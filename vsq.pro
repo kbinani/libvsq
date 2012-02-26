@@ -21,7 +21,9 @@ HEADERS += \
     TimesigList.h \
     MeasureLineIterator.h \
     MeasureLine.h \
-    vsqglobal.h
+    vsqglobal.h \
+    HandleType.h
+
 unix:!symbian {
     maemo5 {
         target.path = /opt/usr/lib
