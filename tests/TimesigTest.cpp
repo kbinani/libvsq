@@ -1,5 +1,5 @@
 #include "Util.h"
-#include "../../vsq/Timesig.h"
+#include "../Timesig.h"
 
 using namespace std;
 using namespace VSQ_NS;

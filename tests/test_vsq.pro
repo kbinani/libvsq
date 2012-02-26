@@ -23,7 +23,7 @@ SOURCES += \
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 INCLUDEPATH += ../../vsq/
-LIBS += -lvsq -lcppunit -L"../vsq/build/mac/release"
+LIBS += -lvsq -lcppunit -L"../build/macosx/release"
 
 HEADERS += \
     Util.h
