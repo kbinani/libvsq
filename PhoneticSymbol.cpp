@@ -66,9 +66,9 @@ bool PhoneticSymbol::isValidSymbol( const string &symbol )
 
     // ブレスの判定
     int symbolCharacterCount = symbol.size();
-    if( symbol.find( "br" ) == 1 && symbolCharacterCount > 2 ){
+    if( symbol.find( "br" ) == 0 && symbolCharacterCount > 2 ){
         // br001とかをfalseにするためのチェック
-        string s = symbol.substr( 3 );
+        string s = symbol.substr( 2 );
         try{
             boost::lexical_cast<int>( s );
             return true;
