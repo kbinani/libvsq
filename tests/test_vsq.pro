@@ -19,7 +19,10 @@ SOURCES += \
     TimesigTest.cpp \
     main.cpp \
     TimesigListTest.cpp \
-    MeasureLineIteratorTest.cpp
+    MeasureLineIteratorTest.cpp \
+    LyricTest.cpp \
+    StringUtilTest.cpp \
+    PhoneticSymbolTest.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 INCLUDEPATH += ../../vsq/

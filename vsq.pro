@@ -14,7 +14,9 @@ SOURCES += \
     Timesig.cpp \
     TimesigList.cpp \
     MeasureLineIterator.cpp \
-    MeasureLine.cpp
+    MeasureLine.cpp \
+    Lyric.cpp \
+    PhoneticSymbol.cpp
 
 HEADERS += \
     Timesig.h \
@@ -22,7 +24,10 @@ HEADERS += \
     MeasureLineIterator.h \
     MeasureLine.h \
     vsqglobal.h \
-    HandleType.h
+    HandleType.h \
+    Lyric.h \
+    StringUtil.h \
+    PhoneticSymbol.h
 
 unix:!symbian {
     maemo5 {
