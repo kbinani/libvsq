@@ -5,4 +5,3 @@ libvsq:
 
 test_vsq: libvsq
 	g++ *.cpp ../*.cpp -L"../" -ldl -lcppunit -lvsq -o test_vsq.exe
-	./test_vsq.exe
