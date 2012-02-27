@@ -4,5 +4,5 @@ libvsq:
 	cd ../ && make
 
 test_vsq: libvsq
-	g++ *.cpp ../*.cpp -L"../" -lcppunit -lvsq -o test_vsq.exe
+	g++ *.cpp ../*.cpp -L"../" -ldl -lcppunit -lvsq -o test_vsq.exe
 	./test_vsq.exe
