@@ -50,7 +50,11 @@ public:
      * @return (boolean) <code>a</code> が <code>b</code> よりも小さい場合は <code>true</code>、そうでない場合は <code>false</code> を返す
      * @access static
      */
-    static int compare( const VSQ_NS::VibratoBP &a, const VSQ_NS::VibratoBP &b );
+    static bool compare( const VSQ_NS::VibratoBP &a, const VSQ_NS::VibratoBP &b );
+
+private:
+    static int compareCore( const VSQ_NS::VibratoBP &a, const VSQ_NS::VibratoBP &b );
+
 };
 
 VSQ_END_NAMESPACE

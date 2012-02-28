@@ -36,11 +36,11 @@ public:
     {
         VibratoBP a = VibratoBP( 2.0, 3 );
         VibratoBP b = VibratoBP( 2.0, 10 );
-        CPPUNIT_ASSERT_EQUAL( 0, VibratoBP::compare( a, b ) );
+        CPPUNIT_ASSERT_EQUAL( false, VibratoBP::compare( a, b ) );
 
         VibratoBP c = VibratoBP( 1.0, 3 );
-        CPPUNIT_ASSERT_EQUAL( 1, VibratoBP::compare( b, c ) );
-        CPPUNIT_ASSERT_EQUAL( -1, VibratoBP::compare( c, b ) );
+        CPPUNIT_ASSERT_EQUAL( false, VibratoBP::compare( b, c ) );
+        CPPUNIT_ASSERT_EQUAL( true, VibratoBP::compare( c, b ) );
     }
 
     CPPUNIT_TEST_SUITE( VibratoBPTest );

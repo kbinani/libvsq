@@ -16,10 +16,15 @@ VibratoBP::VibratoBP( double x, int y )
 
 int VibratoBP::compareTo( const VibratoBP &item )
 {
-    return compare( *this, item );
+    return compareCore( *this, item );
 }
 
-int VibratoBP::compare( const VibratoBP &a, const VibratoBP &b )
+bool VibratoBP::compare( const VibratoBP &a, const VibratoBP &b )
+{
+    return compareCore( a, b ) < 0;
+}
+
+int VibratoBP::compareCore( const VibratoBP &a, const VibratoBP &b )
 {
     double v = a.x - b.x;
     if( v > 0.0 ){
