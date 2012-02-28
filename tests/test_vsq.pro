@@ -22,7 +22,8 @@ SOURCES += \
     MeasureLineIteratorTest.cpp \
     LyricTest.cpp \
     StringUtilTest.cpp \
-    PhoneticSymbolTest.cpp
+    PhoneticSymbolTest.cpp \
+    VibratoBPTest.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 INCLUDEPATH += ../../vsq/

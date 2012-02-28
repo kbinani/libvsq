@@ -16,7 +16,8 @@ SOURCES += \
     MeasureLineIterator.cpp \
     MeasureLine.cpp \
     Lyric.cpp \
-    PhoneticSymbol.cpp
+    PhoneticSymbol.cpp \
+    VibratoBP.cpp
 
 HEADERS += \
     Timesig.h \
@@ -27,7 +28,8 @@ HEADERS += \
     HandleType.h \
     Lyric.h \
     StringUtil.h \
-    PhoneticSymbol.h
+    PhoneticSymbol.h \
+    VibratoBP.h
 
 unix:!symbian {
     maemo5 {
