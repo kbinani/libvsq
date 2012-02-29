@@ -24,7 +24,8 @@ SOURCES += \
     StringUtilTest.cpp \
     PhoneticSymbolTest.cpp \
     VibratoBPTest.cpp \
-    VibratoBPListTest.cpp
+    VibratoBPListTest.cpp \
+    TempoTest.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 INCLUDEPATH += ../../vsq/
