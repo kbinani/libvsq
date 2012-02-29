@@ -11,6 +11,9 @@ OBJECTS = Timesig.o TimesigList.o
 lib: $(OBJECTS) $(SOURCES)
 	ar cq libvsq.a *.o
 
+cppcheck:
+	cppcheck . --enable=all -q --xml 2>cppcheck-result.xml
+
 clean:
 	rm -f *.o
 	rm -f libvsq.a
