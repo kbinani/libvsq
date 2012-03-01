@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<results>
-<error file="./Timesig.h" line="70" id="functionConst" severity="style" msg="The function 'Timesig::compareTo' can be const"/>
-<error file="./TimesigList.h" line="68" id="functionConst" severity="style" msg="The function 'TimesigList::size' can be const"/>
-<error file="./TimesigList.h" line="73" id="functionConst" severity="style" msg="The function 'TimesigList::isUpdated' can be const"/>
-<error file="./VibratoBPList.h" line="61" id="functionConst" severity="style" msg="The function 'VibratoBPList::get' can be const"/>
-<error file="./VibratoBPList.cpp" line="84" id="passedByValue" severity="style" msg="Function parameter 'value' is passed by value. It could be passed by reference instead."/>
-</results>

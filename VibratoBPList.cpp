@@ -103,7 +103,7 @@ void VibratoBPList::setData( const string &value )
     _list.clear();
     vector<string> spl = StringUtil::explode( ",", value );
     vector<string>::iterator i;
-    for( i = spl.begin(); i != spl.end(); i++ ){
+    for( i = spl.begin(); i != spl.end(); ++i ){
         vector<string> spl2 = StringUtil::explode( "=", (*i) );
         if( spl2.size() >= 2 ){
             double x;

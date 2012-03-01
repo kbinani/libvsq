@@ -1,11 +1,11 @@
-all: test_vsq
+all: test_vsq.exe
 
-libvsq:
+../libvsq.a: ../*.cpp ../*.h
 	cd ../ && make
 
-test_vsq: libvsq
+test_vsq.exe: ../libvsq.a *.cpp *.h
 	g++ *.cpp ../*.cpp -L"../" -ldl -lcppunit -lvsq -o test_vsq.exe
 
-run: test_vsq
+run: test_vsq.exe
 	./test_vsq.exe
 

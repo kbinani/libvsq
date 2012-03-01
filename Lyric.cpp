@@ -140,12 +140,12 @@ bool Lyric::equals( Lyric &item )
 const string Lyric::getConsonantAdjustment()
 {
     const vector<int> arr = getConsonantAdjustmentList();
-    if( arr.size() == 0 ){
+    if( arr.empty() ){
         return "";
     }
     vector<int>::const_iterator i;
     ostringstream ret;
-    for( i = arr.begin(); i != arr.end(); i++ ){
+    for( i = arr.begin(); i != arr.end(); ++i ){
         ret << (i == arr.begin() ? "" : " ") << (*i);
     }
     return ret.str();
@@ -156,7 +156,7 @@ void Lyric::setConsonantAdjustment( const string &value )
     vector<string> spl = StringUtil::explode( ",", value );
     vector<int> arr;
     vector<string>::iterator i;
-    for( i = spl.begin(); i != spl.end(); i++ ){
+    for( i = spl.begin(); i != spl.end(); ++i ){
         arr.push_back( (int)atoi( (*i).c_str() ) );
     }
     setConsonantAdjustmentList( arr );
@@ -168,13 +168,13 @@ void Lyric::setConsonantAdjustment( const string &value )
  */
 const vector<int> Lyric::getConsonantAdjustmentList()
 {
-    if( _consonantAdjustment.size() == 0 ){
-        if( _phoneticSymbol.size() == 0 ){
+    if( _consonantAdjustment.empty() ){
+        if( _phoneticSymbol.empty() ){
             _consonantAdjustment.clear();
         }else{
             _consonantAdjustment.clear();
             vector<string>::iterator i;
-            for( i = _phoneticSymbol.begin(); i != _phoneticSymbol.end(); i++ ){
+            for( i = _phoneticSymbol.begin(); i != _phoneticSymbol.end(); ++i ){
                 int consonantAdjustment;
                 if( PhoneticSymbol::isConsonant( (*i) ) ){
                     consonantAdjustment = 64;
@@ -192,7 +192,7 @@ void Lyric::setConsonantAdjustmentList( const vector<int> &value )
 {
     _consonantAdjustment.clear();
     vector<int>::const_iterator i;
-    for( i = value.begin(); i != value.end(); i++ ){
+    for( i = value.begin(); i != value.end(); ++i ){
         _consonantAdjustment.push_back( (*i) );
     }
 }
@@ -200,12 +200,12 @@ void Lyric::setConsonantAdjustmentList( const vector<int> &value )
 const string Lyric::getPhoneticSymbol()
 {
     const vector<string> symbol = getPhoneticSymbolList();
-    if( symbol.size() == 0 ){
+    if( symbol.empty() ){
         return string( "" );
     }
     ostringstream result;
     vector<string>::const_iterator i;
-    for( i = symbol.begin(); i != symbol.end(); i++ ){
+    for( i = symbol.begin(); i != symbol.end(); ++i ){
         result << (i == symbol.begin() ? "" : " ") << (*i);
     }
     return result.str();
@@ -224,7 +224,7 @@ const vector<string> Lyric::getPhoneticSymbolList()
 {
     vector<string> ret;
     vector<string>::iterator i;
-    for( i = _phoneticSymbol.begin(); i != _phoneticSymbol.end(); i++ ){
+    for( i = _phoneticSymbol.begin(); i != _phoneticSymbol.end(); ++i ){
         ret.push_back( (*i) );
     }
     return ret;
@@ -258,9 +258,9 @@ const string Lyric::toString( bool addQuateMark )
     result.str( "" );
     result.clear( ostringstream::goodbit );
     result << escaped;
-    if( _consonantAdjustment.size() == 0 ){
+    if( _consonantAdjustment.empty() ){
         vector<string>::iterator i;
-        for( i = symbol.begin(); i != symbol.end(); i++ ){
+        for( i = symbol.begin(); i != symbol.end(); ++i ){
             int consonantAdjustment;
             if( PhoneticSymbol::isConsonant( (*i) ) ){
                 consonantAdjustment = 64;
@@ -271,7 +271,7 @@ const string Lyric::toString( bool addQuateMark )
         }
     }
     vector<int>::iterator i;
-    for( i = _consonantAdjustment.begin(); i != _consonantAdjustment.end(); i++ ){
+    for( i = _consonantAdjustment.begin(); i != _consonantAdjustment.end(); ++i ){
         result << "," << (*i);
     }
     if( isProtected ){
