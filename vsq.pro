@@ -35,7 +35,8 @@ HEADERS += \
     VibratoBP.h \
     VibratoBPList.h \
     Tempo.h \
-    TextStream.h
+    TextStream.h \
+    ArticulationType.h
 
 unix:!symbian {
     maemo5 {

@@ -26,7 +26,8 @@ SOURCES += \
     VibratoBPTest.cpp \
     VibratoBPListTest.cpp \
     TempoTest.cpp \
-    TextStreamTest.cpp
+    TextStreamTest.cpp \
+    ArticulationTypeTest.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 INCLUDEPATH += ../../vsq/
