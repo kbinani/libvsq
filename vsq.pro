@@ -19,7 +19,8 @@ SOURCES += \
     PhoneticSymbol.cpp \
     VibratoBP.cpp \
     VibratoBPList.cpp \
-    Tempo.cpp
+    Tempo.cpp \
+    TextStream.cpp
 
 HEADERS += \
     Timesig.h \
@@ -33,7 +34,8 @@ HEADERS += \
     PhoneticSymbol.h \
     VibratoBP.h \
     VibratoBPList.h \
-    Tempo.h
+    Tempo.h \
+    TextStream.h
 
 unix:!symbian {
     maemo5 {
