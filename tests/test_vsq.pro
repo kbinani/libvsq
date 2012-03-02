@@ -27,11 +27,14 @@ SOURCES += \
     VibratoBPListTest.cpp \
     TempoTest.cpp \
     TextStreamTest.cpp \
-    ArticulationTypeTest.cpp
+    ArticulationTypeTest.cpp \
+    HandleTest.cpp \
+    ../*.cpp
+
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 INCLUDEPATH += ../../vsq/
-LIBS += -lvsq -lcppunit -L"../build/macosx/release"
+LIBS += -lcppunit
 
 HEADERS += \
     Util.h

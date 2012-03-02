@@ -20,7 +20,8 @@ SOURCES += \
     VibratoBP.cpp \
     VibratoBPList.cpp \
     Tempo.cpp \
-    TextStream.cpp
+    TextStream.cpp \
+    Handle.cpp
 
 HEADERS += \
     Timesig.h \
@@ -36,7 +37,8 @@ HEADERS += \
     VibratoBPList.h \
     Tempo.h \
     TextStream.h \
-    ArticulationType.h
+    ArticulationType.h \
+    Handle.h
 
 unix:!symbian {
     maemo5 {
