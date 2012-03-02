@@ -83,9 +83,6 @@ Handle::Handle( TextStream &stream, int index, string &lastLine )
     // "["にぶち当たるまで読込む
     lastLine = stream.readLine();
     while( lastLine.find( "[" ) != 0 ){
-        {//TODO:
-            cout << "Handle::Hanlde; lastLine=" << lastLine << endl;
-        }
         vector<string> spl = StringUtil::explode( "=", lastLine );
         string search = spl[0];
         if( search == "Language" ){

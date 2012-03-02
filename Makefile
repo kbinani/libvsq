@@ -1,7 +1,7 @@
 all: lib
 
-SOURCES = PhoneticSymbol.cpp TimesigList.cpp Lyric.cpp Tempo.cpp VibratoBP.cpp MeasureLine.cpp TextStream.cpp VibratoBPList.cpp MeasureLineIterator.cpp Timesig.cpp
-OBJECTS = PhoneticSymbol.o TimesigList.o Lyric.o Tempo.o VibratoBP.o MeasureLine.o TextStream.o VibratoBPList.o MeasureLineIterator.o Timesig.o
+SOURCES = PhoneticSymbol.cpp TimesigList.cpp Lyric.cpp Tempo.cpp VibratoBP.cpp MeasureLine.cpp TextStream.cpp VibratoBPList.cpp MeasureLineIterator.cpp Timesig.cpp Handle.cpp
+OBJECTS = PhoneticSymbol.o TimesigList.o Lyric.o Tempo.o VibratoBP.o MeasureLine.o TextStream.o VibratoBPList.o MeasureLineIterator.o Timesig.o Handle.o
 
 .SUFFIXES: .o .c .cpp .cc .cxx .C
 
@@ -9,7 +9,7 @@ OBJECTS = PhoneticSymbol.o TimesigList.o Lyric.o Tempo.o VibratoBP.o MeasureLine
 	g++ -c -o "$@" "$<"
 
 lib: $(OBJECTS) $(SOURCES)
-	ar cq libvsq.a *.o
+	ar cq libvsq.a $(OBJECTS)
 
 cppcheck:
 	cppcheck . --enable=all -q --xml 2>cppcheck-result.xml

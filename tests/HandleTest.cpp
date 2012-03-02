@@ -163,13 +163,7 @@ public:
         string lastLine = "";
         int index = 100;
     
-        {//TODO:
-            cout << "testConstructLyricFromTextStreamStopWithEOF; before ctor" << endl;
-        }
         Handle handle( stream, index, lastLine );
-        {//TODO:
-            cout << "testConstructLyricFromTextStreamStopWithEOF; after ctor" << endl;
-        }
         CPPUNIT_ASSERT_EQUAL( HandleType::LYRIC, handle.getHandleType() );
         CPPUNIT_ASSERT_EQUAL( index, handle.index );
         CPPUNIT_ASSERT_EQUAL( 2, handle.getLyricCount() );
