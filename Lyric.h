@@ -5,6 +5,8 @@
 #include <vector>
 #include "vsqglobal.h"
 
+VSQ_BEGIN_NAMESPACE
+
 /**
  * 歌詞ハンドルに格納する歌詞情報を保持するクラス
  * @class table
@@ -123,5 +125,7 @@ public:
      */
     const std::string toString( bool addQuateMark = false );
 };
+
+VSQ_END_NAMESPACE
 
 #endif
