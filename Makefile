@@ -1,7 +1,7 @@
 all: lib
 
-SOURCES = Timesig.cpp TimesigList.cpp
-OBJECTS = Timesig.o TimesigList.o
+SOURCES = PhoneticSymbol.cpp TimesigList.cpp Lyric.cpp Tempo.cpp VibratoBP.cpp MeasureLine.cpp TextStream.cpp VibratoBPList.cpp MeasureLineIterator.cpp Timesig.cpp
+OBJECTS = PhoneticSymbol.o TimesigList.o Lyric.o Tempo.o VibratoBP.o MeasureLine.o TextStream.o VibratoBPList.o MeasureLineIterator.o Timesig.o
 
 .SUFFIXES: .o .c .cpp .cc .cxx .C
 
