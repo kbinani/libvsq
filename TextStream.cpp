@@ -40,7 +40,7 @@ const std::string TextStream::readLine()
 {
     ostringstream sb;
     // '\n'が来るまで読み込み
-    while( _position < _length ){
+    while( _position + 1 < _length ){
         _position++;
         char c = _array[_position];
         if( c == '\n' || c == 0 ){
