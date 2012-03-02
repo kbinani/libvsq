@@ -14,29 +14,34 @@ namespace ArticulationType
     enum ArticulationTypeEnum
     {
         /**
+         * @brief アイコン設定がない
+         */
+        NONE = 0,
+
+        /**
          * @brief ビブラート
          */
-        VIBRATO = 0,
+        VIBRATO = 1,
 
         /**
          * @brief クレッシェンド、またはデクレッシェンド
          */
-        CRESCENDO = 1,
+        CRESCENDO = 2,
 
         /**
          * @brief ピアノ、フォルテ等の強弱記号
          */
-        DYNAFF = 2,
+        DYNAFF = 3,
 
         /**
          * @brief アタック
          */
-        NOTE_ATTACK = 3,
+        NOTE_ATTACK = 4,
 
         /**
          * @brief NoteTransition(詳細不明)
          */
-        NOTE_TRANSITION = 4
+        NOTE_TRANSITION = 5
     };
 }
 
