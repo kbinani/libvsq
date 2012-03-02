@@ -14,6 +14,8 @@
 #ifndef __vsq_h__
 #define __vsq_h__
 
+#include <cstdlib>
+
 #define VSQ_BEGIN_NAMESPACE namespace cadencii{ namespace vsq{
 
 #define VSQ_END_NAMESPACE }}
