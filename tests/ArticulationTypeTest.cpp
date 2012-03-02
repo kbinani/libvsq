@@ -10,7 +10,8 @@ public:
     {
         ArticulationType::ArticulationTypeEnum e
             = ArticulationType::CRESCENDO;
-        CPPUNIT_ASSERT( ArticulationType::DYNAFF == ArticulationType::DYNAFF );
+        CPPUNIT_ASSERT( e != ArticulationType::DYNAFF );
+        CPPUNIT_ASSERT( e == ArticulationType::CRESCENDO );
     }
 
     CPPUNIT_TEST_SUITE( ArticulationTypeTest );
