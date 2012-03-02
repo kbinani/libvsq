@@ -67,20 +67,20 @@ public:
      * @param item 比較対象のオブジェクト
      * @return 比較対象と同じであれば <code>true</code> を、そうでなければ <code>false</code> を返す
      */
-    bool equalsForSynth( Lyric &item );
+    bool equalsForSynth( Lyric &item ) const;
 
     /**
      * このオブジェクトのインスタンスと、指定されたオブジェクトが同じかどうかを調べる
      * @param item (Lyric) 比較対象のオブジェクト
      * @return (boolean) 比較対象と同じであれば <code>true</code> を、そうでなければ <code>false</code> を返す
      */
-    bool equals( Lyric &item );
+    bool equals( Lyric &item ) const;
 
     /**
      * Consonant Adjustmentの文字列形式を取得する
      * @return Consonant Adjustment を空白区切りで連結した文字列
      */
-    const std::string getConsonantAdjustment();
+    const std::string getConsonantAdjustment() const;
 
     /**
      * Consonant Adjustmentを文字列形式で設定する
@@ -92,7 +92,7 @@ public:
      * Consonant Adjustment を、整数配列で取得する
      * @return Consonant Adjustment を格納した整数の配列
      */
-    const std::vector<int> getConsonantAdjustmentList();
+    const std::vector<int> getConsonantAdjustmentList() const;
 
     /**
      * Consonant Adjustment を、整数配列形式で設定する
@@ -104,7 +104,7 @@ public:
      * この歌詞の発音記号を取得する
      * @return 発音記号
      */
-    const std::string getPhoneticSymbol();
+    const std::string getPhoneticSymbol() const;
 
     /**
      * この歌詞の発音記号を設定する
@@ -116,14 +116,14 @@ public:
      * この歌詞の発音記号の配列を取得する
      * @return 発音記号の配列
      */
-    const std::vector<std::string> getPhoneticSymbolList();
+    const std::vector<std::string> getPhoneticSymbolList() const;
 
     /**
      * このインスタンスを文字列に変換する
      * @param addQuateMark (boolean) 歌詞、発音記号の前後に引用符(")を追加するかどうか
      * @return (string) 変換後の文字列
      */
-    const std::string toString( bool addQuateMark = false );
+    const std::string toString( bool addQuateMark = false ) const;
 };
 
 VSQ_END_NAMESPACE

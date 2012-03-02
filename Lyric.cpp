@@ -102,10 +102,8 @@ Lyric::Lyric( const string &phrase, const string &phoneticSymbol )
     isProtected = false;
 }
 
-bool Lyric::equalsForSynth( Lyric &item )
+bool Lyric::equalsForSynth( Lyric &item ) const
 {
-    string thisSymbol = getPhoneticSymbol();
-    string itemSymbol = item.getPhoneticSymbol();
     if( getPhoneticSymbol() != item.getPhoneticSymbol() ){
         return false;
     }
@@ -120,7 +118,7 @@ bool Lyric::equalsForSynth( Lyric &item )
  * @param item (Lyric) 比較対象のオブジェクト
  * @return (boolean) 比較対象と同じであれば <code>true</code> を、そうでなければ <code>false</code> を返す
  */
-bool Lyric::equals( Lyric &item )
+bool Lyric::equals( Lyric &item ) const
 {
     if( false == equalsForSynth( item ) ){
         return false;
@@ -137,7 +135,7 @@ bool Lyric::equals( Lyric &item )
     return true;
 }
 
-const string Lyric::getConsonantAdjustment()
+const string Lyric::getConsonantAdjustment() const
 {
     const vector<int> arr = getConsonantAdjustmentList();
     if( arr.empty() ){
@@ -166,14 +164,15 @@ void Lyric::setConsonantAdjustment( const string &value )
  * Consonant Adjustment を、整数配列で取得する
  * @return (table<int>) Consonant Adjustment を格納した整数の配列
  */
-const vector<int> Lyric::getConsonantAdjustmentList()
+const vector<int> Lyric::getConsonantAdjustmentList() const
 {
+    vector<int> _consonantAdjustment = this->_consonantAdjustment;
     if( _consonantAdjustment.empty() ){
         if( _phoneticSymbol.empty() ){
             _consonantAdjustment.clear();
         }else{
             _consonantAdjustment.clear();
-            vector<string>::iterator i;
+            vector<string>::const_iterator i;
             for( i = _phoneticSymbol.begin(); i != _phoneticSymbol.end(); ++i ){
                 int consonantAdjustment;
                 if( PhoneticSymbol::isConsonant( (*i) ) ){
@@ -197,7 +196,7 @@ void Lyric::setConsonantAdjustmentList( const vector<int> &value )
     }
 }
 
-const string Lyric::getPhoneticSymbol()
+const string Lyric::getPhoneticSymbol() const
 {
     const vector<string> symbol = getPhoneticSymbolList();
     if( symbol.empty() ){
@@ -220,10 +219,10 @@ void Lyric::setPhoneticSymbol( const string &value )
     }
 }
 
-const vector<string> Lyric::getPhoneticSymbolList()
+const vector<string> Lyric::getPhoneticSymbolList() const
 {
     vector<string> ret;
-    vector<string>::iterator i;
+    vector<string>::const_iterator i;
     for( i = _phoneticSymbol.begin(); i != _phoneticSymbol.end(); ++i ){
         ret.push_back( (*i) );
     }
@@ -235,7 +234,7 @@ const vector<string> Lyric::getPhoneticSymbolList()
  * @param addQuateMark (boolean) 歌詞、発音記号の前後に引用符(")を追加するかどうか
  * @return (string) 変換後の文字列
  */
-const string Lyric::toString( bool addQuateMark )
+const string Lyric::toString( bool addQuateMark ) const
 {
     string quot;
     if( addQuateMark ){
@@ -258,20 +257,21 @@ const string Lyric::toString( bool addQuateMark )
     result.str( "" );
     result.clear( ostringstream::goodbit );
     result << escaped;
-    if( _consonantAdjustment.empty() ){
+    vector<int> consonantAdjustment = _consonantAdjustment;
+    if( consonantAdjustment.empty() ){
         vector<string>::iterator i;
         for( i = symbol.begin(); i != symbol.end(); ++i ){
-            int consonantAdjustment;
+            int adjustment;
             if( PhoneticSymbol::isConsonant( (*i) ) ){
-                consonantAdjustment = 64;
+                adjustment = 64;
             }else{
-                consonantAdjustment = 0;
+                adjustment = 0;
             }
-            _consonantAdjustment.push_back( consonantAdjustment );
+            consonantAdjustment.push_back( adjustment );
         }
     }
     vector<int>::iterator i;
-    for( i = _consonantAdjustment.begin(); i != _consonantAdjustment.end(); ++i ){
+    for( i = consonantAdjustment.begin(); i != consonantAdjustment.end(); ++i ){
         result << "," << (*i);
     }
     if( isProtected ){

@@ -53,7 +53,7 @@ VibratoBPList::VibratoBPList( const vector<double> &x, const vector<int> &y )
     std::sort( _list.begin(), _list.end(), VibratoBP::compare );
 }
 
-int VibratoBPList::getValueAt( double x, int defaultValue )
+int VibratoBPList::getValueAt( double x, int defaultValue ) const
 {
     if( _list.size() <= 0 ){
         return defaultValue;
@@ -72,12 +72,12 @@ int VibratoBPList::getValueAt( double x, int defaultValue )
     }
 }
 
-int VibratoBPList::size()
+int VibratoBPList::size() const
 {
     return (int)_list.size();
 }
 
-const VibratoBP VibratoBPList::get( int index )
+const VibratoBP VibratoBPList::get( int index ) const
 {
     return _list[index];
 }
@@ -87,7 +87,7 @@ void VibratoBPList::set(int index, const VibratoBP value)
     _list[index] = value;
 }
 
-const string VibratoBPList::getData()
+const string VibratoBPList::getData() const
 {
     ostringstream ret;
     for( int i = 0; i < _list.size(); i++ ){

@@ -29,7 +29,7 @@ public:
      * @param textBPY (string) y 軸のデータ点の値をカンマ区切りで繋げた文字列
      * @return (VibratoBPList)
      */
-    VibratoBPList( const std::string &textNum, const std::string &textBPX, const std::string &textBPY );
+    explicit VibratoBPList( const std::string &textNum, const std::string &textBPX, const std::string &textBPY );
 
     /**
      * 初期化を行う
@@ -37,7 +37,7 @@ public:
      * @param y (table<int>) y 軸の値のリスト
      * @return (VibratoBPList)
      */
-    VibratoBPList( const std::vector<double> &x, const std::vector<int> &y );
+    explicit VibratoBPList( const std::vector<double> &x = std::vector<double>(), const std::vector<int> &y = std::vector<int>() );
 
     /**
      * 指定した位置のビブラートカーブの値を取得する
@@ -45,20 +45,20 @@ public:
      * @param defaultValue (int) ビブラートカーブのデフォルト値
      * @return (int) ビブラートカーブの値
      */
-    int getValueAt( double x, int defaultValue );
+    int getValueAt( double x, int defaultValue ) const;
 
     /**
      * データ点の個数を返す
      * @return (int) データ点の個数
      */
-    int size();
+    int size() const;
 
     /**
      * 指定したインデックスのデータ点を取得する
      * @param index (int) 0から始まるインデックス
      * @return (VibratoBP) データ点
      */
-    const VibratoBP get( int index );
+    const VibratoBP get( int index ) const;
 
     /**
      * 指定したインデックスのデータ点を設定する
@@ -71,13 +71,19 @@ public:
      * データ点のリストを、文字列に変換する。例えば "key1=value1,key2=value2" のように変換される
      * @return (string) 変換後の文字列
      */
-    const std::string getData();
+    const std::string getData() const;
 
     /**
      * "key1=value=1,key2=value2" のような文字列から、データ点のリストを設定する
      * @param value (string) データ点の文字列形式
      */
     void setData( const std::string &value );
+
+private:
+    VibratoBPList( const std::vector<double> & )
+    {
+    }
+
 };
 
 VSQ_END_NAMESPACE
