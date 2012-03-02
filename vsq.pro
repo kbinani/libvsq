@@ -50,3 +50,7 @@ unix:!symbian {
 }
 
 INCLUDEPATH += ../ ./
+
+OTHER_FILES += \
+    README.markdown \
+    README.ja_JP.markdown
