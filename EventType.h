@@ -6,9 +6,9 @@
 
 VSQ_BEGIN_NAMESPACE
 
-namespace EventType
+class EventType
 {
-
+public:
     /**
      * {@link Event} の種類を表現する列挙子
      */
@@ -40,7 +40,7 @@ namespace EventType
      * @param value 指定された列挙子の文字列表現
      * @return 変換後の文字列
      */
-    const std::string toString( EventTypeEnum value )
+    static const std::string toString( EventTypeEnum value )
     {
         if( value == EventType::SINGER ){
             return "Singer";
@@ -53,7 +53,12 @@ namespace EventType
         }
     }
 
-}
+private:
+    EventType()
+    {
+    }
+
+};
 
 VSQ_END_NAMESPACE
 
