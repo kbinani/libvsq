@@ -15,35 +15,37 @@ namespace HandleType
      */
     enum HandleTypeEnum
     {
+        UNKNOWN = 0,
+
         /**
          * 歌詞ハンドル
          * @var int
          */
-        LYRIC = 0,
+        LYRIC = 1,
 
         /**
          * ビブラートハンドル
          * @var int
          */
-        VIBRATO = 1,
+        VIBRATO = 2,
 
         /**
          * 歌手ハンドル
          * @var int
          */
-        SINGER = 2,
+        SINGER = 3,
 
         /**
          * アタックハンドル
          * @var int
          */
-        NOTE_HEAD = 3,
+        NOTE_HEAD = 4,
 
         /**
          * Dynamics ハンドル
          * @var int
          */
-        DYNAMICS = 4
+        DYNAMICS = 5
     };
 
 }
