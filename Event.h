@@ -16,6 +16,8 @@ VSQ_BEGIN_NAMESPACE
  */
 class Event
 {
+    friend class EventList;
+
 public:
     /**
      * ミリ秒で表した、音符の最大長さ
@@ -160,10 +162,30 @@ private:
     VSQ_NS::tick_t _length;
 
     /**
+     * @todo 未実装
      * @var UstEvent
-     * @access private
+    VSQ_NS::UstEvent ustEvent = nil;
      */
-//    VSQ_NS::UstEvent ustEvent = nil;
+
+    /**
+     * @brief
+     */
+    int _singerHandleIndex;
+
+    /**
+     * @brief
+     */
+    int _lyricHandleIndex;
+
+    /**
+     * @brief
+     */
+    int _vibratoHandleIndex;
+
+    /**
+     * @brief
+     */
+    int _noteHeadHandleIndex;
 
 public:
     /**

@@ -28,6 +28,10 @@ void Event::init()
     d4mean = 24;
     pMeanEndingNote = 12;
 //    ustEvent = nil;
+    _lyricHandleIndex = 0;
+    _noteHeadHandleIndex = 0;
+    _singerHandleIndex = 0;
+    _vibratoHandleIndex = 0;
 }
 
 Event::Event( const string &line ) :
