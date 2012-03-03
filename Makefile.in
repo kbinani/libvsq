@@ -15,7 +15,9 @@ SRCS = \
     TimesigList.cpp \
     VibratoBP.cpp \
     VibratoBPList.cpp \
-    Event.cpp
+    Event.cpp \
+    EventList.cpp
+
 OBJS = $(SRCS:.cpp=.o)
 PROG = libvsq.a
 

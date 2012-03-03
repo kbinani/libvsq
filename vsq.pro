@@ -22,7 +22,8 @@ SOURCES += \
     Tempo.cpp \
     TextStream.cpp \
     Handle.cpp \
-    Event.cpp
+    Event.cpp \
+    EventList.cpp
 
 HEADERS += \
     Timesig.h \
@@ -43,7 +44,10 @@ HEADERS += \
     EventType.h \
     Event.h \
     EventWriteOption.h \
-    Event.h
+    Event.h \
+    EventList.h \
+    VoiceLanguageEnum.h \
+    EventListIterator.h
 
 unix:!symbian {
     maemo5 {
