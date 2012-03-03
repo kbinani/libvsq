@@ -1,0 +1,31 @@
+CC = @CC@
+CXX = @CXX@
+DEFS = @DEFS@
+LIBS = @LIBS@
+
+SRCS = \
+    Handle.cpp \
+    Lyric.cpp \
+    MeasureLine.cpp \
+    MeasureLineIterator.cpp \
+    PhoneticSymbol.cpp \
+    Tempo.cpp \
+    TextStream.cpp \
+    Timesig.cpp \
+    TimesigList.cpp \
+    VibratoBP.cpp \
+    VibratoBPList.cpp
+OBJS = $(SRCS:.cpp=.o)
+PROG = libvsq.a
+
+all: $(PROG)
+
+$(PROG): $(OBJS)
+	ar cq $(PROG) $(OBJS)
+
+.cpp.o:
+	$(CXX) -c -o "$@" "$<"
+
+clean:
+	rm -f $(OBJS)
+
