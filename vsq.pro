@@ -21,7 +21,8 @@ SOURCES += \
     VibratoBPList.cpp \
     Tempo.cpp \
     TextStream.cpp \
-    Handle.cpp
+    Handle.cpp \
+    Event.cpp
 
 HEADERS += \
     Timesig.h \
@@ -39,7 +40,10 @@ HEADERS += \
     TextStream.h \
     ArticulationType.h \
     Handle.h \
-    EventType.h
+    EventType.h \
+    Event.h \
+    EventWriteOption.h \
+    Event.h
 
 unix:!symbian {
     maemo5 {

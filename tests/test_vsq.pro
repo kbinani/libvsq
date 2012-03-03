@@ -30,7 +30,11 @@ SOURCES += \
     ArticulationTypeTest.cpp \
     HandleTest.cpp \
     ../*.cpp \
-    EventTypeTest.cpp
+    EventTypeTest.cpp \
+    EventTest.cpp \
+    EventWriteOptionTest.cpp \
+    EventTest.cpp \
+    HandleTypeTest.cpp
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
