@@ -136,7 +136,7 @@ public:
     /**
      * @param type ハンドルの種類
      */
-    explicit Handle( VSQ_NS::HandleType::HandleTypeEnum type );
+    explicit Handle( VSQ_NS::HandleType::HandleTypeEnum type = VSQ_NS::HandleType::UNKNOWN );
 
     /**
      * @brief テキストストリームからハンドルの内容を読み込み初期化する

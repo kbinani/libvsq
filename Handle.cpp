@@ -14,7 +14,7 @@ const string Handle::ICONID_HEAD_DECRESCEND = "$0503";
 
 void Handle::init()
 {
-    _type = HandleType::LYRIC;
+    _type = HandleType::UNKNOWN;
     _articulation = ArticulationType::NONE;
     index = 0;
     iconId = "";
