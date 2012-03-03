@@ -79,13 +79,13 @@ public:
      * 文字列をストリームに書きこむ
      * @param str (string) 書きこむ文字列
      */
-    void write( const std::string &str );
+    TextStream &write( const std::string &str );
 
     /**
      * 文字列をストリームに書きこむ。末尾に改行文字を追加する
      * @param str (string) 書きこむ文字列
      */
-    void writeLine( const std::string &str );
+    TextStream &writeLine( const std::string &str );
 
     /**
      * ストリームを閉じる

@@ -71,7 +71,7 @@ void TextStream::_ensureCapacity( int length )
     }
 }
 
-void TextStream::write( const string &str )
+TextStream &TextStream::write( const string &str )
 {
     int len = str.size();
     int newSize = _position + 1 + len;
@@ -83,9 +83,10 @@ void TextStream::write( const string &str )
     }
     _position += len;
     _length = ::max( _length, newSize );
+    return *this;
 }
 
-void TextStream::writeLine( const string &str )
+TextStream &TextStream::writeLine( const string &str )
 {
     int len = str.size();
     int offset = _position + 1;
@@ -97,6 +98,7 @@ void TextStream::writeLine( const string &str )
     _array[offset + len] = '\n';
     _position += len + 1;
     _length = ::max( _length, newSize );
+    return *this;
 }
 
 void TextStream::close()
