@@ -38,7 +38,8 @@ HEADERS += \
     Tempo.h \
     TextStream.h \
     ArticulationType.h \
-    Handle.h
+    Handle.h \
+    EventType.h
 
 unix:!symbian {
     maemo5 {

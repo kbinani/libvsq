@@ -29,7 +29,8 @@ SOURCES += \
     TextStreamTest.cpp \
     ArticulationTypeTest.cpp \
     HandleTest.cpp \
-    ../*.cpp
+    ../*.cpp \
+    EventTypeTest.cpp
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
