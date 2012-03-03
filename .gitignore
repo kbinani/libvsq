@@ -19,3 +19,4 @@ config.h
 config.status
 config.log
 autoscan.log
+Makefile
