@@ -48,7 +48,8 @@ HEADERS += \
     EventList.h \
     VoiceLanguageEnum.h \
     EventListIterator.h \
-    BP.h
+    BP.h \
+    BPListSearchResult.h
 
 unix:!symbian {
     maemo5 {
