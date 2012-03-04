@@ -1,0 +1,8 @@
+all: test_vsq.exe
+
+test_vsq.exe: *.cpp *.h tests/*.cpp tests/*.h
+	g++ *.cpp tests/*.cpp -coverage -ldl -lcppunit -o test_vsq.exe
+
+run: test_vsq.exe
+	./test_vsq.exe
+
