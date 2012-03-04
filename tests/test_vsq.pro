@@ -37,7 +37,8 @@ SOURCES += \
     HandleTypeTest.cpp \
     EventListTest.cpp \
     VoiceLanguageEnumTest.cpp \
-    EventListIteratorTest.cpp
+    EventListIteratorTest.cpp \
+    BPTest.cpp
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
