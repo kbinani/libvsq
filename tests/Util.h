@@ -10,6 +10,9 @@
 #include <cppunit/BriefTestProgressListener.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
+#define assertEqual CPPUNIT_ASSERT_EQUAL
+#define assert CPPUNIT_ASSERT
+
 #define REGISTER_TEST_SUITE( ATestFixtureType )      \
   static CppUnit::AutoRegisterSuite< ATestFixtureType > CPPUNIT_JOIN( testSuite, ATestFixtureType )
 

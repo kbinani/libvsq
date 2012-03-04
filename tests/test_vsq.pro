@@ -39,7 +39,9 @@ SOURCES += \
     VoiceLanguageEnumTest.cpp \
     EventListIteratorTest.cpp \
     BPTest.cpp \
-    BPListSearchResultTest.cpp
+    BPListSearchResultTest.cpp \
+    BPListTest.cpp \
+    BPListKeyClockIteratorTest.cpp
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
@@ -47,4 +49,5 @@ INCLUDEPATH += ../../vsq/
 LIBS += -lcppunit
 
 HEADERS += \
-    Util.h
+    Util.h \
+    ../*.h

@@ -23,7 +23,8 @@ SOURCES += \
     TextStream.cpp \
     Handle.cpp \
     Event.cpp \
-    EventList.cpp
+    EventList.cpp \
+    BPList.cpp
 
 HEADERS += \
     Timesig.h \
@@ -49,7 +50,9 @@ HEADERS += \
     VoiceLanguageEnum.h \
     EventListIterator.h \
     BP.h \
-    BPListSearchResult.h
+    BPListSearchResult.h \
+    BPList.h \
+    BPListKeyClockIterator.h
 
 unix:!symbian {
     maemo5 {
