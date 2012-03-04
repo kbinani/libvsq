@@ -14,9 +14,9 @@ public:
     
         Event a( 1920, EventType::NOTE );
         Event b( 480, EventType::ICON );
-        int idA = list.add( a, 1 );
-        int idB = list.add( b, 2 );
-    
+        list.add( a, 1 );
+        list.add( b, 2 );
+
         iterator = EventListIterator( &list );
         CPPUNIT_ASSERT( iterator.hasNext() );
         Event *eventA = iterator.next();
