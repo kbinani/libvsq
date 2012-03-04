@@ -23,12 +23,13 @@ PROG = libvsq.a
 
 all: $(PROG)
 
-$(PROG): $(OBJS)
-	ar cq $(PROG) $(OBJS)
+$(PROG): $(SRCS) $(OBJS)
+	ar rcs $(PROG) $(OBJS)
 
 .cpp.o:
 	$(CXX) -c -o "$@" "$<"
 
 clean:
 	rm -f $(OBJS)
+	rm -f $(PROG)
 
