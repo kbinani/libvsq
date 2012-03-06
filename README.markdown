@@ -8,7 +8,7 @@ the BSD License.
 
 ## Library Reference
 
-http://59.106.178.161:8080/job/libvsq/doxygen/
+http://www.kbinani.info:8080/job/libvsq/doxygen/
 
 ## Building the project
 
