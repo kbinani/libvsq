@@ -359,6 +359,13 @@ public:
      */
     const std::string toString() const;
 
+    /**
+     * @brief ハンドル指定子（例えば"h#0123"という文字列）からハンドル番号を取得する
+     * @param s ハンドル指定子
+     * @return ハンドル番号
+     */
+    static int getHandleIndexFromString( const std::string &s );
+
 protected:
     void init();
 
@@ -376,13 +383,6 @@ protected:
      * @brief 歌詞ハンドルとして初期化を行う
      */
     void _init_lyric();
-
-    /**
-     * @brief ハンドル指定子（例えば"h#0123"という文字列）からハンドル番号を取得する
-     * @param s ハンドル指定子
-     * @return ハンドル番号
-     */
-    static int getHandleIndexFromString( const std::string &s );
 
 };
 

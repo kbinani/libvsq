@@ -4,15 +4,6 @@
 using namespace std;
 using namespace VSQ_NS;
 
-class HandleStub : public Handle
-{
-public:
-    static int getHandleIndexFromString(const string &s)
-    {
-        return Handle::getHandleIndexFromString( s );
-    }
-};
-
 class HandleTest : public CppUnit::TestCase
 {
 public:
@@ -478,7 +469,7 @@ public:
     
     void testGetHandleIndexFromString()
     {
-        CPPUNIT_ASSERT_EQUAL( 2, HandleStub::getHandleIndexFromString( "h#0002" ) );
+        CPPUNIT_ASSERT_EQUAL( 2, Handle::getHandleIndexFromString( "h#0002" ) );
     }
     
     void testGetterAndSetterDepth()
