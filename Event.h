@@ -166,20 +166,7 @@ public:
      */
     VSQ_NS::Handle iconDynamicsHandle;
 
-private:
-    /**
-     * Tick 単位のイベント長さ
-     * @var int
-     * @access private
-     */
-    VSQ_NS::tick_t _length;
-
-    /**
-     * @todo 未実装
-     * @var UstEvent
-    VSQ_NS::UstEvent ustEvent = nil;
-     */
-
+protected:
     /**
      * @brief
      */
@@ -199,6 +186,20 @@ private:
      * @brief
      */
     int _noteHeadHandleIndex;
+
+private:
+    /**
+     * Tick 単位のイベント長さ
+     * @var int
+     * @access private
+     */
+    VSQ_NS::tick_t _length;
+
+    /**
+     * @todo 未実装
+     * @var UstEvent
+    VSQ_NS::UstEvent ustEvent = nil;
+     */
 
 public:
     /**
@@ -234,9 +235,8 @@ public:
      * @param value [int]
      * @param last_line [ByRef<string>] 読み込んだ最後の行が返されます
      * @return (Id)
-     *
-    Event( TextStream &sr, int value, std::string &last_line );
      */
+    explicit Event( TextStream &sr, int value, std::string &lastLine );
 
     /**
      * 長さを取得する

@@ -323,77 +323,77 @@ void Event::write( TextStream &stream, EventWriteOption printTargets ) const
     }
 }
 
-/*
-    -- テキストファイルからのコンストラクタ
-    -- @param sr [TextStream] 読み込み対象
-    -- @param value [int]
-    -- @param last_line [ByRef<string>] 読み込んだ最後の行が返されます
-    -- @return (Id)
-    function this:_init_3( sr, value, last_line )
-        local spl;
-        self.index = value;
-        self.type = EventTypeEnum.UNKNOWN;
-        self._singerHandleIndex = -2;
-        self._lyricHandleIndex = -1;
-        self._vibratoHandleIndex = -1;
-        self._noteHeadHandleIndex = -1;
-        self:setLength( 0 );
-        self.note = 0;
-        self.dynamics = 64;
-        self.pmBendDepth = 8;
-        self.pmBendLength = 0;
-        self.pmbPortamentoUse = 0;
-        self.demDecGainRate = 50;
-        self.demAccent = 50;
-        self.vibratoDelay = 0;
-        last_line.value = sr:readLine();
-        while( last_line.value:find( "[" ) ~= 0 )do
-            spl = Util.split( last_line.index, '=' );
-            local search = spl[1];
-            if( search == "Type" )then
-                if( spl[2] == "Anote" )then
-                    self.type = EventTypeEnum.NOTE;
-                elseif( spl[2] == "Singer" )then
-                    self.type = EventTypeEnum.SINGER;
-                elseif( spl[2] == "Aicon" )then
-                    self.type = EventTypeEnum.ICON;
-                else
-                    self.type = EventTypeEnum.UNKNOWN;
-                end
-            elseif( search == "Length" )then
-                self:setLength( tonumber( spl[2], 10 ) );
-            elseif( search == "Note#" )then
-                self.note = tonumber( spl[2], 10 );
-            elseif( search == "Dynamics" )then
-                self.dynamics = tonumber( spl[2], 10 );
-            elseif( search == "PMBendDepth" )then
-                self.pmBendDepth = tonumber( spl[2], 10 );
-            elseif( search == "PMBendLength" )then
-                self.pmBendLength = tonumber( spl[2], 10 );
-            elseif( search == "DEMdecGainRate" )then
-                self.demDecGainRate = tonumber( spl[2], 10 );
-            elseif( search ==  "DEMaccent" )then
-                self.demAccent = tonumber( spl[2], 10 );
-            elseif( search == "LyricHandle" )then
-                self._lyricHandleIndex = Handle.getHandleIndexFromString( spl[2] );
-            elseif( search == "IconHandle" )then
-                self._singerHandleIndex = Handle.getHandleIndexFromString( spl[2] );
-            elseif( search == "VibratoHandle" )then
-                self._vibratoHandleIndex = Handle.getHandleIndexFromString( spl[2] );
-            elseif( search == "VibratoDelay" )then
-                self.vibratoDelay = tonumber( spl[2], 10 );
-            elseif( search == "PMbPortamentoUse" )then
-                self.pmbPortamentoUse = tonumber( spl[2], 10 );
-            elseif( search == "NoteHeadHandle" )then
-                self._noteHeadHandleIndex = Handle.getHandleIndexFromString( spl[2] );
-            end
-            if( not sr:ready() )then
-                break;
-            end
-            last_line.value = sr:readLine();
-        end
-    end
-*/
+/**
+ * テキストファイルからのコンストラクタ
+ * @param sr [TextStream] 読み込み対象
+ * @param value [int]
+ * @param last_line [ByRef<string>] 読み込んだ最後の行が返されます
+ * @return (Id)
+ */
+Event::Event( TextStream &sr, int value, string &lastLine )
+{
+    index = value;
+    type = EventType::UNKNOWN;
+    _singerHandleIndex = -2;
+    _lyricHandleIndex = -1;
+    _vibratoHandleIndex = -1;
+    _noteHeadHandleIndex = -1;
+    setLength( 0 );
+    note = 0;
+    dynamics = 64;
+    pmBendDepth = 8;
+    pmBendLength = 0;
+    pmbPortamentoUse = 0;
+    demDecGainRate = 50;
+    demAccent = 50;
+    vibratoDelay = 0;
+    lastLine = sr.readLine();
+    while( lastLine.find( "[" ) != 0 ){
+        vector<string> spl = StringUtil::explode( "=", lastLine );
+        string search = spl[0];
+        if( search == "Type" ){
+            if( spl[1] == "Anote" ){
+                type = EventType::NOTE;
+            }else if( spl[1] == "Singer" ){
+                type = EventType::SINGER;
+            }else if( spl[1] == "Aicon" ){
+                type = EventType::ICON;
+            }else{
+                type = EventType::UNKNOWN;
+            }
+        }else if( search == "Length" ){
+            setLength( boost::lexical_cast<tick_t>( spl[1] ) );
+        }else if( search == "Note#" ){
+            note = boost::lexical_cast<int>( spl[1] );
+        }else if( search == "Dynamics" ){
+            dynamics = boost::lexical_cast<int>( spl[1] );
+        }else if( search == "PMBendDepth" ){
+            pmBendDepth = boost::lexical_cast<int>( spl[1] );
+        }else if( search == "PMBendLength" ){
+            pmBendLength = boost::lexical_cast<int>( spl[1] );
+        }else if( search == "DEMdecGainRate" ){
+            demDecGainRate = boost::lexical_cast<int>( spl[1] );
+        }else if( search ==  "DEMaccent" ){
+            demAccent = boost::lexical_cast<int>( spl[1] );
+        }else if( search == "LyricHandle" ){
+            _lyricHandleIndex = Handle::getHandleIndexFromString( spl[1] );
+        }else if( search == "IconHandle" ){
+            _singerHandleIndex = Handle::getHandleIndexFromString( spl[1] );
+        }else if( search == "VibratoHandle" ){
+            _vibratoHandleIndex = Handle::getHandleIndexFromString( spl[1] );
+        }else if( search == "VibratoDelay" ){
+            vibratoDelay = boost::lexical_cast<int>( spl[1] );
+        }else if( search == "PMbPortamentoUse" ){
+            pmbPortamentoUse = boost::lexical_cast<int>( spl[1] );
+        }else if( search == "NoteHeadHandle" ){
+            _noteHeadHandleIndex = Handle::getHandleIndexFromString( spl[1] );
+        }
+        if( !sr.ready() ){
+            break;
+        }
+        lastLine = sr.readLine();
+    }
+}
 
 bool Event::isEOS() const
 {
