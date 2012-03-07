@@ -54,7 +54,8 @@ HEADERS += \
     BPList.h \
     BPListKeyClockIterator.h \
     MidiParameterType.h \
-    ByteArrayOutputStream.h
+    ByteArrayOutputStream.h \
+    MidiEvent.h
 
 unix:!symbian {
     maemo5 {
