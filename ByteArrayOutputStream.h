@@ -90,7 +90,7 @@ public:
      * @param startIndex 書き込み開始位置
      * @param length 書き込むバイト値の個数
      */
-    void write( std::vector<int> &array, int startIndex, int length )
+    void write( const std::vector<int> &array, int startIndex, int length )
     {
         char *buffer = new char[length]();
         for( int i = 0; i < length; i++ ){
