@@ -1,5 +1,6 @@
 #include "Util.h"
 #include "../MidiEvent.h"
+#include "../ByteArrayOutputStream.h"
 
 using namespace std;
 using namespace VSQ_NS;
@@ -14,7 +15,7 @@ public:
         event.firstByte = 0x91;
         event.data.push_back( 64 );
         event.data.push_back( 127 );
-        event.writeData( stream );
+        event.writeData( (OutputStream *)&stream );
         ostringstream expected;
         expected << (char)0x91 << (char)64 << (char)127;
         CPPUNIT_ASSERT_EQUAL( expected.str(), stream.toString() );
@@ -30,7 +31,7 @@ public:
         event.data.push_back( 0x82 );
         event.data.push_back( 0x81 );
         event.data.push_back( 0x80 );
-        event.writeData( stream );
+        event.writeData( (OutputStream *)&stream );
         ostringstream expected;
         expected << (char)0xff << (char)0x51 << (char)3 << (char)0x82 << (char)0x81 << (char)0x80;
         CPPUNIT_ASSERT_EQUAL( expected.str(), stream.toString() );
@@ -124,25 +125,25 @@ public:
     void testWriteDeltaClock()
     {
         ByteArrayOutputStream stream;
-        MidiEvent::writeDeltaClock( stream, 0 );
+        MidiEvent::writeDeltaClock( (OutputStream *)&stream, 0 );
         string expected = " ";
         expected[0] = 0x0;
         CPPUNIT_ASSERT_EQUAL( expected, stream.toString() );
     
         stream.seek( 0 );
-        MidiEvent::writeDeltaClock( stream, 127 );
+        MidiEvent::writeDeltaClock( (OutputStream *)&stream, 127 );
         expected[0] = 0x7f;
         CPPUNIT_ASSERT_EQUAL( expected, stream.toString() );
     
         stream.seek( 0 );
-        MidiEvent::writeDeltaClock( stream, 128 );
+        MidiEvent::writeDeltaClock( (OutputStream *)&stream, 128 );
         expected = "  ";
         expected[0] = 0x81;
         expected[1] = 0x00;
         CPPUNIT_ASSERT_EQUAL( expected, stream.toString() );
     
         stream.seek( 0 );
-        MidiEvent::writeDeltaClock( stream, 12345678 );
+        MidiEvent::writeDeltaClock( (OutputStream *)&stream, 12345678 );
         expected = "    ";
         expected[0] = 0x85;
         expected[1] = 0xf1;

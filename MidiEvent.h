@@ -4,7 +4,7 @@
 #include <cmath>
 #include <vector>
 #include "vsqglobal.h"
-#include "ByteArrayOutputStream.h"
+#include "OutputStream.h"
 
 using namespace std;
 
@@ -46,9 +46,9 @@ public:
      * MIDI データをストリームに出力する
      * @param stream (? extends OutputStream) 出力先のストリーム
      */
-    void writeData( VSQ_NS::ByteArrayOutputStream &stream ) const
+    void writeData( VSQ_NS::OutputStream *stream ) const
     {
-        stream.write( firstByte );
+        stream->write( firstByte );
         int size = (int)data.size();
         if( 0 < size ){
             char *buffer = new char[size]();
@@ -56,11 +56,11 @@ public:
                 buffer[i] = (char)data[i];
             }
             if( firstByte == 0xff ){
-                stream.write( buffer[0] );
+                stream->write( buffer[0] );
                 writeDeltaClock( stream, size - 1 );
-                stream.write( buffer, 1, size - 1 );
+                stream->write( buffer, 1, size - 1 );
             }else{
-                stream.write( buffer, 0, size );
+                stream->write( buffer, 0, size );
             }
             delete [] buffer;
         }
@@ -166,7 +166,7 @@ public:
      * @name writeDeltaClock
      * @access static
      */
-    static void writeDeltaClock( ByteArrayOutputStream &stream, int number )
+    static void writeDeltaClock( VSQ_NS::OutputStream *stream, int number )
     {
         std::vector<bool> bits;
         long val = 0x1;
@@ -196,7 +196,7 @@ public:
             if( i != bytes ){
                 num += 0x80;
             }
-            stream.write( num );
+            stream->write( num );
         }
     }
 
