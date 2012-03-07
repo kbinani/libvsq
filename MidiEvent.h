@@ -49,12 +49,20 @@ public:
     void writeData( VSQ_NS::ByteArrayOutputStream &stream ) const
     {
         stream.write( firstByte );
-        if( firstByte == 0xff ){
-            stream.write( data[0] );
-            writeDeltaClock( stream, data.size() - 1 );
-            stream.write( data, 1, data.size() - 1 );
-        }else{
-            stream.write( data, 0, data.size() );
+        int size = (int)data.size();
+        if( 0 < size ){
+            char *buffer = new char[size]();
+            for( int i = 0; i < size; i++ ){
+                buffer[i] = (char)data[i];
+            }
+            if( firstByte == 0xff ){
+                stream.write( buffer[0] );
+                writeDeltaClock( stream, size - 1 );
+                stream.write( buffer, 1, size - 1 );
+            }else{
+                stream.write( buffer, 0, size );
+            }
+            delete [] buffer;
         }
     }
 

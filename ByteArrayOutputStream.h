@@ -85,22 +85,6 @@ public:
     }
 
     /**
-     * @brief 指定された配列の、指定した範囲のバイト値をストリームに書きこむ
-     * @param array 書きこむバイト列が格納された配列
-     * @param startIndex 書き込み開始位置
-     * @param length 書き込むバイト値の個数
-     */
-    void write( const std::vector<int> &array, int startIndex, int length )
-    {
-        char *buffer = new char[length]();
-        for( int i = 0; i < length; i++ ){
-            buffer[i] = (char)array[i + startIndex];
-        }
-        write( buffer, 0, length );
-        delete [] buffer;
-    }
-
-    /**
      * @brief バイト列を文字列に変換する
      * @return (string) 変換された文字列
      */
