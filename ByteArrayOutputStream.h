@@ -5,6 +5,7 @@
 #include <cmath>
 #include <vector>
 #include "vsqglobal.h"
+#include "OutputStream.h"
 
 VSQ_BEGIN_NAMESPACE
 
@@ -13,7 +14,7 @@ VSQ_BEGIN_NAMESPACE
  * @class table
  * @name ByteArrayOutputStream
  */
-class ByteArrayOutputStream
+class ByteArrayOutputStream : VSQ_NS::OutputStream
 {
 private:
     static const int UNIT_BUFFER_LENGTH = 512;
