@@ -60,14 +60,14 @@ public:
      * @brief 文字列に変換する
      * @return (string) 変換後の文字列
      */
-    const std::string toString();
+    const std::string toString() const;
 
     /**
      * @brief 順序を比較する
      * @param item 比較対象のアイテム
      * @return このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
      */
-    int compareTo( Timesig &item );
+    int compareTo( Timesig &item ) const;
 
     /**
      * @brief 順序を比較する

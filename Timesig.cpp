@@ -34,14 +34,14 @@ Timesig::Timesig()
     this->barCount = 0;
 }
 
-const string Timesig::toString()
+const string Timesig::toString() const
 {
     ostringstream oss;
     oss << "{Clock=" << this->clock << ", Numerator=" << this->numerator << ", Denominator=" << this->denominator << ", BarCount=" << this->barCount << "}";
     return oss.str();
 }
 
-int Timesig::compareTo( Timesig &item )
+int Timesig::compareTo( Timesig &item ) const
 {
     return this->barCount - item.barCount;
 }
@@ -50,5 +50,5 @@ int Timesig::compare( const void *a, const void *b )
 {
     Timesig *castedA = *(Timesig **)a;
     Timesig *castedB = *(Timesig **)b;
-    return ((castedA->barCount) - (castedB->barCount));
+    return castedA->compareTo( *castedB );
 }

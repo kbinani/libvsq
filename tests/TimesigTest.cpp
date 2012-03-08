@@ -25,9 +25,19 @@ public:
         CPPUNIT_ASSERT_EQUAL( expected, item.toString() );
     }
 
+    void testCompareTo()
+    {
+        Timesig a( 4, 4, 0 );
+        Timesig b( 4, 4, 1 );
+        assertEqual( -1, a.compareTo( b ) );
+        assertEqual( 1, b.compareTo( a ) );
+        assertEqual( 0, a.compareTo( a ) );
+    }
+
     CPPUNIT_TEST_SUITE( TimesigTest );
     CPPUNIT_TEST( testConstruct );
     CPPUNIT_TEST( testToString );
+    CPPUNIT_TEST( testCompareTo );
     CPPUNIT_TEST_SUITE_END();
 };
 
