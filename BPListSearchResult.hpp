@@ -14,8 +14,8 @@
 #ifndef __BPListSearchResult_h__
 #define __BPListSearchResult_h__
 
-#include "vsqglobal.h"
-#include "BP.h"
+#include "vsqglobal.hpp"
+#include "BP.hpp"
 
 VSQ_BEGIN_NAMESPACE
 

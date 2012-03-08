@@ -14,7 +14,7 @@
 #ifndef __Tempo_h__
 #define __Tempo_h__
 
-#include "vsqglobal.h"
+#include "vsqglobal.hpp"
 #include <string>
 
 VSQ_BEGIN_NAMESPACE

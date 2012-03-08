@@ -14,7 +14,7 @@
 #ifndef OUTPUTSTREAM_H
 #define OUTPUTSTREAM_H
 
-#include "vsqglobal.h"
+#include "vsqglobal.hpp"
 
 VSQ_BEGIN_NAMESPACE
 

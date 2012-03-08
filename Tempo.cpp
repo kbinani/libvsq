@@ -12,7 +12,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
 #include <sstream>
-#include "Tempo.h"
+#include "Tempo.hpp"
 
 using namespace std;
 using namespace VSQ_NS;

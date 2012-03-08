@@ -15,8 +15,8 @@
 #define __EventList_h__
 
 #include <vector>
-#include "vsqglobal.h"
-#include "Event.h"
+#include "vsqglobal.hpp"
+#include "Event.hpp"
 
 VSQ_BEGIN_NAMESPACE
 

@@ -1,5 +1,5 @@
-#include "Util.h"
-#include "../Handle.h"
+#include "Util.hpp"
+#include "../Handle.hpp"
 
 using namespace std;
 using namespace VSQ_NS;

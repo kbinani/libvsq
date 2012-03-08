@@ -14,9 +14,9 @@
 #ifndef __MeasureLineIterator_h__
 #define __MeasureLineIterator_h__
 
-#include "vsqglobal.h"
-#include "TimesigList.h"
-#include "MeasureLine.h"
+#include "vsqglobal.hpp"
+#include "TimesigList.hpp"
+#include "MeasureLine.hpp"
 
 VSQ_BEGIN_NAMESPACE
 

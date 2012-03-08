@@ -15,7 +15,7 @@
 #define __TimesigList_h__
 
 #include <vector>
-#include "Timesig.h"
+#include "Timesig.hpp"
 
 VSQ_BEGIN_NAMESPACE
 

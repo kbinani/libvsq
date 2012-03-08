@@ -15,11 +15,11 @@
 #define __BPList_h__
 
 #include <vector>
-#include "vsqglobal.h"
-#include "BP.h"
-#include "BPList.h"
-#include "BPListSearchResult.h"
-#include "TextStream.h"
+#include "vsqglobal.hpp"
+#include "BP.hpp"
+#include "BPList.hpp"
+#include "BPListSearchResult.hpp"
+#include "TextStream.hpp"
 
 VSQ_BEGIN_NAMESPACE
 

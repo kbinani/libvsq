@@ -1,5 +1,5 @@
-#include "Util.h"
-#include "../VibratoBP.h"
+#include "Util.hpp"
+#include "../VibratoBP.hpp"
 
 using namespace std;
 using namespace VSQ_NS;

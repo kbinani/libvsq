@@ -14,8 +14,8 @@
 #ifndef __EventListIterator_h__
 #define __EventListIterator_h__
 
-#include "vsqglobal.h"
-#include "EventList.h"
+#include "vsqglobal.hpp"
+#include "EventList.hpp"
 
 VSQ_BEGIN_NAMESPACE
 

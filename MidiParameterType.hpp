@@ -17,7 +17,7 @@
 #include <string>
 #include <algorithm>
 #include <cctype>
-#include "vsqglobal.h"
+#include "vsqglobal.hpp"
 
 VSQ_BEGIN_NAMESPACE
 

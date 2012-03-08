@@ -1,5 +1,5 @@
-#include "Util.h"
-#include "../VoiceLanguageEnum.h"
+#include "Util.hpp"
+#include "../VoiceLanguageEnum.hpp"
 
 using namespace std;
 using namespace VSQ_NS;

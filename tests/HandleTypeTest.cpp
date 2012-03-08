@@ -1,5 +1,5 @@
-#include "Util.h"
-#include "../HandleType.h"
+#include "Util.hpp"
+#include "../HandleType.hpp"
 
 class HandleTypeTest : public CppUnit::TestCase
 {

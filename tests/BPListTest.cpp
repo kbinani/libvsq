@@ -1,6 +1,6 @@
-#include "Util.h"
-#include "../BPList.h"
-#include "../BPListKeyClockIterator.h"
+#include "Util.hpp"
+#include "../BPList.hpp"
+#include "../BPListKeyClockIterator.hpp"
 
 using namespace std;
 using namespace VSQ_NS;

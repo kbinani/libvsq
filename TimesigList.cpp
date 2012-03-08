@@ -13,11 +13,10 @@
  */
 #include <math.h>
 #include <algorithm>
-#include "TimesigList.h"
-
-VSQ_BEGIN_NAMESPACE
+#include "TimesigList.hpp"
 
 using namespace std;
+using namespace VSQ_NS;
 
 TimesigList::TimesigList()
 {
@@ -157,5 +156,3 @@ tick_t TimesigList::getClockFromBarCount( int barCount )
     int clockPerBar = numerator * 480 * 4 / denominator;
     return initClock + (barCount - initBarCount) * clockPerBar;
 }
-
-VSQ_END_NAMESPACE

@@ -1,5 +1,5 @@
-#include "../Lyric.h"
-#include "Util.h"
+#include "../Lyric.hpp"
+#include "Util.hpp"
 
 using namespace std;
 using namespace VSQ_NS;

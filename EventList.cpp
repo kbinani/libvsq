@@ -14,9 +14,9 @@
 #include <sstream>
 #include <boost/format.hpp>
 #include <algorithm>
-#include "EventList.h"
-#include "EventListIterator.h"
-#include "VoiceLanguageEnum.h"
+#include "EventList.hpp"
+#include "EventListIterator.hpp"
+#include "VoiceLanguageEnum.hpp"
 
 using namespace std;
 using namespace VSQ_NS;

@@ -1,5 +1,5 @@
-#include "Util.h"
-#include "../EventType.h"
+#include "Util.hpp"
+#include "../EventType.hpp"
 
 using namespace std;
 using namespace VSQ_NS;

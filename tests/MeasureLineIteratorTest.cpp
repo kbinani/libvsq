@@ -1,5 +1,5 @@
-#include "Util.h"
-#include "../MeasureLineIterator.h"
+#include "Util.hpp"
+#include "../MeasureLineIterator.hpp"
 
 using namespace VSQ_NS;
 

@@ -15,7 +15,7 @@
 #define __PhoneticSymbol_h__
 
 #include <string>
-#include "vsqglobal.h"
+#include "vsqglobal.hpp"
 
 VSQ_BEGIN_NAMESPACE
 

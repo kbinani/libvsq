@@ -1,5 +1,5 @@
-#include "Util.h"
-#include "../MidiParameterType.h"
+#include "Util.hpp"
+#include "../MidiParameterType.hpp"
 
 using namespace std;
 using namespace VSQ_NS;

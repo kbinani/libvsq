@@ -11,14 +11,12 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-#include "MeasureLine.h"
+#include "MeasureLine.hpp"
 
-VSQ_BEGIN_NAMESPACE
+using namespace VSQ_NS;
 
 MeasureLine::MeasureLine()
 {
     this->isBorder = true;
     this->tick = 0;
 }
-
-VSQ_END_NAMESPACE

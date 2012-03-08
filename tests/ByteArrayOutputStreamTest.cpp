@@ -1,5 +1,5 @@
-#include "Util.h"
-#include "../ByteArrayOutputStream.h"
+#include "Util.hpp"
+#include "../ByteArrayOutputStream.hpp"
 #include <sstream>
 
 using namespace std;

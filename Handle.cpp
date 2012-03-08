@@ -13,8 +13,8 @@
  */
 #include <boost/format.hpp>
 #include <boost/lexical_cast.hpp>
-#include "Handle.h"
-#include "StringUtil.h"
+#include "Handle.hpp"
+#include "StringUtil.hpp"
 
 using namespace std;
 using namespace VSQ_NS;

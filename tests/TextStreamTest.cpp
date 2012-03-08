@@ -1,5 +1,5 @@
-#include "Util.h"
-#include "../TextStream.h"
+#include "Util.hpp"
+#include "../TextStream.hpp"
 
 using namespace std;
 using namespace VSQ_NS;

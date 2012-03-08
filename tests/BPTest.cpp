@@ -1,5 +1,5 @@
-#include "Util.h"
-#include "../BP.h"
+#include "Util.hpp"
+#include "../BP.hpp"
 
 using namespace std;
 using namespace VSQ_NS;

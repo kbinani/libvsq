@@ -1,5 +1,5 @@
-#include "Util.h"
-#include "../EventWriteOption.h"
+#include "Util.hpp"
+#include "../EventWriteOption.hpp"
 
 using namespace std;
 using namespace VSQ_NS;

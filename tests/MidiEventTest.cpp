@@ -1,6 +1,6 @@
-#include "Util.h"
-#include "../MidiEvent.h"
-#include "../ByteArrayOutputStream.h"
+#include "Util.hpp"
+#include "../MidiEvent.hpp"
+#include "../ByteArrayOutputStream.hpp"
 
 using namespace std;
 using namespace VSQ_NS;

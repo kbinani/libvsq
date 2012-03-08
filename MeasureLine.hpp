@@ -14,7 +14,7 @@
 #ifndef __MeasureLine_h__
 #define __MeasureLine_h__
 
-#include "vsqglobal.h"
+#include "vsqglobal.hpp"
 
 VSQ_BEGIN_NAMESPACE
 

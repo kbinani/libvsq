@@ -1,6 +1,6 @@
-#include "Util.h"
-#include "../EventList.h"
-#include "../EventListIterator.h"
+#include "Util.hpp"
+#include "../EventList.hpp"
+#include "../EventListIterator.hpp"
 
 using namespace std;
 using namespace VSQ_NS;

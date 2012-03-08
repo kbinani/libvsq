@@ -14,7 +14,7 @@
 #ifndef __BP_h__
 #define __BP_h__
 
-#include "vsqglobal.h"
+#include "vsqglobal.hpp"
 
 VSQ_BEGIN_NAMESPACE
 

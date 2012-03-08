@@ -15,12 +15,12 @@
 #define __Handle_h__
 
 #include <string>
-#include "vsqglobal.h"
-#include "HandleType.h"
-#include "ArticulationType.h"
-#include "VibratoBPList.h"
-#include "Lyric.h"
-#include "TextStream.h"
+#include "vsqglobal.hpp"
+#include "HandleType.hpp"
+#include "ArticulationType.hpp"
+#include "VibratoBPList.hpp"
+#include "Lyric.hpp"
+#include "TextStream.hpp"
 
 VSQ_BEGIN_NAMESPACE
 

@@ -14,7 +14,7 @@
 #ifndef __EventWriteOption_h__
 #define __EventWriteOption_h__
 
-#include "vsqglobal.h"
+#include "vsqglobal.hpp"
 
 VSQ_BEGIN_NAMESPACE
 

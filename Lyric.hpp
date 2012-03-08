@@ -16,7 +16,7 @@
 
 #include <string>
 #include <vector>
-#include "vsqglobal.h"
+#include "vsqglobal.hpp"
 
 VSQ_BEGIN_NAMESPACE
 

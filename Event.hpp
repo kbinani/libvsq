@@ -15,10 +15,10 @@
 #define __Event_h__
 
 #include <string>
-#include "vsqglobal.h"
-#include "EventType.h"
-#include "Handle.h"
-#include "EventWriteOption.h"
+#include "vsqglobal.hpp"
+#include "EventType.hpp"
+#include "Handle.hpp"
+#include "EventWriteOption.hpp"
 
 VSQ_BEGIN_NAMESPACE
 

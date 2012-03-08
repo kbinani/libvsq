@@ -1,5 +1,5 @@
-#include "Util.h"
-#include "../Tempo.h"
+#include "Util.hpp"
+#include "../Tempo.hpp"
 
 using namespace std;
 using namespace VSQ_NS;

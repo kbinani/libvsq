@@ -13,11 +13,10 @@
  */
 #include <sstream>
 #include <iostream>
-#include "Timesig.h"
-
-VSQ_BEGIN_NAMESPACE
+#include "Timesig.hpp"
 
 using namespace std;
+using namespace VSQ_NS;
 
 Timesig::Timesig( int numerator, int denominator, int barCount )
 {
@@ -53,5 +52,3 @@ int Timesig::compare( const void *a, const void *b )
     Timesig *castedB = *(Timesig **)b;
     return ((castedA->barCount) - (castedB->barCount));
 }
-
-VSQ_END_NAMESPACE

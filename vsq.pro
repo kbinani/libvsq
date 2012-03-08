@@ -27,36 +27,37 @@ SOURCES += \
     BPList.cpp
 
 HEADERS += \
-    Timesig.h \
-    TimesigList.h \
-    MeasureLineIterator.h \
-    MeasureLine.h \
-    vsqglobal.h \
-    HandleType.h \
-    Lyric.h \
-    StringUtil.h \
-    PhoneticSymbol.h \
-    VibratoBP.h \
-    VibratoBPList.h \
-    Tempo.h \
-    TextStream.h \
-    ArticulationType.h \
-    Handle.h \
-    EventType.h \
-    Event.h \
-    EventWriteOption.h \
-    Event.h \
-    EventList.h \
-    VoiceLanguageEnum.h \
-    EventListIterator.h \
-    BP.h \
-    BPListSearchResult.h \
-    BPList.h \
-    BPListKeyClockIterator.h \
-    MidiParameterType.h \
-    ByteArrayOutputStream.h \
-    MidiEvent.h \
-    OutputStream.h
+    Timesig.hpp \
+    TimesigList.hpp \
+    MeasureLineIterator.hpp \
+    MeasureLine.hpp \
+    vsqglobal.hpp \
+    HandleType.hpp \
+    Lyric.hpp \
+    StringUtil.hpp \
+    PhoneticSymbol.hpp \
+    VibratoBP.hpp \
+    VibratoBPList.hpp \
+    Tempo.hpp \
+    TextStream.hpp \
+    ArticulationType.hpp \
+    Handle.hpp \
+    EventType.hpp \
+    Event.hpp \
+    EventWriteOption.hpp \
+    Event.hpp \
+    EventList.hpp \
+    VoiceLanguageEnum.hpp \
+    EventListIterator.hpp \
+    BP.hpp \
+    BPListSearchResult.hpp \
+    BPList.hpp \
+    BPListKeyClockIterator.hpp \
+    MidiParameterType.hpp \
+    ByteArrayOutputStream.hpp \
+    MidiEvent.hpp \
+    OutputStream.hpp \
+    Track.hpp
 
 unix:!symbian {
     maemo5 {

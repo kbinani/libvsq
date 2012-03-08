@@ -1,5 +1,5 @@
-#include "../PhoneticSymbol.h"
-#include "Util.h"
+#include "../PhoneticSymbol.hpp"
+#include "Util.hpp"
 
 using namespace std;
 using namespace VSQ_NS;

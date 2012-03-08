@@ -13,9 +13,9 @@
  */
 #include <boost/lexical_cast.hpp>
 #include <boost/format.hpp>
-#include "Event.h"
-#include "StringUtil.h"
-#include "EventWriteOption.h"
+#include "Event.hpp"
+#include "StringUtil.hpp"
+#include "EventWriteOption.hpp"
 
 using namespace std;
 using namespace VSQ_NS;

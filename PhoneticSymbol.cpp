@@ -13,7 +13,7 @@
  */
 #include <string>
 #include <boost/lexical_cast.hpp>
-#include "PhoneticSymbol.h"
+#include "PhoneticSymbol.hpp"
 
 using namespace std;
 using namespace VSQ_NS;

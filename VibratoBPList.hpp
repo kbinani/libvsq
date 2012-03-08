@@ -15,8 +15,8 @@
 #define __VibratoBPList_h__
 
 #include <vector>
-#include "vsqglobal.h"
-#include "VibratoBP.h"
+#include "vsqglobal.hpp"
+#include "VibratoBP.hpp"
 
 VSQ_BEGIN_NAMESPACE
 

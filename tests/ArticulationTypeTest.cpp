@@ -1,5 +1,5 @@
-#include "Util.h"
-#include "../ArticulationType.h"
+#include "Util.hpp"
+#include "../ArticulationType.hpp"
 
 using namespace VSQ_NS;
 

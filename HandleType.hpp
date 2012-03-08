@@ -14,7 +14,7 @@
 #ifndef __HandleType_h__
 #define __HandleType_h__
 
-#include "vsqglobal.h"
+#include "vsqglobal.hpp"
 
 VSQ_BEGIN_NAMESPACE
 

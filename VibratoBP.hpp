@@ -14,7 +14,7 @@
 #ifndef __VibratoBP_h__
 #define __VibratoBP_h__
 
-#include "vsqglobal.h"
+#include "vsqglobal.hpp"
 
 VSQ_BEGIN_NAMESPACE
 

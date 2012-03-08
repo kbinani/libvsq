@@ -1,5 +1,5 @@
-#include "Util.h"
-#include "../StringUtil.h"
+#include "Util.hpp"
+#include "../StringUtil.hpp"
 
 using namespace std;
 

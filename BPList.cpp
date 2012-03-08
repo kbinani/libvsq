@@ -15,9 +15,9 @@
 #include <cmath>
 #include <boost/lexical_cast.hpp>
 #include <boost/format.hpp>
-#include "BPList.h"
-#include "StringUtil.h"
-#include "BPListKeyClockIterator.h"
+#include "BPList.hpp"
+#include "StringUtil.hpp"
+#include "BPListKeyClockIterator.hpp"
 
 using namespace std;
 using namespace VSQ_NS;

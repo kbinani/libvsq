@@ -52,5 +52,5 @@ INCLUDEPATH += ../../vsq/
 LIBS += -lcppunit
 
 HEADERS += \
-    Util.h \
-    ../*.h
+    Util.hpp \
+    ../*.hpp

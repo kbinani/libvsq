@@ -3,8 +3,8 @@
 
 #include <cmath>
 #include <vector>
-#include "vsqglobal.h"
-#include "OutputStream.h"
+#include "vsqglobal.hpp"
+#include "OutputStream.hpp"
 
 using namespace std;
 

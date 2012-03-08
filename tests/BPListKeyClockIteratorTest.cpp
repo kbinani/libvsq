@@ -1,5 +1,5 @@
-#include "Util.h"
-#include "../BPListKeyClockIterator.h"
+#include "Util.hpp"
+#include "../BPListKeyClockIterator.hpp"
 
 using namespace std;
 using namespace VSQ_NS;

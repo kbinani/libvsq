@@ -12,9 +12,9 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
 #include <sstream>
-#include "Lyric.h"
-#include "StringUtil.h"
-#include "PhoneticSymbol.h"
+#include "Lyric.hpp"
+#include "StringUtil.hpp"
+#include "PhoneticSymbol.hpp"
 #include <iostream>
 
 using namespace std;

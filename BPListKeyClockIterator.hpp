@@ -14,8 +14,8 @@
 #ifndef __BPListKeyClockIterator_h__
 #define __BPListKeyClockIterator_h__
 
-#include "vsqglobal.h"
-#include "BPList.h"
+#include "vsqglobal.hpp"
+#include "BPList.hpp"
 
 VSQ_BEGIN_NAMESPACE
 

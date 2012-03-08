@@ -1,5 +1,5 @@
-#include "Util.h"
-#include "../BPListSearchResult.h"
+#include "Util.hpp"
+#include "../BPListSearchResult.hpp"
 
 using namespace std;
 using namespace VSQ_NS;

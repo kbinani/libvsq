@@ -12,11 +12,10 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
 #include <iostream>
-#include "MeasureLineIterator.h"
-
-VSQ_BEGIN_NAMESPACE
+#include "MeasureLineIterator.hpp"
 
 using namespace std;
+using namespace VSQ_NS;
 
 MeasureLineIterator::MeasureLineIterator( TimesigList *list )
 {
@@ -126,5 +125,3 @@ void MeasureLineIterator::reset( tick_t end_clock )
         this->m_list->updateTimesigInfo();
     }
 }
-
-VSQ_END_NAMESPACE
