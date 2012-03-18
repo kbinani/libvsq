@@ -44,7 +44,8 @@ SOURCES += \
     BPListKeyClockIteratorTest.cpp \
     MidiParameterTypeTest.cpp \
     ByteArrayOutputStreamTest.cpp \
-    MidiEventTest.cpp
+    MidiEventTest.cpp \
+    TrackTest.cpp
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 

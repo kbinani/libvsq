@@ -1,4 +1,4 @@
---[[
+/*--[[
   Track.lua
   Copyright © 2011 kbinani
 
@@ -1010,3 +1010,4 @@ function Track.new( ... )
 
     return this;
 end
+*/
