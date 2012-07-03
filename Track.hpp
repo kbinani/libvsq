@@ -1,58 +1,46 @@
-/*--[[
-  Track.lua
-  Copyright © 2011 kbinani
+/**
+ * Track.hpp
+ * Copyright © 2012 kbinani
+ *
+ * This file is part of libvsq.
+ *
+ * libvsq is free software; you can redistribute it and/or
+ * modify it under the terms of the BSD License.
+ *
+ * libvsq is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ */
+#ifndef __Track_hpp__
+#define __Track_hpp__
 
-  This file is part of luavsq.
+#include "vsqglobal.hpp"
+#include "EventList.hpp"
 
-  luavsq is free software; you can redistribute it and/or
-  modify it under the terms of the BSD License.
+VSQ_BEGIN_NAMESPACE
 
-  luavsq is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-]]
+class Track
+{
+protected:
+    /**
+     * @brief トラック名などの情報
+     */
+    Common common;// = nil;
 
-local type = type;
+    /**
+     * @brief マスター情報。Master Track のみが保持する
+     */
+    Master master;// = nil;
 
-module( "luavsq" );
+    /**
+     * @brief ミキサー情報。Master Track のみが保持する
+     */
+    Mixer mixer;// = nil;
 
----
--- トラックを表すクラス
--- @class table
--- @name Track
-Track = {};
-
---
--- 初期化を行う
--- @return (Track)
-function Track.new( ... )
-    local this = {};
-    local arguments = { ... };
-
-    ---
-    -- トラックに付属するタグ情報
-    -- @var ?
-    this.tag = "";
-
-    ---
-    -- トラック名などの情報
-    -- @var Common
-    this.common = nil;
-
-    ---
-    -- マスター情報。Master Track のみが保持する
-    -- @var Master
-    this.master = nil;
-
-    ---
-    -- ミキサー情報。Master Track のみが保持する
-    -- @var Mixer
-    this.mixer = nil;
-
-    ---
-    -- イベントの一覧
-    -- @var EventList
-    this.events = nil;
+    /**
+     * @brief イベントの一覧
+     */
+    EventList events;// = nil;
 
     ---
     --  PIT。ピッチベンド(pitchBendBPList)。default=0
@@ -1011,3 +999,7 @@ function Track.new( ... )
     return this;
 end
 */
+
+VSQ_END_NAMESPACE
+
+#endif
