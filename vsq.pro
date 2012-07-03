@@ -57,7 +57,8 @@ HEADERS += \
     ByteArrayOutputStream.hpp \
     MidiEvent.hpp \
     OutputStream.hpp \
-    Track.hpp
+    Track.hpp \
+    DynamicsMode.hpp
 
 unix:!symbian {
     maemo5 {
