@@ -45,7 +45,8 @@ SOURCES += \
     MidiParameterTypeTest.cpp \
     ByteArrayOutputStreamTest.cpp \
     MidiEventTest.cpp \
-    TrackTest.cpp
+    TrackTest.cpp \
+    PlayModeTest.cpp
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
