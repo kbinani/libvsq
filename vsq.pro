@@ -59,7 +59,8 @@ HEADERS += \
     OutputStream.hpp \
     Track.hpp \
     DynamicsMode.hpp \
-    PlayMode.hpp
+    PlayMode.hpp \
+    Common.hpp
 
 unix:!symbian {
     maemo5 {
