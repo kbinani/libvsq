@@ -51,12 +51,24 @@ public:
         CPPUNIT_ASSERT_EQUAL( expected, actual );
     }
 
+    void testParseInt(){
+        int actual = StringUtil::parseInt( "1" );
+        CPPUNIT_ASSERT_EQUAL( 1, actual );
+    }
+
+    void testToString(){
+        std::string actual = StringUtil::toString( 10 );
+        CPPUNIT_ASSERT_EQUAL( string( "10" ), actual );
+    }
+
     CPPUNIT_TEST_SUITE( StringUtilTest );
     CPPUNIT_TEST( explode );
     CPPUNIT_TEST( explodeNonLimit );
     CPPUNIT_TEST( explodeWithEscape );
     CPPUNIT_TEST( explodeDelimiterNotFound );
     CPPUNIT_TEST( testReplace );
+    CPPUNIT_TEST( testParseInt );
+    CPPUNIT_TEST( testToString );
     CPPUNIT_TEST_SUITE_END();
 };
 

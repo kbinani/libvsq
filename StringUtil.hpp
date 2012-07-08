@@ -16,6 +16,7 @@
 
 #include <vector>
 #include <string>
+#include <sstream>
 
 using namespace std;
 
@@ -72,6 +73,28 @@ public:
             index = result.find( search, index - searchLength + replaceLength + 1 );
         }
         return result;
+    }
+
+    /**
+     * @brief 文字列を整数に変換する
+     * @param text 変換する文字列
+     * @return 変換後の数値
+     * @todo baseを指定できるようにする
+     * @todo 例外を投げる
+     */
+    static int parseInt( std::string text ){
+        return atoi( text.c_str() );
+    }
+
+    /**
+     * @brief 整数を文字列に変換する
+     * @param value 変換する数値
+     * @return 変換後の文字列
+     */
+    static std::string toString( int value ){
+        ostringstream oss;
+        oss << value;
+        return oss.str();
     }
 
 private:
