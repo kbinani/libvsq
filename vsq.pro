@@ -62,7 +62,8 @@ HEADERS += \
     Common.hpp \
     Master.hpp \
     MixerItem.hpp \
-    Mixer.hpp
+    Mixer.hpp \
+    EventListIndexIteratorKind.hpp
 
 unix:!symbian {
     maemo5 {
