@@ -47,7 +47,8 @@ SOURCES += \
     MidiEventTest.cpp \
     PlayModeTest.cpp \
     CommonTest.cpp \
-    MasterTest.cpp
+    MasterTest.cpp \
+    MixerItemTest.cpp
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 

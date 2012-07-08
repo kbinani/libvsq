@@ -60,7 +60,8 @@ HEADERS += \
     DynamicsMode.hpp \
     PlayMode.hpp \
     Common.hpp \
-    Master.hpp
+    Master.hpp \
+    MixerItem.hpp
 
 unix:!symbian {
     maemo5 {
