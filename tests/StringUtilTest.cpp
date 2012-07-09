@@ -61,6 +61,11 @@ public:
         CPPUNIT_ASSERT_EQUAL( string( "10" ), actual );
     }
 
+    void testToLower(){
+        std::string actual = StringUtil::toLower( "FooBar" );
+        CPPUNIT_ASSERT_EQUAL( string( "foobar" ), actual );
+    }
+
     CPPUNIT_TEST_SUITE( StringUtilTest );
     CPPUNIT_TEST( explode );
     CPPUNIT_TEST( explodeNonLimit );
@@ -69,6 +74,7 @@ public:
     CPPUNIT_TEST( testReplace );
     CPPUNIT_TEST( testParseInt );
     CPPUNIT_TEST( testToString );
+    CPPUNIT_TEST( testToLower );
     CPPUNIT_TEST_SUITE_END();
 };
 

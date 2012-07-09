@@ -18,6 +18,7 @@
 #include <string>
 #include <sstream>
 #include <cstdlib>
+#include <algorithm>
 
 using namespace std;
 
@@ -98,6 +99,17 @@ public:
         return oss.str();
     }
 
+    /**
+     * @brief アルファベットの大文字を小文字に変換する
+     * @param value 変換する文字列
+     * @return 結果文字列
+     */
+    static std::string toLower( std::string value ){
+        std::string result = value;
+        transform( result.begin(), result.end(), result.begin(), _toLower );
+        return result;
+    }
+
 private:
     StringUtil()
     {
@@ -137,6 +149,10 @@ private:
             }
             return string::npos;
         }
+    }
+
+    static char _toLower( char c ){
+        return tolower( c );
     }
 };
 
