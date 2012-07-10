@@ -39,7 +39,7 @@ public:
     /**
      * @brief コントロールカーブのデータ点の Tick 単位の時刻を順に返す反復子
      */
-    class BPListKeyClockIterator
+    class KeyClockIterator
     {
     private:
         /**
@@ -57,7 +57,7 @@ public:
          * @brief 初期化を行う
          * @param list (BPList) 反復子の元になるリスト
          */
-        explicit BPListKeyClockIterator( BPList *list = NULL )
+        explicit KeyClockIterator( BPList *list = NULL )
         {
             _list = list;
             _pos = -1;
@@ -590,10 +590,10 @@ public:
 
     /**
      * @brief データ点の Tick 単位の時刻を昇順に返す反復子を取得する
-     * @return (BPList.KeyClockIterator) 反復子のインスタンス
+     * @return 反復子のインスタンス
      */
-    BPListKeyClockIterator keyClockIterator(){
-        return BPListKeyClockIterator( this );
+    KeyClockIterator keyClockIterator(){
+        return KeyClockIterator( this );
     }
 
     /**
