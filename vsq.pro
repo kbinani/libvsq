@@ -23,8 +23,7 @@ SOURCES += \
     TextStream.cpp \
     Handle.cpp \
     Event.cpp \
-    EventList.cpp \
-    BPList.cpp
+    EventList.cpp
 
 HEADERS += \
     Timesig.hpp \
@@ -52,7 +51,6 @@ HEADERS += \
     BP.hpp \
     BPListSearchResult.hpp \
     BPList.hpp \
-    BPListKeyClockIterator.hpp \
     MidiParameterType.hpp \
     ByteArrayOutputStream.hpp \
     MidiEvent.hpp \
@@ -64,7 +62,8 @@ HEADERS += \
     MixerItem.hpp \
     Mixer.hpp \
     EventListIndexIteratorKind.hpp \
-    EventListIndexIterator.hpp
+    EventListIndexIterator.hpp \
+    Track.hpp
 
 unix:!symbian {
     maemo5 {

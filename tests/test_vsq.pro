@@ -41,7 +41,6 @@ SOURCES += \
     BPTest.cpp \
     BPListSearchResultTest.cpp \
     BPListTest.cpp \
-    BPListKeyClockIteratorTest.cpp \
     MidiParameterTypeTest.cpp \
     ByteArrayOutputStreamTest.cpp \
     MidiEventTest.cpp \
@@ -51,7 +50,8 @@ SOURCES += \
     MixerItemTest.cpp \
     MixerTest.cpp \
     EventListIndexIteratorKindTest.cpp \
-    EventListIndexIteratorTest.cpp
+    EventListIndexIteratorTest.cpp \
+    TrackTest.cpp
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
