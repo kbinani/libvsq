@@ -16,7 +16,6 @@ SOURCES += \
     MeasureLineIterator.cpp \
     MeasureLine.cpp \
     PhoneticSymbol.cpp \
-    VibratoBP.cpp \
     VibratoBPList.cpp \
     Handle.cpp \
     Event.cpp \
