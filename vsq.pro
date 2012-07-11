@@ -11,7 +11,6 @@ TEMPLATE = lib
 CONFIG += staticlib
 
 SOURCES += \
-    Timesig.cpp \
     TimesigList.cpp \
     MeasureLineIterator.cpp \
     MeasureLine.cpp \
