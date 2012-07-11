@@ -18,7 +18,6 @@ SOURCES += \
     PhoneticSymbol.cpp \
     VibratoBP.cpp \
     VibratoBPList.cpp \
-    TextStream.cpp \
     Handle.cpp \
     Event.cpp \
     EventList.cpp

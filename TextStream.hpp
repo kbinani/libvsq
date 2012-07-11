@@ -16,8 +16,12 @@
 
 #include "vsqglobal.hpp"
 #include <string>
+#include <cmath>
+#include <sstream>
 
 VSQ_BEGIN_NAMESPACE
+
+using namespace std;
 
 /**
  * 文字列への読み書きストリーム
@@ -54,70 +58,147 @@ private:
     int _position;// = -1;
 
 public:
-    TextStream();
+    explicit TextStream(){
+        _array = NULL;
+        _arrayLength = 0;
+        _length = 0;
+        _position = -1;
+    }
 
-    ~TextStream();
+    ~TextStream(){
+        close();
+    }
 
     /**
-     * 現在の読み書き位置を取得する
+     * @brief 現在の読み書き位置を取得する
      * @return (int) 現在の読み書き位置
      */
-    int getPointer();
+    int getPointer(){
+        return _position;
+    }
 
     /**
-     * 現在の読み書き位置を設定する
+     * @brief 現在の読み書き位置を設定する
      * @param value (int) 設定する読み書き位置
      */
-    void setPointer( int value );
+    void setPointer( int value ){
+        _position = value;
+    }
 
     /**
-     * 現在の読み込み位置から 1 文字を読み込み、読み書き位置を一つ進める
+     * @brief 現在の読み込み位置から 1 文字を読み込み、読み書き位置を一つ進める
      * @return (string) 読み込んだ文字
      */
-    const std::string get();
+    const std::string get(){
+        _position++;
+        string ret;
+        ret += _array[_position];
+        return ret;
+    }
 
     /**
-     * 現在の読み込み位置から、改行またはファイル末端まで読み込む
+     * @brief 現在の読み込み位置から、改行またはファイル末端まで読み込む
      * @return (string) 読み込んだ文字列
      */
-    const std::string readLine();
+    const std::string readLine(){
+        ostringstream sb;
+        // '\n'が来るまで読み込み
+        while( _position + 1 < _length ){
+            _position++;
+            char c = _array[_position];
+            if( c == '\n' || c == 0 ){
+                break;
+            }
+            sb << c;
+        }
+        return sb.str();
+    }
 
     /**
-     * テキストストリームが読み込み可能な状態かどうかを返す
+     * @brief テキストストリームが読み込み可能な状態かどうかを返す
      * @return (boolean) 読み込み可能であれば <code>true</code> を、そうでなければ <code>false</code> を返す
      */
-    bool ready();
+    bool ready(){
+        if( 0 <= _position + 1 && _position + 1 < _length ){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
     /**
-     * 文字列をストリームに書きこむ
+     * @brief 文字列をストリームに書きこむ
      * @param str (string) 書きこむ文字列
      */
-    TextStream &write( const std::string &str );
+    TextStream &write( const std::string &str ){
+        int len = str.size();
+        int newSize = _position + 1 + len;
+        int offset = _position + 1;
+        _ensureCapacity( newSize );
+        const char *ptr = str.c_str();
+        for( int i = 0; i < len; i++ ){
+            _array[offset + i] = ptr[i];
+        }
+        _position += len;
+        _length = std::max( _length, newSize );
+        return *this;
+    }
 
     /**
-     * 文字列をストリームに書きこむ。末尾に改行文字を追加する
+     * @brief 文字列をストリームに書きこむ。末尾に改行文字を追加する
      * @param str (string) 書きこむ文字列
      */
-    TextStream &writeLine( const std::string &str );
+    TextStream &writeLine( const std::string &str ){
+        int len = str.size();
+        int offset = _position + 1;
+        int newSize = offset + len + 1;
+        _ensureCapacity( newSize );
+        for( int i = 0; i < len; i++ ){
+            _array[offset + i] = str[i];
+        }
+        _array[offset + len] = '\n';
+        _position += len + 1;
+        _length = std::max( _length, newSize );
+        return *this;
+    }
 
     /**
-     * ストリームを閉じる
+     * @brief ストリームを閉じる
      */
-    void close();
+    void close(){
+        if( _array ){
+            free( _array );
+            _array = NULL;
+        }
+        _length = 0;
+    }
 
     /**
-     * ストリームに書きこまれた文字列を連結し、返す
+     * @brief ストリームに書きこまれた文字列を連結し、返す
      * @return (string) 文字列
      */
-    const std::string toString();
+    const std::string toString(){
+        string ret;
+        if( _array ){
+            ret += _array;
+        }
+        return ret;
+    }
 
 private:
     /**
-     * 内部のバッファー容量を確保する
+     * @brief 内部のバッファー容量を確保する
      * @param length (int) 確保したいバッファー容量
-     * @access private
      */
-    void _ensureCapacity( int _length );
+    void _ensureCapacity( int length ){
+        if( length > _arrayLength ){
+            _array = (char *)::realloc( _array, (length + 1) * sizeof( char ) );
+            for( int i = _arrayLength; i <= length; i++ ){
+                _array[i] = 0;
+            }
+            _arrayLength = length;
+        }
+    }
 };
 
 VSQ_END_NAMESPACE
