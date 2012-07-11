@@ -15,7 +15,6 @@ SOURCES += \
     TimesigList.cpp \
     MeasureLineIterator.cpp \
     MeasureLine.cpp \
-    Lyric.cpp \
     PhoneticSymbol.cpp \
     VibratoBP.cpp \
     VibratoBPList.cpp \

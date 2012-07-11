@@ -18,6 +18,7 @@
 #include <algorithm>
 #include <cctype>
 #include "vsqglobal.hpp"
+#include "StringUtil.hpp"
 
 VSQ_BEGIN_NAMESPACE
 
@@ -52,8 +53,7 @@ public:
      */
     static VoiceLanguageEnum valueFromSingerName( const std::string &name )
     {
-        std::string search = name;
-        std::transform( search.begin(), search.end(), search.begin(), tolower );
+        std::string search = StringUtil::toLower( name );
         if( search == "meiko" ||
             search == "kaito" ||
             search == "miku" ||
