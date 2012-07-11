@@ -16,6 +16,7 @@
 
 #include "vsqglobal.hpp"
 #include <string>
+#include <sstream>
 
 VSQ_BEGIN_NAMESPACE
 
@@ -47,54 +48,78 @@ protected:
 
 public:
     /**
-     * 文字列に変換する
+     * @brief 文字列に変換する
      * @return (string) 変換後の文字列
      */
-    const std::string toString();
+    const std::string toString(){
+        std::ostringstream oss;
+        oss << "{Clock=" << clock << ", Tempo=" << tempo << ", Time=" << _time << "}";
+        return oss.str();
+    }
+
 
     /**
-     * 初期化を行う
+     * @brief 初期化を行う
      * @param clock (int) Tick 単位の時刻
      * @param tempo (int) テンポ値。四分音符の長さをマイクロ秒単位で表した値
-     * @return (Tempo)
-     * @name new
-     * @access static ctor
      */
-    explicit Tempo( VSQ_NS::tick_t clock, int tempo );
+    explicit Tempo( VSQ_NS::tick_t clock, int tempo ){
+        this->clock = clock;
+        this->tempo = tempo;
+        _time = 0.0;
+    }
 
-    explicit Tempo();
+    explicit Tempo(){
+        clock = 0;
+        tempo = 0;
+        _time = 0.0;
+    }
+
 
     /**
-     * 順序を比較する
+     * @brief 順序を比較する
      * @param entry (Tempo) 比較対象のアイテム
      * @return (int) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
      */
-    int compareTo( const Tempo &entry );
+    int compareTo( const Tempo &entry ){
+        return compareCore( *this, entry );
+    }
 
     /**
-     * このオブジェクトのインスタンスと、指定されたオブジェクトが同じかどうかを調べる
+     * @brief このオブジェクトのインスタンスと、指定されたオブジェクトが同じかどうかを調べる
      * @param entry (Tempo) 比較対象のオブジェクト
      * @return (boolean) 比較対象と同じであれば <code>true</code> を、そうでなければ <code>false</code> を返す
      */
-    bool equals( const Tempo &entry );
+    bool equals( const Tempo &entry ){
+        if( clock == entry.clock ){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
     /**
-     * 秒単位の時刻を取得する
+     * @brief 秒単位の時刻を取得する
      * @return (double) 秒単位の時刻
      */
-    double getTime();
+    double getTime(){
+        return _time;
+    }
 
     /**
-     * 2 つの {@link Tempo} を比較する
+     * @brief 2 つの {@link Tempo} を比較する
      * @param a (Tempo) 比較対象のオブジェクト
      * @param b (Tempo) 比較対象のオブジェクト
      * @return (boolean) <code>a</code> が <code>b</code> よりも小さい場合は <code>true</code>、そうでない場合は <code>false</code> を返す
-     * @access static
      */
-    static bool compare( const Tempo &a, const Tempo &b );
+    static bool compare( const Tempo &a, const Tempo &b ){
+        return compareCore( a, b ) < 0;
+    }
 
 private:
-    static int compareCore( const Tempo &a, const Tempo &b );
+    static int compareCore( const Tempo &a, const Tempo &b ){
+        return (int)(a.clock - b.clock);
+    }
 
 };
 
