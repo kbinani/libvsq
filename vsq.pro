@@ -11,7 +11,6 @@ TEMPLATE = lib
 CONFIG += staticlib
 
 SOURCES += \
-    MeasureLineIterator.cpp \
     PhoneticSymbol.cpp \
     Handle.cpp \
     Event.cpp \
