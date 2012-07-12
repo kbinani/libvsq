@@ -12,7 +12,6 @@ CONFIG += staticlib
 
 SOURCES += \
     MeasureLineIterator.cpp \
-    MeasureLine.cpp \
     PhoneticSymbol.cpp \
     Handle.cpp \
     Event.cpp \

@@ -35,7 +35,10 @@ public:
     bool isBorder;
 
 public:
-    explicit MeasureLine();
+    explicit MeasureLine(){
+        this->isBorder = true;
+        this->tick = 0;
+    }
 };
 
 VSQ_END_NAMESPACE
