@@ -11,7 +11,6 @@ TEMPLATE = lib
 CONFIG += staticlib
 
 SOURCES += \
-    TimesigList.cpp \
     MeasureLineIterator.cpp \
     MeasureLine.cpp \
     PhoneticSymbol.cpp \
