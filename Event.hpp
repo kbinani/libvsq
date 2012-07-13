@@ -15,6 +15,7 @@
 #define __Event_h__
 
 #include <string>
+#include <boost/format.hpp>
 #include "vsqglobal.hpp"
 #include "EventType.hpp"
 #include "Handle.hpp"
@@ -203,92 +204,441 @@ private:
 
 public:
     /**
-     * 初期化を行う
+     * @brief 初期化を行う
      * @param line (string) VSQ メタテキスト中の [EventList] セクション内のイベント宣言文字列(ex."480=ID#0001")
-     * @return (Event)
-     * @name new<! *2 *>
-     * @access static ctor
      */
-    explicit Event( const std::string &line );
+    explicit Event( const std::string &line ) :
+        vibratoHandle()
+    {
+        init();
+        vector<string> spl = StringUtil::explode( "=", line );
+        clock = boost::lexical_cast<tick_t>( spl[0] );
+        if( spl[1] == "EOS" ){
+            index = -1;
+        }
+    }
 
     /**
-     * 初期化を行う。この初期化メソッドは末尾のイベントリストを表すインスタンスを初期化する
-     * @return (Event)
-     * @name new<! *1 *>
-     * @access static ctor
+     * @brief 初期化を行う。この初期化メソッドは末尾のイベントリストを表すインスタンスを初期化する
      */
-    explicit Event();
+    explicit Event(){
+        init();
+        clock = 0;
+        index = -1;
+        id = 0;
+    }
 
     /**
-     * 初期化を行う
+     * @brief 初期化を行う
      * @param clock (int) Tick 単位の時刻
      * @param eventType (EventTypeEnum) イベントの種類
-     * @return (Event)
-     * @name new<! *3 *>
-     * @access static ctor
      */
-    explicit Event( VSQ_NS::tick_t clock, VSQ_NS::EventType::EventTypeEnum eventType );
+    explicit Event( VSQ_NS::tick_t clock, VSQ_NS::EventType::EventTypeEnum eventType ){
+        this->clock = clock;
+        this->type = eventType;
+        if( eventType == EventType::SINGER ){
+            singerHandle = Handle( HandleType::SINGER );
+        }else if( eventType == EventType::NOTE ){
+            lyricHandle = Handle( HandleType::LYRIC );
+            lyricHandle.setLyricAt( 0, Lyric( "a", "a" ) );
+        }
+        id = 0;
+    }
 
     /**
-     * テキストファイルからのコンストラクタ
+     * @brief テキストファイルからのコンストラクタ
      * @param sr [TextStream] 読み込み対象
      * @param value [int]
      * @param last_line [ByRef<string>] 読み込んだ最後の行が返されます
-     * @return (Id)
      */
-    explicit Event( TextStream &sr, int value, std::string &lastLine );
+    explicit Event( TextStream &sr, int value, std::string &lastLine ){
+        index = value;
+        type = EventType::UNKNOWN;
+        _singerHandleIndex = -2;
+        _lyricHandleIndex = -1;
+        _vibratoHandleIndex = -1;
+        _noteHeadHandleIndex = -1;
+        setLength( 0 );
+        note = 0;
+        dynamics = 64;
+        pmBendDepth = 8;
+        pmBendLength = 0;
+        pmbPortamentoUse = 0;
+        demDecGainRate = 50;
+        demAccent = 50;
+        vibratoDelay = 0;
+        lastLine = sr.readLine();
+        while( lastLine.find( "[" ) != 0 ){
+            vector<string> spl = StringUtil::explode( "=", lastLine );
+            string search = spl[0];
+            if( search == "Type" ){
+                if( spl[1] == "Anote" ){
+                    type = EventType::NOTE;
+                }else if( spl[1] == "Singer" ){
+                    type = EventType::SINGER;
+                }else if( spl[1] == "Aicon" ){
+                    type = EventType::ICON;
+                }else{
+                    type = EventType::UNKNOWN;
+                }
+            }else if( search == "Length" ){
+                setLength( boost::lexical_cast<tick_t>( spl[1] ) );
+            }else if( search == "Note#" ){
+                note = boost::lexical_cast<int>( spl[1] );
+            }else if( search == "Dynamics" ){
+                dynamics = boost::lexical_cast<int>( spl[1] );
+            }else if( search == "PMBendDepth" ){
+                pmBendDepth = boost::lexical_cast<int>( spl[1] );
+            }else if( search == "PMBendLength" ){
+                pmBendLength = boost::lexical_cast<int>( spl[1] );
+            }else if( search == "DEMdecGainRate" ){
+                demDecGainRate = boost::lexical_cast<int>( spl[1] );
+            }else if( search ==  "DEMaccent" ){
+                demAccent = boost::lexical_cast<int>( spl[1] );
+            }else if( search == "LyricHandle" ){
+                _lyricHandleIndex = Handle::getHandleIndexFromString( spl[1] );
+            }else if( search == "IconHandle" ){
+                _singerHandleIndex = Handle::getHandleIndexFromString( spl[1] );
+            }else if( search == "VibratoHandle" ){
+                _vibratoHandleIndex = Handle::getHandleIndexFromString( spl[1] );
+            }else if( search == "VibratoDelay" ){
+                vibratoDelay = boost::lexical_cast<int>( spl[1] );
+            }else if( search == "PMbPortamentoUse" ){
+                pmbPortamentoUse = boost::lexical_cast<int>( spl[1] );
+            }else if( search == "NoteHeadHandle" ){
+                _noteHeadHandleIndex = Handle::getHandleIndexFromString( spl[1] );
+            }
+            if( !sr.ready() ){
+                break;
+            }
+            lastLine = sr.readLine();
+        }
+    }
 
     /**
-     * 長さを取得する
+     * @brief 長さを取得する
      * @return (int) 長さ
      */
-    VSQ_NS::tick_t getLength() const;
+    VSQ_NS::tick_t getLength() const{
+        return _length;
+    }
 
     /**
-     * 長さを設定する
+     * @brief 長さを設定する
      * @param value (int) 長さ
      */
-    void setLength( VSQ_NS::tick_t value );
+    void setLength( VSQ_NS::tick_t value ){
+        _length = value;
+    }
 
     /**
-     * テキストストリームに書き出す
+     * @brief テキストストリームに書き出す
      * @param stream (TextStream) 出力先
      * @param printTargets (table) 出力するアイテムのリスト
-     * @name write<! *2 *>
      */
-    void write( VSQ_NS::TextStream &stream, VSQ_NS::EventWriteOption printTargets = EventWriteOption() ) const;
+    void write( VSQ_NS::TextStream &stream, VSQ_NS::EventWriteOption printTargets = EventWriteOption() ) const{
+        stream.write( "[ID#" ).write( (boost::format( "%04d" ) % index).str() ).writeLine( "]" );
+        stream.write( "Type=" ).writeLine( EventType::toString( type ) );
+        if( type == EventType::NOTE ){
+            if( printTargets.length ){
+                stream.write( "Length=" ).writeLine( (boost::format( "%ld" ) % getLength()).str() );
+            }
+            if( printTargets.note ){
+                stream.write( "Note#=" ).writeLine( (boost::format( "%d" ) % note).str() );
+            }
+            if( printTargets.dynamics ){
+                stream.write( "Dynamics=" ).writeLine( (boost::format( "%d" ) % dynamics).str() );
+            }
+            if( printTargets.pmBendDepth ){
+                stream.write( "PMBendDepth=" ).writeLine( (boost::format( "%d" ) % pmBendDepth).str() );
+            }
+            if( printTargets.pmBendLength ){
+                stream.write( "PMBendLength=" ).writeLine( (boost::format( "%d" ) % pmBendLength).str() );
+            }
+            if( printTargets.pmbPortamentoUse ){
+                stream.write( "PMbPortamentoUse=" ).writeLine( (boost::format( "%d" ) % pmbPortamentoUse).str() );
+            }
+            if( printTargets.demDecGainRate ){
+                stream.write( "DEMdecGainRate=" ).writeLine( (boost::format( "%d" ) % demDecGainRate).str() );
+            }
+            if( printTargets.demAccent ){
+                stream.write( "DEMaccent=" ).writeLine( (boost::format( "%d" ) % demAccent).str() );
+            }
+            if( printTargets.preUtterance ){
+                //TODO:
+    //            stream.writeLine( "PreUtterance=" + ustEvent.preUtterance );
+            }
+            if( printTargets.voiceOverlap ){
+                //TODO:
+    //            stream.writeLine( "VoiceOverlap=" + ustEvent.voiceOverlap );
+            }
+            if( lyricHandle.getHandleType() == HandleType::LYRIC ){
+                stream.write( "LyricHandle=h#" ).writeLine( (boost::format( "%04d" ) % lyricHandle.index).str() );
+            }
+            if( vibratoHandle.getHandleType() == HandleType::VIBRATO ){
+                stream.write( "VibratoHandle=h#" ).writeLine( (boost::format( "%04d" ) % vibratoHandle.index).str() );
+                stream.write( "VibratoDelay=" ).writeLine( (boost::format( "%d" ) % vibratoDelay).str() );
+            }
+            if( noteHeadHandle.getHandleType() == HandleType::NOTE_HEAD ){
+                stream.write( "NoteHeadHandle=h#" ).writeLine( (boost::format( "%04d" ) % noteHeadHandle.index).str() );
+            }
+        }else if( type == EventType::SINGER ){
+            stream.write( "IconHandle=h#" ).writeLine( (boost::format( "%04d" ) % singerHandle.index).str() );
+        }else if( type == EventType::ICON ){
+            stream.write( "IconHandle=h#" ).writeLine( (boost::format( "%04d" ) % iconDynamicsHandle.index).str() );
+            stream.write( "Note#=" ).writeLine( (boost::format( "%d" ) % note).str() );
+        }
+    }
 
     /**
      * このオブジェクトがイベントリストの末尾の要素( EOS )かどうかを取得する
      * @return (boolean) このオブジェクトが EOS 要素であれば <code>true</code> を、そうでなければ <code>false</code> を返す
      */
-    bool isEOS() const;
+    bool isEOS() const{
+        if( index == -1 ){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
     /**
-     * 順序を比較する
+     * @brief 順序を比較する
      * @param item (Event) 比較対象のアイテム
      * @return (int) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
      */
-    int compareTo( const VSQ_NS::Event &item ) const;
+    int compareTo( const VSQ_NS::Event &item ) const{
+        tick_t ret = clock - item.clock;
+        if( ret == 0 ){
+            return type - item.type;
+        }else{
+            return (int)ret;
+        }
+    }
 
     /**
-     * 2 つの {@link Event} を比較する
+     * @brief 2 つの {@link Event} を比較する
      * @param a (Event) 比較対象のオブジェクト
      * @param b (Event) 比較対象のオブジェクト
      * @return (boolean) <code>a</code> が <code>b</code> よりも小さい場合は <code>true</code>、そうでない場合は <code>false</code> を返す
-     * @access static
      */
-    static bool compare( const VSQ_NS::Event &a, const VSQ_NS::Event &b );
+    static bool compare( const VSQ_NS::Event &a, const VSQ_NS::Event &b ){
+        return (a.compareTo( b ) < 0);
+    }
 
     /**
-     * イベントリストの末尾の要素を表すオブジェクトを取得する
+     * @brief イベントリストの末尾の要素を表すオブジェクトを取得する
      * @return (Event) オブジェクト
-     * @access static
      */
-    static const VSQ_NS::Event getEOS();
+    static const VSQ_NS::Event getEOS(){
+        return Event();
+    }
+
+    /**
+        -- @param item [VsqEvent]
+        -- @return [bool]
+        function this:equals( item )
+            if( self.clock ~= item.clock )then
+                return false;
+            end
+            if( self.type ~= item.type )then
+                return false;
+            end
+            if( self.type == idType.Anote )then
+                if( self.note ~= item.note )then
+                    return false;
+                end
+                if( self:getLength() ~= item:getLength() )then
+                    return false;
+                end
+                if( self.d4mean ~= item.d4mean )then
+                    return false;
+                end
+                if( self.demAccent ~= item.demAccent )then
+                    return false;
+                end
+                if( self.demDecGainRate ~= item.demDecGainRate )then
+                    return false;
+                end
+                if( self.dynamics ~= item.dynamics )then
+                    return false;
+                end
+                if( self.lyricHandle ~= nil and item.lyricHandle ~= nil )then
+                    return false;
+                end
+                if( self.lyricHandle ~= nil and item.lyricHandle == nil )then
+                    return false;
+                end
+                if( self.lyricHandle ~= nil and item.lyricHandle ~= nil )then
+                    if( self.lyricHandle:size() ~= item.lyricHandle:size() )then
+                        return false;
+                    end
+                    local count = self.lyricHandle:size();
+                    local k;
+                    for k = 0, count - 1, 1 do
+                        if( not self.lyricHandle:getLyricAt( k ):equalsForSynth( item.lyricHandle:getLyricAt( k ) ) )then
+                            return false;
+                        end
+                    end
+                end
+                if( self.noteHeadHandle == nil and item.noteHeadHandle ~= nil )then
+                    return false;
+                end
+                if( self.noteHeadHandle ~= nil and item.noteHeadHandle == nil )then
+                    return false;
+                end
+                if( self.noteHeadHandle ~= nil and item.noteHeadHandle ~= nil )then
+                    if( self.NoteHeadHandle.iconId ~= item.noteHeadHandle.iconId )then
+                        return false;
+                    end
+                    if( self.noteHeadHandle:getDepth() ~= item.noteHeadHandle:getDepth() )then
+                        return false;
+                    end
+                    if( self.noteHeadHandle:getDuration() ~= item.noteHeadHandle:getDuration() )then
+                        return false;
+                    end
+                    if( self.noteHeadHandle:getLength() ~= item.noteHeadHandle:getLength() )then
+                        return false;
+                    end
+                end
+                if( self.pmBendDepth ~= item.pmBendDepth )then
+                    return false;
+                end
+                if( self.pmBendLength ~= item.pmBendLength )then
+                    return false;
+                end
+                if( self.pmbPortamentoUse ~= item.pmbPortamentoUse )then
+                    return false;
+                end
+                if( self.pMeanEndingNote ~= item.pMeanEndingNote )then
+                    return false;
+                end
+                if( self.pMeanOnsetFirstNote ~= item.pMeanOnsetFirstNote )then
+                    return false;
+                end
+                local hVibratoThis = self.vibratoHandle;
+                local hVibratoItem = item.vibratoHandle;
+                if( hVibratoThis == nil and hVibratoItem ~= nil )then
+                    return false;
+                end
+                if( hVibratoThis ~= nil and hVibratoItem == nil )then
+                    return false;
+                end
+                if( hVibratoThis ~= nil and hVibratoItem ~= nil )then
+                    if( self.vibratoDelay ~= item.vibratoDelay )then
+                        return false;
+                    end
+                    if( hVibratoThis.iconId ~= hVibratoItem.iconId )then
+                        return false;
+                    end
+                    if( hVibratoThis:getStartDepth() ~= hVibratoItem:getStartDepth() )then
+                        return false;
+                    end
+                    if( hVibratoThis:getStartRate() ~= hVibratoItem:getStartRate() )then
+                        return false;
+                    end
+                    local vibRateThis = hVibratoThis:getRateBP();
+                    local vibRateItem = hVibratoItem:getRateBP();
+                    if( vibRateThis == nil and vibRateItem ~= nil )then
+                        return false;
+                    end
+                    if( vibRateThis ~= nil and vibRateItem == nil )then
+                        return false;
+                    end
+                    if( vibRateThis ~= nil and vibRateItem ~= nil )then
+                        local numRateCount = vibRateThis:size();
+                        if( numRateCount ~= vibRateItem:size() )then
+                            return false;
+                        end
+                        local k;
+                        for k = 0, numRateCount - 1, 1 do
+                            local pThis = vibRateThis:getElement( k );
+                            local pItem = vibRateItem:getElement( k );
+                            if( pThis.x ~= pItem.x )then
+                                return false;
+                            end
+                            if( pThis.y ~= pItem.y )then
+                                return false;
+                            end
+                        end
+                    end
+                    local vibDepthThis = hVibratoThis:getDepthBP();
+                    local vibDepthItem = hVibratoItem:getDepthBP();
+                    if( vibDepthThis == nil and vibDepthItem ~= nil )then
+                        return false;
+                    end
+                    if( vibDepthThis ~= nil and vibDepthItem == nil )then
+                        return false;
+                    end
+                    if( vibDepthThis ~= nil and vibDepthItem ~= nil )then
+                        local numDepthCount = vibDepthThis:size();
+                        if( numDepthCount ~= vibDepthItem:size() )then
+                            return false;
+                        end
+                        local k;
+                        for k = 0, numDepthCount - 1, 1 do
+                            local pThis = vibDepthThis:getElement( k );
+                            local pItem = vibDepthItem:getElement( k );
+                            if( pThis.x ~= pItem.x )then
+                                return false;
+                            end
+                            if( pThis.y ~= pItem.y )then
+                                return false;
+                            end
+                        end
+                    end
+                end
+                if( self.vMeanNoteTransition ~= item.vMeanNoteTransition )then
+                    return false;
+                end
+            elseif( self.type == EventTypeEnum.SINGER )then
+                -- シンガーイベントの比較
+                if( self.singerHandle.program ~= item.singerHandle.program )then
+                    return false;
+                end
+            elseif( self.type == EventTypeEnum.ICON )then
+                if( self.iconDynamicsHandle.iconId ~= item.iconDynamicsHandle.iconId )then
+                    return false;
+                end
+                if( self.iconDynamicsHandle:isDynaffType() )then
+                    -- 強弱記号
+                else
+                    -- クレッシェンド・デクレッシェンド
+                    if( self:getLength() ~= item:getLength() )then
+                        return false;
+                    end
+                end
+            end
+
+            return true;
+        end*/
 
 private:
-    void init();
+    void init(){
+        tag = "";
+        id = -1;
+        clock = 0;
+        index = -1;
+        type = EventType::NOTE;
+        _length = 0;
+        note = 0;
+        dynamics = 0;
+        pmBendDepth = 0;
+        pmBendLength = 0;
+        pmbPortamentoUse = 0;
+        demDecGainRate = 0;
+        demAccent = 0;
+        vibratoDelay = 0;
+        pMeanOnsetFirstNote = 10;
+        vMeanNoteTransition = 12;
+        d4mean = 24;
+        pMeanEndingNote = 12;
+    //    ustEvent = nil;
+        _lyricHandleIndex = 0;
+        _noteHeadHandleIndex = 0;
+        _singerHandleIndex = 0;
+        _vibratoHandleIndex = 0;
+    }
 
 };
 

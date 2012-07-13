@@ -13,7 +13,6 @@ CONFIG += staticlib
 SOURCES += \
     PhoneticSymbol.cpp \
     Handle.cpp \
-    Event.cpp \
     EventList.cpp
 
 HEADERS += \
