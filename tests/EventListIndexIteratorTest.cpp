@@ -8,7 +8,7 @@ using namespace VSQ_NS;
 class EventListIndexIteratorTest : public CppUnit::TestCase{
 public:
     void test(){
-        Event::EventList list;
+        Event::List list;
 
         Event noteEvent( 1920, EventType::NOTE );
         list.add( noteEvent, 5 );

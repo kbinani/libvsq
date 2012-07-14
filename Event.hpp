@@ -32,14 +32,14 @@ VSQ_BEGIN_NAMESPACE
 class Event
 {
 public:
-    class EventListIterator;
+    class ListIterator;
 
     /**
      * @brief 固有 ID 付きの {@link Event} のリストを取り扱うクラス
      */
-    class EventList
+    class List
     {
-        friend class EventListIterator;
+        friend class ListIterator;
 
     protected:
         /**
@@ -119,9 +119,9 @@ public:
          * @brief リスト内のイベントを順に返す反復子を取得する
          * @return 反復子
          */
-        EventListIterator iterator(){
+        ListIterator iterator(){
             updateIdList();
-            return EventListIterator( this );
+            return ListIterator( this );
         }
 
         /**
@@ -213,7 +213,7 @@ public:
             vector<Handle> handles = _buildHandleList();
             stream.writeLine( "[EventList]" );
             vector<Event> temp;
-            EventListIterator itr = iterator();
+            ListIterator itr = iterator();
             while( itr.hasNext() ){
                 temp.push_back( *itr.next() );
             }
@@ -276,7 +276,7 @@ public:
             int current_id = -1;
             int current_handle = -1;
             bool add_quotation_mark = true;
-            EventListIterator itr = iterator();
+            ListIterator itr = iterator();
             while( itr.hasNext() ){
                 Event *item = itr.next();
                 current_id = current_id + 1;
@@ -331,13 +331,13 @@ public:
     /**
      * @brief イベントリストのアイテムを順に返す反復子
      */
-    class EventListIterator
+    class ListIterator
     {
     private:
         /**
          * @brief 反復子の元になるリスト
          */
-        EventList *_list;
+        List *_list;
 
         /**
          * @brief 反復子の現在の位置
@@ -349,7 +349,7 @@ public:
          * @brief 初期化を行う
          * @param list 反復子の元になるリスト
          */
-        EventListIterator( EventList *list ) :
+        ListIterator( List *list ) :
             _list( list ),
             _pos( -1 )
         {

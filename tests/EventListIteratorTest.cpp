@@ -8,8 +8,8 @@ class EventListIteratorTest : public CppUnit::TestCase
 {
 public:
     void test(){
-        Event::EventList list;
-        Event::EventListIterator iterator( &list );
+        Event::List list;
+        Event::ListIterator iterator( &list );
         CPPUNIT_ASSERT( false == iterator.hasNext() );
     
         Event a( 1920, EventType::NOTE );
@@ -17,7 +17,7 @@ public:
         list.add( a, 1 );
         list.add( b, 2 );
 
-        iterator = Event::EventListIterator( &list );
+        iterator = Event::ListIterator( &list );
         CPPUNIT_ASSERT( iterator.hasNext() );
         Event *eventA = iterator.next();
         CPPUNIT_ASSERT_EQUAL( (tick_t)480, eventA->clock );

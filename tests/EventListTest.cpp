@@ -4,7 +4,7 @@
 using namespace std;
 using namespace VSQ_NS;
 
-class EventListStub : public Event::EventList
+class EventListStub : public Event::List
 {
 public:
     void pushBackWithoutSort( const Event &item, int id )
@@ -19,12 +19,12 @@ class EventListTest : public CppUnit::TestCase
 public:
     void testConstruct()
     {
-        Event::EventList list;
+        Event::List list;
         CPPUNIT_ASSERT_EQUAL( 0, list.size() );
     }
     
     void testFindIndexFromId(){
-        Event::EventList list;
+        Event::List list;
         Event a( 1, EventType::NOTE );
         Event b( 0, EventType::NOTE );
         list.add( a, 0 );
@@ -37,7 +37,7 @@ public:
     
     void testFindFromId()
     {
-        Event::EventList list;
+        Event::List list;
         Event a( 0, EventType::NOTE );
         Event b( 0, EventType::SINGER );
         list.add( a, 0 );
@@ -50,7 +50,7 @@ public:
     
     void testSetForId()
     {
-        Event::EventList listA;
+        Event::List listA;
         Event event( 0, EventType::NOTE );
         event.note = 60;
         event.id = 10;
@@ -66,7 +66,7 @@ public:
         CPPUNIT_ASSERT_EQUAL( 90, listA.get( 0 ).note );
     
         // 無効なinternalIdを渡すので、setが行われない場合
-        Event::EventList listB;
+        Event::List listB;
         listB.add( event, 10 );
         listB.setForId( 9999, replace );
         CPPUNIT_ASSERT_EQUAL( 60, listB.get( 0 ).note );
@@ -92,7 +92,7 @@ public:
     
     void testClear()
     {
-        Event::EventList list;
+        Event::List list;
         Event b( 480, EventType::NOTE );
         Event a( 0, EventType::NOTE );
         list.add( b, 14 );
@@ -108,7 +108,7 @@ public:
     
     void testAddWithoutInternalId()
     {
-        Event::EventList list;
+        Event::List list;
         Event a( 1, EventType::NOTE );
         Event b( 0, EventType::NOTE );
         int idOfA = list.add( a );
@@ -122,7 +122,7 @@ public:
     
     void testAddWithInternalId()
     {
-        Event::EventList list;
+        Event::List list;
         Event a( 0, EventType::NOTE );
         Event b( 0, EventType::NOTE );
         int idOfA = list.add( a, 100 );
@@ -135,7 +135,7 @@ public:
     
     void testRemoveAt()
     {
-        Event::EventList list;
+        Event::List list;
         Event a( 0, EventType::NOTE );
         Event b( 0, EventType::NOTE );
         list.add( a, 100 );
@@ -152,7 +152,7 @@ public:
     
     void testSize()
     {
-        Event::EventList list;
+        Event::List list;
         CPPUNIT_ASSERT_EQUAL( 0, list.size() );
         Event event( 0, EventType::NOTE );
         list.add( event );
@@ -161,7 +161,7 @@ public:
     
     void testGetAndSetElement()
     {
-        Event::EventList list;
+        Event::List list;
         Event a( 0, EventType::NOTE );
         Event b( 0, EventType::NOTE );
         list.add( a, 100 );
@@ -180,8 +180,8 @@ public:
     
     void testIterator()
     {
-        Event::EventList list;
-        Event::EventListIterator iterator = list.iterator();
+        Event::List list;
+        Event::ListIterator iterator = list.iterator();
         CPPUNIT_ASSERT( false == iterator.hasNext() );
     
         Event singerEvent( 0, EventType::SINGER );
@@ -203,7 +203,7 @@ public:
     
     void testWrite()
     {
-        Event::EventList list;
+        Event::List list;
     
         Event singerEvent( 0, EventType::SINGER );
         singerEvent.singerHandle = Handle( HandleType::SINGER );
