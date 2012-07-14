@@ -1,7 +1,7 @@
 all: test_vsq.exe
 
-test_vsq.exe: ../*.cpp ../*.hpp *.cpp *.hpp
-	g++ *.cpp ../*.cpp -w -ldl -lcppunit -o test_vsq.exe
+test_vsq.exe: ../*.hpp *.cpp *.hpp
+	g++ *.cpp -w -ldl -lcppunit -o test_vsq.exe
 
 run: test_vsq.exe
 	./test_vsq.exe
