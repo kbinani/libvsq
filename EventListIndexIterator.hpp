@@ -131,19 +131,18 @@ private:
                 if( item.type == EventType::ICON
                         && item.iconDynamicsHandle.getHandleType() != HandleType::UNKNOWN )
                 {
-                    std::string iconid = item.iconDynamicsHandle.iconId;
                     if( _kindDynaff ){
-                        if( iconid.find( Handle::ICONID_HEAD_DYNAFF ) == 0 ){
+                        if( item.iconDynamicsHandle.isDynaffType() ){
                             return i;
                         }
                     }
                     if( _kindCrescend ){
-                        if( iconid.find( Handle::ICONID_HEAD_CRESCEND ) == 0 ){
+                        if( item.iconDynamicsHandle.isCrescendType() ){
                             return i;
                         }
                     }
                     if( _kindDecrescend ){
-                        if( iconid.find( Handle::ICONID_HEAD_DECRESCEND ) == 0 ){
+                        if( item.iconDynamicsHandle.isDecrescendType() ){
                             return i;
                         }
                     }

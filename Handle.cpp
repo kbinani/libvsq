@@ -19,12 +19,6 @@
 using namespace std;
 using namespace VSQ_NS;
 
-const string Handle::ICONID_HEAD_DYNAFF = "$0501";
-
-const string Handle::ICONID_HEAD_CRESCEND = "$0502";
-
-const string Handle::ICONID_HEAD_DECRESCEND = "$0503";
-
 void Handle::init()
 {
     _type = HandleType::UNKNOWN;
@@ -231,17 +225,17 @@ ArticulationType::ArticulationTypeEnum Handle::getArticulation() const
 
 bool Handle::isDynaffType() const
 {
-    return iconId.find( Handle::ICONID_HEAD_DYNAFF ) == 0;
+    return iconId.find( Handle::getIconIdPrefixDynaff() ) == 0;
 }
 
 bool Handle::isCrescendType() const
 {
-    return iconId.find( Handle::ICONID_HEAD_CRESCEND ) == 0;
+    return iconId.find( Handle::getIconIdPrefixCrescend() ) == 0;
 }
 
 bool Handle::isDecrescendType() const
 {
-    return iconId.find( Handle::ICONID_HEAD_DECRESCEND ) == 0;
+    return iconId.find( Handle::getIconIdPrefixDecrescend() ) == 0;
 }
 
 tick_t Handle::getLength() const

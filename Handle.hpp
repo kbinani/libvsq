@@ -31,21 +31,6 @@ class Handle
 {
 public:
     /**
-     * @brief 強弱記号の場合の、IconId の最初の5文字。
-     */
-    static const std::string ICONID_HEAD_DYNAFF;
-
-    /**
-     * @brief クレッシェンドの場合の、IconId の最初の5文字。
-     */
-    static const std::string ICONID_HEAD_CRESCEND;
-
-    /**
-     * @brief デクレッシェンドの場合の、IconId の最初の5文字。
-     */
-    static const std::string ICONID_HEAD_DECRESCEND;
-
-    /**
      * @brief メタテキストに出力されるこのオブジェクトの ID
      */
     int index;
@@ -146,6 +131,30 @@ private:
     VSQ_NS::VibratoBPList _dynBP;
 
 public:
+    /**
+     * @brief 強弱記号の場合の、IconId の最初の5文字。
+     * @return IconId の接頭辞
+     */
+    inline static const std::string getIconIdPrefixDynaff(){
+        return "$0501";
+    }
+
+    /**
+     * @brief クレッシェンドの場合の、IconId の最初の5文字。
+     * @return IconId の接頭辞
+     */
+    inline static const std::string getIconIdPrefixCrescend(){
+        return "$0502";
+    }
+
+    /**
+     * @brief デクレッシェンドの場合の、IconId の最初の5文字。
+     * @return IconId の接頭辞
+     */
+    inline static const std::string getIconIdPrefixDecrescend(){
+        return "$0503";
+    }
+
     /**
      * @param type ハンドルの種類
      */
