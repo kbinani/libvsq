@@ -15,7 +15,7 @@
 #define __EventListIndexIterator_hpp__
 
 #include "vsqglobal.hpp"
-#include "EventList.hpp"
+#include "Event.hpp"
 #include "EventListIndexIteratorKind.hpp"
 
 VSQ_BEGIN_NAMESPACE
@@ -28,7 +28,7 @@ private:
     /**
      * @brief 反復子の元になるリスト
      */
-    EventList *_list;
+    Event::EventList *_list;
 
     /**
      * @brief next メソッドで最後に返したインデックス
@@ -66,7 +66,7 @@ public:
      * @param list (EventList) 反復子の元になるリスト
      * @param iteratorKind (EventList.IndexIteratorKindEnum) 反復子の種類
      */
-    explicit EventListIndexIterator( EventList *list, int iteratorKind ){
+    explicit EventListIndexIterator( Event::EventList *list, int iteratorKind ){
         this->_list = list;
         this->_pos = -1;
         this->_kindSinger = (iteratorKind & EventListIndexIteratorKind::SINGER) == EventListIndexIteratorKind::SINGER;

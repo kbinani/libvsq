@@ -20,6 +20,7 @@
 #include "EventType.hpp"
 #include "Handle.hpp"
 #include "EventWriteOption.hpp"
+#include "VoiceLanguageEnum.hpp"
 
 VSQ_BEGIN_NAMESPACE
 
@@ -30,9 +31,364 @@ VSQ_BEGIN_NAMESPACE
  */
 class Event
 {
-    friend class EventList;
-
 public:
+    class EventListIterator;
+
+    /**
+     * @brief 固有 ID 付きの {@link Event} のリストを取り扱うクラス
+     */
+    class EventList
+    {
+        friend class EventListIterator;
+
+    protected:
+        /**
+         * @brief イベントのリスト
+         */
+        std::vector<VSQ_NS::Event> _events;
+
+        /**
+         * @brief イベントの ID のリスト
+         */
+        std::vector<int> _ids;
+
+    public:
+        /**
+         * @brief イベント ID を基にイベントを検索し、そのインデックスを返す
+         * @param internalId 検索するイベント ID
+         * @return 検索結果のインデックス(最初のインデックスは0)。イベントが見つからなければ負の値を返す
+         */
+        int findIndexFromId( int internalId ) const{
+            int c = _events.size();
+            for( int i = 0; i < c; i++ ){
+                Event item = _events[i];
+                if( item.id == internalId ){
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        /**
+         * @brief イベント ID を基にイベントを検索し、そのオブジェクトを返す
+         * @param internalId 検索するイベント ID
+         * @return 検索結果のイベント。イベントが見つからなければ <code>nil</code> を返す
+         */
+        const VSQ_NS::Event *findFromId( int internalId ){
+            int index = findIndexFromId( internalId );
+            if( 0 <= index && index < _events.size() ){
+                return &_events[index];
+            }else{
+                return NULL;
+            }
+        }
+
+        /**
+         * @brief 指定されたイベント ID をもつイベントのオブジェクトを置き換える。イベントが見つからなければ何もしない
+         * @param internalId 検索するイベント ID
+         * @param value 置換するオブジェクト
+         */
+        void setForId( int internalId, const VSQ_NS::Event &value ){
+            int c = _events.size();
+            for( int i = 0; i < c; i++ ){
+                if( _events[i].id == internalId ){
+                    _events[i] = value;
+                    _events[i].id = internalId;
+                    break;
+                }
+            }
+        }
+
+        /**
+         * @brief イベントを並べ替える
+         */
+        void sort(){
+            std::sort( _events.begin(), _events.end(), Event::compare );
+            updateIdList();
+        }
+
+        /**
+         * @brief 全てのイベントを削除する
+         */
+        void clear(){
+            _events.clear();
+            _ids.clear();
+        }
+
+        /**
+         * @brief リスト内のイベントを順に返す反復子を取得する
+         * @return 反復子
+         */
+        EventListIterator iterator(){
+            updateIdList();
+            return EventListIterator( this );
+        }
+
+        /**
+         * @brief イベントを追加する
+         * @param item 追加するオブジェクト
+         * @return 追加したオブジェクトに割り振られたイベント ID
+         */
+        int add( const VSQ_NS::Event &item ){
+            int id = _getNextId( 0 );
+            _addCor( item, id );
+            std::sort( _events.begin(), _events.end(), Event::compare );
+            int count = _events.size();
+            for( int i = 0; i < count; i++ ){
+                _ids[i] = _events[i].id;
+            }
+            return id;
+        }
+
+        /**
+         * @brief イベントを追加する
+         * @param item 追加するオブジェクト
+         * @param internalId 追加するオブジェクトに割り振るイベント ID
+         * @return オブジェクトに割り振られたイベント ID
+         */
+        int add( const VSQ_NS::Event &item, int internalId ){
+            _addCor( item, internalId );
+            std::sort( _events.begin(), _events.end(), Event::compare );
+            return internalId;
+        }
+
+        /**
+         * @brief イベントを削除する
+         * @param index 削除するイベントのインデックス(最初のインデックスは0)
+         */
+        void removeAt( int index ){
+            updateIdList();
+            _events.erase( _events.begin() + index );
+            _ids.erase( _ids.begin() + index );
+        }
+
+        /**
+         * @brief イベントの個数を返す
+         * @return データ点の個数
+         */
+        int size() const{
+            return _events.size();
+        }
+
+        /**
+         * @brief 指定したインデックスのイベントを取得する
+         * @param index インデックス(最初のインデックスは0)
+         * @return イベント
+         */
+        const VSQ_NS::Event get( int index ) const{
+            return _events[index];
+        }
+
+        /**
+         * @brief 指定したインデックスのイベントを設定する
+         * @param index インデックス(最初のインデックスは0)
+         * @param value 設定するイベント
+         */
+        void set( int index, const VSQ_NS::Event &value ){
+            int id = _events[index].id;
+            _events[index] = value;
+            _events[index].id = id;
+        }
+
+        /**
+         * @brief リスト内部のイベント ID のデータを更新する
+         */
+        void updateIdList(){
+            if( _ids.size() != _events.size() ){
+                _ids.clear();
+            }
+            int count = _events.size();
+            for( int i = 0; i < count; i++ ){
+                _ids.push_back( _events[i].id );
+            }
+        }
+
+        /**
+         * @brief イベントリストをテキストストリームに出力する
+         * @param stream 出力先のストリーム
+         * @param eos EOS として出力する Tick 単位の時刻
+         * @return リスト中のイベントに含まれるハンドルの一覧
+         */
+        std::vector<VSQ_NS::Handle> write( TextStream &stream, VSQ_NS::tick_t eos ){
+            vector<Handle> handles = _buildHandleList();
+            stream.writeLine( "[EventList]" );
+            vector<Event> temp;
+            EventListIterator itr = iterator();
+            while( itr.hasNext() ){
+                temp.push_back( *itr.next() );
+            }
+            std::sort( temp.begin(), temp.end(), Event::compare );
+            int i = 0;
+            while( i < temp.size() ){
+                Event item = temp[i];
+                if( !item.isEOS() ){
+                    ostringstream ids;
+                    ids << "ID#" << (boost::format( "%04d" ) % item.index).str();
+                    tick_t clock = temp[i].clock;
+                    while( i + 1 < temp.size() && clock == temp[i + 1].clock ){
+                        i++;
+                        ids << ",ID#" << (boost::format( "%04d" ) % temp[i].index).str();
+                    }
+                    ostringstream oss;
+                    oss << clock << "=" << ids.str();
+                    stream.writeLine( oss.str() );
+                }
+                i++;
+            }
+            stream.write( (boost::format( "%d" ) % eos).str() ).writeLine( "=EOS" );
+            return handles;
+        }
+
+    private:
+        /**
+         * @brief イベントを追加する
+         * @param item 追加するオブジェクト
+         * @param internal_id 追加するオブジェクトに割り振るイベント ID
+         */
+        void _addCor( const VSQ_NS::Event &item, int internalId ){
+            updateIdList();
+            Event add = item;
+            add.id = internalId;
+            _events.push_back( add );
+            _ids.push_back( internalId );
+        }
+
+        /**
+         * @brief イベントに割り振る ID を取得する
+         * @param next
+         * @return
+         */
+        int _getNextId( int next ){
+            updateIdList();
+            int max = -1;
+            for( int i = 0; i < _ids.size(); i++ ){
+                max = ::max( max, _ids[i] );
+            }
+            return max + 1 + next;
+        }
+
+        /**
+         * @brief リスト内のイベントから、ハンドルの一覧を作成する。同時に、各イベント、ハンドルの番号を設定する
+         * @return (table<Handle>) ハンドルの一覧
+         */
+        const std::vector<Handle> _buildHandleList(){
+            vector<Handle> handle;
+            int current_id = -1;
+            int current_handle = -1;
+            bool add_quotation_mark = true;
+            EventListIterator itr = iterator();
+            while( itr.hasNext() ){
+                Event *item = itr.next();
+                current_id = current_id + 1;
+                item->index = current_id;
+                // SingerHandle
+                if( item->singerHandle.getHandleType() == HandleType::SINGER ){
+                    current_handle = current_handle + 1;
+                    item->singerHandle.index = current_handle;
+                    handle.push_back( item->singerHandle );
+                    item->_singerHandleIndex = current_handle;
+                    VoiceLanguage::VoiceLanguageEnum lang = VoiceLanguage::valueFromSingerName( item->singerHandle.ids );
+                    add_quotation_mark = lang == VoiceLanguage::JAPANESE;
+                }
+                // LyricHandle
+                if( item->lyricHandle.getHandleType() == HandleType::LYRIC ){
+                    current_handle = current_handle + 1;
+                    item->lyricHandle.index = current_handle;
+                    item->lyricHandle.addQuotationMark = add_quotation_mark;
+                    handle.push_back( item->lyricHandle );
+                    item->_lyricHandleIndex = current_handle;
+                }
+                // VibratoHandle
+                if( item->vibratoHandle.getHandleType() == HandleType::VIBRATO ){
+                    current_handle = current_handle + 1;
+                    item->vibratoHandle.index = current_handle;
+                    handle.push_back( item->vibratoHandle );
+                    item->_vibratoHandleIndex = current_handle;
+                }
+                // NoteHeadHandle
+                if( item->noteHeadHandle.getHandleType() == HandleType::NOTE_HEAD ){
+                    current_handle = current_handle + 1;
+                    item->noteHeadHandle.index = current_handle;
+                    handle.push_back( item->noteHeadHandle );
+                    item->_noteHeadHandleIndex = current_handle;
+                }
+                // IconDynamicsHandle
+                if( item->iconDynamicsHandle.getHandleType() == HandleType::DYNAMICS ){
+                    current_handle = current_handle + 1;
+                    item->iconDynamicsHandle.index = current_handle;
+                    item->iconDynamicsHandle.setLength( item->getLength() );
+                    handle.push_back( item->iconDynamicsHandle );
+                    // IconDynamicsHandleは、歌手ハンドルと同じ扱いなので
+                    // _singerHandleIndexでよい
+                    item->_singerHandleIndex = current_handle;
+                }
+            }
+            return handle;
+        }
+
+    };
+
+    /**
+     * @brief イベントリストのアイテムを順に返す反復子
+     */
+    class EventListIterator
+    {
+    private:
+        /**
+         * @brief 反復子の元になるリスト
+         */
+        EventList *_list;
+
+        /**
+         * @brief 反復子の現在の位置
+         */
+        int _pos;
+
+    public:
+        /**
+         * @brief 初期化を行う
+         * @param list 反復子の元になるリスト
+         */
+        EventListIterator( EventList *list ) :
+            _list( list ),
+            _pos( -1 )
+        {
+        }
+
+        /**
+         * @brief 反復子が次の要素を持つ場合に <code>true</code> を返す
+         * @return 反復子がさらに要素を持つ場合は <code>true</code> を、そうでなければ <code>false</code> を返す
+         */
+        bool hasNext()
+        {
+            if( 0 <= _pos + 1 && _pos + 1 < _list->size() ){
+                return true;
+            }
+            return false;
+        }
+
+        /**
+         * @brief 反復子の次の要素を返す
+         * @return 次の要素
+         */
+        VSQ_NS::Event *next()
+        {
+            _pos++;
+            return &_list->_events[_pos];
+        }
+
+        /**
+         * @brief 反復子によって最後に返された要素を削除する
+         */
+        void remove()
+        {
+            if( 0 <= _pos && _pos < _list->size() ){
+                _list->removeAt( _pos );
+                _pos--;
+            }
+        }
+    };
+
     /**
      * ミリ秒で表した、音符の最大長さ
      * @access static

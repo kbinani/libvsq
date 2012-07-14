@@ -12,8 +12,7 @@ CONFIG += staticlib
 
 SOURCES += \
     PhoneticSymbol.cpp \
-    Handle.cpp \
-    EventList.cpp
+    Handle.cpp
 
 HEADERS += \
     Timesig.hpp \
@@ -35,9 +34,7 @@ HEADERS += \
     Event.hpp \
     EventWriteOption.hpp \
     Event.hpp \
-    EventList.hpp \
     VoiceLanguageEnum.hpp \
-    EventListIterator.hpp \
     BP.hpp \
     BPListSearchResult.hpp \
     BPList.hpp \

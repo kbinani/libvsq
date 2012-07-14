@@ -1,5 +1,5 @@
 #include "Util.hpp"
-#include "../EventListIterator.hpp"
+#include "../Event.hpp"
 
 using namespace std;
 using namespace VSQ_NS;
@@ -8,8 +8,8 @@ class EventListIteratorTest : public CppUnit::TestCase
 {
 public:
     void test(){
-        EventList list;
-        EventListIterator iterator( &list );
+        Event::EventList list;
+        Event::EventListIterator iterator( &list );
         CPPUNIT_ASSERT( false == iterator.hasNext() );
     
         Event a( 1920, EventType::NOTE );
@@ -17,7 +17,7 @@ public:
         list.add( a, 1 );
         list.add( b, 2 );
 
-        iterator = EventListIterator( &list );
+        iterator = Event::EventListIterator( &list );
         CPPUNIT_ASSERT( iterator.hasNext() );
         Event *eventA = iterator.next();
         CPPUNIT_ASSERT_EQUAL( (tick_t)480, eventA->clock );
