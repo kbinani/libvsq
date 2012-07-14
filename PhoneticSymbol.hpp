@@ -14,10 +14,14 @@
 #ifndef __PhoneticSymbol_h__
 #define __PhoneticSymbol_h__
 
-#include <string>
 #include "vsqglobal.hpp"
+#include <string>
+#include <boost/lexical_cast.hpp>
 
 VSQ_BEGIN_NAMESPACE
+
+using namespace std;
+using namespace VSQ_NS;
 
 /**
  * VSQ で使用される発音記号のためのユーティリティ
@@ -28,52 +32,75 @@ class PhoneticSymbol
 {
 public:
     /**
-     * 指定した文字列が子音を表す発音記号かどうかを判定する
+     * @brief 指定した文字列が子音を表す発音記号かどうかを判定する
      * @param symbol (string) 判定対象の発音記号
      * @return (boolean) 子音であれば <code>true</code> を、そうでなければ <code>false</code> を返す
-     * @access static
      */
-    static bool isConsonant( const std::string &symbol );
+    static bool isConsonant( const string &symbol ){
+        string search = "\t" + symbol + "\t";
+        return isConsonantEN( search ) || isConsonantJP( search );
+    }
 
     /**
-     * 指定した文字列が母音を表す発音記号かどうかを判定する
+     * @brief 指定した文字列が母音を表す発音記号かどうかを判定する
      * @param symbol (string) 判定対象の発音記号
      * @return (boolean) 母音であれば <code>true</code> を、そうでなければ <code>false</code> を返す
-     * @access static
      */
-    static bool isVowel( const std::string &symbol );
+    static bool isVowel( const string &symbol ){
+        string search = "\t" + symbol + "\t";
+        return isVowelEN( search ) || isVowelJP( search );
+    }
 
     /**
-     * 指定した文字列が発音記号として有効かどうかを判定する
+     * @brief 指定した文字列が発音記号として有効かどうかを判定する
      * @param symbol (string) 判定対象の発音記号
      * @return (boolean) 有効であれば <code>true</code> を、そうでなければ <code>false</code> を返す
-     * @access static
      */
-    static bool isValidSymbol( const std::string &symbol );
+    static bool isValidSymbol( const string &symbol ){
+        bool vowel = isVowel( symbol );
+        bool consonant = isConsonant( symbol );
+        if( vowel || consonant ){
+            return true;
+        }
+
+        // ブレスの判定
+        int symbolCharacterCount = symbol.size();
+        if( symbol.find( "br" ) == 0 && symbolCharacterCount > 2 ){
+            // br001とかをfalseにするためのチェック
+            string s = symbol.substr( 2 );
+            try{
+                boost::lexical_cast<int>( s );
+                return true;
+            }catch( boost::bad_lexical_cast & ){
+                return false;
+            }
+        }
+        return false;
+    }
 
 private:
     PhoneticSymbol()
     {
     }
 
-    static bool isVowelJP( const std::string search ){
-        const std::string symbolVowelJP = "\ta\ti\tM\te\to\t";
-        return symbolVowelJP.find( search ) != std::string::npos;
+    static bool isVowelJP( const string search ){
+        const string symbolVowelJP = "\ta\ti\tM\te\to\t";
+        return symbolVowelJP.find( search ) != string::npos;
     }
 
-    static bool isConsonantJP( const std::string search ){
-        const std::string symbolConsonantJP = "\tk\tk'\tg\tg'\tN\tN'\ts\tS\tz\tZ\tdz\tdZ\tt\tt'\tts\ttS\td\td'\tn\tJ\th\th\\\tC\tp\\\tp\\'\tb\tb'\tp\tp'\tm\tm'\tj\t4\t4'\tw\tN\\\t";
-        return symbolConsonantJP.find( search ) != std::string::npos;
+    static bool isConsonantJP( const string search ){
+        const string symbolConsonantJP = "\tk\tk'\tg\tg'\tN\tN'\ts\tS\tz\tZ\tdz\tdZ\tt\tt'\tts\ttS\td\td'\tn\tJ\th\th\\\tC\tp\\\tp\\'\tb\tb'\tp\tp'\tm\tm'\tj\t4\t4'\tw\tN\\\t";
+        return symbolConsonantJP.find( search ) != string::npos;
     }
 
-    static bool isVowelEN( const std::string search ){
-        const std::string symbolVowelEN = "\t@\tV\te\te\tI\ti:\t{\tO:\tQ\tU\tu:\t@r\teI\taI\tOI\t@U\taU\tI@\te@\tU@\tO@\tQ@\t";
-        return symbolVowelEN.find( search ) != std::string::npos;
+    static bool isVowelEN( const string search ){
+        const string symbolVowelEN = "\t@\tV\te\te\tI\ti:\t{\tO:\tQ\tU\tu:\t@r\teI\taI\tOI\t@U\taU\tI@\te@\tU@\tO@\tQ@\t";
+        return symbolVowelEN.find( search ) != string::npos;
     }
 
-    static bool isConsonantEN( const std::string search ){
-        const std::string symbolConsonantEN = "\tw\tj\tb\td\tg\tbh\tdh\tgh\tdZ\tv\tD\tz\tZ\tm\tn\tN\tr\tl\tl0\tp\tt\tk\tph\tth\tkh\ttS\tf\tT\ts\tS\th\tSil\tAsp\t";
-        return symbolConsonantEN.find( search ) != std::string::npos;
+    static bool isConsonantEN( const string search ){
+        const string symbolConsonantEN = "\tw\tj\tb\td\tg\tbh\tdh\tgh\tdZ\tv\tD\tz\tZ\tm\tn\tN\tr\tl\tl0\tp\tt\tk\tph\tth\tkh\ttS\tf\tT\ts\tS\th\tSil\tAsp\t";
+        return symbolConsonantEN.find( search ) != string::npos;
     }
 };
 

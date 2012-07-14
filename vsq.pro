@@ -11,7 +11,6 @@ TEMPLATE = lib
 CONFIG += staticlib
 
 SOURCES += \
-    PhoneticSymbol.cpp \
     Handle.cpp
 
 HEADERS += \
