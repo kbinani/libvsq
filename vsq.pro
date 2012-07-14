@@ -10,8 +10,7 @@ TARGET = vsq
 TEMPLATE = lib
 CONFIG += staticlib
 
-SOURCES += \
-    Handle.cpp
+SOURCES +=
 
 HEADERS += \
     Timesig.hpp \
