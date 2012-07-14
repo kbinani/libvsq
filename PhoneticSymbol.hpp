@@ -26,35 +26,6 @@ VSQ_BEGIN_NAMESPACE
  */
 class PhoneticSymbol
 {
-private:
-    /**
-     * 日本語の母音発音記号
-     * @var string
-     * @access private static
-     */
-    static const std::string _SYMBOL_VOWEL_JP;
-
-    /**
-     * 日本語の子音発音記号
-     * @var string
-     * @access private static
-     */
-    static const std::string _SYMBOL_CONSONANT_JP;
-
-    /**
-     * 英語の母音発音記号
-     * @var string
-     * @access private static
-     */
-    static const std::string _SYMBOL_VOWEL_EN;
-
-    /**
-     * 英語の子音発音記号
-     * @var string
-     * @access private static
-     */
-    static const std::string _SYMBOL_CONSONANT_EN;
-
 public:
     /**
      * 指定した文字列が子音を表す発音記号かどうかを判定する
@@ -83,6 +54,26 @@ public:
 private:
     PhoneticSymbol()
     {
+    }
+
+    static bool isVowelJP( const std::string search ){
+        const std::string symbolVowelJP = "\ta\ti\tM\te\to\t";
+        return symbolVowelJP.find( search ) != std::string::npos;
+    }
+
+    static bool isConsonantJP( const std::string search ){
+        const std::string symbolConsonantJP = "\tk\tk'\tg\tg'\tN\tN'\ts\tS\tz\tZ\tdz\tdZ\tt\tt'\tts\ttS\td\td'\tn\tJ\th\th\\\tC\tp\\\tp\\'\tb\tb'\tp\tp'\tm\tm'\tj\t4\t4'\tw\tN\\\t";
+        return symbolConsonantJP.find( search ) != std::string::npos;
+    }
+
+    static bool isVowelEN( const std::string search ){
+        const std::string symbolVowelEN = "\t@\tV\te\te\tI\ti:\t{\tO:\tQ\tU\tu:\t@r\teI\taI\tOI\t@U\taU\tI@\te@\tU@\tO@\tQ@\t";
+        return symbolVowelEN.find( search ) != std::string::npos;
+    }
+
+    static bool isConsonantEN( const std::string search ){
+        const std::string symbolConsonantEN = "\tw\tj\tb\td\tg\tbh\tdh\tgh\tdZ\tv\tD\tz\tZ\tm\tn\tN\tr\tl\tl0\tp\tt\tk\tph\tth\tkh\ttS\tf\tT\ts\tS\th\tSil\tAsp\t";
+        return symbolConsonantEN.find( search ) != std::string::npos;
     }
 };
 
