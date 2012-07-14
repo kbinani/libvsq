@@ -37,7 +37,6 @@ SOURCES += \
     HandleTypeTest.cpp \
     EventListTest.cpp \
     VoiceLanguageEnumTest.cpp \
-    EventListIteratorTest.cpp \
     BPTest.cpp \
     BPListSearchResultTest.cpp \
     BPListTest.cpp \
@@ -51,7 +50,9 @@ SOURCES += \
     MixerTest.cpp \
     EventListIndexIteratorKindTest.cpp \
     EventListIndexIteratorTest.cpp \
-    TrackTest.cpp
+    TrackTest.cpp \
+    Event.ListTest.cpp \
+    Event.ListIteratorTest.cpp
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
