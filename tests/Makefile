@@ -1,12 +1,17 @@
-all: test_vsq.exe
+TEST_FILES=$(shell ls *Test.cpp)
+TARGETS=$(TEST_FILES:.cpp=.exe)
 
-test_vsq.exe: ../*.hpp *.cpp *.hpp
-	g++ *.cpp -w -ldl -lcppunit -o test_vsq.exe
+all: $(TARGETS)
 
-run: test_vsq.exe
-	./test_vsq.exe
+$(TARGETS): %.exe: %.cpp
+	g++ main.cpp $< -w -ldl -lcppunit -o $@
+	./$@
+
+run: $(TARGETS)
+	for TARGET in $(TARGETS); do \
+	  ./$$TARGET;\
+	done
 
 clean:
-	rm -f *.o
-	rm -f test_vsq.exe
+	rm -f *.exe
 
