@@ -554,7 +554,7 @@ public:
         handle.setStartDyn( 2 );
         handle.setEndDyn( 3 );
         handle.setLength( 4 );
-        Handle copy = handle;
+        Handle copy = handle.clone();
         CPPUNIT_ASSERT_EQUAL( string( "$05010000" ), copy.iconId );
         CPPUNIT_ASSERT_EQUAL( string( "foo" ), copy.ids );
         CPPUNIT_ASSERT_EQUAL( 1, copy.original );
@@ -566,7 +566,7 @@ public:
     
         VibratoBPList dynBP( "2", "0.0,1.0", "1,64" );
         handle.setDynBP( dynBP );
-        copy = handle;
+        copy = handle.clone();
         CPPUNIT_ASSERT_EQUAL( string( "0=1,1=64" ), copy.getDynBP().getData() );
     }
     
@@ -575,7 +575,7 @@ public:
         Handle handle( HandleType::LYRIC );
         handle.setLyricAt( 0, Lyric( "ら", "4 a" ) );
         handle.index = 10;
-        Handle copy = handle;
+        Handle copy = handle.clone();
         CPPUNIT_ASSERT_EQUAL( handle.index, copy.index );
         Lyric original = handle.getLyricAt( 0 );
         Lyric copied = copy.getLyricAt( 0 );
@@ -594,7 +594,7 @@ public:
         handle.setDuration( 4 );
         handle.setDepth( 5 );
     
-        Handle copy = handle;
+        Handle copy = handle.clone();
         CPPUNIT_ASSERT_EQUAL( 1, copy.index );
         CPPUNIT_ASSERT_EQUAL( string( "$05010000" ), copy.iconId );
         CPPUNIT_ASSERT_EQUAL( string( "dwango" ), copy.ids );
@@ -618,7 +618,7 @@ public:
         handle.setDepthBP( VibratoBPList( "2", "0.0,1.0", "32,56" ) );
         handle.setStartRate( 5 );
         handle.setRateBP( VibratoBPList( "2", "0.0,1.0", "64,128" ) );
-        Handle copy = handle;
+        Handle copy = handle.clone();
         CPPUNIT_ASSERT_EQUAL( 1, copy.index );
         CPPUNIT_ASSERT_EQUAL( string( "hahaha" ), copy.iconId );
         CPPUNIT_ASSERT_EQUAL( string( "baka" ), copy.ids );
@@ -643,7 +643,7 @@ public:
         handle.program = 4;
         handle.language= 5;
     
-        Handle copy = handle;
+        Handle copy = handle.clone();
         CPPUNIT_ASSERT_EQUAL( handle.getCaption(), copy.getCaption() );
         CPPUNIT_ASSERT_EQUAL( handle.iconId, copy.iconId );
         CPPUNIT_ASSERT_EQUAL( handle.ids, copy.ids );

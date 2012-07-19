@@ -663,6 +663,79 @@ public:
     }
 
     /**
+     * @brief コピーを作成する
+     * @return (Handle) このオブジェクトのコピー
+     */
+    Handle clone() const{
+        if( _type == HandleType::DYNAMICS ){
+            Handle ret( HandleType::DYNAMICS );
+            ret.iconId = iconId;
+            ret.ids = ids;
+            ret.original = original;
+            ret.setCaption( getCaption() );
+            ret.setStartDyn( getStartDyn() );
+            ret.setEndDyn( getEndDyn() );
+            //TODO: _dynBPの型をVibratoBPList*に変える
+            //if( 0 != _dynBP ){
+                ret.setDynBP( _dynBP.clone() );
+            //}
+            ret.setLength( getLength() );
+            return ret;
+        }else if( _type == HandleType::LYRIC ){
+            Handle result( HandleType::LYRIC );
+            result.index = index;
+            for( int i = 0; i < _lyrics.size(); i++ ){
+                Lyric buf = _lyrics[i].clone();
+                result._lyrics.push_back( buf );
+            }
+            return result;
+        }else if( _type == HandleType::NOTE_HEAD ){
+            Handle result( HandleType::NOTE_HEAD );
+            result.index = index;
+            result.iconId = iconId;
+            result.ids = ids;
+            result.original = original;
+            result.setCaption( getCaption() );
+            result.setLength( getLength() );
+            result.setDuration( getDuration() );
+            result.setDepth( getDepth() );
+            return result;
+        }else if( _type == HandleType::SINGER ){
+            Handle ret( HandleType::SINGER );
+            ret._caption = _caption;
+            ret.iconId = iconId;
+            ret.ids = ids;
+            ret.index = index;
+            ret.language = language;
+            ret.setLength( _length );
+            ret.original = original;
+            ret.program = program;
+            return ret;
+        }else if( _type == HandleType::VIBRATO ){
+            Handle result( HandleType::VIBRATO );
+            result.index = index;
+            result.iconId = iconId;
+            result.ids = ids;
+            result.original = original;
+            result.setCaption( _caption );
+            result.setLength( getLength() );
+            result.setStartDepth( _startDepth );
+            //TODO: _depthBPの型をVibratoBPList*に変える
+            //if( 0 != _depthBP ){
+                result.setDepthBP( _depthBP.clone() );
+            //}
+            result.setStartRate( _startRate );
+            //TODO: _rateBPの型をVibratoBPList*に変える
+            //if( 0 != _rateBP ){
+                result.setRateBP( _rateBP.clone() );
+            //}
+            return result;
+        }else{
+            return Handle( HandleType::UNKNOWN );
+        }
+    }
+
+    /**
      * @brief ハンドル指定子（例えば"h#0123"という文字列）からハンドル番号を取得する
      * @param s ハンドル指定子
      * @return ハンドル番号
