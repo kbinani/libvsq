@@ -275,6 +275,29 @@ public:
     }
 
     /**
+     * @brief コピーを作成する
+     * @return (Lyric) このインスタンスのコピー
+     */
+    Lyric clone() const{
+        Lyric result( "あ", "a" );
+        result.phrase = phrase;
+
+        result._phoneticSymbol.clear();
+        for( int i = 0; i < _phoneticSymbol.size(); i++ ){
+            result._phoneticSymbol.push_back( _phoneticSymbol[i] );
+        }
+
+        result.lengthRatio = lengthRatio;
+
+        result._consonantAdjustment.clear();
+        for( int i = 0; i < _consonantAdjustment.size(); i++ ){
+            result._consonantAdjustment.push_back( _consonantAdjustment[i] );
+        }
+        result.isProtected = isProtected;
+        return result;
+    }
+
+    /**
      * @brief この歌詞の発音記号を取得する
      * @return 発音記号
      */

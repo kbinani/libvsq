@@ -127,6 +127,12 @@ public:
         CPPUNIT_ASSERT( false == a.equalsForSynth( d ) );
     }
 
+    void testClone(){
+        Lyric lyric( "は,h a,1,64,0,0" );
+        Lyric copy = lyric.clone();
+        CPPUNIT_ASSERT_EQUAL( lyric.toString(), copy.toString() );
+    }
+
     CPPUNIT_TEST_SUITE( LyricTest );
     CPPUNIT_TEST( testConstructWithLine );
     CPPUNIT_TEST( testConstructWithPhrase );
@@ -139,6 +145,7 @@ public:
     CPPUNIT_TEST( testToString );
     CPPUNIT_TEST( testEquals );
     CPPUNIT_TEST( testEqualsForSynth );
+    CPPUNIT_TEST( testClone );
     CPPUNIT_TEST_SUITE_END();
 };
 
