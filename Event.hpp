@@ -426,8 +426,8 @@ public:
     VSQ_NS::EventType::EventTypeEnum type;
 
     /**
-     * 歌手ハンドル
-     * @var Handle
+     * @brief 歌手ハンドル
+     * @todo 型をHandle*に変える
      */
     VSQ_NS::Handle singerHandle;
 
@@ -474,14 +474,14 @@ public:
     int demAccent ;
 
     /**
-     * 歌詞ハンドル
-     * @var Handle
+     * @brief 歌詞ハンドル
+     * @todo 型をHandle*に変える
      */
     VSQ_NS::Handle lyricHandle;
 
     /**
-     * ビブラートハンドル
-     * @var Handle
+     * @brief ビブラートハンドル
+     * @todo 型をHandle*に変える
      */
     VSQ_NS::Handle vibratoHandle;
 
@@ -492,8 +492,8 @@ public:
     int vibratoDelay ;
 
     /**
-     * アタックハンドル
-     * @var Handle
+     * @brief アタックハンドル
+     * @todo 型をHandle*に変える
      */
     VSQ_NS::Handle noteHeadHandle;
 
@@ -518,8 +518,8 @@ public:
     int pMeanEndingNote;
 
     /**
-     * 強弱記号ハンドル
-     * @var Handle
+     * @brief 強弱記号ハンドル
+     * @todo 型をHandle*に変える
      */
     VSQ_NS::Handle iconDynamicsHandle;
 
@@ -744,6 +744,39 @@ public:
             stream.write( "IconHandle=h#" ).writeLine( (boost::format( "%04d" ) % iconDynamicsHandle.index).str() );
             stream.write( "Note#=" ).writeLine( (boost::format( "%d" ) % note).str() );
         }
+    }
+
+    /**
+     * @brief コピーを作成する
+     * @return (Event) このインスタンスのコピー
+     */
+    Event clone() const{
+        Event result( clock, type );
+
+        result.type = type;
+        result.singerHandle = singerHandle.clone();
+        result.setLength( getLength() );
+        result.note = note;
+        result.dynamics = dynamics;
+        result.pmBendDepth = pmBendDepth;
+        result.pmBendLength = pmBendLength;
+        result.pmbPortamentoUse = pmbPortamentoUse;
+        result.demDecGainRate = demDecGainRate;
+        result.demAccent = demAccent;
+        result.d4mean = d4mean;
+        result.pMeanOnsetFirstNote = pMeanOnsetFirstNote;
+        result.vMeanNoteTransition = vMeanNoteTransition;
+        result.pMeanEndingNote = pMeanEndingNote;
+        result.lyricHandle = lyricHandle.clone();
+        result.vibratoHandle = vibratoHandle.clone();
+        result.vibratoDelay = vibratoDelay;
+        result.noteHeadHandle = noteHeadHandle.clone();
+        result.iconDynamicsHandle = iconDynamicsHandle.clone();
+        result.index = index;
+
+        result.id = id;
+        result.tag = tag;
+        return result;
     }
 
     /**

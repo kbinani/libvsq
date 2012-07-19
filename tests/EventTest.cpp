@@ -321,6 +321,77 @@ public:
         CPPUNIT_ASSERT( false == Event::compare( noteEvent, singerEvent ) );
     }
 
+    void testClone(){
+        Event event = getSingerEvent();
+        event.clock = 40;
+        event.id = 4;
+        event.singerHandle = Handle( HandleType::SINGER );
+        event.singerHandle.index = 12;
+        Event copy = event.clone();
+        CPPUNIT_ASSERT_EQUAL( (tick_t)40, copy.clock );
+        CPPUNIT_ASSERT_EQUAL( 4, copy.id );
+        CPPUNIT_ASSERT_EQUAL( 12, copy.singerHandle.index );
+
+        Event id( 0, EventType::NOTE );
+        id.index = 1;
+        id.note = 6;
+        id.dynamics = 7;
+        id.pmBendDepth = 8;
+        id.pmBendLength = 9;
+        id.pmbPortamentoUse = 10;
+        id.demDecGainRate = 11;
+        id.demAccent = 12;
+        id.vibratoDelay = 13;
+        id.pMeanOnsetFirstNote = 14;
+        id.vMeanNoteTransition = 15;
+        id.d4mean = 16;
+        id.pMeanEndingNote = 17;
+        //assert_nil( id.singerHandle );
+        //assert_not_nil( id.lyricHandle );
+        //assert_nil( id.vibratoHandle );
+        //assert_nil( id.noteHeadHandle );
+        //assert_nil( id.iconDynamicsHandle );
+
+        copy = id.clone();
+        CPPUNIT_ASSERT_EQUAL( 1, copy.index );
+        CPPUNIT_ASSERT_EQUAL( EventType::NOTE, copy.type );
+        CPPUNIT_ASSERT_EQUAL( 6, copy.note );
+        CPPUNIT_ASSERT_EQUAL( 7, copy.dynamics );
+        CPPUNIT_ASSERT_EQUAL( 8, copy.pmBendDepth );
+        CPPUNIT_ASSERT_EQUAL( 9, copy.pmBendLength );
+        CPPUNIT_ASSERT_EQUAL( 10, copy.pmbPortamentoUse );
+        CPPUNIT_ASSERT_EQUAL( 11, copy.demDecGainRate );
+        CPPUNIT_ASSERT_EQUAL( 12, copy.demAccent );
+        CPPUNIT_ASSERT_EQUAL( 13, copy.vibratoDelay );
+        CPPUNIT_ASSERT_EQUAL( 14, copy.pMeanOnsetFirstNote );
+        CPPUNIT_ASSERT_EQUAL( 15, copy.vMeanNoteTransition );
+        CPPUNIT_ASSERT_EQUAL( 16, copy.d4mean );
+        CPPUNIT_ASSERT_EQUAL( 17, copy.pMeanEndingNote );
+
+        Handle iconHandle( HandleType::SINGER );
+        iconHandle.setCaption( "foo" );
+        id.singerHandle = iconHandle;
+        Handle lyricHandle( HandleType::LYRIC );
+        lyricHandle.index = 102;
+        id.lyricHandle = lyricHandle;
+        Handle vibratoHandle( HandleType::VIBRATO );
+        vibratoHandle.iconId = "aho";
+        id.vibratoHandle = vibratoHandle;
+        Handle noteHeadHandle( HandleType::NOTE_HEAD );
+        noteHeadHandle.ids = "baka";
+        id.noteHeadHandle = noteHeadHandle;
+        Handle iconDynamicsHandle( HandleType::DYNAMICS );
+        iconDynamicsHandle.setStartDyn( 183635 );
+        id.iconDynamicsHandle = iconDynamicsHandle;
+
+        copy = id.clone();
+        CPPUNIT_ASSERT_EQUAL( string( "foo" ), copy.singerHandle.getCaption() );
+        CPPUNIT_ASSERT_EQUAL( 102, copy.lyricHandle.index );
+        CPPUNIT_ASSERT_EQUAL( string( "aho" ), copy.vibratoHandle.iconId );
+        CPPUNIT_ASSERT_EQUAL( string( "baka" ), copy.noteHeadHandle.ids );
+        CPPUNIT_ASSERT_EQUAL( 183635, copy.iconDynamicsHandle.getStartDyn() );
+    }
+
     CPPUNIT_TEST_SUITE( EventTest );
     CPPUNIT_TEST( testConstruct );
     CPPUNIT_TEST( testConstructWithLine );
@@ -332,6 +403,7 @@ public:
     CPPUNIT_TEST( testWriteIcon );
     CPPUNIT_TEST( testCompareTo );
     CPPUNIT_TEST( testCompare );
+    CPPUNIT_TEST( testClone );
     CPPUNIT_TEST_SUITE_END();
 };
 
