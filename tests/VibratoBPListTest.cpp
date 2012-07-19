@@ -82,6 +82,18 @@ public:
         CPPUNIT_ASSERT_EQUAL( 128, list.get( 2 ).y );
     }
 
+    void testClone(){
+        std::vector<double> xList;
+        xList.push_back( 0.0 );
+        xList.push_back( 1.0 );
+        std::vector<int> yList;
+        yList.push_back( 1 );
+        yList.push_back( 128 );
+        VibratoBPList list( xList, yList );
+        VibratoBPList copy = list.clone();
+        CPPUNIT_ASSERT_EQUAL( string( "0=1,1=128" ), copy.getData() );
+    }
+
     CPPUNIT_TEST_SUITE( VibratoBPListTest );
     CPPUNIT_TEST( testConstructWithString );
     CPPUNIT_TEST( testConstructWithArray );
@@ -91,6 +103,7 @@ public:
     CPPUNIT_TEST( testSet );
     CPPUNIT_TEST( testGetData );
     CPPUNIT_TEST( testSetData );
+    CPPUNIT_TEST( testClone );
     CPPUNIT_TEST_SUITE_END();
 };
 

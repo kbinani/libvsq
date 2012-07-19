@@ -23,7 +23,7 @@
 VSQ_BEGIN_NAMESPACE
 
 /**
- * ビブラートデータポイントのリストを表すクラス
+ * @brief ビブラートデータポイントのリストを表すクラス
  * @class table
  * @name VibratoBPList
  */
@@ -31,8 +31,7 @@ class VibratoBPList
 {
 private:
     /**
-     * カーブのデータ点を保持するリスト
-     * @var table<VibratoBP>
+     * @brief カーブのデータ点を保持するリスト
      */
     std::vector<VSQ_NS::VibratoBP> _list;
 
@@ -116,6 +115,18 @@ public:
         }else{
             return _list[index].y;
         }
+    }
+
+    /**
+     * @brief コピーを作成する
+     * @return (VibratoBPList) このオブジェクトのコピー
+     */
+    VibratoBPList clone() const{
+        VibratoBPList ret;
+        for( int i = 0; i < _list.size(); i++ ){
+            ret._list.push_back( VibratoBP( _list[i].x, _list[i].y ) );
+        }
+        return ret;
     }
 
     /**
