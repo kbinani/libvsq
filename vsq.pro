@@ -48,6 +48,7 @@ HEADERS += \
     Mixer.hpp \
     EventListIndexIteratorKind.hpp \
     EventListIndexIterator.hpp \
+    TempoList.hpp \
     Track.hpp
 
 unix:!symbian {

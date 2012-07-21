@@ -23,8 +23,9 @@ VSQ_BEGIN_NAMESPACE
 /**
  * @brief テンポ情報テーブル内の要素を表現するクラス
  */
-class Tempo
-{
+class Tempo{
+    friend class TempoList;
+
 public:
     /**
      * Tick 単位の時刻
