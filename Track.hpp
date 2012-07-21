@@ -15,10 +15,18 @@
 #define __Track_hpp__
 
 #include "vsqglobal.hpp"
-#include "EventList.hpp"
+#include "Event.hpp"
+#include "Common.hpp"
+#include "Master.hpp"
+#include "Mixer.hpp"
+#include "BPList.hpp"
+#include "EventListIndexIterator.hpp"
 
 VSQ_BEGIN_NAMESPACE
 
+/**
+ * @todo _pit とかを一般化する
+ */
 class Track
 {
 protected:
@@ -29,171 +37,143 @@ protected:
 
     /**
      * @brief マスター情報。Master Track のみが保持する
+     * @todo ここの情報はSequenceクラスに移す
      */
     Master master;// = nil;
 
     /**
      * @brief ミキサー情報。Master Track のみが保持する
+     * @todo ここの情報はSequenceクラスに移す
      */
     Mixer mixer;// = nil;
 
     /**
      * @brief イベントの一覧
      */
-    EventList events;// = nil;
+    Event::List events;// = nil;
 
-    ---
-    --  PIT。ピッチベンド(pitchBendBPList)。default=0
-    -- @var BPList
-    -- @access private
-    this._pit = nil;
+private:
+    /**
+     * @brief PIT。ピッチベンド(pitchBendBPList)。default=0
+     */
+    BPList _pit;
 
-    ---
-    --  PBS。ピッチベンドセンシティビティ(pitchBendSensBPList)。dfault=2
-    -- @var BPList
-    -- @access private
-    this._pbs = nil;
+    /**
+     * @brief PBS。ピッチベンドセンシティビティ(pitchBendSensBPList)。dfault=2
+     */
+    BPList _pbs;
 
-    ---
-    --  DYN。ダイナミクス(dynamicsBPList)。default=64
-    -- @var BPList
-    -- @access private
-    this._dyn = nil;
+    /**
+     * @brief DYN。ダイナミクス(dynamicsBPList)。default=64
+     */
+    BPList _dyn;
 
-    ---
-    --  BRE。ブレシネス(epRResidualBPList)。default=0
-    -- @var BPList
-    -- @access private
-    this._bre = nil;
+    /**
+     * @brief BRE。ブレシネス(epRResidualBPList)。default=0
+     */
+    BPList _bre;
 
-    ---
-    --  BRI。ブライトネス(epRESlopeBPList)。default=64
-    -- @var BPList
-    -- @access private
-    this._bri = nil;
+    /**
+     * @brief BRI。ブライトネス(epRESlopeBPList)。default=64
+     */
+    BPList _bri;
 
-    ---
-    --  CLE。クリアネス(epRESlopeDepthBPList)。default=0
-    -- @var BPList
-    -- @access private
-    this._cle = nil;
+    /**
+     * @brief CLE。クリアネス(epRESlopeDepthBPList)。default=0
+     */
+    BPList _cle;
 
-    ---
-    -- @var BPList
-    -- @access private
-    this._reso1FreqBPList = nil;
+    /**
+     */
+    BPList _reso1FreqBPList;
 
-    ---
-    -- @var BPList
-    -- @access private
-    this._reso2FreqBPList = nil;
+    /**
+     */
+    BPList _reso2FreqBPList;
 
-    ---
-    -- @var BPList
-    -- @access private
-    this._reso3FreqBPList = nil;
+    /**
+     */
+    BPList _reso3FreqBPList;
 
-    ---
-    -- @var BPList
-    -- @access private
-    this._reso4FreqBPList = nil;
+    /**
+     */
+    BPList _reso4FreqBPList;
 
-    ---
-    -- @var BPList
-    -- @access private
-    this._reso1BWBPList = nil;
+    /**
+     */
+    BPList _reso1BWBPList;
 
-    ---
-    -- @var BPList
-    -- @access private
-    this._reso2BWBPList = nil;
+    /**
+     */
+    BPList _reso2BWBPList;
 
-    ---
-    -- @var BPList
-    -- @access private
-    this._reso3BWBPList = nil;
+    /**
+     */
+    BPList _reso3BWBPList;
 
-    ---
-    -- @var BPList
-    -- @access private
-    this._reso4BWBPList = nil;
+    /**
+     */
+    BPList _reso4BWBPList;
 
-    ---
-    -- @var BPList
-    -- @access private
-    this._reso1AmpBPList = nil;
+    /**
+     */
+    BPList _reso1AmpBPList;
 
-    ---
-    -- @var BPList
-    -- @access private
-    this._reso2AmpBPList = nil;
+    /**
+     */
+    BPList _reso2AmpBPList;
 
-    ---
-    -- @var BPList
-    -- @access private
-    this._reso3AmpBPList = nil;
+    /**
+     */
+    BPList _reso3AmpBPList;
 
-    ---
-    -- @var BPList
-    -- @access private
-    this._reso4AmpBPList = nil;
+    /**
+     */
+    BPList _reso4AmpBPList;
 
-    ---
-    --  Harmonics。(EpRSineBPList)default = 64
-    -- @var BPList
-    -- @access private
-    this._harmonics = nil;
+    /**
+     * @brief Harmonics。(EpRSineBPList)default = 64
+     */
+    BPList _harmonics;
 
-    ---
-    --  Effect2 Depth。
-    -- @var BPList
-    -- @access private
-    this._fx2depth = nil;
+    /**
+     * @brief Effect2 Depth。
+     */
+    BPList _fx2depth;
 
-    ---
-    --  GEN。ジェンダーファクター(genderFactorBPList)。default=64
-    -- @var BPList
-    -- @access private
-    this._gen = nil;
+    /**
+     * @brief GEN。ジェンダーファクター(genderFactorBPList)。default=64
+     */
+    BPList _gen;
 
-    ---
-    -- POR。ポルタメントタイミング(portamentoTimingBPList)。default=64
-    -- @var BPList
-    -- @access private
-    this._por = nil;
+    /**
+     * @brief POR。ポルタメントタイミング(portamentoTimingBPList)。default=64
+     */
+    BPList _por;
 
-    ---
-    --  OPE。オープニング(openingBPList)。default=127
-    -- @var BPList
-    -- @access private
-    this._ope = nil;
+    /**
+     * @brief OPE。オープニング(openingBPList)。default=127
+     */
+    BPList _ope;
 
-    ---
-    -- cent単位のピッチベンド。vsqに保存するときは、VsqFile#reflectPitchによってPIT, PBSに落とし込む。それらの範囲をオーバーしてたら知らん(cutoff)
-    -- @var BPList
-    -- @access private
-    this._pitch = nil;
+public:
+    /**
+     * @brief Master Trackを構築
+     */
+    explicit Track(){
+        this->_initCor( "Track1", "Miku" );
+    }
 
-    ---
-    -- Master Trackを構築
-    -- @return (Track)
-    -- @name new<!--1-->
-    -- @access static ctor
-    function this:_init_0()
-    end
+    /**
+     * @brief Master Trackでないトラックを構築
+     * @param name (string) トラック名
+     * @param singer (string) トラックのデフォルトの歌手名
+     */
+    explicit Track( std::string name, std::string singer ){
+        this->_initCor( name, singer );
+    }
 
-    ---
-    -- Master Trackでないトラックを構築
-    -- @param name (string) トラック名
-    -- @param singer (string) トラックのデフォルトの歌手名
-    -- @return (Track)
-    -- @name new<!--2-->
-    -- @access static ctor
-    function this:_init_2a( name, singer )
-        self:_initCor( name, singer );
-    end
-
-    --[[
+    /**
         -- @param midi_event [Array<MidiEvent>]
         -- @param encoding [string]
         function this:_init_2b( midi_event, encoding )
@@ -206,26 +186,26 @@ protected:
             local i;
             for i = 0; i < count; i++
                 local item = midi_event[i];
-                if( item.firstByte == 0xff and #item.data > 0 )then
+                if( item.firstByte == 0xff and #item.data > 0 ){
                     -- meta textを抽出
                     local type = item.data[0];
-                    if( type == 0x01 or type == 0x03 )then
-                        if( type == 0x01 )then
+                    if( type == 0x01 or type == 0x03 ){
+                        if( type == 0x01 ){
                             local colon_count = 0;
                             local j;
                             for j = 0; j < #item.data - 1; j++
                                 local d = item.data[j + 1];
-                                if( d == 0x3a )then
+                                if( d == 0x3a ){
                                     colon_count++;
-                                    if( colon_count <= 2 )then
+                                    if( colon_count <= 2 ){
                                         continue;
-                                    end
-                                end
-                                if( colon_count < 2 )then
+                                    }
+                                }
+                                if( colon_count < 2 ){
                                     continue;
-                                end
+                                }
                                 buffer.push( d );
-                            end
+                            }
 
                             local index_0x0a = org.kbinani.PortUtil.arrayIndexOf( buffer, 0x0a );
                             while( index_0x0a >= 0 )do
@@ -234,146 +214,119 @@ protected:
                                 for j = 0; j < index_0x0a; j++
                                     cpy[j] = 0xff & buffer[0];
                                     buffer.shift();
-                                end
+                                }
 
                                 local line = org.kbinani.Cp932.convertToUTF8( cpy );
 --alert( "VsqTrack#_init_2b; line=" + line );
                                 sw:writeLine( line );
                                 buffer.shift();
                                 index_0x0a = org.kbinani.PortUtil.arrayIndexOf( buffer, 0x0a );
-                            end
+                            }
                         else
                             local j;
                             for j = 0; j < #item.data - 1; j++
                                 buffer.push( item.data[j + 1] );
-                            end
+                            }
                             local c = #buffer;
                             local d = Array.new( c );
                             local j;
                             for j = 0; j < c; j++
                                 d[j] = 0xff & buffer[j];
-                            end
+                            }
                             track_name = org.kbinani.Cp932.convertToUTF8( d );
                             buffer.splice( 0, #buffer );
-                        end
-                    end
+                        }
+                    }
                 else
                     continue;
-                end
-            end
+                }
+            }
 
             local remain = #buffer;
-            if( remain > 0 )then
+            if( remain > 0 ){
                 local cpy = Array.new( remain );
                 local j;
                 for j = 0; j < remain; j++
                     cpy[j] = 0xff & buffer[j];
-                end
+                }
                 local line = org.kbinani.Cp932.convertToUTF8( cpy );
                 sw:writeLine( line );
-            end
+            }
 
             sw:setPointer( -1 );
             self.MetaText = MetaText.new( sw );
             self.setName( track_name );
-        end]]
+        }
+*/
 
-    ---
-    -- 初期化を行う
-    -- @param name (string)
-    -- @param singer (string)
-    -- @access private
-    function this:_initCor( name, singer )
-        self.common = Common.new( name, 179, 181, 123, 1, 1 );
-        self._pit = BPList.new( "pit", 0, -8192, 8191 );
-        self._pbs = BPList.new( "pbs", 2, 0, 24 );
-        self._dyn = BPList.new( "dyn", 64, 0, 127 );
-        self._bre = BPList.new( "bre", 0, 0, 127 );
-        self._bri = BPList.new( "bri", 64, 0, 127 );
-        self._cle = BPList.new( "cle", 0, 0, 127 );
-        self._reso1FreqBPList = BPList.new( "reso1freq", 64, 0, 127 );
-        self._reso2FreqBPList = BPList.new( "reso2freq", 64, 0, 127 );
-        self._reso3FreqBPList = BPList.new( "reso3freq", 64, 0, 127 );
-        self._reso4FreqBPList = BPList.new( "reso4freq", 64, 0, 127 );
-        self._reso1BWBPList = BPList.new( "reso1bw", 64, 0, 127 );
-        self._reso2BWBPList = BPList.new( "reso2bw", 64, 0, 127 );
-        self._reso3BWBPList = BPList.new( "reso3bw", 64, 0, 127 );
-        self._reso4BWBPList = BPList.new( "reso4bw", 64, 0, 127 );
-        self._reso1AmpBPList = BPList.new( "reso1amp", 64, 0, 127 );
-        self._reso2AmpBPList = BPList.new( "reso2amp", 64, 0, 127 );
-        self._reso3AmpBPList = BPList.new( "reso3amp", 64, 0, 127 );
-        self._reso4AmpBPList = BPList.new( "reso4amp", 64, 0, 127 );
-        self._harmonics = BPList.new( "harmonics", 64, 0, 127 );
-        self._fx2depth = BPList.new( "fx2depth", 64, 0, 127 );
-        self._gen = BPList.new( "gen", 64, 0, 127 );
-        self._por = BPList.new( "por", 64, 0, 127 );
-        self._ope = BPList.new( "ope", 127, 0, 127 );
-        self._pitch = BPList.new( "pitch", 0, -15000, 15000 );
-        --[[if ( is_first_track ) {
-                self.master = Master.new( pre_measure );
-            } else {
-                self.master = null;
-            }]]
-        self.events = EventList.new();
+    /**
+     * @brief トラックの名前を取得する
+     * @return (string) トラック名
+     */
+    const std::string getName() const{
+        //if( common == nil ){
+        //    return "Master Track";
+        //}else{
+            return common.name;
+        //}
+    }
 
-        local event = Event.new( 0, EventTypeEnum.SINGER );
-        local ish = Handle.new( HandleTypeEnum.SINGER );
-        ish.iconId = "$07010000";
-        ish.ids = singer;
-        ish.original = 0;
-        ish.caption = "";
-        ish:setLength( 1 );
-        ish.language = 0;
-        ish.program = 0;
-        event.singerHandle = ish;
-        self.events:add( event );
-    end
+    /**
+     * @brief トラックの名前を設定する
+     * @param value (string) トラック名
+     */
+    void setName( const std::string value ){
+        common.name = value;
+    }
 
-    ---
-    -- 指定された種類のイベントのインデクスを順に返す反復子を取得する
-    -- @param iteratorKind (EventList.IndexIteratorKindEnum) 反復子の種類
-    -- @return (EventList.IndexIterator) 反復子
-    function this:getIndexIterator( iteratorKind )
-        return EventList.IndexIterator.new( self.events, iteratorKind );
-    end
+    /**
+     * @brief 指定された種類のイベントのインデクスを順に返す反復子を取得する
+     * @param iteratorKind 反復子の種類
+     * @return 反復子
+     */
+    EventListIndexIterator getIndexIterator( EventListIndexIteratorKind::EventListIndexIteratorKindEnum iteratorKind ){
+        return EventListIndexIterator( &this->events, (int)iteratorKind );
+    }
 
-    --[[
+    /**
         -- このトラックの再生モードを取得します．
         --
         -- @return [int] PlayMode.PlayAfterSynthまたはPlayMode.PlayWithSynth
         function this:getPlayMode()
-            if( self.common == nil )then
+            if( self.common == nil ){
                 return PlayModeEnum.PLAY_WITH_SYNTH;
-            end
+            }
             if( self.common.lastPlayMode ~= PlayModeEnum.PLAY_AFTER_SYNTH and
-                 self.common.lastPlayMode ~= PlayModeEnum.PLAY_WITH_SYNTH )then
+                 self.common.lastPlayMode ~= PlayModeEnum.PLAY_WITH_SYNTH ){
                 self.common.lastPlayMode = PlayModeEnum.PLAY_WITH_SYNTH;
-            end
+            }
             return self.common.lastPlayMode;
-        end]]
+        }
+        */
 
-    --[[
+    /**
         -- このトラックの再生モードを設定します．
         --
         -- @param value [int] PlayMode.PlayAfterSynth, PlayMode.PlayWithSynth, またはPlayMode.Offのいずれかを指定します
         -- @return [void]
         function this:setPlayMode( value )
             if( self.MetaText == nil ) return;
-            if( self.common == nil )then
+            if( self.common == nil ){
                 self.common = Common.new( "Miku", 128, 128, 128, DynamicsModeEnum.EXPERT, value );
                 return;
-            end
-            if( value == PlayModeEnum.OFF )then
-                if( self.common.playMode ~= PlayModeEnum.OFF )then
+            }
+            if( value == PlayModeEnum.OFF ){
+                if( self.common.playMode ~= PlayModeEnum.OFF ){
                     self.common.lastPlayMode = self.common.playMode;
-                end
+                }
             else
                 self.common.lastPlayMode = value;
-            end
+            }
             self.common.playMode = value;
-        end]]
+        }
+        */
 
-    --[[
+    /**
         -- このトラックがレンダリングされるかどうかを取得します．
         --
         -- @return [bool]
@@ -381,53 +334,35 @@ protected:
             if( self.MetaText == nil ) return true;
             if( self.common == nil ) return true;
             return self.common.playMode ~= PlayModeEnum.OFF;
-        end]]
+        }
+        */
 
-    --[[
+    /**
         -- このトラックがレンダリングされるかどうかを設定します，
         --
         -- @param value [bool]
         function this:setTrackOn( value )
             if( self.MetaText == nil ) return;
-            if( self.common == nil )then
+            if( self.common == nil ){
                 self.common = Common.new( "Miku", 128, 128, 128, DynamicsModeEnum.EXPERT, value ? PlayModeEnum.PLAY_WITH_SYNTH : PlayModeEnum.OFF );
-            end
-            if( value )then
+            }
+            if( value ){
                 if( self.common.lastPlayMode ~= PlayModeEnum.PLAY_AFTER_SYNTH and
-                     self.common.lastPlayMode ~= PlayModeEnum.PLAY_WITH_SYNTH )then
+                     self.common.lastPlayMode ~= PlayModeEnum.PLAY_WITH_SYNTH ){
                     self.common.lastPlayMode = PlayModeEnum.PLAY_WITH_SYNTH;
-                end
+                }
                 self.common.playMode = self.common.lastPlayMode;
             else
                 if( self.common.playMode == PlayModeEnum.PLAY_AFTER_SYNTH or
-                     self.common.playMode == PlayModeEnum.PLAY_WITH_SYNTH )then
+                     self.common.playMode == PlayModeEnum.PLAY_WITH_SYNTH ){
                     self.common.lastPlayMode = self.common.playMode;
-                end
+                }
                 self.common.playMode = PlayModeEnum.OFF;
-            end
-        end]]
+            }
+        }
+        */
 
-    ---
-    -- トラックの名前を取得する
-    -- @return (string) トラック名
-    function this:getName()
-        if( self.common == nil )then
-            return "Master Track";
-        else
-            return self.common.name;
-        end
-    end
-
-    ---
-    -- トラックの名前を設定する
-    -- @param value (string) トラック名
-    function this:setName( value )
-        if( self.common ~= nil )then
-            self.common.name = value;
-        end
-    end
-
-    --[[
+    /**
         -- このトラックの，指定したゲートタイムにおけるピッチベンドを取得します．単位はCentです．
         --
         -- @param clock [int] ピッチベンドを取得するゲートタイム
@@ -437,9 +372,10 @@ protected:
             local pit = self.PIT.getValue( clock );
             local pbs = self.PBS.getValue( clock );
             return pit * pbs * inv2_13 * 100.0;
-        end]]
+        }
+        */
 
-    --[[
+    /**
         -- クレッシェンド，デクレッシェンド，および強弱記号をダイナミクスカーブに反映させます．
         -- この操作によって，ダイナミクスカーブに設定されたデータは全て削除されます．
         -- @return [void]
@@ -450,13 +386,13 @@ protected:
             for itr = self.getDynamicsEventIterator(); itr.hasNext();
                 local item = itr.next();
                 local handle = item.IconDynamicsHandle;
-                if( handle == nil )then
+                if( handle == nil ){
                     continue;
-                end
+                }
                 local clock = item.Clock;
                 local length = item.getLength();
 
-                if( handle.isDynaffType() )then
+                if( handle.isDynaffType() ){
                     -- 強弱記号
                     dyn.add( clock, handle.getStartDyn() );
                 else
@@ -468,39 +404,39 @@ protected:
                     local i;
                     for i = count - 1; i >= 0; i--
                         local c = dyn.getKeyClock( i );
-                        if( clock <= c and c <= clock + length )then
+                        if( clock <= c and c <= clock + length ){
                             dyn.removeElementAt( i );
-                        elseif( c < clock )then
+                        }else if( c < clock ){
                             break;
-                        end
-                    end
+                        }
+                    }
 
                     local bplist = handle.getDynBP();
-                    if( bplist == nil or (bplist ~= nil and bplist.size() <= 0) )then
+                    if( bplist == nil or (bplist ~= nil and bplist.size() <= 0) ){
                         -- カーブデータが無い場合
                         local a = 0.0;
-                        if( length > 0 )then
+                        if( length > 0 ){
                             a = (handle.getEndDyn() - handle.getStartDyn()) / length;
-                        end
+                        }
                         local last_val = start_dyn;
                         local i;
                         for i = clock; i < clock + length; i++
                             local val = start_dyn + org.kbinani.PortUtil.castToInt( a * (i - clock) );
-                            if( val < dyn.getMinimum() )then
+                            if( val < dyn.getMinimum() ){
                                 val = dyn.getMinimum();
-                            elseif( dyn.getMaximum() < val )then
+                            }else if( dyn.getMaximum() < val ){
                                 val = dyn.getMaximum();
-                            end
-                            if( last_val ~= val )then
+                            }
+                            if( last_val ~= val ){
                                 dyn.add( i, val );
                                 last_val = val;
-                            end
-                        end
+                            }
+                        }
                     else
                         -- カーブデータがある場合
                         local last_val = handle.getStartDyn();
                         local last_clock = clock;
-                        local bpnum = bplist:size();
+                        local bpnum = bplist.size();
                         local last = start_dyn;
 
                         -- bplistに指定されている分のデータ点を追加
@@ -508,52 +444,53 @@ protected:
                         for i = 0; i < bpnum; i++
                             local point = bplist.getElement( i );
                             local pointClock = clock + org.kbinani.PortUtil.castToInt( length * point.X );
-                            if( pointClock <= last_clock )then
+                            if( pointClock <= last_clock ){
                                 continue;
-                            end
+                            }
                             local pointValue = point.Y;
                             local a = (pointValue - last_val) / (pointClock - last_clock);
                             local j;
                             for j = last_clock; j <= pointClock; j++
                                 local val = start_dyn + org.kbinani.PortUtil.castToInt( (j - last_clock) * a );
-                                if( val < dyn.getMinimum() )then
+                                if( val < dyn.getMinimum() ){
                                     val = dyn.getMinimum();
-                                elseif( dyn.getMaximum() < val )then
+                                }else if( dyn.getMaximum() < val ){
                                     val = dyn.getMaximum();
-                                end
-                                if( val ~= last )then
+                                }
+                                if( val ~= last ){
                                     dyn.add( j, val );
                                     last = val;
-                                end
-                            end
+                                }
+                            }
                             last_val = point.Y;
                             last_clock = pointClock;
-                        end
+                        }
 
                         -- bplistの末尾から，clock => clock + lengthまでのデータ点を追加
                         local last2 = last;
-                        if( last_clock < clock + length )then
+                        if( last_clock < clock + length ){
                             local a = (handle.getEndDyn() - last_val) / (clock + length - last_clock);
                             local j;
                             for j = last_clock; j < clock + length; j++
                                 local val = last2 + org.kbinani.PortUtil.castToInt( (j - last_clock) * a );
-                                if( val < dyn.getMinimum() )then
+                                if( val < dyn.getMinimum() ){
                                     val = dyn.getMinimum();
-                                elseif( dyn.getMaximum() < val )then
+                                }else if( dyn.getMaximum() < val ){
                                     val = dyn.getMaximum();
-                                end
-                                if( val ~= last )then
+                                }
+                                if( val ~= last ){
                                     dyn.add( j, val );
                                     last = val;
-                                end
-                            end
-                        end
-                    end
-                end
-            end
-        end]]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        */
 
-    --[[
+    /**
         -- 指定したゲートタイムにおいて、歌唱を担当している歌手のVsqEventを取得します．
         --
         -- @param clock [int]
@@ -563,151 +500,134 @@ protected:
             local itr;
             for itr = self.getSingerEventIterator(); itr.hasNext();
                 local item = itr.next();
-                if( clock < item.Clock )then
+                if( clock < item.Clock ){
                     return last;
-                end
+                }
                 last = item;
-            end
+            }
             return last;
-        end]]
+        }
+*/
 
-    --[[
+    /**
         -- このトラックに設定されているイベントを，ゲートタイム順に並べ替えます．
         --
         -- @reutrn [void]
         function this:sortEvent()
             self.events:sort();
-        end]]
+        }
+        */
 
-    --
-    -- トラックのメタテキストを、テキストストリームに出力する
-    function this:printMetaText( ... )
-        local arguments = { ... };
-        if( #arguments == 3 )then
-            self:_printMetaText_3( arguments[1], arguments[2], arguments[3] );
-        elseif( #arguments == 4 )then
-            self:_printMetaText_4( arguments[1], arguments[2], arguments[3], arguments[4] );
-        end
-    end
+    /**
+     * @brief トラックのメタテキストを、テキストストリームに出力する
+     * @param stream (TextStream) 出力先のストリーム
+     * @param eos (int) イベントリストの末尾を表す番号
+     * @param start (int) Tick 単位の出力開始時刻
+     * @param printPitch (boolean) pitch を含めて出力するかどうか(現在は <code>false</code> 固定で、引数は無視される)
+     */
+    void printMetaText( TextStream &stream, int eos, tick_t start, bool printPitch = false ){
+        //TODO: commonの型を Common* にする
+        //if( common ~= nil ){
+            common.write( stream );
+        //}
+        //TODO: master の型を Master* にする
+        //if( master ~= nil ){
+            master.write( stream );
+        //}
+        //TODO: mixer の型を Mixer* にする
+        //if( mixer ~= nil ){
+            mixer.write( stream );
+        //}
+        vector<Handle> handle = events.write( stream, eos );
+        Event::ListIterator itr = events.iterator();
+        while( itr.hasNext() ){
+            Event *item = itr.next();
+            item->write( stream );
+        }
+        for( int i = 0; i < handle.size(); ++i ){
+            handle[i].write( stream );
+        }
+        string version = common.version;
+        if( _pit.size() > 0 ){
+            _pit.print( stream, start, "[PitchBendBPList]" );
+        }
+        if( _pbs.size() > 0 ){
+            _pbs.print( stream, start, "[PitchBendSensBPList]" );
+        }
+        if( _dyn.size() > 0 ){
+            _dyn.print( stream, start, "[DynamicsBPList]" );
+        }
+        if( _bre.size() > 0 ){
+            _bre.print( stream, start, "[EpRResidualBPList]" );
+        }
+        if( _bri.size() > 0 ){
+            _bri.print( stream, start, "[EpRESlopeBPList]" );
+        }
+        if( _cle.size() > 0 ){
+            _cle.print( stream, start, "[EpRESlopeDepthBPList]" );
+        }
+        if( version.substr( 0, 4 ) == "DSB2" ){
+            if( _harmonics.size() > 0 ){
+                _harmonics.print( stream, start, "[EpRSineBPList]" );
+            }
+            if( _fx2depth.size() > 0 ){
+                _fx2depth.print( stream, start, "[VibTremDepthBPList]" );
+            }
 
-    ---
-    -- トラックのメタテキストを、テキストストリームに出力する
-    -- @param stream (TextStream) 出力先のストリーム
-    -- @param eos (int) イベントリストの末尾を表す番号
-    -- @param start (int) Tick 単位の出力開始時刻
-    -- @name printMetaText<!--1-->
-    function this:_printMetaText_3( stream, eos, start )
-        self:_printMetaText_4( stream, eos, start, false );
-    end
+            if( _reso1FreqBPList.size() > 0 ){
+                _reso1FreqBPList.print( stream, start, "[Reso1FreqBPList]" );
+            }
+            if( _reso2FreqBPList.size() > 0 ){
+                _reso2FreqBPList.print( stream, start, "[Reso2FreqBPList]" );
+            }
+            if( _reso3FreqBPList.size() > 0 ){
+                _reso3FreqBPList.print( stream, start, "[Reso3FreqBPList]" );
+            }
+            if( _reso4FreqBPList.size() > 0 ){
+                _reso4FreqBPList.print( stream, start, "[Reso4FreqBPList]" );
+            }
 
-    ---
-    -- トラックのメタテキストを、テキストストリームに出力する
-    -- @param stream (TextStream) 出力先のストリーム
-    -- @param eos (int) イベントリストの末尾を表す番号
-    -- @param start (int) Tick 単位の出力開始時刻
-    -- @param printPitch (boolean) pitch を含めて出力するかどうか(現在は <code>false</code> 固定で、引数は無視される)
-    -- @name printMetaText<!--2-->
-    function this:_printMetaText_4( stream, eos, start, printPitch )
-        if( self.common ~= nil )then
-            self.common:write( stream );
-        end
-        if( self.master ~= nil )then
-            self.master:write( stream );
-        end
-        if( self.mixer ~= nil )then
-            self.mixer:write( stream );
-        end
-        local handle = self.events:write( stream, eos );
-        local itr = self.events:iterator()
-        while( itr:hasNext() )do
-            local item = itr:next();
-            item:write( stream );
-        end
-        local i;
-        for i = 1, #handle, 1 do
-            handle[i]:write( stream );
-        end
-        local version = self.common.version;
-        if( self._pit:size() > 0 )then
-            self._pit:print( stream, start, "[PitchBendBPList]" );
-        end
-        if( self._pbs:size() > 0 )then
-            self._pbs:print( stream, start, "[PitchBendSensBPList]" );
-        end
-        if( self._dyn:size() > 0 )then
-            self._dyn:print( stream, start, "[DynamicsBPList]" );
-        end
-        if( self._bre:size() > 0 )then
-            self._bre:print( stream, start, "[EpRResidualBPList]" );
-        end
-        if( self._bri:size() > 0 )then
-            self._bri:print( stream, start, "[EpRESlopeBPList]" );
-        end
-        if( self._cle:size() > 0 )then
-            self._cle:print( stream, start, "[EpRESlopeDepthBPList]" );
-        end
-        if( version:sub( 1, 4 ) == "DSB2" )then
-            if( self._harmonics:size() > 0 )then
-                self._harmonics:print( stream, start, "[EpRSineBPList]" );
-            end
-            if( self._fx2depth:size() > 0 )then
-                self._fx2depth:print( stream, start, "[VibTremDepthBPList]" );
-            end
+            if( _reso1BWBPList.size() > 0 ){
+                _reso1BWBPList.print( stream, start, "[Reso1BWBPList]" );
+            }
+            if( _reso2BWBPList.size() > 0 ){
+                _reso2BWBPList.print( stream, start, "[Reso2BWBPList]" );
+            }
+            if( _reso3BWBPList.size() > 0 ){
+                _reso3BWBPList.print( stream, start, "[Reso3BWBPList]" );
+            }
+            if( _reso4BWBPList.size() > 0 ){
+                _reso4BWBPList.print( stream, start, "[Reso4BWBPList]" );
+            }
 
-            if( self._reso1FreqBPList:size() > 0 )then
-                self._reso1FreqBPList:print( stream, start, "[Reso1FreqBPList]" );
-            end
-            if( self._reso2FreqBPList:size() > 0 )then
-                self._reso2FreqBPList:print( stream, start, "[Reso2FreqBPList]" );
-            end
-            if( self._reso3FreqBPList:size() > 0 )then
-                self._reso3FreqBPList:print( stream, start, "[Reso3FreqBPList]" );
-            end
-            if( self._reso4FreqBPList:size() > 0 )then
-                self._reso4FreqBPList:print( stream, start, "[Reso4FreqBPList]" );
-            end
+            if( _reso1AmpBPList.size() > 0 ){
+                _reso1AmpBPList.print( stream, start, "[Reso1AmpBPList]" );
+            }
+            if( _reso2AmpBPList.size() > 0 ){
+                _reso2AmpBPList.print( stream, start, "[Reso2AmpBPList]" );
+            }
+            if( _reso3AmpBPList.size() > 0 ){
+                _reso3AmpBPList.print( stream, start, "[Reso3AmpBPList]" );
+            }
+            if( _reso4AmpBPList.size() > 0 ){
+                _reso4AmpBPList.print( stream, start, "[Reso4AmpBPList]" );
+            }
+        }
 
-            if( self._reso1BWBPList:size() > 0 )then
-                self._reso1BWBPList:print( stream, start, "[Reso1BWBPList]" );
-            end
-            if( self._reso2BWBPList:size() > 0 )then
-                self._reso2BWBPList:print( stream, start, "[Reso2BWBPList]" );
-            end
-            if( self._reso3BWBPList:size() > 0 )then
-                self._reso3BWBPList:print( stream, start, "[Reso3BWBPList]" );
-            end
-            if( self._reso4BWBPList:size() > 0 )then
-                self._reso4BWBPList:print( stream, start, "[Reso4BWBPList]" );
-            end
+        if( _gen.size() > 0 ){
+            _gen.print( stream, start, "[GenderFactorBPList]" );
+        }
+        if( _por.size() > 0 ){
+            _por.print( stream, start, "[PortamentoTimingBPList]" );
+        }
+        if( version.substr( 0, 4 ) == "DSB3" ){
+            if( _ope.size() > 0 ){
+                _ope.print( stream, start, "[OpeningBPList]" );
+            }
+        }
+    }
 
-            if( self._reso1AmpBPList:size() > 0 )then
-                self._reso1AmpBPList:print( stream, start, "[Reso1AmpBPList]" );
-            end
-            if( self._reso2AmpBPList:size() > 0 )then
-                self._reso2AmpBPList:print( stream, start, "[Reso2AmpBPList]" );
-            end
-            if( self._reso3AmpBPList:size() > 0 )then
-                self._reso3AmpBPList:print( stream, start, "[Reso3AmpBPList]" );
-            end
-            if( self._reso4AmpBPList:size() > 0 )then
-                self._reso4AmpBPList:print( stream, start, "[Reso4AmpBPList]" );
-            end
-        end
-
-        if( self._gen:size() > 0 )then
-            self._gen:print( stream, start, "[GenderFactorBPList]" );
-        end
-        if( self._por:size() > 0 )then
-            self._por:print( stream, start, "[PortamentoTimingBPList]" );
-        end
-        if( version:sub( 1, 4 ) == "DSB3" )then
-            if( self._ope:size() > 0 )then
-                self._ope:print( stream, start, "[OpeningBPList]" );
-            end
-        end
-    end
-
-    --[[
+    /**
         -- レンダラーを変更します
         --
         -- @param new_renderer [string]
@@ -715,7 +635,7 @@ protected:
         function this:changeRenderer( new_renderer, singers )
             local default_id = nil;
             local singers_size = #singers;
-            if( singers_size <= 0 )then
+            if( singers_size <= 0 ){
                 default_id = Id.new();
                 default_id.type = EventTypeEnum.SINGER;
                 local singer_handle = Handle.new( HandleTypeEnum.SINGER );
@@ -730,7 +650,7 @@ protected:
                 default_id.singerHandle = singer_handle;
             else
                 default_id = singers[0];
-            end
+            }
 
             local itr;
             for ( itr = self.getSingerEventIterator(); itr.hasNext();
@@ -741,264 +661,277 @@ protected:
                 local i;
                 for i = 0; i < singers_size; i++
                     local id = singers[i];
-                    if( program == singer_handle.Program )then
+                    if( program == singer_handle.Program ){
                         ve.id = id:clone();
                         found = true;
                         break;
-                    end
-                end
-                if( !found )then
+                    }
+                }
+                if( !found ){
                     local add = default_id:clone();
                     add.IconHandle.Program = program;
                     ve.id = add;
-                end
-            end
+                }
+            }
             self.common.Version = new_renderer;
-        end]]
+        }
+        */
 
-    ---
-    -- 指定された名前のカーブを取得します
-    -- @param curve (string) カーブ名
-    -- @return (BPList) カーブ
-    function this:getCurve( curve )
-        local search = curve:lower();
-        if( search == "bre" )then
-            return self._bre;
-        elseif( search == "bri" )then
-            return self._bri;
-        elseif( search == "cle" )then
-            return self._cle;
-        elseif( search == "dyn" )then
-            return self._dyn;
-        elseif( search == "gen" )then
-            return self._gen;
-        elseif( search == "ope" )then
-            return self._ope;
-        elseif( search == "pbs" )then
-            return self._pbs;
-        elseif( search == "pit" )then
-            return self._pit;
-        elseif( search == "por" )then
-            return self._por;
-        elseif( search == "harmonics" )then
-            return self._harmonics;
-        elseif( search == "fx2depth" )then
-            return self._fx2depth;
-        elseif( search == "reso1amp" )then
-            return self._reso1AmpBPList;
-        elseif( search == "reso1bw" )then
-            return self._reso1BWBPList;
-        elseif( search == "reso1freq" )then
-            return self._reso1FreqBPList;
-        elseif( search == "reso2amp" )then
-            return self._reso2AmpBPList;
-        elseif( search == "reso2bw" )then
-            return self._reso2BWBPList;
-        elseif( search == "reso2freq" )then
-            return self._reso2FreqBPList;
-        elseif( search == "reso3amp" )then
-            return self._reso3AmpBPList;
-        elseif( search == "reso3bw" )then
-            return self._reso3BWBPList;
-        elseif( search == "reso3freq" )then
-            return self._reso3FreqBPList;
-        elseif( search == "reso4amp" )then
-            return self._reso4AmpBPList;
-        elseif( search == "reso4bw" )then
-            return self._reso4BWBPList;
-        elseif( search == "reso4freq" )then
-            return self._reso4FreqBPList;
-        elseif( search == "pitch" )then
-            return self._pitch;
-        else
-            return nil;
-        end
-    end
+    /**
+     * @brief 指定された名前のカーブを取得します
+     * @param curve (string) カーブ名
+     * @return (BPList) カーブ
+     */
+    BPList *getCurve( const std::string curve ){
+        string search = StringUtil::toLower( curve );
+        if( search == "bre" ){
+            return &_bre;
+        }else if( search == "bri" ){
+            return &_bri;
+        }else if( search == "cle" ){
+            return &_cle;
+        }else if( search == "dyn" ){
+            return &_dyn;
+        }else if( search == "gen" ){
+            return &_gen;
+        }else if( search == "ope" ){
+            return &_ope;
+        }else if( search == "pbs" ){
+            return &_pbs;
+        }else if( search == "pit" ){
+            return &_pit;
+        }else if( search == "por" ){
+            return &_por;
+        }else if( search == "harmonics" ){
+            return &_harmonics;
+        }else if( search == "fx2depth" ){
+            return &_fx2depth;
+        }else if( search == "reso1amp" ){
+            return &_reso1AmpBPList;
+        }else if( search == "reso1bw" ){
+            return &_reso1BWBPList;
+        }else if( search == "reso1freq" ){
+            return &_reso1FreqBPList;
+        }else if( search == "reso2amp" ){
+            return &_reso2AmpBPList;
+        }else if( search == "reso2bw" ){
+            return &_reso2BWBPList;
+        }else if( search == "reso2freq" ){
+            return &_reso2FreqBPList;
+        }else if( search == "reso3amp" ){
+            return &_reso3AmpBPList;
+        }else if( search == "reso3bw" ){
+            return &_reso3BWBPList;
+        }else if( search == "reso3freq" ){
+            return &_reso3FreqBPList;
+        }else if( search == "reso4amp" ){
+            return &_reso4AmpBPList;
+        }else if( search == "reso4bw" ){
+            return &_reso4BWBPList;
+        }else if( search == "reso4freq" ){
+            return &_reso4FreqBPList;
+        }else{
+            //TODO: 戻り値なんとかする
+            return 0;
+        }
+    }
 
-    ---
-    -- 指定された名前のカーブを設定する
-    -- @param curve (string) カーブ名
-    -- @param value (BPList) 設定するカーブ
-    function this:setCurve( curve, value )
-        local search = curve:lower();
-        if( search == "bre" )then
-            self._bre = value;
-        elseif( search == "bri" )then
-            self._bri = value;
-        elseif( search == "cle" )then
-            self._cle = value;
-        elseif( search == "dyn" )then
-            self._dyn = value;
-        elseif( search == "gen" )then
-            self._gen = value;
-        elseif( search == "ope" )then
-            self._ope = value;
-        elseif( search == "pbs" )then
-            self._pbs = value;
-        elseif( search == "pit" )then
-            self._pit = value;
-        elseif( search == "por" )then
-            self._por = value;
-        elseif( search == "harmonics" )then
-            self._harmonics = value;
-        elseif( search == "fx2depth" )then
-            self._fx2depth = value;
-        elseif( search == "reso1amp" )then
-            self._reso1AmpBPList = value;
-        elseif( search == "reso1bw" )then
-            self._reso1BWBPList = value;
-        elseif( search == "reso1freq" )then
-            self._reso1FreqBPList = value;
-        elseif( search == "reso2amp" )then
-            self._reso2AmpBPList = value;
-        elseif( search == "reso2bw" )then
-            self._reso2BWBPList = value;
-        elseif( search == "reso2freq" )then
-            self._reso2FreqBPList = value;
-        elseif( search == "reso3amp" )then
-            self._reso3AmpBPList = value;
-        elseif( search == "reso3bw" )then
-            self._reso3BWBPList = value;
-        elseif( search == "reso3freq" )then
-            self._reso3FreqBPList = value;
-        elseif( search == "reso4amp" )then
-            self._reso4AmpBPList = value;
-        elseif( search == "reso4bw" )then
-            self._reso4BWBPList = value;
-        elseif( search == "reso4freq" )then
-            self._reso4FreqBPList = value;
-        elseif( search == "pitch" )then
-            self._pitch = value;
-        end
-    end
+    /*
+     * @brief 指定された名前のカーブを設定する
+     * @param curve (string) カーブ名
+     * @param value (BPList) 設定するカーブ
+     */
+    /*void setCurve( const std::string curve, BPList value ){
+        string search = StringUtil::toLower( curve );
+        if( search == "bre" ){
+            _bre = value;
+        }else if( search == "bri" ){
+            _bri = value;
+        }else if( search == "cle" ){
+            _cle = value;
+        }else if( search == "dyn" ){
+            _dyn = value;
+        }else if( search == "gen" ){
+            _gen = value;
+        }else if( search == "ope" ){
+            _ope = value;
+        }else if( search == "pbs" ){
+            _pbs = value;
+        }else if( search == "pit" ){
+            _pit = value;
+        }else if( search == "por" ){
+            _por = value;
+        }else if( search == "harmonics" ){
+            _harmonics = value;
+        }else if( search == "fx2depth" ){
+            _fx2depth = value;
+        }else if( search == "reso1amp" ){
+            _reso1AmpBPList = value;
+        }else if( search == "reso1bw" ){
+            _reso1BWBPList = value;
+        }else if( search == "reso1freq" ){
+            _reso1FreqBPList = value;
+        }else if( search == "reso2amp" ){
+            _reso2AmpBPList = value;
+        }else if( search == "reso2bw" ){
+            _reso2BWBPList = value;
+        }else if( search == "reso2freq" ){
+            _reso2FreqBPList = value;
+        }else if( search == "reso3amp" ){
+            _reso3AmpBPList = value;
+        }else if( search == "reso3bw" ){
+            _reso3BWBPList = value;
+        }else if( search == "reso3freq" ){
+            _reso3FreqBPList = value;
+        }else if( search == "reso4amp" ){
+            _reso4AmpBPList = value;
+        }else if( search == "reso4bw" ){
+            _reso4BWBPList = value;
+        }else if( search == "reso4freq" ){
+            _reso4FreqBPList = value;
+        }
+    }*/
 
-    ---
-    -- コピーを作成する
-    -- @return (Track) このオブジェクトのコピー
-    function this:clone()
-        local res = Track.new();
-        res:setName( self:getName() );
+    /**
+     * @brief コピーを作成する
+     * @return (Track) このオブジェクトのコピー
+     */
+    Track clone() const{
+        Track res;
+        res.setName( getName() );
 
-        if( self.common ~= nil )then
-            res.common = self.common:clone();
-        end
-        if( self.master ~= nil )then
-            res.master = self.master:clone();
-        end
-        if( self.mixer ~= nil )then
-            res.mixer = self.mixer:clone();
-        end
-        if( self.events ~= nil )then
-            res.events = EventList.new();
-            local i;
-            for i = 0, self.events:size() - 1, 1 do
-                local item = self.events:get( i );
-                res.events:add( item:clone(), item.internalID );
-            end
-        end
-        if( self._pit ~= nil )then
-            res._pit = self._pit:clone();
-        end
-        if( self._pbs ~= nil )then
-            res._pbs = self._pbs:clone();
-        end
-        if( self._dyn ~= nil )then
-            res._dyn = self._dyn:clone();
-        end
-        if( self._bre ~= nil )then
-            res._bre = self._bre:clone();
-        end
-        if( self._bri ~= nil )then
-            res._bri = self._bri:clone();
-        end
-        if( self._cle ~= nil )then
-            res._cle = self._cle:clone();
-        end
-        if( self._reso1FreqBPList ~= nil )then
-            res._reso1FreqBPList = self._reso1FreqBPList:clone();
-        end
-        if( self._reso2FreqBPList ~= nil )then
-            res._reso2FreqBPList = self._reso2FreqBPList:clone();
-        end
-        if( self._reso3FreqBPList ~= nil )then
-            res._reso3FreqBPList = self._reso3FreqBPList:clone();
-        end
-        if( self._reso4FreqBPList ~= nil )then
-            res._reso4FreqBPList = self._reso4FreqBPList:clone();
-        end
-        if( self._reso1BWBPList ~= nil )then
-            res._reso1BWBPList = self._reso1BWBPList:clone();
-        end
-        if( self._reso2BWBPList ~= nil )then
-            res._reso2BWBPList = self._reso2BWBPList:clone();
-        end
-        if( self._reso3BWBPList ~= nil )then
-            res._reso3BWBPList = self._reso3BWBPList:clone();
-        end
-        if( self._reso4BWBPList ~= nil )then
-            res._reso4BWBPList = self._reso4BWBPList:clone();
-        end
-        if( self._reso1AmpBPList ~= nil )then
-            res._reso1AmpBPList = self._reso1AmpBPList:clone();
-        end
-        if( self._reso2AmpBPList ~= nil )then
-            res._reso2AmpBPList = self._reso2AmpBPList:clone();
-        end
-        if( self._reso3AmpBPList ~= nil )then
-            res._reso3AmpBPList = self._reso3AmpBPList:clone();
-        end
-        if( self._reso4AmpBPList ~= nil )then
-            res._reso4AmpBPList = self._reso4AmpBPList:clone();
-        end
-        if( self._harmonics ~= nil )then
-            res._harmonics = self._harmonics:clone();
-        end
-        if( self._fx2depth ~= nil )then
-            res._fx2depth = self._fx2depth:clone();
-        end
-        if( self._gen ~= nil )then
-            res._gen = self._gen:clone();
-        end
-        if( self._por ~= nil )then
-            res._por = self._por:clone();
-        end
-        if( self._ope ~= nil )then
-            res._ope = self._ope:clone();
-        end
-        if( self._pitch ~= nil )then
-            res._pitch = self._pitch:clone();
-        end
-        res.tag = self.tag;
+        res.common = common.clone();
+        res.master = master.clone();
+        res.mixer = mixer.clone();
+        for( int i = 0; i < events.size(); i++ ){
+            Event item = events.get( i );
+            res.events.add( item.clone(), item.id );
+        }
+        res._pit = _pit.clone();
+        res._pbs = _pbs.clone();
+        res._dyn = _dyn.clone();
+        res._bre = _bre.clone();
+        res._bri = _bri.clone();
+        res._cle = _cle.clone();
+        res._reso1FreqBPList = _reso1FreqBPList.clone();
+        res._reso2FreqBPList = _reso2FreqBPList.clone();
+        res._reso3FreqBPList = _reso3FreqBPList.clone();
+        res._reso4FreqBPList = _reso4FreqBPList.clone();
+        res._reso1BWBPList = _reso1BWBPList.clone();
+        res._reso2BWBPList = _reso2BWBPList.clone();
+        res._reso3BWBPList = _reso3BWBPList.clone();
+        res._reso4BWBPList = _reso4BWBPList.clone();
+        res._reso1AmpBPList = _reso1AmpBPList.clone();
+        res._reso2AmpBPList = _reso2AmpBPList.clone();
+        res._reso3AmpBPList = _reso3AmpBPList.clone();
+        res._reso4AmpBPList = _reso4AmpBPList.clone();
+        res._harmonics = _harmonics.clone();
+        res._fx2depth = _fx2depth.clone();
+        res._gen = _gen.clone();
+        res._por = _por.clone();
+        res._ope = _ope.clone();
         return res;
-    end
+    }
 
-    --[[
+    /*
         -- 歌詞の文字数を調べます
         -- @return [int]
         function this:getLyricLength()
             local counter = 0;
             local i;
-            for i = 0; i < self.events:size(); i++
-                if( self.events:getElement( i ).type == EventTypeEnum.NOTE )then
+            for i = 0; i < self.events.size(); i++
+                if( self.events:getElement( i ).type == EventTypeEnum.NOTE ){
                     counter++;
-                end
-            end
+                }
+            }
             return counter;
-        end]]
+        }
+        */
 
-    if( #arguments == 0 )then
-        this:_init_0();
-    elseif( #arguments == 2 )then
-        if( type( arguments[1] ) == "string" )then
-            this:_init_2a( arguments[1], arguments[2] );
-        else
-            this:_init_2b( arguments[1], arguments[2] );
-        end
-    end
+    /**
+     * @brief イベントリストを取得する
+     * @return イベントリストのポインタ
+     */
+    Event::List *getEvents(){
+        return &events;
+    }
 
-    return this;
-end
-*/
+    /**
+     * @brief ミキシング情報を取得する
+     * @return ミキシング情報のポインタ
+     */
+    Mixer *getMixer(){
+        return &mixer;
+    }
+
+    /**
+     * @brief プリメジャーを取得する
+     * @return プリメジャー値(小節単位)
+     */
+    int getPreMeasure() const{
+        return master.preMeasure;
+    }
+
+    /**
+     * @brief プリメジャー値を設定する
+     * @param preMeasure 設定するプリメジャー値(小節単位)
+     */
+    void setPreMeasure( int preMeasure ){
+        master.preMeasure = preMeasure;
+    }
+
+    /**
+     * @brief [Common] セクションの情報を取得する
+     * @return [Common] セクションの情報のポインタ
+     */
+    Common *getCommon(){
+        return &common;
+    }
+
+private:
+    /**
+     * @brief 初期化を行う
+     * @param name (string)
+     * @param singer (string)
+     */
+    void _initCor( std::string name, std::string singer ){
+        this->common = Common( name, 179, 181, 123, DynamicsMode::EXPERT, PlayMode::PLAY_WITH_SYNTH );
+        this->_pit = BPList( "pit", 0, -8192, 8191 );
+        this->_pbs = BPList( "pbs", 2, 0, 24 );
+        this->_dyn = BPList( "dyn", 64, 0, 127 );
+        this->_bre = BPList( "bre", 0, 0, 127 );
+        this->_bri = BPList( "bri", 64, 0, 127 );
+        this->_cle = BPList( "cle", 0, 0, 127 );
+        this->_reso1FreqBPList = BPList( "reso1freq", 64, 0, 127 );
+        this->_reso2FreqBPList = BPList( "reso2freq", 64, 0, 127 );
+        this->_reso3FreqBPList = BPList( "reso3freq", 64, 0, 127 );
+        this->_reso4FreqBPList = BPList( "reso4freq", 64, 0, 127 );
+        this->_reso1BWBPList = BPList( "reso1bw", 64, 0, 127 );
+        this->_reso2BWBPList = BPList( "reso2bw", 64, 0, 127 );
+        this->_reso3BWBPList = BPList( "reso3bw", 64, 0, 127 );
+        this->_reso4BWBPList = BPList( "reso4bw", 64, 0, 127 );
+        this->_reso1AmpBPList = BPList( "reso1amp", 64, 0, 127 );
+        this->_reso2AmpBPList = BPList( "reso2amp", 64, 0, 127 );
+        this->_reso3AmpBPList = BPList( "reso3amp", 64, 0, 127 );
+        this->_reso4AmpBPList = BPList( "reso4amp", 64, 0, 127 );
+        this->_harmonics = BPList( "harmonics", 64, 0, 127 );
+        this->_fx2depth = BPList( "fx2depth", 64, 0, 127 );
+        this->_gen = BPList( "gen", 64, 0, 127 );
+        this->_por = BPList( "por", 64, 0, 127 );
+        this->_ope = BPList( "ope", 127, 0, 127 );
+
+        Event event( 0, EventType::SINGER );
+        Handle ish( HandleType::SINGER );
+        ish.iconId = "$07010000";
+        ish.ids = singer;
+        ish.original = 0;
+        ish.setLength( 1 );
+        ish.language = 0;
+        ish.program = 0;
+        event.singerHandle = ish;
+        this->events.add( event );
+    }
+};
 
 VSQ_END_NAMESPACE
 

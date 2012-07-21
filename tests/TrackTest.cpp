@@ -1,26 +1,29 @@
-/*
-#include "Util.h"
+#include "Util.hpp"
 #include "../Track.hpp"
 
 using namespace std;
 using namespace VSQ_NS;
 
-class TrackTest : public CppUnit::TestCase
-{
+class TrackTest : public CppUnit::TestCase{
 public:
-    void testConstructNormalTrack()
-    {
+    void testConstructNormalTrack(){
         Track track( "DummyTrackName", "DummySingerName" );
-        assertEqual( string( "DummyTrackName" ), track.getName() );
-        assertEqual( 1, track.events.size() );
-        assertEqual( EventType::SINGER, track.events.get( 0 ).type );
-        assertEqual( string( "DummySingerName" ), track.events.get( 0 ).singerHandle.ids );
-    
+        CPPUNIT_ASSERT_EQUAL( string( "DummyTrackName" ), track.getName() );
+        Event::List *events = track.getEvents();
+        CPPUNIT_ASSERT_EQUAL( 1, events->size() );
+        CPPUNIT_ASSERT_EQUAL( EventType::SINGER, events->get( 0 ).type );
+        CPPUNIT_ASSERT_EQUAL( string( "DummySingerName" ), events->get( 0 ).singerHandle.ids );
+
+        //TODO:
+/*
         assert_not_nil( track.common );
         assert_nil( track.master );
         assert_nil( track.mixer );
         assert_not_nil( track.events );
-    
+*/
+
+        //TODO:
+/*
         assert_not_nil( track.getCurve( "pit" ) );
         assert_not_nil( track.getCurve( "pbs" ) );
         assert_not_nil( track.getCurve( "dyn" ) );
@@ -44,105 +47,108 @@ public:
         assert_not_nil( track.getCurve( "gen" ) );
         assert_not_nil( track.getCurve( "por" ) );
         assert_not_nil( track.getCurve( "ope" ) );
-    
-        CPPUNIT_ASSERT_EQUAL( "pit", track.getCurve( "pit" ).getName() );
-        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "pit" ).getDefault() );
-        CPPUNIT_ASSERT_EQUAL( -8192, track.getCurve( "pit" ).getMinimum() );
-        CPPUNIT_ASSERT_EQUAL( 8191, track.getCurve( "pit" ).getMaximum() );
-        CPPUNIT_ASSERT_EQUAL( "pbs", track.getCurve( "pbs" ).getName() );
-        CPPUNIT_ASSERT_EQUAL( 2, track.getCurve( "pbs" ).getDefault() );
-        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "pbs" ).getMinimum() );
-        CPPUNIT_ASSERT_EQUAL( 24, track.getCurve( "pbs" ).getMaximum() );
-        CPPUNIT_ASSERT_EQUAL( "dyn", track.getCurve( "dyn" ).getName() );
-        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "dyn" ).getMinimum() );
-        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "dyn" ).getMaximum() );
-        CPPUNIT_ASSERT_EQUAL( "bre", track.getCurve( "bre" ).getName() );
-        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "bre" ).getDefault() );
-        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "bre" ).getMinimum() );
-        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "bre" ).getMaximum() );
-        CPPUNIT_ASSERT_EQUAL( "bri", track.getCurve( "bri" ).getName() );
-        CPPUNIT_ASSERT_EQUAL( 64, track.getCurve( "bri" ).getDefault() );
-        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "bri" ).getMinimum() );
-        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "bri" ).getMaximum() );
-        CPPUNIT_ASSERT_EQUAL( "cle", track.getCurve( "cle" ).getName() );
-        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "cle" ).getDefault() );
-        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "cle" ).getMinimum() );
-        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "cle" ).getMaximum() );
-        CPPUNIT_ASSERT_EQUAL( "reso1freq", track.getCurve( "reso1Freq" ).getName() );
-        CPPUNIT_ASSERT_EQUAL( 64, track.getCurve( "reso1Freq" ).getDefault() );
-        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "reso1Freq" ).getMinimum() );
-        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "reso1Freq" ).getMaximum() );
-        CPPUNIT_ASSERT_EQUAL( "reso2freq", track.getCurve( "reso2Freq" ).getName() );
-        CPPUNIT_ASSERT_EQUAL( 64, track.getCurve( "reso2Freq" ).getDefault() );
-        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "reso2Freq" ).getMinimum() );
-        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "reso2Freq" ).getMaximum() );
-        CPPUNIT_ASSERT_EQUAL( "reso3freq", track.getCurve( "reso3Freq" ).getName() );
-        CPPUNIT_ASSERT_EQUAL( 64, track.getCurve( "reso3Freq" ).getDefault() );
-        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "reso3Freq" ).getMinimum() );
-        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "reso3Freq" ).getMaximum() );
-        CPPUNIT_ASSERT_EQUAL( "reso4freq", track.getCurve( "reso4Freq" ).getName() );
-        CPPUNIT_ASSERT_EQUAL( 64, track.getCurve( "reso4Freq" ).getDefault() );
-        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "reso4Freq" ).getMinimum() );
-        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "reso4Freq" ).getMaximum() );
-        CPPUNIT_ASSERT_EQUAL( "reso1bw", track.getCurve( "reso1BW" ).getName() );
-        CPPUNIT_ASSERT_EQUAL( 64, track.getCurve( "reso1BW" ).getDefault() );
-        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "reso1BW" ).getMinimum() );
-        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "reso1BW" ).getMaximum() );
-        CPPUNIT_ASSERT_EQUAL( "reso2bw", track.getCurve( "reso2BW" ).getName() );
-        CPPUNIT_ASSERT_EQUAL( 64, track.getCurve( "reso2BW" ).getDefault() );
-        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "reso2BW" ).getMinimum() );
-        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "reso2BW" ).getMaximum() );
-        CPPUNIT_ASSERT_EQUAL( "reso3bw", track.getCurve( "reso3BW" ).getName() );
-        CPPUNIT_ASSERT_EQUAL( 64, track.getCurve( "reso3BW" ).getDefault() );
-        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "reso3BW" ).getMinimum() );
-        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "reso3BW" ).getMaximum() );
-        CPPUNIT_ASSERT_EQUAL( "reso4bw", track.getCurve( "reso4BW" ).getName() );
-        CPPUNIT_ASSERT_EQUAL( 64, track.getCurve( "reso4BW" ).getDefault() );
-        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "reso4BW" ).getMinimum() );
-        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "reso4BW" ).getMaximum() );
-        CPPUNIT_ASSERT_EQUAL( "reso1amp", track.getCurve( "reso1Amp" ).getName() );
-        CPPUNIT_ASSERT_EQUAL( 64, track.getCurve( "reso1Amp" ).getDefault() );
-        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "reso1Amp" ).getMinimum() );
-        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "reso1Amp" ).getMaximum() );
-        CPPUNIT_ASSERT_EQUAL( "reso2amp", track.getCurve( "reso2Amp" ).getName() );
-        CPPUNIT_ASSERT_EQUAL( 64, track.getCurve( "reso2Amp" ).getDefault() );
-        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "reso2Amp" ).getMinimum() );
-        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "reso2Amp" ).getMaximum() );
-        CPPUNIT_ASSERT_EQUAL( "reso3amp", track.getCurve( "reso3Amp" ).getName() );
-        CPPUNIT_ASSERT_EQUAL( 64, track.getCurve( "reso3Amp" ).getDefault() );
-        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "reso3Amp" ).getMinimum() );
-        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "reso3Amp" ).getMaximum() );
-        CPPUNIT_ASSERT_EQUAL( "reso4amp", track.getCurve( "reso4Amp" ).getName() );
-        CPPUNIT_ASSERT_EQUAL( 64, track.getCurve( "reso4Amp" ).getDefault() );
-        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "reso4Amp" ).getMinimum() );
-        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "reso4Amp" ).getMaximum() );
-        CPPUNIT_ASSERT_EQUAL( "harmonics", track.getCurve( "harmonics" ).getName() );
-        CPPUNIT_ASSERT_EQUAL( 64, track.getCurve( "harmonics" ).getDefault() );
-        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "harmonics" ).getMinimum() );
-        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "harmonics" ).getMaximum() );
-        CPPUNIT_ASSERT_EQUAL( "fx2depth", track.getCurve( "fx2depth" ).getName() );
-        CPPUNIT_ASSERT_EQUAL( 64, track.getCurve( "fx2depth" ).getDefault() );
-        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "fx2depth" ).getMinimum() );
-        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "fx2depth" ).getMaximum() );
-        CPPUNIT_ASSERT_EQUAL( "gen", track.getCurve( "gen" ).getName() );
-        CPPUNIT_ASSERT_EQUAL( 64, track.getCurve( "gen" ).getDefault() );
-        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "gen" ).getMinimum() );
-        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "gen" ).getMaximum() );
-        CPPUNIT_ASSERT_EQUAL( "por", track.getCurve( "por" ).getName() );
-        CPPUNIT_ASSERT_EQUAL( 64, track.getCurve( "por" ).getDefault() );
-        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "por" ).getMinimum() );
-        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "por" ).getMaximum() );
-        CPPUNIT_ASSERT_EQUAL( "ope", track.getCurve( "ope" ).getName() );
-        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "ope" ).getDefault() );
-        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "ope" ).getMinimum() );
-        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "ope" ).getMaximum() );
+*/
+
+        CPPUNIT_ASSERT_EQUAL( string( "pit" ), track.getCurve( "pit" )->getName() );
+        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "pit" )->getDefault() );
+        CPPUNIT_ASSERT_EQUAL( -8192, track.getCurve( "pit" )->getMinimum() );
+        CPPUNIT_ASSERT_EQUAL( 8191, track.getCurve( "pit" )->getMaximum() );
+        CPPUNIT_ASSERT_EQUAL( string( "pbs" ), track.getCurve( "pbs" )->getName() );
+        CPPUNIT_ASSERT_EQUAL( 2, track.getCurve( "pbs" )->getDefault() );
+        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "pbs" )->getMinimum() );
+        CPPUNIT_ASSERT_EQUAL( 24, track.getCurve( "pbs" )->getMaximum() );
+        CPPUNIT_ASSERT_EQUAL( string( "dyn" ), track.getCurve( "dyn" )->getName() );
+        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "dyn" )->getMinimum() );
+        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "dyn" )->getMaximum() );
+        CPPUNIT_ASSERT_EQUAL( string( "bre" ), track.getCurve( "bre" )->getName() );
+        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "bre" )->getDefault() );
+        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "bre" )->getMinimum() );
+        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "bre" )->getMaximum() );
+        CPPUNIT_ASSERT_EQUAL( string( "bri" ), track.getCurve( "bri" )->getName() );
+        CPPUNIT_ASSERT_EQUAL( 64, track.getCurve( "bri" )->getDefault() );
+        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "bri" )->getMinimum() );
+        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "bri" )->getMaximum() );
+        CPPUNIT_ASSERT_EQUAL( string( "cle" ), track.getCurve( "cle" )->getName() );
+        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "cle" )->getDefault() );
+        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "cle" )->getMinimum() );
+        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "cle" )->getMaximum() );
+        CPPUNIT_ASSERT_EQUAL( string( "reso1freq" ), track.getCurve( "reso1Freq" )->getName() );
+        CPPUNIT_ASSERT_EQUAL( 64, track.getCurve( "reso1Freq" )->getDefault() );
+        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "reso1Freq" )->getMinimum() );
+        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "reso1Freq" )->getMaximum() );
+        CPPUNIT_ASSERT_EQUAL( string( "reso2freq" ), track.getCurve( "reso2Freq" )->getName() );
+        CPPUNIT_ASSERT_EQUAL( 64, track.getCurve( "reso2Freq" )->getDefault() );
+        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "reso2Freq" )->getMinimum() );
+        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "reso2Freq" )->getMaximum() );
+        CPPUNIT_ASSERT_EQUAL( string( "reso3freq" ), track.getCurve( "reso3Freq" )->getName() );
+        CPPUNIT_ASSERT_EQUAL( 64, track.getCurve( "reso3Freq" )->getDefault() );
+        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "reso3Freq" )->getMinimum() );
+        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "reso3Freq" )->getMaximum() );
+        CPPUNIT_ASSERT_EQUAL( string( "reso4freq" ), track.getCurve( "reso4Freq" )->getName() );
+        CPPUNIT_ASSERT_EQUAL( 64, track.getCurve( "reso4Freq" )->getDefault() );
+        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "reso4Freq" )->getMinimum() );
+        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "reso4Freq" )->getMaximum() );
+        CPPUNIT_ASSERT_EQUAL( string( "reso1bw" ), track.getCurve( "reso1BW" )->getName() );
+        CPPUNIT_ASSERT_EQUAL( 64, track.getCurve( "reso1BW" )->getDefault() );
+        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "reso1BW" )->getMinimum() );
+        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "reso1BW" )->getMaximum() );
+        CPPUNIT_ASSERT_EQUAL( string( "reso2bw" ), track.getCurve( "reso2BW" )->getName() );
+        CPPUNIT_ASSERT_EQUAL( 64, track.getCurve( "reso2BW" )->getDefault() );
+        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "reso2BW" )->getMinimum() );
+        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "reso2BW" )->getMaximum() );
+        CPPUNIT_ASSERT_EQUAL( string( "reso3bw" ), track.getCurve( "reso3BW" )->getName() );
+        CPPUNIT_ASSERT_EQUAL( 64, track.getCurve( "reso3BW" )->getDefault() );
+        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "reso3BW" )->getMinimum() );
+        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "reso3BW" )->getMaximum() );
+        CPPUNIT_ASSERT_EQUAL( string( "reso4bw" ), track.getCurve( "reso4BW" )->getName() );
+        CPPUNIT_ASSERT_EQUAL( 64, track.getCurve( "reso4BW" )->getDefault() );
+        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "reso4BW" )->getMinimum() );
+        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "reso4BW" )->getMaximum() );
+        CPPUNIT_ASSERT_EQUAL( string( "reso1amp" ), track.getCurve( "reso1Amp" )->getName() );
+        CPPUNIT_ASSERT_EQUAL( 64, track.getCurve( "reso1Amp" )->getDefault() );
+        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "reso1Amp" )->getMinimum() );
+        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "reso1Amp" )->getMaximum() );
+        CPPUNIT_ASSERT_EQUAL( string( "reso2amp" ), track.getCurve( "reso2Amp" )->getName() );
+        CPPUNIT_ASSERT_EQUAL( 64, track.getCurve( "reso2Amp" )->getDefault() );
+        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "reso2Amp" )->getMinimum() );
+        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "reso2Amp" )->getMaximum() );
+        CPPUNIT_ASSERT_EQUAL( string( "reso3amp" ), track.getCurve( "reso3Amp" )->getName() );
+        CPPUNIT_ASSERT_EQUAL( 64, track.getCurve( "reso3Amp" )->getDefault() );
+        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "reso3Amp" )->getMinimum() );
+        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "reso3Amp" )->getMaximum() );
+        CPPUNIT_ASSERT_EQUAL( string( "reso4amp" ), track.getCurve( "reso4Amp" )->getName() );
+        CPPUNIT_ASSERT_EQUAL( 64, track.getCurve( "reso4Amp" )->getDefault() );
+        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "reso4Amp" )->getMinimum() );
+        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "reso4Amp" )->getMaximum() );
+        CPPUNIT_ASSERT_EQUAL( string( "harmonics" ), track.getCurve( "harmonics" )->getName() );
+        CPPUNIT_ASSERT_EQUAL( 64, track.getCurve( "harmonics" )->getDefault() );
+        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "harmonics" )->getMinimum() );
+        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "harmonics" )->getMaximum() );
+        CPPUNIT_ASSERT_EQUAL( string( "fx2depth" ), track.getCurve( "fx2depth" )->getName() );
+        CPPUNIT_ASSERT_EQUAL( 64, track.getCurve( "fx2depth" )->getDefault() );
+        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "fx2depth" )->getMinimum() );
+        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "fx2depth" )->getMaximum() );
+        CPPUNIT_ASSERT_EQUAL( string( "gen" ), track.getCurve( "gen" )->getName() );
+        CPPUNIT_ASSERT_EQUAL( 64, track.getCurve( "gen" )->getDefault() );
+        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "gen" )->getMinimum() );
+        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "gen" )->getMaximum() );
+        CPPUNIT_ASSERT_EQUAL( string( "por" ), track.getCurve( "por" )->getName() );
+        CPPUNIT_ASSERT_EQUAL( 64, track.getCurve( "por" )->getDefault() );
+        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "por" )->getMinimum() );
+        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "por" )->getMaximum() );
+        CPPUNIT_ASSERT_EQUAL( string( "ope" ), track.getCurve( "ope" )->getName() );
+        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "ope" )->getDefault() );
+        CPPUNIT_ASSERT_EQUAL( 0, track.getCurve( "ope" )->getMinimum() );
+        CPPUNIT_ASSERT_EQUAL( 127, track.getCurve( "ope" )->getMaximum() );
     }
     
     void testConstructFromMidiEvents(){
-    --    fail();
+        //fail();
     }
-    
+
     void testGetIndexIterator(){
+        //TODO
+        /*
         local track = luavsq.Track.new( "DummyTrackName", "DummySingerName" );
         local iterator = track.getIndexIterator( luavsq.EventList.IndexIteratorKindEnum.NOTE );
         CPPUNIT_ASSERT( false == iterator.hasNext() );
@@ -151,109 +157,130 @@ public:
         CPPUNIT_ASSERT( iterator.hasNext() );
         CPPUNIT_ASSERT_EQUAL( 0, iterator.next() );
         CPPUNIT_ASSERT( false == iterator.hasNext() );
+        */
     }
     
+    /**
+     * @todo
+     */
     void testGetterAndSetterPlayMode(){
-    --    fail();
+        //fail();
     }
     
+    /**
+     * @todo
+     */
     void testGetterAndSetterTrackOn(){
-    --    fail();
+        //fail();
     }
     
     void testGetterAndSetterName(){
-        local track = luavsq.Track.new( "DummyTrackName", "DummySingerName" );
-        CPPUNIT_ASSERT_EQUAL( "DummyTrackName", track.getName() );
+        Track track( "DummyTrackName", "DummySingerName" );
+        CPPUNIT_ASSERT_EQUAL( string( "DummyTrackName" ), track.getName() );
         track.setName( "foo" );
-        CPPUNIT_ASSERT_EQUAL( "foo", track.getName() );
+        CPPUNIT_ASSERT_EQUAL( string( "foo" ), track.getName() );
     }
     
+    /**
+     * @todo
+     */
     void testGetPitchAt(){
-    --    fail();
+        //fail();
     }
     
+    /**
+     * @todo
+     */
     void testReflectDynamics(){
-    --    fail();
+        //fail();
     }
     
+    /**
+     * @todo
+     */
     void testGetSingerEventAt(){
-    --    fail();
+        //fail();
     }
     
+    /**
+     * @todo
+     */
     void testSortEvent(){
-    --    fail();
+        //fail();
     }
     
     void testGetIndexIteratorSinger(){
-        local track = luavsq.Track.new( "DummyTrackName", "DummySingerName" );
-        local iterator = track.getIndexIterator( luavsq.EventList.IndexIteratorKindEnum.SINGER );
+        Track track( "DummyTrackName", "DummySingerName" );
+        EventListIndexIterator iterator = track.getIndexIterator( EventListIndexIteratorKind::SINGER );
         CPPUNIT_ASSERT( iterator.hasNext() );
-        local event = track.events.get( iterator.next() );
-        CPPUNIT_ASSERT_EQUAL( "DummySingerName", event.singerHandle.ids );
+        Event event = track.getEvents()->get( iterator.next() );
+        CPPUNIT_ASSERT_EQUAL( string( "DummySingerName" ), event.singerHandle.ids );
         CPPUNIT_ASSERT( false == iterator.hasNext() );
     }
     
     void testGetIndexIteratorNote(){
-        local track = luavsq.Track.new( "DummyTrackName", "DummySingerName" );
-        local iterator = track.getIndexIterator( luavsq.EventList.IndexIteratorKindEnum.NOTE );
+        Track track( "DummyTrackName", "DummySingerName" );
+        EventListIndexIterator iterator = track.getIndexIterator( EventListIndexIteratorKind::NOTE );
         CPPUNIT_ASSERT( false == iterator.hasNext() );
     
-        local event = luavsq.Event.new( 480, luavsq.EventTypeEnum.NOTE );
-        track.events.add( event, 10 );
-        iterator = track.getIndexIterator( luavsq.EventList.IndexIteratorKindEnum.NOTE );
+        Event event( 480, EventType::NOTE );
+        track.getEvents()->add( event, 10 );
+        iterator = track.getIndexIterator( EventListIndexIteratorKind::NOTE );
         CPPUNIT_ASSERT( iterator.hasNext() );
-        local obtained = track.events.get( iterator.next() );
-        CPPUNIT_ASSERT_EQUAL( event, obtained );
+        Event obtained = track.getEvents()->get( iterator.next() );
+        //TODO: Event::equalが実装されたらコメントアウトを元に戻す
+        //CPPUNIT_ASSERT_EQUAL( event, obtained );
         CPPUNIT_ASSERT_EQUAL( 10, obtained.id );
         CPPUNIT_ASSERT( false == iterator.hasNext() );
     }
     
     void testGetIndexIteratorDynamics(){
-        local track = luavsq.Track.new( "DummyTrackName", "DummySingerName" );
-        local iterator = track.getIndexIterator( luavsq.EventList.IndexIteratorKindEnum.DYNAFF );
+        Track track( "DummyTrackName", "DummySingerName" );
+        EventListIndexIterator iterator = track.getIndexIterator( EventListIndexIteratorKind::DYNAFF );
         CPPUNIT_ASSERT( false == iterator.hasNext() );
     
-        local event = luavsq.Event.new( 480, luavsq.EventTypeEnum.ICON );
-        event.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.DYNAMICS );
+        Event event( 480, EventType::ICON );
+        event.iconDynamicsHandle = Handle( HandleType::DYNAMICS );
         event.iconDynamicsHandle.iconId = "$05019999";
-        track.events.add( event, 10 );
-        iterator = track.getIndexIterator( luavsq.EventList.IndexIteratorKindEnum.DYNAFF );
+        track.getEvents()->add( event, 10 );
+        iterator = track.getIndexIterator( EventListIndexIteratorKind::DYNAFF );
         CPPUNIT_ASSERT( iterator.hasNext() );
-        local obtained = track.events.get( iterator.next() );
-        CPPUNIT_ASSERT_EQUAL( event, obtained );
+        Event obtained = track.getEvents()->get( iterator.next() );
+        //TODO: Event::equalが実装されたらコメントアウトを元に戻す
+        //CPPUNIT_ASSERT_EQUAL( event, obtained );
         CPPUNIT_ASSERT_EQUAL( 10, obtained.id );
-        CPPUNIT_ASSERT_EQUAL( "$05019999", obtained.iconDynamicsHandle.iconId );
+        CPPUNIT_ASSERT_EQUAL( string( "$05019999" ), obtained.iconDynamicsHandle.iconId );
         CPPUNIT_ASSERT( false == iterator.hasNext() );
     }
     
     void testPrintMetaText(){
-        local track = luavsq.Track.new( "DummyTrackName", "DummySingerName" );
+        Track track( "DummyTrackName", "DummySingerName" );
     
-        local singerEvent = luavsq.Event.new( 0, luavsq.EventTypeEnum.SINGER );
-        singerEvent.singerHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.SINGER ); --h#0000
+        Event singerEvent( 0, EventType::SINGER );
+        singerEvent.singerHandle = Handle( HandleType::SINGER ); //h#0000
         singerEvent.singerHandle.iconId = "$07010002";
         singerEvent.singerHandle.ids = "Miku";
         singerEvent.singerHandle.original = 1;
         singerEvent.singerHandle.setCaption( "caption for miku" );
         singerEvent.singerHandle.language = 1;
         singerEvent.singerHandle.program = 2;
-        track.events.set( 0, singerEvent );
+        track.getEvents()->set( 0, singerEvent );
     
-        local cresc}oEvent = luavsq.Event.new( 240, luavsq.EventTypeEnum.ICON );
-        cresc}oEvent.note = 64;
-        cresc}oEvent.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.DYNAMICS ); --h#0001
-        cresc}oEvent.iconDynamicsHandle.iconId = "$05020001";
-        cresc}oEvent.iconDynamicsHandle.ids = "cresc}o";
-        cresc}oEvent.iconDynamicsHandle.original = 1;
-        cresc}oEvent.iconDynamicsHandle.setCaption( "caption for cresc}o" );
-        cresc}oEvent.iconDynamicsHandle.setStartDyn( 4 );
-        cresc}oEvent.iconDynamicsHandle.setEndDyn( 7 );
-        cresc}oEvent.setLength( 10 );
-        track.events.add( cresc}oEvent, 2 );
+        Event crescendoEvent( 240, EventType::ICON );
+        crescendoEvent.note = 64;
+        crescendoEvent.iconDynamicsHandle = Handle( HandleType::DYNAMICS ); //h#0001
+        crescendoEvent.iconDynamicsHandle.iconId = "$05020001";
+        crescendoEvent.iconDynamicsHandle.ids = "crescendo";
+        crescendoEvent.iconDynamicsHandle.original = 1;
+        crescendoEvent.iconDynamicsHandle.setCaption( "caption for crescendo" );
+        crescendoEvent.iconDynamicsHandle.setStartDyn( 4 );
+        crescendoEvent.iconDynamicsHandle.setEndDyn( 7 );
+        crescendoEvent.setLength( 10 );
+        track.getEvents()->add( crescendoEvent, 2 );
     
-        local dynaffEvent = luavsq.Event.new( 480, luavsq.EventTypeEnum.ICON );
+        Event dynaffEvent( 480, EventType::ICON );
         dynaffEvent.note = 65;
-        dynaffEvent.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.DYNAMICS );--h#0002
+        dynaffEvent.iconDynamicsHandle = Handle( HandleType::DYNAMICS );//h#0002
         dynaffEvent.iconDynamicsHandle.iconId = "$05010001";
         dynaffEvent.iconDynamicsHandle.ids = "dynaff";
         dynaffEvent.iconDynamicsHandle.original = 2;
@@ -261,42 +288,42 @@ public:
         dynaffEvent.iconDynamicsHandle.setStartDyn( 5 );
         dynaffEvent.iconDynamicsHandle.setEndDyn( 8 );
         dynaffEvent.setLength( 11 );
-        track.events.add( dynaffEvent, 3 );
+        track.getEvents()->add( dynaffEvent, 3 );
     
-        local decresc}oEvent = luavsq.Event.new( 720, luavsq.EventTypeEnum.ICON );
-        decresc}oEvent.note = 66;
-        decresc}oEvent.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.DYNAMICS );--h#0003
-        decresc}oEvent.iconDynamicsHandle.iconId = "$05030001";
-        decresc}oEvent.iconDynamicsHandle.ids = "decresc}o";
-        decresc}oEvent.iconDynamicsHandle.original = 3;
-        decresc}oEvent.iconDynamicsHandle.setCaption( "caption for decresc}o" );
-        decresc}oEvent.iconDynamicsHandle.setStartDyn( 6 );
-        decresc}oEvent.iconDynamicsHandle.setEndDyn( 9 );
-        decresc}oEvent.setLength( 12 );
-        track.events.add( decresc}oEvent, 4 );
+        Event decrescendoEvent( 720, EventType::ICON );
+        decrescendoEvent.note = 66;
+        decrescendoEvent.iconDynamicsHandle = Handle( HandleType::DYNAMICS );//h#0003
+        decrescendoEvent.iconDynamicsHandle.iconId = "$05030001";
+        decrescendoEvent.iconDynamicsHandle.ids = "decrescendo";
+        decrescendoEvent.iconDynamicsHandle.original = 3;
+        decrescendoEvent.iconDynamicsHandle.setCaption( "caption for decrescendo" );
+        decrescendoEvent.iconDynamicsHandle.setStartDyn( 6 );
+        decrescendoEvent.iconDynamicsHandle.setEndDyn( 9 );
+        decrescendoEvent.setLength( 12 );
+        track.getEvents()->add( decrescendoEvent, 4 );
     
-        local singerEvent2 = luavsq.Event.new( 1920, luavsq.EventTypeEnum.SINGER );
-        singerEvent2.singerHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.SINGER );--h#0004
+        Event singerEvent2( 1920, EventType::SINGER );
+        singerEvent2.singerHandle = Handle( HandleType::SINGER );//h#0004
         singerEvent2.singerHandle.iconId = "$07020003";
         singerEvent2.singerHandle.ids = "Luka_EN";
         singerEvent2.singerHandle.original = 0x82;
         singerEvent2.singerHandle.setCaption( "caption for luka" );
         singerEvent2.singerHandle.language = 2;
         singerEvent2.singerHandle.program = 3;
-        track.events.add( singerEvent2, 5 );
+        track.getEvents()->add( singerEvent2, 5 );
     
-        local noteEvent = luavsq.Event.new( 1920, luavsq.EventTypeEnum.NOTE );
+        Event noteEvent( 1920, EventType::NOTE );
         noteEvent.note = 67;
         noteEvent.dynamics = 68;
-        noteEvent.pmB}Depth = 69;
-        noteEvent.pmB}Length = 70;
+        noteEvent.pmBendDepth = 69;
+        noteEvent.pmBendLength = 70;
         noteEvent.pmbPortamentoUse = 3;
         noteEvent.demDecGainRate = 71;
         noteEvent.demAccent = 72;
         noteEvent.setLength( 480 );
-        noteEvent.lyricHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.LYRIC );
-        noteEvent.lyricHandle.setLyricAt( 0, luavsq.Lyric.new( "ら", "4 a" ) );--h#0005
-        noteEvent.vibratoHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.VIBRATO );--h#0006
+        noteEvent.lyricHandle = Handle( HandleType::LYRIC );
+        noteEvent.lyricHandle.setLyricAt( 0, Lyric( "ら", "4 a" ) );//h#0005
+        noteEvent.vibratoHandle = Handle( HandleType::VIBRATO );//h#0006
         noteEvent.vibratoDelay = 73;
         noteEvent.vibratoHandle.iconId ="$04040004";
         noteEvent.vibratoHandle.ids = "vibrato";
@@ -305,7 +332,7 @@ public:
         noteEvent.vibratoHandle.setLength( 407 );
         noteEvent.vibratoHandle.setStartDepth( 13 );
         noteEvent.vibratoHandle.setStartRate( 14 );
-        noteEvent.noteHeadHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.NOTE_HEAD );--h#0007
+        noteEvent.noteHeadHandle = Handle( HandleType::NOTE_HEAD );//h#0007
         noteEvent.noteHeadHandle.iconId = "$05030000";
         noteEvent.noteHeadHandle.ids = "attack";
         noteEvent.noteHeadHandle.original = 15;
@@ -313,209 +340,235 @@ public:
         noteEvent.noteHeadHandle.setLength( 120 );
         noteEvent.noteHeadHandle.setDuration( 62 );
         noteEvent.noteHeadHandle.setDepth( 65 );
-        track.events.add( noteEvent, 6 );
+        track.getEvents()->add( noteEvent, 6 );
     
-        track.master = luavsq.Master.new( 1 );
+        track.setPreMeasure( 1 );
     
-        track.mixer = luavsq.Mixer.new( 1, 2, 3, 4 );
-        track.mixer.slave = {};
-        track.mixer.slave[1] = luavsq.MixerItem.new( 5, 6, 7, 8 );
+        track.getMixer()->masterFeder = 1;
+        track.getMixer()->masterPanpot = 2;
+        track.getMixer()->masterMute = 3;
+        track.getMixer()->outputMode = 4;
+        track.getMixer()->slave.push_back( MixerItem( 5, 6, 7, 8 ) );
     
-        track.common.version = "DSB301";
-        track.common.name = "foo";
-        track.common.color = "1,2,3";
-        track.common.dynamicsMode = luavsq.DynamicsModeEnum.STANDARD;
-        track.common.playMode = luavsq.PlayModeEnum.PLAY_WITH_SYNTH;
-    
-        local curves = {
-            "pit", "pbs", "dyn", "bre", "bri", "cle",
-            "RESO1FREQ", "RESO2FREQ", "RESO3FREQ", "RESO4FREQ",
-            "RESO1BW", "RESO2BW", "RESO3BW", "RESO4BW",
-            "RESO1amp", "RESO2amp", "RESO3amp", "RESO4amp",
-            "HARMONICS", "fx2depth", "GEN", "pOr", "OPE"
-        };
-        local i, curveName;
-        for i, curveName in ipairs( curves ) do
-            track.getCurve( curveName ).add( 480 + i, i );
+        track.getCommon()->version = "DSB301";
+        track.getCommon()->name = "foo";
+        track.getCommon()->color = "1,2,3";
+        track.getCommon()->dynamicsMode = DynamicsMode::STANDARD;
+        track.getCommon()->playMode = PlayMode::PLAY_WITH_SYNTH;
+
+        vector<string> curves;
+        curves.push_back( "pit" );
+        curves.push_back( "pbs" );
+        curves.push_back( "dyn" );
+        curves.push_back( "bre" );
+        curves.push_back( "bri" );
+        curves.push_back( "cle" );
+        curves.push_back( "RESO1FREQ" );
+        curves.push_back( "RESO2FREQ" );
+        curves.push_back( "RESO3FREQ" );
+        curves.push_back( "RESO4FREQ" );
+        curves.push_back( "RESO1BW" );
+        curves.push_back( "RESO2BW" );
+        curves.push_back( "RESO3BW" );
+        curves.push_back( "RESO4BW" );
+        curves.push_back( "RESO1amp" );
+        curves.push_back( "RESO2amp" );
+        curves.push_back( "RESO3amp" );
+        curves.push_back( "RESO4amp" );
+        curves.push_back( "HARMONICS" );
+        curves.push_back( "fx2depth" );
+        curves.push_back( "GEN" );
+        curves.push_back( "pOr" );
+        curves.push_back( "OPE" );
+        for( int i = 0; i < curves.size(); i++ ){
+            string curveName = curves[i];
+            track.getCurve( curveName )->add( 480 + i, i );
         }
     
-        local stream = luavsq.TextStream.new();
+        TextStream stream;
         track.printMetaText( stream, 2400, 0 );
-        local expected =
-            "[Common]\n" ..
-            "Version=DSB301\n" ..
-            "Name=foo\n" ..
-            "Color=1,2,3\n" ..
-            "DynamicsMode=0\n" ..
-            "PlayMode=1\n" ..
+        string expected =
+            "[Common]\n"
+            "Version=DSB301\n"
+            "Name=foo\n"
+            "Color=1,2,3\n"
+            "DynamicsMode=0\n"
+            "PlayMode=1\n"
     
-            "[Master]\n" ..
-            "PreMeasure=1\n" ..
+            "[Master]\n"
+            "PreMeasure=1\n"
     
-            "[Mixer]\n" ..
-            "MasterFeder=1\n" ..
-            "MasterPanpot=2\n" ..
-            "MasterMute=3\n" ..
-            "OutputMode=4\n" ..
-            "Tracks=1\n" ..
-            "Feder0=5\n" ..
-            "Panpot0=6\n" ..
-            "Mute0=7\n" ..
-            "Solo0=8\n" ..
+            "[Mixer]\n"
+            "MasterFeder=1\n"
+            "MasterPanpot=2\n"
+            "MasterMute=3\n"
+            "OutputMode=4\n"
+            "Tracks=1\n"
+            "Feder0=5\n"
+            "Panpot0=6\n"
+            "Mute0=7\n"
+            "Solo0=8\n"
     
-            "[EventList]\n" ..
-            "0=ID#0000\n" ..
-            "240=ID#0001\n" ..
-            "480=ID#0002\n" ..
-            "720=ID#0003\n" ..
-            "1920=ID#0004,ID#0005\n" ..
-            "2400=EOS\n" ..
+            "[EventList]\n"
+            "0=ID#0000\n"
+            "240=ID#0001\n"
+            "480=ID#0002\n"
+            "720=ID#0003\n"
+            "1920=ID#0004,ID#0005\n"
+            "2400=EOS\n"
     
-            "[ID#0000]\n" ..
-            "Type=Singer\n" ..
-            "IconHandle=h#0000\n" ..
+            "[ID#0000]\n"
+            "Type=Singer\n"
+            "IconHandle=h#0000\n"
     
-            "[ID#0001]\n" ..
-            "Type=Aicon\n" ..
-            "IconHandle=h#0001\n" ..
-            "Note#=64\n" ..
+            "[ID#0001]\n"
+            "Type=Aicon\n"
+            "IconHandle=h#0001\n"
+            "Note#=64\n"
     
-            "[ID#0002]\n" ..
-            "Type=Aicon\n" ..
-            "IconHandle=h#0002\n" ..
-            "Note#=65\n" ..
+            "[ID#0002]\n"
+            "Type=Aicon\n"
+            "IconHandle=h#0002\n"
+            "Note#=65\n"
     
-            "[ID#0003]\n" ..
-            "Type=Aicon\n" ..
-            "IconHandle=h#0003\n" ..
-            "Note#=66\n" ..
+            "[ID#0003]\n"
+            "Type=Aicon\n"
+            "IconHandle=h#0003\n"
+            "Note#=66\n"
     
-            "[ID#0004]\n" ..
-            "Type=Singer\n" ..
-            "IconHandle=h#0004\n" ..
+            "[ID#0004]\n"
+            "Type=Singer\n"
+            "IconHandle=h#0004\n"
     
-            "[ID#0005]\n" ..
-            "Type=Anote\n" ..
-            "Length=480\n" ..
-            "Note#=67\n" ..
-            "Dynamics=68\n" ..
-            "PMB}Depth=69\n" ..
-            "PMB}Length=70\n" ..
-            "PMbPortamentoUse=3\n" ..
-            "DEMdecGainRate=71\n" ..
-            "DEMaccent=72\n" ..
-            "LyricHandle=h#0005\n" ..
-            "VibratoHandle=h#0006\n" ..
-            "VibratoDelay=73\n" ..
-            "NoteHeadHandle=h#0007\n" ..
+            "[ID#0005]\n"
+            "Type=Anote\n"
+            "Length=480\n"
+            "Note#=67\n"
+            "Dynamics=68\n"
+            "PMBendDepth=69\n"
+            "PMBendLength=70\n"
+            "PMbPortamentoUse=3\n"
+            "DEMdecGainRate=71\n"
+            "DEMaccent=72\n"
+            "LyricHandle=h#0005\n"
+            "VibratoHandle=h#0006\n"
+            "VibratoDelay=73\n"
+            "NoteHeadHandle=h#0007\n"
     
-            "[h#0000]\n" ..
-            "IconID=$07010002\n" ..
-            "IDS=Miku\n" ..
-            "Original=1\n" ..
-            "Caption=caption for miku\n" ..
-            "Length=0\n" ..
-            "Language=1\n" ..
-            "Program=2\n" ..
+            "[h#0000]\n"
+            "IconID=$07010002\n"
+            "IDS=Miku\n"
+            "Original=1\n"
+            "Caption=caption for miku\n"
+            "Length=0\n"
+            "Language=1\n"
+            "Program=2\n"
     
-            "[h#0001]\n" ..
-            "IconID=$05020001\n" ..
-            "IDS=cresc}o\n" ..
-            "Original=1\n" ..
-            "Caption=caption for cresc}o\n" ..
-            "StartDyn=4\n" ..
-            "EndDyn=7\n" ..
-            "Length=10\n" ..
-            "DynBPNum=0\n" ..
+            "[h#0001]\n"
+            "IconID=$05020001\n"
+            "IDS=crescendo\n"
+            "Original=1\n"
+            "Caption=caption for crescendo\n"
+            "StartDyn=4\n"
+            "EndDyn=7\n"
+            "Length=10\n"
+            "DynBPNum=0\n"
     
-            "[h#0002]\n" ..
-            "IconID=$05010001\n" ..
-            "IDS=dynaff\n" ..
-            "Original=2\n" ..
-            "Caption=caption for dynaff\n" ..
-            "StartDyn=5\n" ..
-            "EndDyn=8\n" ..
-            "Length=11\n" ..
-            "DynBPNum=0\n" ..
+            "[h#0002]\n"
+            "IconID=$05010001\n"
+            "IDS=dynaff\n"
+            "Original=2\n"
+            "Caption=caption for dynaff\n"
+            "StartDyn=5\n"
+            "EndDyn=8\n"
+            "Length=11\n"
+            "DynBPNum=0\n"
     
-            "[h#0003]\n" ..
-            "IconID=$05030001\n" ..
-            "IDS=decresc}o\n" ..
-            "Original=3\n" ..
-            "Caption=caption for decresc}o\n" ..
-            "StartDyn=6\n" ..
-            "EndDyn=9\n" ..
-            "Length=12\n" ..
-            "DynBPNum=0\n" ..
+            "[h#0003]\n"
+            "IconID=$05030001\n"
+            "IDS=decrescendo\n"
+            "Original=3\n"
+            "Caption=caption for decrescendo\n"
+            "StartDyn=6\n"
+            "EndDyn=9\n"
+            "Length=12\n"
+            "DynBPNum=0\n"
     
-            "[h#0004]\n" ..
-            "IconID=$07020003\n" ..
-            "IDS=Luka_EN\n" ..
-            "Original=130\n" ..
-            "Caption=caption for luka\n" ..
-            "Length=0\n" ..
-            "Language=2\n" ..
-            "Program=3\n" ..
+            "[h#0004]\n"
+            "IconID=$07020003\n"
+            "IDS=Luka_EN\n"
+            "Original=130\n"
+            "Caption=caption for luka\n"
+            "Length=0\n"
+            "Language=2\n"
+            "Program=3\n"
     
-            "[h#0005]\n" ..
-            "L0=\"ら\",\"4 a\",1,64,0,0\n" ..
+            "[h#0005]\n"
+            "L0=\"ら\",\"4 a\",1,64,0,0\n"
     
-            "[h#0006]\n" ..
-            "IconID=$04040004\n" ..
-            "IDS=vibrato\n" ..
-            "Original=1\n" ..
-            "Caption=caption for vibrato\n" ..
-            "Length=407\n" ..
-            "StartDepth=13\n" ..
-            "DepthBPNum=0\n" ..
-            "StartRate=14\n" ..
-            "RateBPNum=0\n" ..
+            "[h#0006]\n"
+            "IconID=$04040004\n"
+            "IDS=vibrato\n"
+            "Original=1\n"
+            "Caption=caption for vibrato\n"
+            "Length=407\n"
+            "StartDepth=13\n"
+            "DepthBPNum=0\n"
+            "StartRate=14\n"
+            "RateBPNum=0\n"
     
-            "[h#0007]\n" ..
-            "IconID=$05030000\n" ..
-            "IDS=attack\n" ..
-            "Original=15\n" ..
-            "Caption=caption for attack\n" ..
-            "Length=120\n" ..
-            "Duration=62\n" ..
-            "Depth=65\n" ..
+            "[h#0007]\n"
+            "IconID=$05030000\n"
+            "IDS=attack\n"
+            "Original=15\n"
+            "Caption=caption for attack\n"
+            "Length=120\n"
+            "Duration=62\n"
+            "Depth=65\n"
     
-            "[PitchB}BPList]\n" ..
-            "481=1\n" ..
+            "[PitchBendBPList]\n"
+            "480=0\n"
     
-            "[PitchB}SensBPList]\n" ..
-            "482=2\n" ..
+            "[PitchBendSensBPList]\n"
+            "481=1\n"
     
-            "[DynamicsBPList]\n" ..
-            "483=3\n" ..
+            "[DynamicsBPList]\n"
+            "482=2\n"
     
-            "[EpRResidualBPList]\n" ..
-            "484=4\n" ..
+            "[EpRResidualBPList]\n"
+            "483=3\n"
     
-            "[EpRESlopeBPList]\n" ..
-            "485=5\n" ..
+            "[EpRESlopeBPList]\n"
+            "484=4\n"
     
-            "[EpRESlopeDepthBPList]\n" ..
-            "486=6\n" ..
+            "[EpRESlopeDepthBPList]\n"
+            "485=5\n"
     
-            "[G}erFactorBPList]\n" ..
-            "501=21\n" ..
+            "[GenderFactorBPList]\n"
+            "500=20\n"
     
-            "[PortamentoTimingBPList]\n" ..
-            "502=22\n" ..
+            "[PortamentoTimingBPList]\n"
+            "501=21\n"
     
-            "[OpeningBPList]\n" ..
-            "503=23\n";
+            "[OpeningBPList]\n"
+            "502=22\n";
     
         CPPUNIT_ASSERT_EQUAL( expected, stream.toString() );
     }
     
-    void testChangeR}erer(){
-    --    fail();
+    /**
+     * @todo
+     */
+    void testChangeRenderer(){
+        //fail();
     }
     
+    /**
+     * @todo
+     */
     void testGetterAndSetterCurve(){
-        local track = luavsq.Track.new( "DummyTrackName", "DummySingerName" );
+/*
+        Track track( "DummyTrackName", "DummySingerName" );
         CPPUNIT_ASSERT_EQUAL( track._pit, track.getCurve( "PiT" ) );
         CPPUNIT_ASSERT_EQUAL( track._pbs, track.getCurve( "PBS" ) );
         CPPUNIT_ASSERT_EQUAL( track._dyn, track.getCurve( "DYN" ) );
@@ -571,11 +624,16 @@ public:
                 }
             }
         }
+*/
     }
-    
+
+    /**
+     * @todo
+     */
     void testClone(){
+/*
         local track = luavsq.Track.new( "DummyTrackName", "DummySingerName" );
-        local event = luavsq.Event.new( 480, luavsq.EventTypeEnum.NOTE );
+        local event = luavsq.Event.new( 480, EventType::NOTE );
         track.events.add( event );
         track.getCurve( "pit" ).add( 480, 100 );
         track.tag = "valueOfTag";
@@ -583,23 +641,26 @@ public:
         local copy = track.clone();
         CPPUNIT_ASSERT_EQUAL( 2, copy.events.size() );
         CPPUNIT_ASSERT_EQUAL( 0, copy.events.get( 0 ).clock );
-        CPPUNIT_ASSERT_EQUAL( luavsq.EventTypeEnum.SINGER, copy.events.get( 0 ).type );
+        CPPUNIT_ASSERT_EQUAL( EventType::SINGER, copy.events.get( 0 ).type );
         CPPUNIT_ASSERT_EQUAL( "DummySingerName", copy.events.get( 0 ).singerHandle.ids );
         CPPUNIT_ASSERT_EQUAL( 480, copy.events.get( 1 ).clock );
-        CPPUNIT_ASSERT_EQUAL( luavsq.EventTypeEnum.NOTE, copy.events.get( 1 ).type );
+        CPPUNIT_ASSERT_EQUAL( EventType::NOTE, copy.events.get( 1 ).type );
         CPPUNIT_ASSERT_EQUAL( 1, copy.getCurve( "pit" ).size() );
         CPPUNIT_ASSERT_EQUAL( 480, copy.getCurve( "pit" ).getKeyClock( 0 ) );
         CPPUNIT_ASSERT_EQUAL( 100, copy.getCurve( "pit" ).get( 0 ).value );
         CPPUNIT_ASSERT_EQUAL( "DummyTrackName", copy.getName() );
         CPPUNIT_ASSERT_EQUAL( "valueOfTag", copy.tag );
+*/
     }
-    
+
+    /**
+     * @todo
+     */
     void testGetLyricLength(){
-    --    fail();
+        //fail();
     }
 
     CPPUNIT_TEST_SUITE( TrackTest );
-    CPPUNIT_TEST( testConstructMasterTrack );
     CPPUNIT_TEST( testConstructNormalTrack );
     CPPUNIT_TEST( testConstructFromMidiEvents );
     CPPUNIT_TEST( testGetIndexIterator );
@@ -622,4 +683,3 @@ public:
 };
 
 REGISTER_TEST_SUITE( TrackTest );
-*/

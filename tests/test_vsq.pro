@@ -50,9 +50,9 @@ SOURCES += \
     MixerTest.cpp \
     EventListIndexIteratorKindTest.cpp \
     EventListIndexIteratorTest.cpp \
-    TrackTest.cpp \
     Event.ListTest.cpp \
-    Event.ListIteratorTest.cpp
+    Event.ListIteratorTest.cpp \
+    TrackTest.cpp
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 

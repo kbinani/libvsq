@@ -53,6 +53,16 @@ public:
     std::vector<MixerItem> slave;
 
     /**
+     * @brief 初期化を行う
+     */
+    explicit Mixer(){
+        this->masterFeder = 0;
+        this->masterMute = 0;
+        this->masterPanpot = 0;
+        this->outputMode = 0;
+    }
+
+    /**
      * @brief 各パラメータを指定し、初期化を行う
      * @param masterFeder MasterFader 値
      * @param masterPanpot MasterPanpot 値

@@ -63,6 +63,13 @@ private:
 public:
     /**
      * @brief 初期化を行う
+     */
+    explicit Common(){
+        init();
+    }
+
+    /**
+     * @brief 初期化を行う
      * @param stream 読み込み元のテキストストリーム
      * @param lastLine 読み込んだ最後の行。テーブルの ["value"] に文字列が格納される
      */
