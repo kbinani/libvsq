@@ -16,8 +16,18 @@ public:
         CPPUNIT_ASSERT_EQUAL( 1, point.id );
     }
 
+    void testClone(){
+        int value = 64;
+        int id = 1;
+        BP point( value, id );
+        BP copy = point.clone();
+        CPPUNIT_ASSERT_EQUAL( 64, copy.value );
+        CPPUNIT_ASSERT_EQUAL( 1, copy.id );
+    }
+
     CPPUNIT_TEST_SUITE( BPTest );
     CPPUNIT_TEST( testConstruct );
+    CPPUNIT_TEST( testClone );
     CPPUNIT_TEST_SUITE_END();
 };
 

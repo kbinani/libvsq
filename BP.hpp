@@ -45,6 +45,14 @@ public:
         this->id = id;
     }
 
+    /**
+     * @brief コピーを作成する
+     * @return (BP) このインスタンスのコピー
+     */
+    BP clone() const{
+        return BP( value, id );
+    }
+
 private:
     BP()
     {
