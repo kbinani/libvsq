@@ -403,6 +403,24 @@ public:
         CPPUNIT_ASSERT_EQUAL( 0, index );
     }
 
+    void testClone(){
+        BPList list( "foo", 63, -10, 1000 );
+        list.add( 480, 1 );
+        list.add( 1920, 2 );
+        BPList copy = list.clone();
+        CPPUNIT_ASSERT_EQUAL( string( "foo" ), copy.getName() );
+        CPPUNIT_ASSERT_EQUAL( 63, copy.getDefault() );
+        CPPUNIT_ASSERT_EQUAL( -10, copy.getMinimum() );
+        CPPUNIT_ASSERT_EQUAL( 1000, copy.getMaximum() );
+        CPPUNIT_ASSERT_EQUAL( 2, copy.size() );
+        CPPUNIT_ASSERT_EQUAL( 1, copy.get( 0 ).id );
+        CPPUNIT_ASSERT_EQUAL( 1, copy.get( 0 ).value );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)480, copy.getKeyClock( 0 ) );
+        CPPUNIT_ASSERT_EQUAL( 2, copy.get( 1 ).id );
+        CPPUNIT_ASSERT_EQUAL( 2, copy.get( 1 ).value );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1920, copy.getKeyClock( 1 ) );
+    }
+
     CPPUNIT_TEST_SUITE( BPListTest );
     CPPUNIT_TEST( testConstruct );
     CPPUNIT_TEST( testGetterAndSetterName );
@@ -432,6 +450,7 @@ public:
     CPPUNIT_TEST( testRemoveWithId );
     CPPUNIT_TEST( testGetValueAtWithoutLastIndex );
     CPPUNIT_TEST( testGetValueAtWithLastIndex );
+    CPPUNIT_TEST( testClone );
     CPPUNIT_TEST_SUITE_END();
 };
 

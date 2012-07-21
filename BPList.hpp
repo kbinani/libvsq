@@ -285,6 +285,22 @@ public:
     }
 
     /**
+     * @brief コピーを作成する
+     * @return (BPList) このオブジェクトのコピー
+     */
+    BPList clone() const{
+        BPList res( _name, _defaultValue, _minValue, _maxValue );
+        res._ensureBufferLength( _length );
+        for( int i = 0; i < _length; i++ ){
+            res.addWithoutSort( _clocks[i], _items[i].value );
+            res._items[i].id = _items[i].id;
+        }
+        res._length = _length;
+        res._maxId = _maxId;
+        return res;
+    }
+
+    /**
      * @brief コントロールカーブの最大値を取得する
      * @return (int) コントロールカーブの最大値
      */
