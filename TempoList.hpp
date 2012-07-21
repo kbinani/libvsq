@@ -17,6 +17,7 @@
 #include "vsqglobal.hpp"
 #include "Tempo.hpp"
 #include <vector>
+#include <algorithm>
 
 VSQ_BEGIN_NAMESPACE
 
