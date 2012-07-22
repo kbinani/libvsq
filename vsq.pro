@@ -49,7 +49,8 @@ HEADERS += \
     EventListIndexIteratorKind.hpp \
     EventListIndexIterator.hpp \
     TempoList.hpp \
-    Track.hpp
+    Track.hpp \
+    NrpnEvent.hpp
 
 unix:!symbian {
     maemo5 {

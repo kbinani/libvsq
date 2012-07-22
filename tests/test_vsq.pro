@@ -53,7 +53,8 @@ SOURCES += \
     Event.ListTest.cpp \
     Event.ListIteratorTest.cpp \
     TrackTest.cpp \
-    TempoListTest.cpp
+    TempoListTest.cpp \
+    NrpnEventTest.cpp
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
