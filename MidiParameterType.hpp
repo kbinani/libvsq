@@ -14,9 +14,7 @@
 #ifndef __MidiParameterType_h__
 #define __MidiParameterType_h__
 
-#include <string>
-#include <algorithm>
-#include <cctype>
+#include "StringUtil.hpp"
 #include "vsqglobal.hpp"
 
 VSQ_BEGIN_NAMESPACE
@@ -575,8 +573,7 @@ public:
     static int getVoiceChangeParameterId( const std::string &curve_name )
     {
         int lsb = 0x31;
-        std::string curveName = curve_name;
-        transform( curveName.begin(), curveName.end(), curveName.begin(), tolower );
+        std::string curveName = StringUtil::toLower( curve_name );
         if( curveName == "harmonics" ){
             lsb = 0x30;
         }else if( curveName == "bre" ){
