@@ -50,7 +50,9 @@ HEADERS += \
     EventListIndexIterator.hpp \
     TempoList.hpp \
     Track.hpp \
-    NrpnEvent.hpp
+    NrpnEvent.hpp \
+    CP932Converter.hpp \
+    CP932ConverterData.hpp
 
 unix:!symbian {
     maemo5 {

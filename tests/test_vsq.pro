@@ -54,7 +54,8 @@ SOURCES += \
     Event.ListIteratorTest.cpp \
     TrackTest.cpp \
     TempoListTest.cpp \
-    NrpnEventTest.cpp
+    NrpnEventTest.cpp \
+    CP932ConverterTest.cpp
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
