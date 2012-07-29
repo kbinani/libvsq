@@ -58,7 +58,6 @@ public:
         return oss.str();
     }
 
-
     /**
      * @brief 初期化を行う
      * @param clock (int) Tick 単位の時刻
@@ -105,6 +104,18 @@ public:
      */
     double getTime(){
         return _time;
+    }
+
+    /**
+     * @brief コピーを作成する
+     * @return このオブジェクトのコピー
+     */
+    Tempo clone() const{
+        Tempo result;
+        result.clock = clock;
+        result.tempo = tempo;
+        result._time = _time;
+        return result;
     }
 
     /**

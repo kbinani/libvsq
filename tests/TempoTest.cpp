@@ -72,12 +72,21 @@ public:
         CPPUNIT_ASSERT( Tempo::compare( a, b ) );
     }
 
+    void testClone(){
+        Tempo a( 1920, 500000 );
+        Tempo b = a;
+        CPPUNIT_ASSERT_EQUAL( 1920, b.clock );
+        CPPUNIT_ASSERT_EQUAL( 500000, b.tempo );
+        CPPUNIT_ASSERT_EQUAL( 0.0, b.getTime() );
+    }
+
     CPPUNIT_TEST_SUITE( TempoTest );
     CPPUNIT_TEST( testConstructor );
     CPPUNIT_TEST( testToString );
     CPPUNIT_TEST( testCompareTo );
     CPPUNIT_TEST( testEquals );
     CPPUNIT_TEST( testCompare );
+    CPPUNIT_TEST( testClone );
     CPPUNIT_TEST_SUITE_END();
 };
 
