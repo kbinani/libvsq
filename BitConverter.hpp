@@ -24,15 +24,15 @@ using namespace std;
 
 class BitConverter{
 public:
-    static vector<int> getBytesUInt16BE( uint16_t value ){
-        vector<int> result;
+    static vector<char> getBytesUInt16BE( uint16_t value ){
+        vector<char> result;
         result.push_back( ((0xff00 & value) >> 8) & 0xff );
         result.push_back( ((0x00ff & value)) & 0xff );
         return result;
     }
 
-    static vector<int> getBytesUInt32BE( uint32_t value ){
-        vector<int> result;
+    static vector<char> getBytesUInt32BE( uint32_t value ){
+        vector<char> result;
         result.push_back( ((0xff000000 & value) >> 24) & 0xff );
         result.push_back( ((0x00ff0000 & value) >> 16) & 0xff );
         result.push_back( ((0x0000ff00 & value) >> 8) & 0xff );
