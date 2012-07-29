@@ -4,6 +4,18 @@
 using namespace std;
 using namespace VSQ_NS;
 
+class TrackStub : public Track{
+public:
+    explicit TrackStub( std::string name, std::string singer )
+        : Track( name, singer )
+    {
+    }
+
+    Master getMaster() const{
+        return master;
+    }
+};
+
 class TrackTest : public CppUnit::TestCase{
 public:
     void testConstructNormalTrack(){
@@ -254,7 +266,7 @@ public:
     }
     
     void testPrintMetaText(){
-        Track track( "DummyTrackName", "DummySingerName" );
+        TrackStub track( "DummyTrackName", "DummySingerName" );
     
         Event singerEvent( 0, EventType::SINGER );
         singerEvent.singerHandle = Handle( HandleType::SINGER ); //h#0000
@@ -386,7 +398,8 @@ public:
         }
     
         TextStream stream;
-        track.printMetaText( stream, 2400, 0 );
+
+        track.printMetaText( stream, 2400, 0, false, &track.getMaster(), track.getMixer() );
         string expected =
             "[Common]\n"
             "Version=DSB301\n"
