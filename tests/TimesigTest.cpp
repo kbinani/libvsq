@@ -34,10 +34,21 @@ public:
         assertEqual( 0, a.compareTo( a ) );
     }
 
+    void testClone(){
+        Timesig a( 3, 4, 1 );
+        a.clock = 10;
+        Timesig b = a.clone();
+        CPPUNIT_ASSERT_EQUAL( 3, b.numerator );
+        CPPUNIT_ASSERT_EQUAL( 4, b.denominator );
+        CPPUNIT_ASSERT_EQUAL( 1, b.barCount );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)10, b.clock );
+    }
+
     CPPUNIT_TEST_SUITE( TimesigTest );
     CPPUNIT_TEST( testConstruct );
     CPPUNIT_TEST( testToString );
     CPPUNIT_TEST( testCompareTo );
+    CPPUNIT_TEST( testClone );
     CPPUNIT_TEST_SUITE_END();
 };
 

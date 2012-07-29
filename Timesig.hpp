@@ -89,6 +89,16 @@ public:
     }
 
     /**
+     * @brief コピーを作成する
+     * @return このオブジェクトのコピー
+     */
+    Timesig clone() const{
+        Timesig result( numerator, denominator, barCount );
+        result.clock = clock;
+        return result;
+    }
+
+    /**
      * @brief 順序を比較する
      * @return b が a より大であれば true を、そうでなければ false を返す
      */

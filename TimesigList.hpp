@@ -64,7 +64,7 @@ public:
      * @param index 取得するデータ点のインデックス(0から始まる)
      * @return 拍子変更情報
      */
-    Timesig get( int index ){
+    Timesig get( int index ) const{
         Timesig *item = this->list[index];
         Timesig result( item->numerator, item->denominator, item->barCount );
         result.clock = item->clock;
@@ -124,14 +124,14 @@ public:
     /**
      * @brief データ点の個数を返す
      */
-    int size(){
+    int size() const{
         return this->listSize;
     }
 
     /**
      * @brief updateTimesigInfo メソッドが呼ばれたかどうかを取得する
      */
-    bool isUpdated(){
+    bool isUpdated() const{
         return this->updated;
     }
 
