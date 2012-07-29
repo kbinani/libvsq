@@ -14,7 +14,7 @@ VSQ_BEGIN_NAMESPACE
  * @class table
  * @name ByteArrayOutputStream
  */
-class ByteArrayOutputStream : VSQ_NS::OutputStream
+class ByteArrayOutputStream : public VSQ_NS::OutputStream
 {
 private:
     static const int UNIT_BUFFER_LENGTH = 512;
