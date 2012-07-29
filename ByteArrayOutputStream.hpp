@@ -75,7 +75,7 @@ public:
      * @param length (int) 書き込むバイト値の個数
      * @name write<! *2 *>
      */
-    void write( char *array, int startIndex, int length )
+    void write( const char *array, int startIndex, int length )
     {
         ensureBufferLength( _pointer + length );
         for( int i = 0; i < length; i++ ){

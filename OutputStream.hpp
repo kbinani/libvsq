@@ -23,7 +23,7 @@ class OutputStream
 public:
     virtual void write( int value ) = 0;
 
-    virtual void write( char *buffer, int startIndex, int length ) = 0;
+    virtual void write( const char *buffer, int startIndex, int length ) = 0;
 
     virtual void seek( int position ) = 0;
 
