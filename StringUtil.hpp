@@ -110,6 +110,20 @@ public:
         return result;
     }
 
+    /**
+     * @brief 文字列を指定回数繰り返した文字列を取得する
+     * @param value 繰り返す文字列
+     * @param count 繰り返す回数
+     * @return 結果文字列
+     */
+    static std::string repeat( const std::string &value, int count ){
+        ostringstream result;
+        for( int i = 0; i < count; i++ ){
+            result << value;
+        }
+        return result.str();
+    }
+
 private:
     StringUtil()
     {

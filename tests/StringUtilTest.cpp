@@ -66,6 +66,12 @@ public:
         CPPUNIT_ASSERT_EQUAL( string( "foobar" ), actual );
     }
 
+    void testRepeat(){
+        string fixture = "ab";
+        string actual = StringUtil::repeat( fixture, 4 );
+        CPPUNIT_ASSERT_EQUAL( string( "abababab" ), actual );
+    }
+
     CPPUNIT_TEST_SUITE( StringUtilTest );
     CPPUNIT_TEST( explode );
     CPPUNIT_TEST( explodeNonLimit );
