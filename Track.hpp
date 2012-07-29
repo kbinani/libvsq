@@ -520,24 +520,24 @@ public:
 
     /**
      * @brief トラックのメタテキストを、テキストストリームに出力する
-     * @param stream (TextStream) 出力先のストリーム
-     * @param eos (int) イベントリストの末尾を表す番号
-     * @param start (int) Tick 単位の出力開始時刻
-     * @param printPitch (boolean) pitch を含めて出力するかどうか(現在は <code>false</code> 固定で、引数は無視される)
+     * @param stream 出力先のストリーム
+     * @param eos イベントリストの末尾を表す番号
+     * @param start Tick 単位の出力開始時刻
+     * @param printPitch pitch を含めて出力するかどうか(現在は <code>false</code> 固定で、引数は無視される)
+     * @param master 出力する Master 情報。出力しない場合は NULL を指定する
+     * @param mixer 出力する Mixer 情報。出力しない場合は NULL を指定する
      */
-    void printMetaText( TextStream &stream, int eos, tick_t start, bool printPitch = false ){
+    void printMetaText( TextStream &stream, int eos, tick_t start, bool printPitch = false, Master *master = 0, Mixer *mixer = 0 ){
         //TODO: commonの型を Common* にする
         //if( common ~= nil ){
             common.write( stream );
         //}
-        //TODO: master の型を Master* にする
-        //if( master ~= nil ){
-            master.write( stream );
-        //}
-        //TODO: mixer の型を Mixer* にする
-        //if( mixer ~= nil ){
-            mixer.write( stream );
-        //}
+        if( master ){
+            master->write( stream );
+        }
+        if( mixer ){
+            mixer->write( stream );
+        }
         vector<Handle> handle = events.write( stream, eos );
         Event::ListIterator itr = events.iterator();
         while( itr.hasNext() ){
