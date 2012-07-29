@@ -112,7 +112,7 @@ public:
      * @param time (double) 秒単位の時刻
      * @return (double) Tick 単位の時刻
      */
-    double getClockFromSec( double time ){
+    double getClockFromSec( double time ) const{
         // timeにおけるテンポを取得
         int tempo = TempoList::baseTempo;
         tick_t base_clock = 0;
