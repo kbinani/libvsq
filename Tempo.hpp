@@ -31,7 +31,7 @@ public:
      * Tick 単位の時刻
      * @var int
      */
-    int clock;
+    tick_t clock;
 
     /**
      * テンポ値。四分音符の長さをマイクロ秒単位で表した値

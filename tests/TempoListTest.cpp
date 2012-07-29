@@ -17,10 +17,10 @@ public:
         list.updateTempoInfo();
 
         CPPUNIT_ASSERT_EQUAL( 2, list.size() );
-        CPPUNIT_ASSERT_EQUAL( 0, list.get( 0 ).clock );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)0, list.get( 0 ).clock );
         CPPUNIT_ASSERT_EQUAL( 500000, list.get( 0 ).tempo );
         CPPUNIT_ASSERT_EQUAL( 0.0, list.get( 0 ).getTime() );
-        CPPUNIT_ASSERT_EQUAL( 480, list.get( 1 ).clock );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)480, list.get( 1 ).clock );
         CPPUNIT_ASSERT_EQUAL( 525000, list.get( 1 ).tempo );
         CPPUNIT_ASSERT_EQUAL( 0.5, list.get( 1 ).getTime() );
     }
@@ -35,12 +35,12 @@ public:
         TempoList::Iterator i = list.iterator();
         CPPUNIT_ASSERT( i.hasNext() );
         Tempo item = i.next();
-        CPPUNIT_ASSERT_EQUAL( 0, item.clock );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)0, item.clock );
         CPPUNIT_ASSERT_EQUAL( 500000, item.tempo );
         CPPUNIT_ASSERT_EQUAL( 0.0, item.getTime() );
         CPPUNIT_ASSERT( i.hasNext() );
         item = i.next();
-        CPPUNIT_ASSERT_EQUAL( 480, item.clock );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)480, item.clock );
         CPPUNIT_ASSERT_EQUAL( 525000, item.tempo );
         CPPUNIT_ASSERT_EQUAL( 0.5, item.getTime() );
         CPPUNIT_ASSERT( i.hasNext() == false );
@@ -53,9 +53,9 @@ public:
 
         list.sort();
 
-        CPPUNIT_ASSERT_EQUAL( 0, list.get( 0 ).clock );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)0, list.get( 0 ).clock );
         CPPUNIT_ASSERT_EQUAL( 500000, list.get( 0 ).tempo );
-        CPPUNIT_ASSERT_EQUAL( 480, list.get( 1 ).clock );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)480, list.get( 1 ).clock );
         CPPUNIT_ASSERT_EQUAL( 525000, list.get( 1 ).tempo );
     }
 
@@ -75,7 +75,7 @@ public:
         TempoList list;
         list.updateTempoInfo();
         CPPUNIT_ASSERT_EQUAL( 1, list.size() );
-        CPPUNIT_ASSERT_EQUAL( 0, list.get( 0 ).clock );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)0, list.get( 0 ).clock );
         CPPUNIT_ASSERT_EQUAL( 500000, list.get( 0 ).tempo );
         CPPUNIT_ASSERT_EQUAL( 0.0, list.get( 0 ).getTime() );
 
@@ -84,10 +84,10 @@ public:
         list.push( Tempo( 0, 500000 ) );
         list.updateTempoInfo();
         CPPUNIT_ASSERT_EQUAL( 2, list.size() );
-        CPPUNIT_ASSERT_EQUAL( 0, list.get( 0 ).clock );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)0, list.get( 0 ).clock );
         CPPUNIT_ASSERT_EQUAL( 500000, list.get( 0 ).tempo );
         CPPUNIT_ASSERT_EQUAL( 0.0, list.get( 0 ).getTime() );
-        CPPUNIT_ASSERT_EQUAL( 480, list.get( 1 ).clock );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)480, list.get( 1 ).clock );
         CPPUNIT_ASSERT_EQUAL( 525000, list.get( 1 ).tempo );
         CPPUNIT_ASSERT_EQUAL( 0.5, list.get( 1 ).getTime() );
     }

@@ -24,12 +24,12 @@ public:
     void testConstructor()
     {
         Tempo entry = Tempo();
-        CPPUNIT_ASSERT_EQUAL( 0, entry.clock );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)0, entry.clock );
         CPPUNIT_ASSERT_EQUAL( 0, entry.tempo );
         CPPUNIT_ASSERT_EQUAL( 0.0, entry.getTime() );
     
         entry = Tempo( 480, 500000 );
-        CPPUNIT_ASSERT_EQUAL( 480, entry.clock );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)480, entry.clock );
         CPPUNIT_ASSERT_EQUAL( 500000, entry.tempo );
     }
     
@@ -75,7 +75,7 @@ public:
     void testClone(){
         Tempo a( 1920, 500000 );
         Tempo b = a;
-        CPPUNIT_ASSERT_EQUAL( 1920, b.clock );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1920, b.clock );
         CPPUNIT_ASSERT_EQUAL( 500000, b.tempo );
         CPPUNIT_ASSERT_EQUAL( 0.0, b.getTime() );
     }
