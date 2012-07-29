@@ -94,7 +94,7 @@ public:
      * @param index (int) インデックス(最初のインデックスは0)
      * @return (Tempo) テンポ変更情報
      */
-    Tempo get( int index ){
+    Tempo get( int index ) const{
         return _array[index];
     }
 
