@@ -24,6 +24,7 @@
 #include "NrpnEvent.hpp"
 #include "BitConverter.hpp"
 #include <vector>
+#include <string.h>
 
 VSQ_BEGIN_NAMESPACE
 
