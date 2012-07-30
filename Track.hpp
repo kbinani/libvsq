@@ -275,7 +275,7 @@ public:
      * @brief トラックの名前を設定する
      * @param value (string) トラック名
      */
-    void setName( const std::string value ){
+    void setName( const std::string &value ){
         common.name = value;
     }
 
@@ -682,7 +682,7 @@ public:
      * @param curve (string) カーブ名
      * @return (BPList) カーブ
      */
-    BPList *getCurve( const std::string curve ){
+    BPList *getCurve( const std::string &curve ){
         string search = StringUtil::toLower( curve );
         if( search == "bre" ){
             return &_bre;

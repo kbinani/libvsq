@@ -590,6 +590,7 @@ public:
      * @param eventType (EventTypeEnum) イベントの種類
      */
     explicit Event( VSQ_NS::tick_t clock, VSQ_NS::EventType::EventTypeEnum eventType ){
+        init();
         this->clock = clock;
         this->type = eventType;
         if( eventType == EventType::SINGER ){
@@ -608,6 +609,7 @@ public:
      * @param last_line [ByRef<string>] 読み込んだ最後の行が返されます
      */
     explicit Event( TextStream &sr, int value, std::string &lastLine ){
+        init();
         index = value;
         type = EventType::UNKNOWN;
         _singerHandleIndex = -2;

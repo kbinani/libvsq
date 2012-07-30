@@ -294,8 +294,13 @@ public:
 
 protected:
     explicit NrpnEvent(){
+        this->clock = 0;
+        this->dataLSB = 0;
+        this->dataMSB = 0;
+        this->hasLSB = false;
+        this->isMSBOmittingRequired = false;
+        this->nrpn = (MidiParameterType::MidiParameterTypeEnum)0;
     }
-
 };
 
 VSQ_END_NAMESPACE

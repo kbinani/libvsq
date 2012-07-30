@@ -577,7 +577,7 @@ protected:
                     prefix = _getLinePrefixBytes( line_count + 1 );
                 }
             }
-            if( buffer.size() > 0 ){
+            if( false == buffer.empty() ){
                 vector<int> prefix = _getLinePrefixBytes( line_count + 1 );
                 while( prefix.size() + buffer.size() >= 127 ){
                     line_count = line_count + 1;
@@ -597,7 +597,7 @@ protected:
                     ret.push_back( add );
                     prefix = _getLinePrefixBytes( line_count + 1 );
                 }
-                if( buffer.size() > 0 ){
+                if( false == buffer.empty() ){
                     line_count = line_count + 1;
                     prefix = _getLinePrefixBytes( line_count );
                     MidiEvent add;

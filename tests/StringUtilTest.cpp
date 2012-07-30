@@ -80,6 +80,7 @@ public:
     CPPUNIT_TEST( testReplace );
     CPPUNIT_TEST( testParseInt );
     CPPUNIT_TEST( testToString );
+    CPPUNIT_TEST( testRepeat );
     CPPUNIT_TEST( testToLower );
     CPPUNIT_TEST_SUITE_END();
 };

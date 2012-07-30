@@ -46,7 +46,7 @@ public:
 
         Tempo next(){
             Tempo result = *iterator;
-            iterator++;
+            ++iterator;
             return result;
         }
     };
