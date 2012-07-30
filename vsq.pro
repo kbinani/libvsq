@@ -53,7 +53,8 @@ HEADERS += \
     NrpnEvent.hpp \
     CP932Converter.hpp \
     CP932ConverterData.hpp \
-    BitConverter.hpp
+    BitConverter.hpp \
+    Sequence.hpp
 
 unix:!symbian {
     maemo5 {

@@ -56,7 +56,8 @@ SOURCES += \
     TempoListTest.cpp \
     NrpnEventTest.cpp \
     CP932ConverterTest.cpp \
-    BitConverterTest.cpp
+    BitConverterTest.cpp \
+    SequenceTest.cpp
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
