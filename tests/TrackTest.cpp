@@ -644,26 +644,22 @@ public:
      * @todo
      */
     void testClone(){
-/*
-        local track = luavsq.Track.new( "DummyTrackName", "DummySingerName" );
-        local event = luavsq.Event.new( 480, EventType::NOTE );
-        track.events.add( event );
-        track.getCurve( "pit" ).add( 480, 100 );
-        track.tag = "valueOfTag";
+        Track track( "DummyTrackName", "DummySingerName" );
+        Event event( 480, EventType::NOTE );
+        track.getEvents()->add( event );
+        track.getCurve( "pit" )->add( 480, 100 );
     
-        local copy = track.clone();
-        CPPUNIT_ASSERT_EQUAL( 2, copy.events.size() );
-        CPPUNIT_ASSERT_EQUAL( 0, copy.events.get( 0 ).clock );
-        CPPUNIT_ASSERT_EQUAL( EventType::SINGER, copy.events.get( 0 ).type );
-        CPPUNIT_ASSERT_EQUAL( "DummySingerName", copy.events.get( 0 ).singerHandle.ids );
-        CPPUNIT_ASSERT_EQUAL( 480, copy.events.get( 1 ).clock );
-        CPPUNIT_ASSERT_EQUAL( EventType::NOTE, copy.events.get( 1 ).type );
-        CPPUNIT_ASSERT_EQUAL( 1, copy.getCurve( "pit" ).size() );
-        CPPUNIT_ASSERT_EQUAL( 480, copy.getCurve( "pit" ).getKeyClock( 0 ) );
-        CPPUNIT_ASSERT_EQUAL( 100, copy.getCurve( "pit" ).get( 0 ).value );
-        CPPUNIT_ASSERT_EQUAL( "DummyTrackName", copy.getName() );
-        CPPUNIT_ASSERT_EQUAL( "valueOfTag", copy.tag );
-*/
+        Track copy = track.clone();
+        CPPUNIT_ASSERT_EQUAL( 2, copy.getEvents()->size() );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)0, copy.getEvents()->get( 0 ).clock );
+        CPPUNIT_ASSERT_EQUAL( EventType::SINGER, copy.getEvents()->get( 0 ).type );
+        CPPUNIT_ASSERT_EQUAL( string( "DummySingerName" ), copy.getEvents()->get( 0 ).singerHandle.ids );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)480, copy.getEvents()->get( 1 ).clock );
+        CPPUNIT_ASSERT_EQUAL( EventType::NOTE, copy.getEvents()->get( 1 ).type );
+        CPPUNIT_ASSERT_EQUAL( 1, copy.getCurve( "pit" )->size() );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)480, copy.getCurve( "pit" )->getKeyClock( 0 ) );
+        CPPUNIT_ASSERT_EQUAL( 100, copy.getCurve( "pit" )->get( 0 ).value );
+        CPPUNIT_ASSERT_EQUAL( string( "DummyTrackName" ), copy.getName() );
     }
 
     /**

@@ -803,6 +803,7 @@ public:
         res.common = common.clone();
         res.master = master.clone();
         res.mixer = mixer.clone();
+        res.events.clear();
         for( int i = 0; i < events.size(); i++ ){
             Event item = events.get( i );
             res.events.add( item.clone(), item.id );
