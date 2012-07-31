@@ -54,7 +54,8 @@ HEADERS += \
     CP932Converter.hpp \
     CP932ConverterData.hpp \
     BitConverter.hpp \
-    Sequence.hpp
+    Sequence.hpp \
+    VocaloidMidiEventListFactory.hpp
 
 unix:!symbian {
     maemo5 {

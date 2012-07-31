@@ -12,16 +12,8 @@ public:
     {
     }
 
-    void getActualClockAndDelay( tick_t clock, int msPreSend, tick_t *actualClock, int *delay ){
-        _getActualClockAndDelay( clock, msPreSend, actualClock, delay );
-    }
-
     static vector<MidiEvent> getMidiEventsFromMetaText( TextStream *stream, const string &encoding ){
         return _getMidiEventsFromMetaText( stream, encoding );
-    }
-
-    static void getMsbAndLsb( int value, int *msb, int *lsb ){
-        _getMsbAndLsb( value, msb, lsb );
     }
 
     static vector<int> getLinePrefixBytes( int count ){
@@ -216,32 +208,6 @@ public:
             actual << (char)events[1].data[i];
         }
         CPPUNIT_ASSERT_EQUAL( string( "DM:0001:" ) + (char)0xA0 + StringUtil::repeat( "b", 63 ), actual.str() );
-    }
-
-    void test_getActualClockAndDelay(){
-        SequenceStub sequence( "Miku", 1, 4, 4, 500000 );
-        tick_t actualClock;
-        int delay;
-
-        sequence.getActualClockAndDelay( 1920, 500, &actualClock, &delay );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, actualClock );
-        CPPUNIT_ASSERT_EQUAL( 500, delay );
-
-        sequence.getActualClockAndDelay( 1920, 499, &actualClock, &delay );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, actualClock );
-        CPPUNIT_ASSERT_EQUAL( 500, delay );
-
-        sequence.getActualClockAndDelay( 1920, 498, &actualClock, &delay );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1441, actualClock );
-        CPPUNIT_ASSERT_EQUAL( 498, delay );
-
-        sequence.getActualClockAndDelay( 0, 500, &actualClock, &delay );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)0, actualClock );
-        CPPUNIT_ASSERT_EQUAL( 0, delay );
-
-        sequence.getActualClockAndDelay( 0, 0, &actualClock, &delay );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)0, actualClock );
-        CPPUNIT_ASSERT_EQUAL( 0, delay );
     }
 
     void testGetMaximumNoteLengthAt(){
@@ -929,13 +895,6 @@ public:
         */
     }
 
-    void test_getMsbAndLsb(){
-        int msb, lsb;
-        SequenceStub::getMsbAndLsb( 264, &msb, &lsb );
-        CPPUNIT_ASSERT_EQUAL( 2, msb );
-        CPPUNIT_ASSERT_EQUAL( 8, lsb );
-    }
-
     void test_getLinePrefixBytes(){
         // 4 桁
         vector<int> expected;
@@ -1045,7 +1004,6 @@ public:
     CPPUNIT_TEST( testGetTickPerQuarter );
     CPPUNIT_TEST( testUpdateTotalClocks );
     CPPUNIT_TEST( test_getMidiEventsFromMetaText );
-    CPPUNIT_TEST( test_getActualClockAndDelay );
     CPPUNIT_TEST( testGetMaximumNoteLengthAt );
     CPPUNIT_TEST( testWriteWithoutPitch );
     CPPUNIT_TEST( testWriteWithPitch );
@@ -1061,7 +1019,6 @@ public:
     CPPUNIT_TEST( test_generateVibratoNRPN );
     CPPUNIT_TEST( testGenerateVoiceChangeParameterNRPN );
     CPPUNIT_TEST( test_addVoiceChangeParameters );
-    CPPUNIT_TEST( test_getMsbAndLsb );
     CPPUNIT_TEST( test_getLinePrefixBytes );
     CPPUNIT_TEST( test_getHowManyDigits );
     CPPUNIT_TEST( test_writeUnsignedShort );

@@ -57,7 +57,8 @@ SOURCES += \
     NrpnEventTest.cpp \
     CP932ConverterTest.cpp \
     BitConverterTest.cpp \
-    SequenceTest.cpp
+    SequenceTest.cpp \
+    VocaloidMidiEventListFactoryTest.cpp
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 

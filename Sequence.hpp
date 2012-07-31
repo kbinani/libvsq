@@ -621,22 +621,6 @@ protected:
     }
 
     /**
-     * @brief DATA の値を MSB と LSB に分解する
-     * @param value (int) 分解する値
-     * @param (int) MSB の値
-     * @param (int) LSB の値
-     */
-    static void _getMsbAndLsb( int value, int *msb, int *lsb ){
-        if( 0x3fff < value ){
-            *msb = 0x7f;
-            *lsb = 0x7f;
-        }else{
-            *msb = 0xff & (value >> 7);
-            *lsb = value - (*msb << 7);
-        }
-    }
-
-    /**
      * @brief "DM:0001:"といった、VSQメタテキストの行の先頭につくヘッダー文字列のバイト列表現を取得する
      * @param count (int) ヘッダーの番号
      * @return (table<int>) バイト列
@@ -692,25 +676,6 @@ protected:
     static void _writeUnsignedInt( OutputStream *stream, int data ){
         vector<char> dat = BitConverter::getBytesUInt32BE( data );
         stream->write( dat.data(), 0, dat.size() );
-    }
-
-    /**
-     * @brief 指定した時刻における、プリセンド込の時刻と、ディレイを取得する
-     * @param clock (int) Tick 単位の時刻
-     * @param msPreSend (int) ミリ秒単位のプリセンド時間
-     * @return (int) プリセンド分のクロックを引いた Tick 単位の時刻
-     * @return (int) ミリ秒単位のプリセンド時間
-     */
-    void _getActualClockAndDelay( tick_t clock, int msPreSend, tick_t *actualClock, int *delay ) const{
-        double clock_msec = tempoList.getSecFromClock( clock ) * 1000.0;
-
-        if( clock_msec - msPreSend <= 0 ){
-            *actualClock = 0;
-        }else{
-            double draft_clock_sec = (clock_msec - msPreSend) / 1000.0;
-            *actualClock = (tick_t)::floor( tempoList.getClockFromSec( draft_clock_sec ) );
-        }
-        *delay = (int)::floor( clock_msec - tempoList.getSecFromClock( (double)*actualClock ) * 1000.0 );
     }
 
 private:
@@ -819,45 +784,6 @@ private:
         _writeUnsignedInt( stream, pos - first_position );
         stream->seek( pos );
     }
-
-    //TODO: 実装
-/*
-    /*
-     * @brief トラックの Expression(DYN) の NRPN リストを作成する
-     * @param sequence (Sequence) 出力するシーケンス
-     * @param track (int) 出力するトラックの番号
-     * @param msPreSend (int) ミリ秒単位のプリセンド時間
-     * @return (table&lt;NrpnEvent&gt;) NrpnEvent の配列
-     *
-    static vector<NrpnEvent> _generateExpressionNRPN( sequence, track, msPreSend ){
-        local ret = {};
-        local dyn = sequence.track:get( track ):getCurve( "DYN" );
-        local count = dyn:size();
-        local i;
-        local lastDelay = 0;
-        for i = 0, count - 1, 1 do
-            local clock = dyn:getKeyClock( i );
-            local c, delay = sequence:_getActualClockAndDelay( clock, msPreSend );
-            if( c >= 0 )then
-                if( lastDelay ~= delay )then
-                    local delayMsb, delayLsb;
-                    delayMsb, delayLsb = Sequence._getMsbAndLsb( delay );
-                    local delayNrpn = NrpnEvent.new( c, MidiParameterEnum.CC_E_DELAY, delayMsb, delayLsb );
-                    table.insert( ret, delayNrpn );
-                end
-                lastDelay = delay;
-
-                local add = NrpnEvent.new(
-                    c,
-                    MidiParameterEnum.CC_E_EXPRESSION,
-                    dyn:getValue( i )
-                );
-                table.insert( ret, add );
-            end
-        end
-        return ret;
-    end
-*/
 
     //TODO: 実装
 /*
