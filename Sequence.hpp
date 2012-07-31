@@ -541,9 +541,9 @@ protected:
         string _NL = "" + (char)0x0a;
         vector<MidiEvent> ret;
         sr->setPointer( -1 );
-        int line_count = -1;
         string tmp = "";
         if( sr->ready() ){
+            int line_count = -1;
             vector<int> buffer;
             bool first = true;
             while( sr->ready() ){
