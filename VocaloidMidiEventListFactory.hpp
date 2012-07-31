@@ -67,6 +67,17 @@ protected:
     }
 
     /**
+     * @brief トラックの先頭に記録される NRPN を作成する
+     * @return NRPNイベント
+     */
+    static NrpnEvent generateHeaderNRPN(){
+        NrpnEvent ret( 0, MidiParameterType::CC_BS_VERSION_AND_DEVICE, 0x00, 0x00 );
+        ret.append( MidiParameterType::CC_BS_DELAY, 0x00, 0x00 );
+        ret.append( MidiParameterType::CC_BS_LANGUAGE_TYPE, 0x00 );
+        return ret;
+    }
+
+    /**
      * @brief 指定した時刻における、プリセンド込の時刻と、ディレイを取得する
      * @param tempoList テンポ情報
      * @param clock (int) Tick 単位の時刻

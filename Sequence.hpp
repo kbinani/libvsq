@@ -788,20 +788,6 @@ private:
     //TODO: 実装
 /*
     ---
-    -- トラックの先頭に記録される NRPN のリストを作成する
-    -- @return (table&lt;NrpnEvent&gt;) NrpnEvent の配列
-    -- @access static private
-    function Sequence._generateHeaderNRPN()
-        local ret = NrpnEvent.new( 0, MidiParameterEnum.CC_BS_VERSION_AND_DEVICE, 0x00, 0x00 );
-        ret:append( MidiParameterEnum.CC_BS_DELAY, 0x00, 0x00 );
-        ret:append( MidiParameterEnum.CC_BS_LANGUAGE_TYPE, 0x00 );
-        return ret;
-    end
-*/
-
-    //TODO: 実装
-/*
-    ---
     -- 歌手変更イベントの NRPN リストを作成する。
     -- トラック先頭の歌手変更イベントについては、このメソッドで作成してはいけない。
     -- トラック先頭のgenerateNRPN メソッドが担当する
