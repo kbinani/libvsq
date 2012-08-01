@@ -52,8 +52,8 @@ public:
     }
 
     void testParseInt(){
-        int actual = StringUtil::parseInt( "1" );
-        CPPUNIT_ASSERT_EQUAL( 1, actual );
+        CPPUNIT_ASSERT_EQUAL( 1, StringUtil::parseInt( "1" ) );
+        CPPUNIT_ASSERT_EQUAL( 10, StringUtil::parseInt( "A", 16 ) );
     }
 
     void testToString(){

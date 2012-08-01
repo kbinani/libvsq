@@ -84,8 +84,8 @@ public:
      * @todo baseを指定できるようにする
      * @todo 例外を投げる
      */
-    static int parseInt( std::string text ){
-        return atoi( text.c_str() );
+    static int parseInt( std::string text, int baseNumber = 10 ){
+        return strtol( text.c_str(), 0, baseNumber );
     }
 
     /**
