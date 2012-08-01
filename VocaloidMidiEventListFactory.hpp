@@ -78,6 +78,43 @@ protected:
     }
 
     /**
+     * @brief 歌手変更イベントの NRPN リストを作成する。
+     * トラック先頭の歌手変更イベントについては、このメソッドで作成してはいけない。
+     * トラック先頭のgenerateNRPN メソッドが担当する
+     * @param sequence (Sequence) 出力元のシーケンス
+     * @param singerEvent (Event) 出力する歌手変更イベント
+     * @param msPreSend (int) ミリ秒単位のプリセンド時間
+     * @return (table<NrpnEvent>) NrpnEvent の配列
+     */
+    static vector<NrpnEvent> generateSingerNRPN( TempoList *tempoList, Event *singerEvent, int preSendMilliseconds ){
+        tick_t clock = singerEvent->clock;
+        Handle singer_handle;
+
+        double clock_msec = tempoList->getSecFromClock( clock ) * 1000.0;
+
+        double msEnd = tempoList->getSecFromClock( singerEvent->clock + singerEvent->getLength() ) * 1000.0;
+        int duration = (int)::floor( ::ceil( msEnd - clock_msec ) );
+
+        int duration0, duration1;
+        _getMsbAndLsb( duration, &duration0, &duration1 );
+
+        tick_t actualClock;
+        int delay;
+        _getActualClockAndDelay( tempoList, clock, preSendMilliseconds, &actualClock, &delay );
+        int delayMsb, delayLsb;
+        _getMsbAndLsb( delay, &delayMsb, &delayLsb );
+
+        NrpnEvent add( actualClock, MidiParameterType::CC_BS_VERSION_AND_DEVICE, 0x00, 0x00 );
+        add.append( MidiParameterType::CC_BS_DELAY, delayMsb, delayLsb, true );
+        add.append( MidiParameterType::CC_BS_LANGUAGE_TYPE, singer_handle.language, true );
+        add.append( MidiParameterType::PC_VOICE_TYPE, singer_handle.program );
+
+        vector<NrpnEvent> ret;
+        ret.push_back( add );
+        return ret;
+    }
+
+    /**
      * @brief 指定した時刻における、プリセンド込の時刻と、ディレイを取得する
      * @param tempoList テンポ情報
      * @param clock (int) Tick 単位の時刻

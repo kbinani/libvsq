@@ -785,49 +785,6 @@ private:
         stream->seek( pos );
     }
 
-    //TODO: 実装
-/*
-    ---
-    -- 歌手変更イベントの NRPN リストを作成する。
-    -- トラック先頭の歌手変更イベントについては、このメソッドで作成してはいけない。
-    -- トラック先頭のgenerateNRPN メソッドが担当する
-    -- @param sequence (Sequence) 出力元のシーケンス
-    -- @param singerEvent (Event) 出力する歌手変更イベント
-    -- @param msPreSend (int) ミリ秒単位のプリセンド時間
-    -- @return (table<NrpnEvent>) NrpnEvent の配列
-    -- @access static private
-    function Sequence._generateSingerNRPN( sequence, singerEvent, msPreSend )
-        local clock = singerEvent.clock;
-        local singer_handle = nil;
-        if( singerEvent.singerHandle ~= nil )then
-            singer_handle = singerEvent.singerHandle;
-        end
-        if( singer_handle == nil )then
-            return {};
-        end
-
-        local clock_msec = sequence.tempoList:getSecFromClock( clock ) * 1000.0;
-
-        local msEnd = sequence.tempoList:getSecFromClock( singerEvent.clock + singerEvent:getLength() ) * 1000.0;
-        local duration = math.floor( math.ceil( msEnd - clock_msec ) );
-
-        local duration0, duration1 = Sequence._getMsbAndLsb( duration );
-
-        local actualClock, delay;
-        actualClock, delay = sequence:_getActualClockAndDelay( clock, msPreSend );
-        local delayMsb, delayLsb = Sequence._getMsbAndLsb( delay );
-        local ret = {};
-
-        local add = NrpnEvent.new( actualClock, MidiParameterEnum.CC_BS_VERSION_AND_DEVICE, 0x00, 0x00 );
-        add:append( MidiParameterEnum.CC_BS_DELAY, delayMsb, delayLsb, true );
-        add:append( MidiParameterEnum.CC_BS_LANGUAGE_TYPE, singer_handle.language, true );
-        add:append( MidiParameterEnum.PC_VOICE_TYPE, singer_handle.program );
-        local arr = {};
-        table.insert( arr, add );
-        return arr;
-    end
-*/
-
     //TODO:実装
 /*
     ---

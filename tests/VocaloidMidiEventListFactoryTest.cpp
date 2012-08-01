@@ -15,6 +15,10 @@ public:
         return VocaloidMidiEventListFactory::generateHeaderNRPN();
     }
 
+    static vector<NrpnEvent> generateSingerNRPN( TempoList *tempoList, Event *singerEvent, int preSendMilliseconds ){
+        return VocaloidMidiEventListFactory::generateSingerNRPN( tempoList, singerEvent, preSendMilliseconds );
+    }
+
     static void getActualClockAndDelay( TempoList *tempoList, tick_t clock, int msPreSend, tick_t *actualClock, int *delay ){
         _getActualClockAndDelay( tempoList, clock, msPreSend, actualClock, delay );
     }
@@ -81,6 +85,48 @@ public:
         CPPUNIT_ASSERT_EQUAL( false, actual[2].isMSBOmittingRequired );
     }
 
+    void testGenerateSingerNRPN(){
+        Sequence sequence( "Miku", 1, 4, 4, 500000 );
+        Event singerEvent( 1920, EventType::SINGER );
+        singerEvent.singerHandle = Handle( HandleType::SINGER );
+        sequence.track[0].getEvents()->add( singerEvent );
+        vector<NrpnEvent> actual = VocaloidMidiEventListFactoryStub::generateSingerNRPN( &sequence.tempoList, &singerEvent, 500 );
+
+        CPPUNIT_ASSERT_EQUAL( (size_t)1, actual.size() );
+        vector<NrpnEvent> actualExpanded = actual[0].expand();
+
+        CPPUNIT_ASSERT_EQUAL( (size_t)4, actualExpanded.size() );
+        NrpnEvent item = actualExpanded[0];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CC_BS_VERSION_AND_DEVICE, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 0x00, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( 0x00, item.dataLSB );
+        CPPUNIT_ASSERT( item.hasLSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.isMSBOmittingRequired );
+
+        item = actualExpanded[1];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CC_BS_DELAY, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 0x03, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( 0x74, item.dataLSB );
+        CPPUNIT_ASSERT( item.hasLSB );
+        CPPUNIT_ASSERT( item.isMSBOmittingRequired );
+
+        item = actualExpanded[2];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CC_BS_LANGUAGE_TYPE, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( singerEvent.singerHandle.language, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.hasLSB );
+        CPPUNIT_ASSERT( item.isMSBOmittingRequired );
+
+        item = actualExpanded[3];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::PC_VOICE_TYPE, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( singerEvent.singerHandle.program, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.hasLSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.isMSBOmittingRequired );
+    }
+
     void test_getActualClockAndDelay(){
         Sequence sequence( "Miku", 1, 4, 4, 500000 );
         tick_t actualClock;
@@ -117,6 +163,7 @@ public:
     CPPUNIT_TEST_SUITE( VocaloidMidiEventListFactoryTest );
     CPPUNIT_TEST( test_generateExpressionNRPN );
     CPPUNIT_TEST( test_generateHeaderNRPN );
+    CPPUNIT_TEST( testGenerateSingerNRPN );
     CPPUNIT_TEST( test_getActualClockAndDelay );
     CPPUNIT_TEST( test_getMsbAndLsb );
     CPPUNIT_TEST_SUITE_END();
