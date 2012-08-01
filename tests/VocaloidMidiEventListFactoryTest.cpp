@@ -23,6 +23,10 @@ public:
         return VocaloidMidiEventListFactory::generateNoteNRPN( track, tempoList, noteEvent, msPreSend, noteLocation, lastDelay, delay );
     }
 
+    static vector<NrpnEvent> generatePitchBendNRPN( Track *track, TempoList *tempoList, int msPreSend ){
+        return VocaloidMidiEventListFactory::generatePitchBendNRPN( track, tempoList, msPreSend );
+    }
+
     static void getActualClockAndDelay( TempoList *tempoList, tick_t clock, int msPreSend, tick_t *actualClock, int *delay ){
         _getActualClockAndDelay( tempoList, clock, msPreSend, actualClock, delay );
     }
@@ -353,6 +357,37 @@ public:
         CPPUNIT_ASSERT( item.isMSBOmittingRequired );
     }
 
+    void testGeneratePitchBendNRPN(){
+        Sequence sequence( "Miku", 1, 4, 4, 500000 );
+        BPList *pit = sequence.track[1].getCurve( "PIT" );
+        pit->add( 480, 8191 );
+        pit->add( 1920, -8192 );
+
+        vector<NrpnEvent> actual = VocaloidMidiEventListFactoryStub::generatePitchBendNRPN( &sequence.track[1], &sequence.tempoList, 500 );
+        CPPUNIT_ASSERT_EQUAL( (size_t)3, actual.size() );
+
+        CPPUNIT_ASSERT_EQUAL( (tick_t)0, actual[0].clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::PB_DELAY, actual[0].nrpn );
+        CPPUNIT_ASSERT_EQUAL( 0x03, actual[0].dataMSB );
+        CPPUNIT_ASSERT_EQUAL( 0x74, actual[0].dataLSB );
+        CPPUNIT_ASSERT( actual[0].hasLSB );
+        CPPUNIT_ASSERT_EQUAL( false, actual[0].isMSBOmittingRequired );
+
+        CPPUNIT_ASSERT_EQUAL( (tick_t)0, actual[1].clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::PB_PITCH_BEND, actual[1].nrpn );
+        CPPUNIT_ASSERT_EQUAL( 0x7F, actual[1].dataMSB );
+        CPPUNIT_ASSERT_EQUAL( 0x7F, actual[1].dataLSB );
+        CPPUNIT_ASSERT( actual[1].hasLSB );
+        CPPUNIT_ASSERT_EQUAL( false, actual[1].isMSBOmittingRequired );
+
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, actual[2].clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::PB_PITCH_BEND, actual[2].nrpn );
+        CPPUNIT_ASSERT_EQUAL( 0x00, actual[2].dataMSB );
+        CPPUNIT_ASSERT_EQUAL( 0x00, actual[2].dataLSB );
+        CPPUNIT_ASSERT( actual[2].hasLSB );
+        CPPUNIT_ASSERT_EQUAL( false, actual[2].isMSBOmittingRequired );
+    }
+
     void test_getActualClockAndDelay(){
         Sequence sequence( "Miku", 1, 4, 4, 500000 );
         tick_t actualClock;
@@ -391,6 +426,7 @@ public:
     CPPUNIT_TEST( test_generateHeaderNRPN );
     CPPUNIT_TEST( testGenerateSingerNRPN );
     CPPUNIT_TEST( testGenerateNoteNRPN );
+    CPPUNIT_TEST( testGeneratePitchBendNRPN );
     CPPUNIT_TEST( test_getActualClockAndDelay );
     CPPUNIT_TEST( test_getMsbAndLsb );
     CPPUNIT_TEST_SUITE_END();
