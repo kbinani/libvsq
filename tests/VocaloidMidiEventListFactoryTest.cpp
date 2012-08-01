@@ -19,6 +19,10 @@ public:
         return VocaloidMidiEventListFactory::generateSingerNRPN( tempoList, singerEvent, preSendMilliseconds );
     }
 
+    static NrpnEvent generateNoteNRPN( Track *track, TempoList *tempoList, Event *noteEvent, int msPreSend, int noteLocation, int *lastDelay, int *delay ){
+        return VocaloidMidiEventListFactory::generateNoteNRPN( track, tempoList, noteEvent, msPreSend, noteLocation, lastDelay, delay );
+    }
+
     static void getActualClockAndDelay( TempoList *tempoList, tick_t clock, int msPreSend, tick_t *actualClock, int *delay ){
         _getActualClockAndDelay( tempoList, clock, msPreSend, actualClock, delay );
     }
@@ -127,6 +131,228 @@ public:
         CPPUNIT_ASSERT_EQUAL( false, item.isMSBOmittingRequired );
     }
 
+    void testGenerateNoteNRPN(){
+        Sequence sequence( "Miku", 1, 4, 4, 500000 );
+        Event noteEvent( 1920, EventType::NOTE );
+        noteEvent.setLength( 480 );
+        noteEvent.note = 60;
+        noteEvent.dynamics = 127;
+        noteEvent.pmBendDepth = 8;
+        noteEvent.pmBendLength = 0;
+        noteEvent.d4mean = 63;
+        noteEvent.pMeanOnsetFirstNote = 65;
+        noteEvent.vMeanNoteTransition = 66;
+        noteEvent.pMeanEndingNote = 67;
+        noteEvent.pmbPortamentoUse = 3;
+        noteEvent.demDecGainRate = 50;
+        noteEvent.demAccent = 50;
+        noteEvent.vibratoDelay = 240;
+        noteEvent.vibratoHandle = Handle( HandleType::VIBRATO );
+        noteEvent.vibratoHandle.setLength( 240 );
+        noteEvent.vibratoHandle.iconId = "$04040005";
+        noteEvent.lyricHandle = Handle( HandleType::LYRIC );
+        noteEvent.lyricHandle.setLyricAt( 0, Lyric( "あ", "a" ) );
+        sequence.track[1].getCommon()->version = "DSB3";
+
+        // lastDelay が nil であるために、CVM_NM_VERSION_AND_DEVICE が出力されるケース
+        int lastDelay;// = nil;
+        int noteLocation = 1;
+        int msPreSend = 500;
+        int track = 1;
+        int delay;
+        NrpnEvent actual = VocaloidMidiEventListFactoryStub::generateNoteNRPN( &sequence.track[1], &sequence.tempoList, &noteEvent, msPreSend, noteLocation, (int *)0, &delay );
+        vector<NrpnEvent> actualExpanded = actual.expand();
+        CPPUNIT_ASSERT_EQUAL( (size_t)24, actualExpanded.size() );
+        CPPUNIT_ASSERT_EQUAL( 500, delay );
+        NrpnEvent item = actualExpanded[0];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_VERSION_AND_DEVICE, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 0x00, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( 0x00, item.dataLSB );
+        CPPUNIT_ASSERT( item.hasLSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.isMSBOmittingRequired );
+        item = actualExpanded[1];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_DELAY, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 0x03, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( 0x74, item.dataLSB );
+        CPPUNIT_ASSERT( item.hasLSB );
+        CPPUNIT_ASSERT( item.isMSBOmittingRequired );
+        item = actualExpanded[2];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_NOTE_NUMBER, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 60, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.hasLSB );
+        CPPUNIT_ASSERT( item.isMSBOmittingRequired );
+        item = actualExpanded[3];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_VELOCITY, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 127, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.hasLSB );
+        CPPUNIT_ASSERT( item.isMSBOmittingRequired );
+        item = actualExpanded[4];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_NOTE_DURATION, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 0x03, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( 0x74, item.dataLSB );
+        CPPUNIT_ASSERT( item.hasLSB );
+        CPPUNIT_ASSERT( item.isMSBOmittingRequired );
+        item = actualExpanded[5];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_NOTE_LOCATION, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 1, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.hasLSB );
+        CPPUNIT_ASSERT( item.isMSBOmittingRequired );
+        item = actualExpanded[6];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_INDEX_OF_VIBRATO_DB, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 0x00, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( 0x00, item.dataLSB );
+        CPPUNIT_ASSERT( item.hasLSB );
+        CPPUNIT_ASSERT( item.isMSBOmittingRequired );
+        item = actualExpanded[7];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_VIBRATO_CONFIG, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 5, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( 63, item.dataLSB );
+        CPPUNIT_ASSERT( item.hasLSB );
+        CPPUNIT_ASSERT( item.isMSBOmittingRequired );
+        item = actualExpanded[8];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_VIBRATO_DELAY, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 64, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.hasLSB );
+        CPPUNIT_ASSERT( item.isMSBOmittingRequired );
+        item = actualExpanded[9];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_PHONETIC_SYMBOL_BYTES, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 1, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.hasLSB );
+        CPPUNIT_ASSERT( item.isMSBOmittingRequired );
+        item = actualExpanded[10];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, item.clock );
+        CPPUNIT_ASSERT_EQUAL( (MidiParameterType::MidiParameterTypeEnum)0x5013, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( (int)'a', item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( 0, item.dataLSB );
+        CPPUNIT_ASSERT( item.hasLSB );
+        CPPUNIT_ASSERT( item.isMSBOmittingRequired );
+        item = actualExpanded[11];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_PHONETIC_SYMBOL_CONTINUATION, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 0x7f, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.hasLSB );
+        CPPUNIT_ASSERT( item.isMSBOmittingRequired );
+        item = actualExpanded[12];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_V1MEAN, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 4, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.hasLSB );
+        CPPUNIT_ASSERT( item.isMSBOmittingRequired );
+        item = actualExpanded[13];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_D1MEAN, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 8, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.hasLSB );
+        CPPUNIT_ASSERT( item.isMSBOmittingRequired );
+        item = actualExpanded[14];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_D1MEAN_FIRST_NOTE, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 0x14, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.hasLSB );
+        CPPUNIT_ASSERT( item.isMSBOmittingRequired );
+        item = actualExpanded[15];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_D2MEAN, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 28, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.hasLSB );
+        CPPUNIT_ASSERT( item.isMSBOmittingRequired );
+        item = actualExpanded[16];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_D4MEAN, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 63, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.hasLSB );
+        CPPUNIT_ASSERT( item.isMSBOmittingRequired );
+        item = actualExpanded[17];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_PMEAN_ONSET_FIRST_NOTE, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 65, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.hasLSB );
+        CPPUNIT_ASSERT( item.isMSBOmittingRequired );
+        item = actualExpanded[18];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_VMEAN_NOTE_TRNSITION, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 66, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.hasLSB );
+        CPPUNIT_ASSERT( item.isMSBOmittingRequired );
+        item = actualExpanded[19];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_PMEAN_ENDING_NOTE, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 67, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.hasLSB );
+        CPPUNIT_ASSERT( item.isMSBOmittingRequired );
+        item = actualExpanded[20];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_ADD_PORTAMENTO, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 3, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.hasLSB );
+        CPPUNIT_ASSERT( item.isMSBOmittingRequired );
+        item = actualExpanded[21];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_CHANGE_AFTER_PEAK, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 50, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.hasLSB );
+        CPPUNIT_ASSERT( item.isMSBOmittingRequired );
+        item = actualExpanded[22];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_ACCENT, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 50, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.hasLSB );
+        CPPUNIT_ASSERT( item.isMSBOmittingRequired );
+        item = actualExpanded[23];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_NOTE_MESSAGE_CONTINUATION, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 0x7f, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.hasLSB );
+        CPPUNIT_ASSERT( item.isMSBOmittingRequired );
+
+        // lastDelay が nil でないために、CVM_NM_VERSION_AND_DEVICE が出力されないパターン
+        lastDelay = 0;
+        actual = VocaloidMidiEventListFactoryStub::generateNoteNRPN( &sequence.track[track], &sequence.tempoList, &noteEvent, msPreSend, noteLocation, &lastDelay, &delay );
+        actualExpanded = actual.expand();
+        CPPUNIT_ASSERT_EQUAL( (size_t)23, actualExpanded.size() );
+        CPPUNIT_ASSERT_EQUAL( 500, delay );
+
+        // lastDelay が、該当音符についての delay と同じであるために、CVM_NM_DELAY が出力されないパターン
+        lastDelay = 500;
+        actual = VocaloidMidiEventListFactoryStub::generateNoteNRPN( &sequence.track[track], &sequence.tempoList, &noteEvent, msPreSend, noteLocation, &lastDelay, &delay );
+        actualExpanded = actual.expand();
+        CPPUNIT_ASSERT_EQUAL( (size_t)22, actualExpanded.size() );
+        CPPUNIT_ASSERT_EQUAL( 500, delay );
+
+        // vibratoHandle が nil であるために、CVM_NM_INDEX_OF_VIBRATO_DB, CVM_NM_VIBRATO_CONFIG, CVM_NM_VIBRATO_DELAY
+        // が出力されないパターン
+        lastDelay = 500;
+        noteEvent.vibratoHandle = Handle();
+        actual = VocaloidMidiEventListFactoryStub::generateNoteNRPN( &sequence.track[track], &sequence.tempoList, &noteEvent, msPreSend, noteLocation, &lastDelay, &delay );
+        actualExpanded = actual.expand();
+        CPPUNIT_ASSERT_EQUAL( (size_t)19, actualExpanded.size() );
+        CPPUNIT_ASSERT_EQUAL( 500, delay );
+
+        sequence.track[1].getCommon()->version = "DSB2";
+        // VOCALOID1 であるために、0x5011が出力され、CVM_NM_PHONETIC_SYMBOL_CONTINUATIONとVOCALOID2用のNRPNが出力されない
+        lastDelay = 500;
+        noteEvent.vibratoHandle = Handle();
+        actual = VocaloidMidiEventListFactoryStub::generateNoteNRPN( &sequence.track[track], &sequence.tempoList, &noteEvent, msPreSend, noteLocation, &lastDelay, &delay );
+        actualExpanded = actual.expand();
+        CPPUNIT_ASSERT_EQUAL( (size_t)8, actualExpanded.size() );
+        item = actualExpanded[4];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, item.clock );
+        CPPUNIT_ASSERT_EQUAL( (MidiParameterType::MidiParameterTypeEnum)0x5011, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 0x01, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.hasLSB );
+        CPPUNIT_ASSERT( item.isMSBOmittingRequired );
+    }
+
     void test_getActualClockAndDelay(){
         Sequence sequence( "Miku", 1, 4, 4, 500000 );
         tick_t actualClock;
@@ -164,6 +390,7 @@ public:
     CPPUNIT_TEST( test_generateExpressionNRPN );
     CPPUNIT_TEST( test_generateHeaderNRPN );
     CPPUNIT_TEST( testGenerateSingerNRPN );
+    CPPUNIT_TEST( testGenerateNoteNRPN );
     CPPUNIT_TEST( test_getActualClockAndDelay );
     CPPUNIT_TEST( test_getMsbAndLsb );
     CPPUNIT_TEST_SUITE_END();
