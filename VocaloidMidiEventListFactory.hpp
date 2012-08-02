@@ -293,6 +293,43 @@ protected:
     }
 
     /**
+     * @brief 指定したシーケンスの指定したトラックから、PitchBendSensitivity の NRPN リストを作成する
+     * @param sequence (Sequence) 出力元のシーケンス
+     * @param track (int) 出力するトラックの番号
+     * @param msPreSend (int) ミリ秒単位のプリセンド時間
+     * @return (table<NrpnEvent>) NrpnEvent の配列
+     */
+    static vector<NrpnEvent> generatePitchBendSensitivityNRPN( Track *track, TempoList *tempoList, int msPreSend ){
+        vector<NrpnEvent> ret;
+        BPList *pbs = track->getCurve( "PBS" );
+        int count = pbs->size();
+        int lastDelay = 0;
+        for( int i = 0; i < count; i++ ){
+            tick_t clock = pbs->getKeyClock( i );
+            tick_t actualClock;
+            int delay;
+            _getActualClockAndDelay( tempoList, clock, msPreSend, &actualClock, &delay );
+            if( actualClock >= 0 ){
+                if( lastDelay != delay ){
+                    int delayMsb, delayLsb;
+                    _getMsbAndLsb( delay, &delayMsb, &delayLsb );
+                    ret.push_back( NrpnEvent( actualClock, MidiParameterType::CC_PBS_DELAY, delayMsb, delayLsb ) );
+                }
+                lastDelay = delay;
+
+                NrpnEvent add(
+                    actualClock,
+                    MidiParameterType::CC_PBS_PITCH_BEND_SENSITIVITY,
+                    pbs->getValue( i ),
+                    0x00
+                );
+                ret.push_back( add );
+            }
+        }
+        return ret;
+    }
+
+    /**
      * @brief 指定した時刻における、プリセンド込の時刻と、ディレイを取得する
      * @param tempoList テンポ情報
      * @param clock (int) Tick 単位の時刻
