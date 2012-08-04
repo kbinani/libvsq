@@ -31,6 +31,10 @@ public:
         return VocaloidMidiEventListFactory::generatePitchBendSensitivityNRPN( track, tempoList, msPreSend );
     }
 
+    static vector<NrpnEvent> generateVibratoNRPN( TempoList *tempoList, Event *noteEvent, int msPreSend ){
+        return VocaloidMidiEventListFactory::generateVibratoNRPN( tempoList, noteEvent, msPreSend );
+    }
+
     static void getActualClockAndDelay( TempoList *tempoList, tick_t clock, int msPreSend, tick_t *actualClock, int *delay ){
         _getActualClockAndDelay( tempoList, clock, msPreSend, actualClock, delay );
     }
@@ -423,6 +427,120 @@ public:
         CPPUNIT_ASSERT_EQUAL( false, actual[2].isMSBOmittingRequired );
     }
 
+    void testGenerateVibratoNRPN(){
+        Sequence sequence( "Miku", 1, 4, 4, 500000 );
+        Event noteEvent( 480, EventType::NOTE );
+        noteEvent.vibratoHandle = Handle();
+
+        // ビブラートがないため、NRPN が生成されない場合
+        vector<NrpnEvent> actual = VocaloidMidiEventListFactoryStub::generateVibratoNRPN( &sequence.tempoList, &noteEvent, 500 );
+        CPPUNIT_ASSERT_EQUAL( (size_t)0, actual.size() );
+
+        // ビブラートがある場合
+        noteEvent.vibratoHandle = Handle( HandleType::VIBRATO );
+        noteEvent.setLength( 480 );
+        noteEvent.vibratoDelay = 240;
+        noteEvent.vibratoHandle.setLength( 240 );
+        noteEvent.vibratoHandle.setStartDepth( 71 );
+        noteEvent.vibratoHandle.setStartRate( 72 );
+        VibratoBPList rateCurve( "2", "0.5,1.0", "11,12" );
+        VibratoBPList depthCurve( "2", "0.4,0.9", "13,14" );
+        noteEvent.vibratoHandle.setRateBP( rateCurve );
+        noteEvent.vibratoHandle.setDepthBP( depthCurve );
+        actual = VocaloidMidiEventListFactoryStub::generateVibratoNRPN( &sequence.tempoList, &noteEvent, 500 );
+        CPPUNIT_ASSERT_EQUAL( (size_t)5, actual.size() );
+
+        vector<NrpnEvent> actualExpanded = actual[0].expand();
+        CPPUNIT_ASSERT_EQUAL( (size_t)6, actualExpanded.size() );
+        NrpnEvent item = actualExpanded[0];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)240, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CC_VD_VERSION_AND_DEVICE, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 0x00, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( 0x00, item.dataLSB );
+        CPPUNIT_ASSERT( item.hasLSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.isMSBOmittingRequired );
+        item = actualExpanded[1];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)240, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CC_VR_VERSION_AND_DEVICE, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 0x00, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( 0x00, item.dataLSB );
+        CPPUNIT_ASSERT( item.hasLSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.isMSBOmittingRequired );
+        item = actualExpanded[2];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)240, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CC_VD_DELAY, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 0x03, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( 0x74, item.dataLSB );
+        CPPUNIT_ASSERT( item.hasLSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.isMSBOmittingRequired );
+        item = actualExpanded[3];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)240, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CC_VR_DELAY, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 0x03, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( 0x74, item.dataLSB );
+        CPPUNIT_ASSERT( item.hasLSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.isMSBOmittingRequired );
+        item = actualExpanded[4];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)240, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CC_VD_VIBRATO_DEPTH, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 71, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.hasLSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.isMSBOmittingRequired );
+        item = actualExpanded[5];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)240, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CC_VR_VIBRATO_RATE, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 72, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.hasLSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.isMSBOmittingRequired );
+
+        actualExpanded = actual[1].expand();
+        CPPUNIT_ASSERT_EQUAL( (size_t)2, actualExpanded.size() );
+        item = actualExpanded[0];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)336, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CC_VD_DELAY, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 0x03, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( 0x74, item.dataLSB );
+        CPPUNIT_ASSERT( item.hasLSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.isMSBOmittingRequired );
+        item = actualExpanded[1];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)336, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CC_VD_VIBRATO_DEPTH, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 13, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.hasLSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.isMSBOmittingRequired );
+
+        item = actual[2];
+        actualExpanded = item.expand();
+        CPPUNIT_ASSERT_EQUAL( (size_t)2, actualExpanded.size() );
+        item = actualExpanded[0];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)360, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CC_VR_DELAY, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 0x03, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( 0x74, item.dataLSB );
+        CPPUNIT_ASSERT( item.hasLSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.isMSBOmittingRequired );
+        item = actualExpanded[1];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)360, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CC_VR_VIBRATO_RATE, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 11, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.hasLSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.isMSBOmittingRequired );
+
+        item = actual[3];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)456, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CC_VD_VIBRATO_DEPTH, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 14, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.hasLSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.isMSBOmittingRequired );
+
+        item = actual[4];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)480, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CC_VR_VIBRATO_RATE, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 12, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.hasLSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.isMSBOmittingRequired );
+    }
+
     void test_getActualClockAndDelay(){
         Sequence sequence( "Miku", 1, 4, 4, 500000 );
         tick_t actualClock;
@@ -463,6 +581,7 @@ public:
     CPPUNIT_TEST( testGenerateNoteNRPN );
     CPPUNIT_TEST( testGeneratePitchBendNRPN );
     CPPUNIT_TEST( testGeneratePitchBendSensitivityNRPN );
+    CPPUNIT_TEST( testGenerateVibratoNRPN );
     CPPUNIT_TEST( test_getActualClockAndDelay );
     CPPUNIT_TEST( test_getMsbAndLsb );
     CPPUNIT_TEST_SUITE_END();

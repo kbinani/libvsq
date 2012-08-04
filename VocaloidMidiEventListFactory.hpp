@@ -330,6 +330,80 @@ protected:
     }
 
     /**
+     * @brief トラックの音符イベントから、ビブラート出力用の NRPN のリストを作成する
+     * @param sequence (Sequence) 出力元のシーケンス
+     * @param noteEvent (Event) 出力する音符イベント
+     * @param msPreSend (int) ミリ秒単位のプリセンド時間
+     * @return (table<NrpnEvent>) NrpnEvent の配列
+     */
+    static vector<NrpnEvent> generateVibratoNRPN( TempoList *tempoList, Event *noteEvent, int msPreSend ){
+        vector<NrpnEvent> ret;
+        if( noteEvent->vibratoHandle.getHandleType() != HandleType::UNKNOWN ){
+            tick_t vclock = noteEvent->clock + noteEvent->vibratoDelay;
+            tick_t actualClock;
+            int delay;
+            _getActualClockAndDelay( tempoList, vclock, msPreSend, &actualClock, &delay );
+            int delayMsb, delayLsb;
+            _getMsbAndLsb( delay, &delayMsb, &delayLsb );
+            NrpnEvent add2( actualClock, MidiParameterType::CC_VD_VERSION_AND_DEVICE, 0x00, 0x00 );
+            add2.append( MidiParameterType::CC_VR_VERSION_AND_DEVICE, 0x00, 0x00 );
+            add2.append( MidiParameterType::CC_VD_DELAY, delayMsb, delayLsb );
+            add2.append( MidiParameterType::CC_VR_DELAY, delayMsb, delayLsb );
+            // CC_VD_VIBRATO_DEPTH, CC_VR_VIBRATO_RATE では、NRPN の MSB を省略してはいけない
+            add2.append( MidiParameterType::CC_VD_VIBRATO_DEPTH, noteEvent->vibratoHandle.getStartDepth() );
+            add2.append( MidiParameterType::CC_VR_VIBRATO_RATE, noteEvent->vibratoHandle.getStartRate() );
+            ret.push_back( add2 );
+            tick_t vlength = noteEvent->getLength() - noteEvent->vibratoDelay;
+
+            VibratoBPList depthBP = noteEvent->vibratoHandle.getDepthBP();
+            int count = depthBP.size();
+            if( count > 0 ){
+                int lastDelay = 0;
+                for( int i = 0; i < count; i++ ){
+                    VibratoBP itemi = depthBP.get( i );
+                    double percent = itemi.x;
+                    tick_t cl = vclock + (tick_t) ::floor( percent * vlength );
+                    _getActualClockAndDelay( tempoList, cl, msPreSend, &actualClock, &delay );
+                    NrpnEvent nrpnEvent( 0, MidiParameterType::CC_BS_DELAY, 0 );
+                    if( lastDelay != delay ){
+                        _getMsbAndLsb( delay, &delayMsb, &delayLsb );
+                        nrpnEvent = NrpnEvent( actualClock, MidiParameterType::CC_VD_DELAY, delayMsb, delayLsb );
+                        nrpnEvent.append( MidiParameterType::CC_VD_VIBRATO_DEPTH, itemi.y );
+                    }else{
+                        nrpnEvent = NrpnEvent( actualClock, MidiParameterType::CC_VD_VIBRATO_DEPTH, itemi.y );
+                    }
+                    lastDelay = delay;
+                    ret.push_back( nrpnEvent );
+                }
+            }
+
+            VibratoBPList rateBP = noteEvent->vibratoHandle.getRateBP();
+            count = rateBP.size();
+            if( count > 0 ){
+                int lastDelay = 0;
+                for( int i = 0; i < count; i++ ){
+                    VibratoBP itemi = rateBP.get( i );
+                    double percent = itemi.x;
+                    tick_t cl = vclock + (tick_t)::floor( percent * vlength );
+                    _getActualClockAndDelay( tempoList, cl, msPreSend, &actualClock, &delay );
+                    NrpnEvent nrpnEvent( 0, MidiParameterType::CC_BS_DELAY, 0 );
+                    if( lastDelay != delay ){
+                        _getMsbAndLsb( delay, &delayMsb, &delayLsb );
+                        nrpnEvent = NrpnEvent( actualClock, MidiParameterType::CC_VR_DELAY, delayMsb, delayLsb );
+                        nrpnEvent.append( MidiParameterType::CC_VR_VIBRATO_RATE, itemi.y );
+                    }else{
+                        nrpnEvent = NrpnEvent( actualClock, MidiParameterType::CC_VR_VIBRATO_RATE, itemi.y );
+                    }
+                    lastDelay = delay;
+                    ret.push_back( nrpnEvent );
+                }
+            }
+        }
+        std::sort( ret.begin(), ret.end(), NrpnEvent::compare );
+        return ret;
+    }
+
+    /**
      * @brief 指定した時刻における、プリセンド込の時刻と、ディレイを取得する
      * @param tempoList テンポ情報
      * @param clock (int) Tick 単位の時刻
