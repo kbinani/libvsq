@@ -434,11 +434,52 @@ protected:
         for( int i = 0; i < curves.size(); i++ ){
             BPList *list = track->getCurve( curves[i] );
             if( list->size() > 0 ){
-                lastDelay = _addVoiceChangeParameters( res, list, tempoList, msPreSend, lastDelay );
+                lastDelay = addVoiceChangeParameters( res, list, tempoList, msPreSend, lastDelay );
             }
         }
         std::sort( res.begin(), res.end(), NrpnEvent::compare );
         return res;
+    }
+
+    /**
+     * @brief Voice Change Parameter の NRPN を追加する
+     * @param dest (table) 追加先のテーブル
+     * @param list (BPList) Voice Change Parameter のデータ点が格納された BPList
+     * @param sequence (Sequence) シーケンス
+     * @param msPreSend (int) ミリ秒単位のプリセンド時間
+     * @param lastDelay (int) 直前の delay 値(ミリ秒単位)
+     * @return (int) delay 値(ミリ秒単位)
+     */
+    static int addVoiceChangeParameters( vector<NrpnEvent> &dest, BPList *list, TempoList *tempoList, int msPreSend, int lastDelay ){
+        int id = MidiParameterType::getVoiceChangeParameterId( list->getName() );
+        for( int j = 0; j < list->size(); j++ ){
+            tick_t clock = list->getKeyClock( j );
+            int value = list->getValue( j );
+            tick_t actualClock;
+            int delay;
+            _getActualClockAndDelay( tempoList, clock, msPreSend, &actualClock, &delay );
+
+            if( actualClock >= 0 ){
+                NrpnEvent add( 0, MidiParameterType::CC_BS_DELAY, 0 );
+                bool initialized = false;
+                if( lastDelay != delay ){
+                    int delayMsb, delayLsb;
+                    _getMsbAndLsb( delay, &delayMsb, &delayLsb );
+                    add = NrpnEvent( actualClock, MidiParameterType::VCP_DELAY, delayMsb, delayLsb );
+                    initialized = true;
+                }
+                lastDelay = delay;
+
+                if( false == initialized ){
+                    add = NrpnEvent( actualClock, MidiParameterType::VCP_VOICE_CHANGE_PARAMETER_ID, id );
+                }else{
+                    add.append( MidiParameterType::VCP_VOICE_CHANGE_PARAMETER_ID, id );
+                }
+                add.append( MidiParameterType::VCP_VOICE_CHANGE_PARAMETER, value, true );
+                dest.push_back( add );
+            }
+        }
+        return lastDelay;
     }
 
     /**
@@ -475,48 +516,6 @@ protected:
             *msb = 0xff & (value >> 7);
             *lsb = value - (*msb << 7);
         }
-    }
-
-private:
-    /**
-     * @brief Voice Change Parameter の NRPN を追加する
-     * @param dest (table) 追加先のテーブル
-     * @param list (BPList) Voice Change Parameter のデータ点が格納された BPList
-     * @param sequence (Sequence) シーケンス
-     * @param msPreSend (int) ミリ秒単位のプリセンド時間
-     * @param lastDelay (int) 直前の delay 値(ミリ秒単位)
-     * @return (int) delay 値(ミリ秒単位)
-     */
-    static int _addVoiceChangeParameters( vector<NrpnEvent> &dest, BPList *list, TempoList *tempoList, int msPreSend, int lastDelay ){
-        int id = MidiParameterType::getVoiceChangeParameterId( list->getName() );
-        for( int j = 0; j < list->size(); j++ ){
-            tick_t clock = list->getKeyClock( j );
-            int value = list->getValue( j );
-            tick_t actualClock;
-            int delay;
-            _getActualClockAndDelay( tempoList, clock, msPreSend, &actualClock, &delay );
-
-            if( actualClock >= 0 ){
-                NrpnEvent add( 0, MidiParameterType::CC_BS_DELAY, 0 );
-                bool initialized = false;
-                if( lastDelay != delay ){
-                    int delayMsb, delayLsb;
-                    _getMsbAndLsb( delay, &delayMsb, &delayLsb );
-                    add = NrpnEvent( actualClock, MidiParameterType::VCP_DELAY, delayMsb, delayLsb );
-                    initialized = true;
-                }
-                lastDelay = delay;
-
-                if( false == initialized ){
-                    add = NrpnEvent( actualClock, MidiParameterType::VCP_VOICE_CHANGE_PARAMETER_ID, id );
-                }else{
-                    add.append( MidiParameterType::VCP_VOICE_CHANGE_PARAMETER_ID, id );
-                }
-                add.append( MidiParameterType::VCP_VOICE_CHANGE_PARAMETER, value, true );
-                dest.push_back( add );
-            }
-        }
-        return lastDelay;
     }
 };
 

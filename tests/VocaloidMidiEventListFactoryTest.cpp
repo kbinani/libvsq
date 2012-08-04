@@ -39,6 +39,10 @@ public:
         return VocaloidMidiEventListFactory::generateVoiceChangeParameterNRPN( track, tempoList, msPreSend, premeasure_clock );
     }
 
+    static int addVoiceChangeParameters( vector<NrpnEvent> &dest, BPList *list, TempoList *tempoList, int msPreSend, int lastDelay ){
+        return VocaloidMidiEventListFactory::addVoiceChangeParameters( dest, list, tempoList, msPreSend, lastDelay );
+    }
+
     static void getActualClockAndDelay( TempoList *tempoList, tick_t clock, int msPreSend, tick_t *actualClock, int *delay ){
         _getActualClockAndDelay( tempoList, clock, msPreSend, actualClock, delay );
     }
@@ -602,6 +606,51 @@ public:
         CPPUNIT_ASSERT_EQUAL( (size_t)5, events.size() );
     }
 
+    void testAddVoiceChangeParameters(){
+        Sequence sequence( "Foo", 1, 4, 4, 500000 );
+        BPList *list = sequence.track[1].getCurve( "BRE" );
+        list->clear();
+        list->add( 480, 0 );
+        list->add( 1920, 127 );
+        vector<NrpnEvent> dest;
+        int preSend = 500;
+        int delay = VocaloidMidiEventListFactoryStub::addVoiceChangeParameters( dest, list, &sequence.tempoList, preSend, 0 );
+
+        CPPUNIT_ASSERT_EQUAL( (size_t)2, dest.size() );
+        CPPUNIT_ASSERT_EQUAL( 500, delay );
+
+        vector<NrpnEvent> actual = dest[0].expand();
+        CPPUNIT_ASSERT_EQUAL( (size_t)3, actual.size() );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)0, actual[0].clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::VCP_DELAY, actual[0].nrpn );
+        CPPUNIT_ASSERT_EQUAL( 0x03, actual[0].dataMSB );
+        CPPUNIT_ASSERT_EQUAL( 0x74, actual[0].dataLSB );
+        CPPUNIT_ASSERT( actual[0].hasLSB );
+        CPPUNIT_ASSERT_EQUAL( false, actual[0].isMSBOmittingRequired );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)0, actual[1].clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::VCP_VOICE_CHANGE_PARAMETER_ID, actual[1].nrpn );
+        CPPUNIT_ASSERT_EQUAL( 0x31, actual[1].dataMSB );
+        CPPUNIT_ASSERT_EQUAL( false, actual[1].hasLSB );
+        CPPUNIT_ASSERT_EQUAL( false, actual[1].isMSBOmittingRequired );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)0, actual[2].clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::VCP_VOICE_CHANGE_PARAMETER, actual[2].nrpn );
+        CPPUNIT_ASSERT_EQUAL( 0, actual[2].dataMSB );
+        CPPUNIT_ASSERT_EQUAL( false, actual[2].hasLSB );
+        CPPUNIT_ASSERT( actual[2].isMSBOmittingRequired );
+
+        actual = dest[1].expand();
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, actual[0].clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::VCP_VOICE_CHANGE_PARAMETER_ID, actual[0].nrpn );
+        CPPUNIT_ASSERT_EQUAL( 0x31, actual[0].dataMSB );
+        CPPUNIT_ASSERT_EQUAL( false, actual[0].hasLSB );
+        CPPUNIT_ASSERT_EQUAL( false, actual[0].isMSBOmittingRequired );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, actual[1].clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::VCP_VOICE_CHANGE_PARAMETER, actual[1].nrpn );
+        CPPUNIT_ASSERT_EQUAL( 127, actual[1].dataMSB );
+        CPPUNIT_ASSERT_EQUAL( false, actual[1].hasLSB );
+        CPPUNIT_ASSERT( actual[1].isMSBOmittingRequired );
+    }
+
     void test_getActualClockAndDelay(){
         Sequence sequence( "Miku", 1, 4, 4, 500000 );
         tick_t actualClock;
@@ -643,6 +692,7 @@ public:
     CPPUNIT_TEST( testGeneratePitchBendNRPN );
     CPPUNIT_TEST( testGeneratePitchBendSensitivityNRPN );
     CPPUNIT_TEST( testGenerateVibratoNRPN );
+    CPPUNIT_TEST( testAddVoiceChangeParameters );
     CPPUNIT_TEST( test_getActualClockAndDelay );
     CPPUNIT_TEST( test_getMsbAndLsb );
     CPPUNIT_TEST_SUITE_END();
