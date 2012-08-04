@@ -35,6 +35,10 @@ public:
         return VocaloidMidiEventListFactory::generateVibratoNRPN( tempoList, noteEvent, msPreSend );
     }
 
+    static vector<NrpnEvent> generateVoiceChangeParameterNRPN( Track *track, TempoList *tempoList, int msPreSend, tick_t premeasure_clock ){
+        return VocaloidMidiEventListFactory::generateVoiceChangeParameterNRPN( track, tempoList, msPreSend, premeasure_clock );
+    }
+
     static void getActualClockAndDelay( TempoList *tempoList, tick_t clock, int msPreSend, tick_t *actualClock, int *delay ){
         _getActualClockAndDelay( tempoList, clock, msPreSend, actualClock, delay );
     }
@@ -539,6 +543,63 @@ public:
         CPPUNIT_ASSERT_EQUAL( 12, item.dataMSB );
         CPPUNIT_ASSERT_EQUAL( false, item.hasLSB );
         CPPUNIT_ASSERT_EQUAL( false, item.isMSBOmittingRequired );
+    }
+
+    void testGenerateVoiceChangeParameterNRPN(){
+        Sequence sequence( "Foo", 1, 4, 4, 500000 );
+        Track *track = &sequence.track[1];
+
+        // 全種類のカーブに、データ点を1個ずつ入れる
+        vector<string> curveNames;
+        curveNames.push_back( "BRE" );
+        curveNames.push_back( "BRI" );
+        curveNames.push_back( "CLE" );
+        curveNames.push_back( "POR" );
+        curveNames.push_back( "GEN" );
+        curveNames.push_back( "harmonics" );
+        curveNames.push_back( "OPE" );
+        curveNames.push_back( "reso1amp" );
+        curveNames.push_back( "reso1bw" );
+        curveNames.push_back( "reso1freq" );
+        curveNames.push_back( "reso2amp" );
+        curveNames.push_back( "reso2bw" );
+        curveNames.push_back( "reso2freq" );
+        curveNames.push_back( "reso3amp" );
+        curveNames.push_back( "reso3bw" );
+        curveNames.push_back( "reso3freq" );
+        curveNames.push_back( "reso4amp" );
+        curveNames.push_back( "reso4bw" );
+        curveNames.push_back( "reso4freq" );
+        for( int i = 0; i < curveNames.size(); i++ ){
+            string curveName = curveNames[i];
+            BPList *list = track->getCurve( curveName );
+            list->clear();
+            list->setName( curveName );
+            list->setDefault( 0 );
+            list->setMinimum( 0 );
+            list->setMaximum( 127 );
+            list->add( 480, 64 );
+        }
+
+        // VOCALOID1 の場合
+        track->getCommon()->version = "DSB2";
+        vector<NrpnEvent> events = VocaloidMidiEventListFactoryStub::generateVoiceChangeParameterNRPN( track, &sequence.tempoList, 500, sequence.getPreMeasureClocks() );
+        // 中身は見ない。各カーブに MIDI イベントが1つずつできることだけをチェック
+        // 各イベントの子にあたるイベントのテストは、test_addVoiceChangeParameters で行う
+        // vocaloid1 で出力されるのは 18 種類
+        CPPUNIT_ASSERT_EQUAL( (size_t)18, events.size() );
+
+        // VOCALOID2 の場合
+        // 6 種類
+        track->getCommon()->version = "DSB3";
+        events = VocaloidMidiEventListFactoryStub::generateVoiceChangeParameterNRPN( track, &sequence.tempoList, 500, sequence.getPreMeasureClocks() );
+        CPPUNIT_ASSERT_EQUAL( (size_t)6, events.size() );
+
+        // UNKNOWN の場合
+        // 5 種類
+        track->getCommon()->version = "";
+        events = VocaloidMidiEventListFactoryStub::generateVoiceChangeParameterNRPN( track, &sequence.tempoList, 500, sequence.getPreMeasureClocks() );
+        CPPUNIT_ASSERT_EQUAL( (size_t)5, events.size() );
     }
 
     void test_getActualClockAndDelay(){

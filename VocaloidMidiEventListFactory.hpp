@@ -404,6 +404,44 @@ protected:
     }
 
     /**
+     * @brief 指定したシーケンスの指定したトラックから、VoiceChangeParameter の NRPN リストを作成する
+     * @param sequence (Sequence) 出力元のシーケンス
+     * @param track (int) 出力するトラックの番号
+     * @param msPreSend (int) ミリ秒単位のプリセンド時間
+     * @return (table<NrpnEvent>) NrpnEvent の配列
+     */
+    static vector<NrpnEvent> generateVoiceChangeParameterNRPN( Track *track, TempoList *tempoList, int msPreSend, tick_t premeasure_clock ){
+        string renderer = track->getCommon()->version;
+        vector<NrpnEvent> res;
+
+        vector<string> curves;
+        if( renderer.substr( 0, 4 ) == "DSB3" ){
+            curves.push_back( "BRE" ); curves.push_back( "BRI" ); curves.push_back( "CLE" );
+            curves.push_back( "POR" ); curves.push_back( "OPE" ); curves.push_back( "GEN" );
+        }else if( renderer.substr( 0, 4 ) == "DSB2" ){
+            curves.push_back( "BRE" ); curves.push_back( "BRI" ); curves.push_back( "CLE" );
+            curves.push_back( "POR" ); curves.push_back( "GEN" ); curves.push_back( "harmonics" );
+            curves.push_back( "reso1amp" ); curves.push_back( "reso1bw" ); curves.push_back( "reso1freq" );
+            curves.push_back( "reso2amp" ); curves.push_back( "reso2bw" ); curves.push_back( "reso2freq" );
+            curves.push_back( "reso3amp" ); curves.push_back( "reso3bw" ); curves.push_back( "reso3freq" );
+            curves.push_back( "reso4amp" ); curves.push_back( "reso4bw" ); curves.push_back( "reso4freq" );
+        }else{
+            curves.push_back( "BRE" ); curves.push_back( "BRI" ); curves.push_back( "CLE" );
+            curves.push_back( "POR" ); curves.push_back( "GEN" );
+        }
+
+        int lastDelay = 0;
+        for( int i = 0; i < curves.size(); i++ ){
+            BPList *list = track->getCurve( curves[i] );
+            if( list->size() > 0 ){
+                lastDelay = _addVoiceChangeParameters( res, list, tempoList, msPreSend, lastDelay );
+            }
+        }
+        std::sort( res.begin(), res.end(), NrpnEvent::compare );
+        return res;
+    }
+
+    /**
      * @brief 指定した時刻における、プリセンド込の時刻と、ディレイを取得する
      * @param tempoList テンポ情報
      * @param clock (int) Tick 単位の時刻
@@ -437,6 +475,48 @@ protected:
             *msb = 0xff & (value >> 7);
             *lsb = value - (*msb << 7);
         }
+    }
+
+private:
+    /**
+     * @brief Voice Change Parameter の NRPN を追加する
+     * @param dest (table) 追加先のテーブル
+     * @param list (BPList) Voice Change Parameter のデータ点が格納された BPList
+     * @param sequence (Sequence) シーケンス
+     * @param msPreSend (int) ミリ秒単位のプリセンド時間
+     * @param lastDelay (int) 直前の delay 値(ミリ秒単位)
+     * @return (int) delay 値(ミリ秒単位)
+     */
+    static int _addVoiceChangeParameters( vector<NrpnEvent> &dest, BPList *list, TempoList *tempoList, int msPreSend, int lastDelay ){
+        int id = MidiParameterType::getVoiceChangeParameterId( list->getName() );
+        for( int j = 0; j < list->size(); j++ ){
+            tick_t clock = list->getKeyClock( j );
+            int value = list->getValue( j );
+            tick_t actualClock;
+            int delay;
+            _getActualClockAndDelay( tempoList, clock, msPreSend, &actualClock, &delay );
+
+            if( actualClock >= 0 ){
+                NrpnEvent add( 0, MidiParameterType::CC_BS_DELAY, 0 );
+                bool initialized = false;
+                if( lastDelay != delay ){
+                    int delayMsb, delayLsb;
+                    _getMsbAndLsb( delay, &delayMsb, &delayLsb );
+                    add = NrpnEvent( actualClock, MidiParameterType::VCP_DELAY, delayMsb, delayLsb );
+                    initialized = true;
+                }
+                lastDelay = delay;
+
+                if( false == initialized ){
+                    add = NrpnEvent( actualClock, MidiParameterType::VCP_VOICE_CHANGE_PARAMETER_ID, id );
+                }else{
+                    add.append( MidiParameterType::VCP_VOICE_CHANGE_PARAMETER_ID, id );
+                }
+                add.append( MidiParameterType::VCP_VOICE_CHANGE_PARAMETER, value, true );
+                dest.push_back( add );
+            }
+        }
+        return lastDelay;
     }
 };
 
