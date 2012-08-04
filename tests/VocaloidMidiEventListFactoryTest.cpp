@@ -692,6 +692,7 @@ public:
     CPPUNIT_TEST( testGeneratePitchBendNRPN );
     CPPUNIT_TEST( testGeneratePitchBendSensitivityNRPN );
     CPPUNIT_TEST( testGenerateVibratoNRPN );
+    CPPUNIT_TEST( testGenerateVoiceChangeParameterNRPN );
     CPPUNIT_TEST( testAddVoiceChangeParameters );
     CPPUNIT_TEST( test_getActualClockAndDelay );
     CPPUNIT_TEST( test_getMsbAndLsb );
