@@ -18,12 +18,25 @@ public:
     }
 
     void testConstructFromStream(){
-        TextStream stream;
-        stream.writeLine( "PreMeasure=12" );
-        stream.setPointer( -1 );
-        std::string lastLine = "";
-        Master master( stream, lastLine );
-        CPPUNIT_ASSERT_EQUAL( 12, master.preMeasure );
+        {
+            TextStream stream;
+            stream.writeLine( "PreMeasure=12" );
+            stream.setPointer( -1 );
+            std::string lastLine = "";
+            Master master( stream, lastLine );
+            CPPUNIT_ASSERT_EQUAL( 12, master.preMeasure );
+            CPPUNIT_ASSERT_EQUAL( string( "PreMeasure=12" ), lastLine );
+        }
+        {
+            TextStream stream;
+            stream.writeLine( "PreMeasure=12" );
+            stream.writeLine( "[Common]" );
+            stream.setPointer( -1 );
+            std::string lastLine = "";
+            Master master( stream, lastLine );
+            CPPUNIT_ASSERT_EQUAL( 12, master.preMeasure );
+            CPPUNIT_ASSERT_EQUAL( string( "[Common]" ), lastLine );
+        }
     }
 
     void testWrite(){
