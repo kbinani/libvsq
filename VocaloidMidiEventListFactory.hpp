@@ -76,6 +76,21 @@ private:
         }
     };
 
+    /**
+     * @brief PitchBendSensitivity カーブ用の NrpnEventProvider 実装
+     */
+    class PitchBendSensitivityNrpnEventProvider : public NrpnEventProvider{
+    public:
+        explicit PitchBendSensitivityNrpnEventProvider()
+            : NrpnEventProvider( MidiParameterType::CC_PBS_DELAY, MidiParameterType::CC_PBS_PITCH_BEND_SENSITIVITY )
+        {
+        }
+
+        NrpnEvent getNrpnEvent( tick_t actualClock, int value ){
+            return NrpnEvent( actualClock, nrpn, value, 0x00 );
+        }
+    };
+
 protected:
     /**
      * @brief データ点のリストから、NRPN のリストを作成する
@@ -341,30 +356,9 @@ protected:
     static vector<NrpnEvent> generatePitchBendSensitivityNRPN( Track *track, TempoList *tempoList, int msPreSend ){
         vector<NrpnEvent> ret;
         BPList *pbs = track->getCurve( "PBS" );
-        int count = pbs->size();
-        int lastDelay = 0;
-        for( int i = 0; i < count; i++ ){
-            tick_t clock = pbs->getKeyClock( i );
-            tick_t actualClock;
-            int delay;
-            _getActualClockAndDelay( tempoList, clock, msPreSend, &actualClock, &delay );
-            if( actualClock >= 0 ){
-                if( lastDelay != delay ){
-                    int delayMsb, delayLsb;
-                    _getMsbAndLsb( delay, &delayMsb, &delayLsb );
-                    ret.push_back( NrpnEvent( actualClock, MidiParameterType::CC_PBS_DELAY, delayMsb, delayLsb ) );
-                }
-                lastDelay = delay;
-
-                NrpnEvent add(
-                    actualClock,
-                    MidiParameterType::CC_PBS_PITCH_BEND_SENSITIVITY,
-                    pbs->getValue( i ),
-                    0x00
-                );
-                ret.push_back( add );
-            }
-        }
+        PitchBendSensitivityNrpnEventProvider *provider = new PitchBendSensitivityNrpnEventProvider();
+        generateNRPNByBPList( ret, tempoList, msPreSend, pbs, provider );
+        delete provider;
         return ret;
     }
 
