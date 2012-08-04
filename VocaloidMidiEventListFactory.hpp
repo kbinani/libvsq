@@ -25,10 +25,69 @@ VSQ_BEGIN_NAMESPACE
 using namespace std;
 
 /**
- * @brief
+ * @brief Track のインスタンスから、VOCALOID で使用される NRPN リストを作成するためのクラス
  */
 class VocaloidMidiEventListFactory{
+private:
+    /**
+     * @brief BPList のインスタンスから NrpnEvent のリストを作成する際の、
+     * ディレイ指定 NrpnEvent と、値 NrpnEvent を提供するためのクラス
+     */
+    class NrpnEventProvider{
+    protected:
+        MidiParameterType::MidiParameterTypeEnum delayNrpn;
+        MidiParameterType::MidiParameterTypeEnum nrpn;
+
+    public:
+        explicit NrpnEventProvider( MidiParameterType::MidiParameterTypeEnum delayNrpnType, MidiParameterType::MidiParameterTypeEnum nrpnType )
+        {
+            this->delayNrpn = delayNrpnType;
+            this->nrpn = nrpnType;
+        }
+
+        NrpnEvent getDelayNrpnEvent( tick_t actualClock, int delay ){
+            int delayMsb, delayLsb;
+            VocaloidMidiEventListFactory::_getMsbAndLsb( delay, &delayMsb, &delayLsb );
+            return NrpnEvent( actualClock, delayNrpn, delayMsb, delayLsb );
+        }
+
+        NrpnEvent getNrpnEvent( tick_t actualClock, int value ){
+            return NrpnEvent( actualClock, nrpn, value );
+        }
+    };
+
 protected:
+    /**
+     * @brief データ点のリストから、NRPN のリストを作成する
+     * @param result 作成した NRPN のリストの格納先
+     * @param tempoList テンポ情報
+     * @param preSendMilliseconds ミリ秒単位のプリセンド秒
+     * @param list NRPN リストの元になるデータのリスト
+     * @param delayNrpnType delay を指定する際の NRPN のタイプ
+     * @param nrpnType データ点の値を指定する際の NRPN のタイプ
+     */
+    static void generateNRPNByBPList(
+        vector<NrpnEvent> &result,
+        TempoList *tempoList, int preSendMilliseconds,
+        BPList *list, NrpnEventProvider *provider
+    ){
+        size_t count = list->size();
+        int lastDelay = 0;
+        for( int i = 0; i < count; i++ ){
+            tick_t clock = list->getKeyClock( i );
+            tick_t actualClock;
+            int delay;
+            _getActualClockAndDelay( tempoList, clock, preSendMilliseconds, &actualClock, &delay );
+            if( actualClock >= 0 ){
+                if( lastDelay != delay ){
+                    result.push_back( provider->getDelayNrpnEvent( actualClock, delay ) );
+                }
+                lastDelay = delay;
+                result.push_back( provider->getNrpnEvent( actualClock, list->getValue( i ) ) );
+            }
+        }
+    }
+
     /**
      * @brief トラックの Expression(DYN) の NRPN リストを作成する
      * @param track 出力するトラック
@@ -39,30 +98,9 @@ protected:
     static vector<NrpnEvent> generateExpressionNRPN( Track *track, TempoList *tempoList, int preSendMilliseconds ){
         vector<NrpnEvent> ret;
         BPList *dyn = track->getCurve( "DYN" );
-        size_t count = dyn->size();
-        int lastDelay = 0;
-        for( int i = 0; i < count; i++ ){
-            tick_t clock = dyn->getKeyClock( i );
-            tick_t actualClock;
-            int delay;
-            _getActualClockAndDelay( tempoList, clock, preSendMilliseconds, &actualClock, &delay );
-            if( actualClock >= 0 ){
-                if( lastDelay != delay ){
-                    int delayMsb, delayLsb;
-                    _getMsbAndLsb( delay, &delayMsb, &delayLsb );
-                    NrpnEvent delayNrpn( actualClock, MidiParameterType::CC_E_DELAY, delayMsb, delayLsb );
-                    ret.push_back( delayNrpn );
-                }
-                lastDelay = delay;
-
-                NrpnEvent add(
-                    actualClock,
-                    MidiParameterType::CC_E_EXPRESSION,
-                    dyn->getValue( i )
-                );
-                ret.push_back( add );
-            }
-        }
+        NrpnEventProvider *provider = new NrpnEventProvider( MidiParameterType::CC_E_DELAY, MidiParameterType::CC_E_EXPRESSION );
+        generateNRPNByBPList( ret, tempoList, preSendMilliseconds, dyn, provider );
+        delete provider;
         return ret;
     }
 
@@ -450,30 +488,9 @@ protected:
     static vector<NrpnEvent> generateFx2DepthNRPN( Track *track, TempoList *tempoList, int preSendMilliseconds ){
         vector<NrpnEvent> ret;
         BPList *fx2depth = track->getCurve( "fx2depth" );
-        size_t count = fx2depth->size();
-        int lastDelay = 0;
-        for( int i = 0; i < count; i++ ){
-            tick_t clock = fx2depth->getKeyClock( i );
-            tick_t actualClock;
-            int delay;
-            _getActualClockAndDelay( tempoList, clock, preSendMilliseconds, &actualClock, &delay );
-            if( actualClock >= 0 ){
-                if( lastDelay != delay ){
-                    int delayMsb, delayLsb;
-                    _getMsbAndLsb( delay, &delayMsb, &delayLsb );
-                    NrpnEvent delayNrpn( actualClock, MidiParameterType::CC_FX2_DELAY, delayMsb, delayLsb );
-                    ret.push_back( delayNrpn );
-                }
-                lastDelay = delay;
-
-                NrpnEvent add(
-                    actualClock,
-                    MidiParameterType::CC_FX2_EFFECT2_DEPTH,
-                    fx2depth->getValue( i )
-                );
-                ret.push_back( add );
-            }
-        }
+        NrpnEventProvider *provider = new NrpnEventProvider( MidiParameterType::CC_FX2_DELAY, MidiParameterType::CC_FX2_EFFECT2_DEPTH );
+        generateNRPNByBPList( ret, tempoList, preSendMilliseconds, fx2depth, provider );
+        delete provider;
         return ret;
     }
 
