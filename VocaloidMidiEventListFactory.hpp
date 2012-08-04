@@ -39,20 +39,40 @@ private:
         MidiParameterType::MidiParameterTypeEnum nrpn;
 
     public:
-        explicit NrpnEventProvider( MidiParameterType::MidiParameterTypeEnum delayNrpnType, MidiParameterType::MidiParameterTypeEnum nrpnType )
+        explicit NrpnEventProvider(
+            MidiParameterType::MidiParameterTypeEnum delayNrpnType,
+            MidiParameterType::MidiParameterTypeEnum nrpnType )
         {
             this->delayNrpn = delayNrpnType;
             this->nrpn = nrpnType;
         }
 
-        NrpnEvent getDelayNrpnEvent( tick_t actualClock, int delay ){
+        virtual NrpnEvent getDelayNrpnEvent( tick_t actualClock, int delay ){
             int delayMsb, delayLsb;
             VocaloidMidiEventListFactory::_getMsbAndLsb( delay, &delayMsb, &delayLsb );
             return NrpnEvent( actualClock, delayNrpn, delayMsb, delayLsb );
         }
 
-        NrpnEvent getNrpnEvent( tick_t actualClock, int value ){
+        virtual NrpnEvent getNrpnEvent( tick_t actualClock, int value ){
             return NrpnEvent( actualClock, nrpn, value );
+        }
+    };
+
+    /**
+     * @brief PitchBend カーブ用の NrpnEventProvider 実装
+     */
+    class PitchBendNrpnEventProvider : public NrpnEventProvider{
+    public:
+        explicit PitchBendNrpnEventProvider()
+            : NrpnEventProvider( MidiParameterType::PB_DELAY, MidiParameterType::PB_PITCH_BEND )
+        {
+        }
+
+        NrpnEvent getNrpnEvent( tick_t actualClock, int value ){
+            int actualValue = value + 0x2000;
+            int msb, lsb;
+            VocaloidMidiEventListFactory::_getMsbAndLsb( actualValue, &msb, &lsb );
+            return NrpnEvent( actualClock, nrpn, msb, lsb );
         }
     };
 
@@ -305,28 +325,9 @@ protected:
     static vector<NrpnEvent> generatePitchBendNRPN( Track *track, TempoList *tempoList, int msPreSend ){
         vector<NrpnEvent> ret;
         BPList *pit = track->getCurve( "PIT" );
-        int count = pit->size();
-        int lastDelay = 0;
-        for( int i = 0; i < count; i++ ){
-            tick_t clock = pit->getKeyClock( i );
-
-            tick_t actualClock;
-            int delay;
-            _getActualClockAndDelay( tempoList, clock, msPreSend, &actualClock, &delay );
-            if( actualClock >= 0 ){
-                if( lastDelay != delay ){
-                    int delayMsb, delayLsb;
-                    _getMsbAndLsb( delay, &delayMsb, &delayLsb );
-                    ret.push_back( NrpnEvent( actualClock, MidiParameterType::PB_DELAY, delayMsb, delayLsb ) );
-                }
-                lastDelay = delay;
-
-                int value = pit->getValue( i ) + 0x2000;
-                int msb, lsb;
-                _getMsbAndLsb( value, &msb, &lsb );
-                ret.push_back( NrpnEvent( actualClock, MidiParameterType::PB_PITCH_BEND, msb, lsb ) );
-            }
-        }
+        PitchBendNrpnEventProvider *provider = new PitchBendNrpnEventProvider();
+        generateNRPNByBPList( ret, tempoList, msPreSend, pit, provider );
+        delete provider;
         return ret;
     }
 
