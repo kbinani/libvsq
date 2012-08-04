@@ -442,6 +442,42 @@ protected:
     }
 
     /**
+     * @param vsq [VsqFile]
+     * @param track [int]
+     * @param msPreSend [int]
+     * @return [VsqNrpn[] ]
+     */
+    static vector<NrpnEvent> generateFx2DepthNRPN( Track *track, TempoList *tempoList, int preSendMilliseconds ){
+        vector<NrpnEvent> ret;
+        BPList *fx2depth = track->getCurve( "fx2depth" );
+        size_t count = fx2depth->size();
+        int lastDelay = 0;
+        for( int i = 0; i < count; i++ ){
+            tick_t clock = fx2depth->getKeyClock( i );
+            tick_t actualClock;
+            int delay;
+            _getActualClockAndDelay( tempoList, clock, preSendMilliseconds, &actualClock, &delay );
+            if( actualClock >= 0 ){
+                if( lastDelay != delay ){
+                    int delayMsb, delayLsb;
+                    _getMsbAndLsb( delay, &delayMsb, &delayLsb );
+                    NrpnEvent delayNrpn( actualClock, MidiParameterType::CC_FX2_DELAY, delayMsb, delayLsb );
+                    ret.push_back( delayNrpn );
+                }
+                lastDelay = delay;
+
+                NrpnEvent add(
+                    actualClock,
+                    MidiParameterType::CC_FX2_EFFECT2_DEPTH,
+                    fx2depth->getValue( i )
+                );
+                ret.push_back( add );
+            }
+        }
+        return ret;
+    }
+
+    /**
      * @brief Voice Change Parameter の NRPN を追加する
      * @param dest (table) 追加先のテーブル
      * @param list (BPList) Voice Change Parameter のデータ点が格納された BPList

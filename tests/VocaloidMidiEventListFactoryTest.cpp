@@ -39,6 +39,10 @@ public:
         return VocaloidMidiEventListFactory::generateVoiceChangeParameterNRPN( track, tempoList, msPreSend, premeasure_clock );
     }
 
+    static vector<NrpnEvent> generateFx2DepthNRPN( Track *track, TempoList *tempoList, int preSendMilliseconds ){
+        return VocaloidMidiEventListFactory::generateFx2DepthNRPN( track, tempoList, preSendMilliseconds );
+    }
+
     static int addVoiceChangeParameters( vector<NrpnEvent> &dest, BPList *list, TempoList *tempoList, int msPreSend, int lastDelay ){
         return VocaloidMidiEventListFactory::addVoiceChangeParameters( dest, list, tempoList, msPreSend, lastDelay );
     }
@@ -651,6 +655,40 @@ public:
         CPPUNIT_ASSERT( actual[1].isMSBOmittingRequired );
     }
 
+    void testGenerateFx2DepthNRPN(){
+        Sequence sequence( "Miku", 1, 4, 4, 500000 );
+        Track *track = &sequence.track[1];
+        BPList *list = track->getCurve( "fx2depth" );
+        list->clear();
+        list->add( 480, 64 );
+        list->add( 1920, 63 );
+
+        vector<NrpnEvent> actual = VocaloidMidiEventListFactoryStub::generateFx2DepthNRPN( track, &sequence.tempoList, 500 );
+        CPPUNIT_ASSERT_EQUAL( (size_t)3, actual.size() );
+
+        NrpnEvent item = actual[0];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)0, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CC_FX2_DELAY, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 0x03, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( 0x74, item.dataLSB );
+        CPPUNIT_ASSERT( item.hasLSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.isMSBOmittingRequired );
+
+        item = actual[1];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)0, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CC_FX2_EFFECT2_DEPTH, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 64, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.hasLSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.isMSBOmittingRequired );
+
+        item = actual[2];
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, item.clock );
+        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CC_FX2_EFFECT2_DEPTH, item.nrpn );
+        CPPUNIT_ASSERT_EQUAL( 63, item.dataMSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.hasLSB );
+        CPPUNIT_ASSERT_EQUAL( false, item.isMSBOmittingRequired );
+    }
+
     void test_getActualClockAndDelay(){
         Sequence sequence( "Miku", 1, 4, 4, 500000 );
         tick_t actualClock;
@@ -694,6 +732,7 @@ public:
     CPPUNIT_TEST( testGenerateVibratoNRPN );
     CPPUNIT_TEST( testGenerateVoiceChangeParameterNRPN );
     CPPUNIT_TEST( testAddVoiceChangeParameters );
+    CPPUNIT_TEST( testGenerateFx2DepthNRPN );
     CPPUNIT_TEST( test_getActualClockAndDelay );
     CPPUNIT_TEST( test_getMsbAndLsb );
     CPPUNIT_TEST_SUITE_END();

@@ -326,34 +326,6 @@ public:
         }
     }
 
-    //TODO:
-/*
-        --
-        -- @param vsq [VsqFile]
-        -- @param track [int]
-        -- @param msPreSend [int]
-        -- @return [VsqNrpn[] ]
-        function Sequence.generateFx2DepthNRPN( vsq, track, msPreSend )
-            local ret = {};--Array.new();--Vector<VsqNrpn>();
-            local fx2depth = vsq.track:get( track ):getCurve( "fx2depth" );
-            local count = fx2depth:size();
-            local i;
-            for i = 0, count - 1, do
-                local clock = fx2depth:getKeyClock( i );
-                local c = clock - vsq:getPresendClockAt( clock, msPreSend );
-                if( c >= 0 )then
-                    local add = NrpnEvent.new(
-                        c,
-                        MidiParameterEnum.CC_FX2_EFFECT2_DEPTH,
-                        fx2depth:getValue( i )
-                    );
-                    table.insert( ret, add );
-                end
-            end
-            return ret;
-        end
-*/
-
 /*
         --
         --  指定したトラックのデータから，NRPNを作成します
@@ -514,23 +486,6 @@ public:
     }
 */
 
-    //TODO: lua用の実装なので、後で消す
-/*
-    ---
-    -- 配列を連結する
-    -- @access private
-    -- @param src_array (table) 連結先のテーブル。参照として更新される
-    -- @param add_array (table) 追加される要素が格納されたテーブル
-    -- @return (table) src_array と同じインスタンス
-    -- @access static private
-    function Sequence._array_add_all( src_array, add_array )
-        local i;
-        for i = 1, #add_array, 1 do
-            table.insert( src_array, add_array[i] );
-        end
-        return src_array;
-    end
-*/
 protected:
     /**
      * @brief 文字列を MIDI メタイベントにしたものを取得する
