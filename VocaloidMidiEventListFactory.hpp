@@ -91,38 +91,135 @@ private:
         }
     };
 
-protected:
+public:
     /**
-     * @brief データ点のリストから、NRPN のリストを作成する
-     * @param result 作成した NRPN のリストの格納先
-     * @param tempoList テンポ情報
-     * @param preSendMilliseconds ミリ秒単位のプリセンド秒
-     * @param list NRPN リストの元になるデータのリスト
-     * @param delayNrpnType delay を指定する際の NRPN のタイプ
-     * @param nrpnType データ点の値を指定する際の NRPN のタイプ
+     * @brief 指定したシーケンスの指定したトラックから、NRPN のリストを作成する
+     * @param sequence (Sequence) 出力元のシーケンス
+     * @param track (int) 出力するトラックの番号
+     * @param msPreSend (int) ミリ秒単位のプリセンド時間
+     * @return (table<NrpnEvent>) NrpnEvent の配列
      */
-    static void generateNRPNByBPList(
-        vector<NrpnEvent> &result,
-        TempoList *tempoList, int preSendMilliseconds,
-        BPList *list, NrpnEventProvider *provider
-    ){
-        size_t count = list->size();
-        int lastDelay = 0;
+    static vector<NrpnEvent> generateNRPN(
+        Track *target, TempoList *tempoList, tick_t totalClocks, tick_t preMeasureClock, int msPreSend )
+    {
+        vector<NrpnEvent> list;
+
+        string version = target->getCommon()->version;
+        Event::List *events = target->getEvents();
+
+        int count = events->size();
+        int note_start = 0;
+        int note_end = count - 1;
         for( int i = 0; i < count; i++ ){
-            tick_t clock = list->getKeyClock( i );
-            tick_t actualClock;
-            int delay;
-            _getActualClockAndDelay( tempoList, clock, preSendMilliseconds, &actualClock, &delay );
-            if( actualClock >= 0 ){
-                if( lastDelay != delay ){
-                    result.push_back( provider->getDelayNrpnEvent( actualClock, delay ) );
-                }
-                lastDelay = delay;
-                result.push_back( provider->getNrpnEvent( actualClock, list->getValue( i ) ) );
+            if( 0 <= events->get( i ).clock ){
+                note_start = i;
+                break;
+            }
+            note_start = i;
+        }
+        for( int i = count - 1; i >= 0; i-- ){
+            if( events->get( i ).clock <= totalClocks ){
+                note_end = i;
+                break;
             }
         }
+
+        // 最初の歌手を決める
+        int singer_event = -1;
+        for( int i = note_start; i >= 0; i-- ){
+            if( events->get( i ).type == EventType::SINGER ){
+                singer_event = i;
+                break;
+            }
+        }
+        if( singer_event >= 0 ){
+            // 見つかった場合
+            vector<NrpnEvent> singerNrpnList = generateSingerNRPN( tempoList, &events->get( singer_event ), 0 );
+            list.insert( list.end(), singerNrpnList.begin(), singerNrpnList.end() );
+        }else{
+            // 多分ありえないと思うが、歌手が不明の場合。
+            list.push_back( NrpnEvent( 0, MidiParameterType::CC_BS_LANGUAGE_TYPE, 0x0 ) );
+            list.push_back( NrpnEvent( 0, MidiParameterType::PC_VOICE_TYPE, 0x0 ) );
+        }
+
+        vector<NrpnEvent> voiceChangeParameterNrpn = generateVoiceChangeParameterNRPN( target, tempoList, msPreSend, preMeasureClock );
+        list.insert( list.end(), voiceChangeParameterNrpn.begin(), voiceChangeParameterNrpn.end() );
+        if( version.substr( 0, 4 ) == "DSB2" ){
+            vector<NrpnEvent> fx2DepthNrpn = generateFx2DepthNRPN( target, tempoList, msPreSend );
+            list.insert( list.end(), fx2DepthNrpn.begin(), fx2DepthNrpn.end() );
+        }
+
+        int ms_presend = msPreSend;
+        if( target->getCurve( "dyn" )->size() > 0 ){
+            vector<NrpnEvent> listdyn = generateExpressionNRPN( target, tempoList, ms_presend );
+            if( listdyn.size() > 0 ){
+                list.insert( list.end(), listdyn.begin(), listdyn.end() );
+            }
+        }
+        if( target->getCurve( "pbs" )->size() > 0 ){
+            vector<NrpnEvent> listpbs = generatePitchBendSensitivityNRPN( target, tempoList, ms_presend );
+            if( listpbs.size() > 0 ){
+                list.insert( list.end(), listpbs.begin(), listpbs.end() );
+            }
+        }
+        if( target->getCurve( "pit" )->size() > 0 ){
+            vector<NrpnEvent> listpit = generatePitchBendNRPN( target, tempoList, ms_presend );
+            if( listpit.size() > 0 ){
+                list.insert( list.end(), listpit.begin(), listpit.end() );
+            }
+        }
+
+        int lastDelay = 0;
+        int last_note_end = 0;
+        for( int i = note_start; i <= note_end; i++ ){
+            Event item = events->get( i );
+            if( item.type == EventType::NOTE ){
+                int note_loc = 0x03;
+                if( item.clock == last_note_end ){
+                    note_loc = note_loc - 0x02;
+                }
+
+                // 次に現れる音符イベントを探す
+                tick_t nextclock = item.clock + item.getLength() + 1;
+                int event_count = events->size();
+                for( int j = i + 1; j < event_count; j++ ){
+                    Event itemj = events->get( j );
+                    if( itemj.type == EventType::NOTE ){
+                        nextclock = itemj.clock;
+                        break;
+                    }
+                }
+                if( item.clock + item.getLength() == nextclock ){
+                    note_loc = note_loc - 0x01;
+                }
+
+                int delay;
+                NrpnEvent noteNrpn =
+                    generateNoteNRPN( target, tempoList, &item, msPreSend, note_loc, &lastDelay, &delay );
+                lastDelay = delay;
+
+                list.push_back( noteNrpn );
+                vector<NrpnEvent> vibratoNrpn = generateVibratoNRPN( tempoList, &item, msPreSend );
+                list.insert( list.end(), vibratoNrpn.begin(), vibratoNrpn.end() );
+                last_note_end = item.clock + item.getLength();
+            }else if( item.type == EventType::SINGER ){
+                if( i > note_start && i != singer_event ){
+                    vector<NrpnEvent> singerNrpn = generateSingerNRPN( tempoList, &item, msPreSend );
+                    list.insert( list.end(), singerNrpn.begin(), singerNrpn.end() );
+                }
+            }
+        }
+
+        std::sort( list.begin(), list.end(), NrpnEvent::compare );
+        vector<NrpnEvent> merged;
+        for( int i = 0; i < list.size(); i++ ){
+            vector<NrpnEvent> expanded = list[i].expand();
+            merged.insert( merged.end(), expanded.begin(), expanded.end() );
+        }
+        return merged;
     }
 
+protected:
     /**
      * @brief トラックの Expression(DYN) の NRPN リストを作成する
      * @param track 出力するトラック
@@ -159,7 +256,7 @@ protected:
      * @param msPreSend (int) ミリ秒単位のプリセンド時間
      * @return (table<NrpnEvent>) NrpnEvent の配列
      */
-    static vector<NrpnEvent> generateSingerNRPN( TempoList *tempoList, Event *singerEvent, int preSendMilliseconds ){
+    static vector<NrpnEvent> generateSingerNRPN( TempoList *tempoList, const Event *singerEvent, int preSendMilliseconds ){
         tick_t clock = singerEvent->clock;
         Handle singer_handle;
 
@@ -229,6 +326,7 @@ protected:
             int delayMsb, delayLsb;
             _getMsbAndLsb( *delay, &delayMsb, &delayLsb );
             if( false == addInitialized ){
+                //TODO: ここを通る場合、CVM_NM_VERSION_AND_DEVICE が省略されてしまう。OKかどうか要検証
                 add = NrpnEvent( actualClock, MidiParameterType::CVM_NM_DELAY, delayMsb, delayLsb );
                 addInitialized = true;
             }else{
@@ -563,6 +661,46 @@ protected:
         }else{
             *msb = 0xff & (value >> 7);
             *lsb = value - (*msb << 7);
+        }
+    }
+
+private:
+    /**
+     * @brief データ点のリストから、NRPN のリストを作成する
+     * @param result 作成した NRPN のリストの格納先
+     * @param tempoList テンポ情報
+     * @param preSendMilliseconds ミリ秒単位のプリセンド秒
+     * @param list NRPN リストの元になるデータのリスト
+     * @param delayNrpnType delay を指定する際の NRPN のタイプ
+     * @param nrpnType データ点の値を指定する際の NRPN のタイプ
+     */
+    static void generateNRPNByBPList(
+        vector<NrpnEvent> &result,
+        TempoList *tempoList, int preSendMilliseconds,
+        BPList *list, NrpnEventProvider *provider
+    ){
+        size_t count = list->size();
+        int lastDelay = 0;
+        for( int i = 0; i < count; i++ ){
+            tick_t clock = list->getKeyClock( i );
+            tick_t actualClock;
+            int delay;
+            _getActualClockAndDelay( tempoList, clock, preSendMilliseconds, &actualClock, &delay );
+            if( actualClock >= 0 ){
+                NrpnEvent add = provider->getNrpnEvent( actualClock, list->getValue( i ) );
+                if( lastDelay != delay ){
+                    NrpnEvent delayNrpn = provider->getDelayNrpnEvent( actualClock, delay );
+                    if( add.hasLSB ){
+                        delayNrpn.append( add.nrpn, add.dataLSB, add.dataLSB, add.isMSBOmittingRequired );
+                    }else{
+                        delayNrpn.append( add.nrpn, add.dataMSB, add.isMSBOmittingRequired );
+                    }
+                    result.push_back( delayNrpn );
+                }else{
+                    result.push_back( add );
+                }
+                lastDelay = delay;
+            }
         }
     }
 };
