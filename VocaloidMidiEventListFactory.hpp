@@ -91,7 +91,7 @@ private:
         }
     };
 
-public:
+protected:
     /**
      * @brief 指定したシーケンスの指定したトラックから、NRPN のリストを作成する
      * @param sequence (Sequence) 出力元のシーケンス
@@ -219,7 +219,6 @@ public:
         return merged;
     }
 
-protected:
     /**
      * @brief トラックの Expression(DYN) の NRPN リストを作成する
      * @param track 出力するトラック

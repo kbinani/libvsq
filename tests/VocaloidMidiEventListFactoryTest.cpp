@@ -7,6 +7,12 @@ using namespace VSQ_NS;
 
 class VocaloidMidiEventListFactoryStub : public VocaloidMidiEventListFactory{
 public:
+    static vector<NrpnEvent> generateNRPN(
+        Track *target, TempoList *tempoList, tick_t totalClocks, tick_t preMeasureClock, int msPreSend )
+    {
+        return VocaloidMidiEventListFactory::generateNRPN( target, tempoList, totalClocks, preMeasureClock, msPreSend );
+    }
+
     static vector<NrpnEvent> generateExpressionNRPN( Track *track, TempoList *tempoList, int preSendMilliseconds ){
         return VocaloidMidiEventListFactory::generateExpressionNRPN( track, tempoList, preSendMilliseconds );
     }
@@ -786,7 +792,7 @@ public:
         track->getEvents()->add( noteEvent );
 
         int preSendMilliseconds = 500;
-        vector<NrpnEvent> actual = VocaloidMidiEventListFactory::generateNRPN(
+        vector<NrpnEvent> actual = VocaloidMidiEventListFactoryStub::generateNRPN(
             track, &sequence.tempoList, sequence.getTotalClocks(), sequence.getPreMeasureClocks(), preSendMilliseconds );
         CPPUNIT_ASSERT_EQUAL( (size_t)50, actual.size() );
 
