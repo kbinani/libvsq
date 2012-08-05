@@ -152,19 +152,19 @@ public:
         int ms_presend = msPreSend;
         if( target->getCurve( "dyn" )->size() > 0 ){
             vector<NrpnEvent> listdyn = generateExpressionNRPN( target, tempoList, ms_presend );
-            if( listdyn.size() > 0 ){
+            if( ! listdyn.empty() ){
                 list.insert( list.end(), listdyn.begin(), listdyn.end() );
             }
         }
         if( target->getCurve( "pbs" )->size() > 0 ){
             vector<NrpnEvent> listpbs = generatePitchBendSensitivityNRPN( target, tempoList, ms_presend );
-            if( listpbs.size() > 0 ){
+            if( ! listpbs.empty() ){
                 list.insert( list.end(), listpbs.begin(), listpbs.end() );
             }
         }
         if( target->getCurve( "pit" )->size() > 0 ){
             vector<NrpnEvent> listpit = generatePitchBendNRPN( target, tempoList, ms_presend );
-            if( listpit.size() > 0 ){
+            if( ! listpit.empty() ){
                 list.insert( list.end(), listpit.begin(), listpit.end() );
             }
         }
