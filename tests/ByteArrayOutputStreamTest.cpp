@@ -1,15 +1,21 @@
 #include "Util.hpp"
 #include "../ByteArrayOutputStream.hpp"
+#include "../StringUtil.hpp"
 #include <sstream>
 
 using namespace std;
 using namespace VSQ_NS;
 
-class ByteArrayOutputStreamTest : public CppUnit::TestCase
-{
+class ByteArrayOutputStreamStub : public ByteArrayOutputStream{
 public:
-    void test()
-    {
+    static int getUnitBufferLength(){
+        return UNIT_BUFFER_LENGTH;
+    }
+};
+
+class ByteArrayOutputStreamTest : public CppUnit::TestCase{
+public:
+    void test(){
         ByteArrayOutputStream stream;
         CPPUNIT_ASSERT_EQUAL( 0, stream.getPointer() );
         stream.write( 0 );
@@ -36,8 +42,30 @@ public:
         stream.close();
     }
 
+    void testSeek(){
+        ByteArrayOutputStream stream;
+
+        // 負の値を指定した場合、0になる
+        stream.seek( -100 );
+        CPPUNIT_ASSERT_EQUAL( 0, stream.getPointer() );
+
+        // 初期に確保されるバッファーより後ろにseekしても、正しくseekできる
+        stream.seek( ByteArrayOutputStreamStub::getUnitBufferLength() + 10 );
+        stream.write( (int)'a' );
+
+        string actualString = stream.toString();
+        vector<char> actual;
+        actual.insert( actual.begin(), actualString.begin(), actualString.end() );
+
+        vector<char> expected;
+        expected.insert( expected.begin(), ByteArrayOutputStreamStub::getUnitBufferLength() + 10, '\0' );
+        expected.insert( expected.end(), 'a' );
+        CPPUNIT_ASSERT( expected == actual );
+    }
+
     CPPUNIT_TEST_SUITE( ByteArrayOutputStreamTest );
     CPPUNIT_TEST( test );
+    CPPUNIT_TEST( testSeek );
     CPPUNIT_TEST_SUITE_END();
 };
 

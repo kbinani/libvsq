@@ -16,8 +16,13 @@ VSQ_BEGIN_NAMESPACE
  */
 class ByteArrayOutputStream : public VSQ_NS::OutputStream
 {
-private:
+protected:
+    /**
+     * @brief 確保するバッファー・ブロックのサイズ(バイト単位)
+     */
     static const int UNIT_BUFFER_LENGTH = 512;
+
+private:
     /**
      * 現在のファイルポインタ
      */
@@ -108,11 +113,8 @@ public:
      * @brief ファイルポインタを指定した位置に変更する
      * @param position (int) 新しいポインタ値
      */
-    void seek( int position )
-    {
-        if( 0 <= position && position < _length ){
-            _pointer = position;
-        }
+    void seek( int position ){
+        _pointer = (position < 0) ? 0 : position;
     }
 
     /**
