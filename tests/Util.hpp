@@ -16,4 +16,18 @@
 #define REGISTER_TEST_SUITE( ATestFixtureType )      \
   static CppUnit::AutoRegisterSuite< ATestFixtureType > CPPUNIT_JOIN( testSuite, ATestFixtureType )
 
+class TestUtil{
+private:
+    static std::string fixtureRootPath;
+
+public:
+    static void setFixtureRootPath( const std::string &fixtureRootPath ){
+        TestUtil::fixtureRootPath = fixtureRootPath;
+    }
+
+    static std::string getFixgtureRootPath(){
+        return TestUtil::fixtureRootPath;
+    }
+};
+
 #endif // UTIL_H

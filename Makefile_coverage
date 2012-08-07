@@ -4,5 +4,5 @@ test_vsq.exe: *.hpp tests/*.cpp tests/*.hpp
 	g++ tests/*.cpp -w -coverage -ldl -lcppunit -o test_vsq.exe
 
 run: test_vsq.exe
-	./test_vsq.exe
+	./test_vsq.exe -f ./tests
 

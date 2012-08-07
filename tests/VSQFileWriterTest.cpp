@@ -55,7 +55,8 @@ class VSQFileWriterTest : public CppUnit::TestCase{
 
         // 期待値と比較する
         vector<char> expected;
-        FILE *fileHandle = fopen( "./VSQFileWriterTest/expected/expected.vsq", "rb" );
+        string fixturePath = TestUtil::getFixgtureRootPath() + "/VSQFileWriterTest/expected/expected.vsq";
+        FILE *fileHandle = fopen( fixturePath.c_str(), "rb" );
         if( ! fileHandle ){
             CPPUNIT_FAIL( "fixture を読み込めなかった" );
         }

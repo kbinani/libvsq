@@ -3,6 +3,8 @@
 
 using namespace std;
 
+string TestUtil::fixtureRootPath = ".";
+
 int main( int argc, char* argv[] )
 {
     string xmlPath = "";
@@ -14,6 +16,8 @@ int main( int argc, char* argv[] )
         }else{
             if( currentParse == "-o" ){
                 xmlPath = s;
+            }else if( currentParse == "-f" ){
+                TestUtil::setFixtureRootPath( s );
             }
             currentParse = "";
         }
