@@ -91,6 +91,23 @@ private:
         }
     };
 
+public:
+    /**
+     * @brief 指定したシーケンスの指定したトラックから、VOCALOID MIDI イベントのリストを作成する
+     * @param target 出力元のシーケンスのトラック
+     * @param tempoList テンポ情報
+     * @param totalClocks シーケンスの長さ(tick 単位)
+     * @param preMeasureClock プリメジャーの長さ(tick 単位)
+     * @param msPreSend ミリ秒単位のプリセンド時間
+     * @return VOCALOID MIDI イベントのリスト
+     */
+    static vector<MidiEvent> generateMidiEventList(
+        Track *target, TempoList *tempoList, tick_t totalClocks, tick_t preMeasureClock, int msPreSend )
+    {
+        vector<NrpnEvent> nrpnEventList = generateNRPN( target, tempoList, totalClocks, preMeasureClock, msPreSend );
+        return NrpnEvent::convert( nrpnEventList );
+    }
+
 protected:
     /**
      * @brief 指定したシーケンスの指定したトラックから、NRPN のリストを作成する
