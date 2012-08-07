@@ -55,7 +55,8 @@ HEADERS += \
     CP932ConverterData.hpp \
     BitConverter.hpp \
     Sequence.hpp \
-    VocaloidMidiEventListFactory.hpp
+    VocaloidMidiEventListFactory.hpp \
+    VSQFileWriter.hpp
 
 unix:!symbian {
     maemo5 {
