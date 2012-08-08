@@ -10,10 +10,6 @@ public:
         : Track( name, singer )
     {
     }
-
-    Master getMaster() const{
-        return master;
-    }
 };
 
 class TrackTest : public CppUnit::TestCase{
@@ -354,13 +350,15 @@ public:
         noteEvent.noteHeadHandle.setDepth( 65 );
         track.getEvents()->add( noteEvent, 6 );
     
-        track.setPreMeasure( 1 );
-    
-        track.getMixer()->masterFeder = 1;
-        track.getMixer()->masterPanpot = 2;
-        track.getMixer()->masterMute = 3;
-        track.getMixer()->outputMode = 4;
-        track.getMixer()->slave.push_back( MixerItem( 5, 6, 7, 8 ) );
+        Master master;
+        master.preMeasure = 1;
+
+        Mixer mixer;
+        mixer.masterFeder = 1;
+        mixer.masterPanpot = 2;
+        mixer.masterMute = 3;
+        mixer.outputMode = 4;
+        mixer.slave.push_back( MixerItem( 5, 6, 7, 8 ) );
     
         track.getCommon()->version = "DSB301";
         track.getCommon()->name = "foo";
@@ -399,7 +397,7 @@ public:
     
         TextStream stream;
 
-        track.printMetaText( stream, 2400, 0, false, &track.getMaster(), track.getMixer() );
+        track.printMetaText( stream, 2400, 0, false, &master, &mixer );
         string expected =
             "[Common]\n"
             "Version=DSB301\n"

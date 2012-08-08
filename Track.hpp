@@ -36,18 +36,6 @@ protected:
     Common common;// = nil;
 
     /**
-     * @brief マスター情報。Master Track のみが保持する
-     * @todo ここの情報はSequenceクラスに移す
-     */
-    Master master;// = nil;
-
-    /**
-     * @brief ミキサー情報。Master Track のみが保持する
-     * @todo ここの情報はSequenceクラスに移す
-     */
-    Mixer mixer;// = nil;
-
-    /**
      * @brief イベントの一覧
      */
     Event::List events;// = nil;
@@ -801,8 +789,6 @@ public:
         res.setName( getName() );
 
         res.common = common.clone();
-        res.master = master.clone();
-        res.mixer = mixer.clone();
         res.events.clear();
         for( int i = 0; i < events.size(); i++ ){
             Event item = events.get( i );
@@ -855,30 +841,6 @@ public:
      */
     Event::List *getEvents(){
         return &events;
-    }
-
-    /**
-     * @brief ミキシング情報を取得する
-     * @return ミキシング情報のポインタ
-     */
-    Mixer *getMixer(){
-        return &mixer;
-    }
-
-    /**
-     * @brief プリメジャーを取得する
-     * @return プリメジャー値(小節単位)
-     */
-    int getPreMeasure() const{
-        return master.preMeasure;
-    }
-
-    /**
-     * @brief プリメジャー値を設定する
-     * @param preMeasure 設定するプリメジャー値(小節単位)
-     */
-    void setPreMeasure( int preMeasure ){
-        master.preMeasure = preMeasure;
     }
 
     /**
