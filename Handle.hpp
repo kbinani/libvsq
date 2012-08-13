@@ -547,6 +547,14 @@ public:
     }
 
     /**
+     * @brief 歌詞を追加する
+     * @param lyric 追加する歌詞
+     */
+    void addLyric( Lyric lyric ){
+        _lyrics.push_back( lyric );
+    }
+
+    /**
      * @brief 歌詞の個数を返す
      * @return 歌詞の個数
      */

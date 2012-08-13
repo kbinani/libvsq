@@ -654,6 +654,15 @@ public:
         CPPUNIT_ASSERT_EQUAL( handle.program, copy.program );
     }
     
+    void testAddLyric(){
+        Handle handle( HandleType::LYRIC );
+        handle.addLyric( Lyric( "ら", "4 a" ) );
+
+        CPPUNIT_ASSERT_EQUAL( 1, handle.getLyricCount() );
+        CPPUNIT_ASSERT_EQUAL( string( "ら" ), handle.getLyricAt( 0 ).phrase );
+        CPPUNIT_ASSERT_EQUAL( string( "4 a" ), handle.getLyricAt( 0 ).getPhoneticSymbol() );
+    }
+
     CPPUNIT_TEST_SUITE( HandleTest );
     CPPUNIT_TEST( testConstructIconDynamicsHandle );
     CPPUNIT_TEST( testConstructNoteHeadHandle );
@@ -692,6 +701,7 @@ public:
     CPPUNIT_TEST( testCloneNoteHeadHandle );
     CPPUNIT_TEST( testCloneVibratoHandle );
     CPPUNIT_TEST( testCloneSingerHandle );
+    CPPUNIT_TEST( testAddLyric );
     CPPUNIT_TEST_SUITE_END();
 };
 
