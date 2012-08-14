@@ -31,8 +31,7 @@ public:
      */
     void write( Sequence *sequence, OutputStream *stream, int msPreSend, const string &encoding, bool printPitch = false ){
         sequence->updateTotalClocks();
-        //TODO: 型を要検討
-        size_t first_position; //チャンクの先頭のファイル位置
+        int64_t first_position; //チャンクの先頭のファイル位置
 
         // ヘッダ
         // チャンクタイプ
@@ -92,7 +91,7 @@ public:
         stream->write( 0xff );
         stream->write( 0x2f );// イベントタイプEnd of Track
         stream->write( 0x00 );
-        int pos = stream->getPointer();
+        int64_t pos = stream->getPointer();
         stream->seek( first_position - 4 );
         writeUnsignedInt( stream, pos - first_position );
         stream->seek( pos );
@@ -124,7 +123,7 @@ protected:
         // データ長。とりあえず0
         char empty[] = { 0x00, 0x00, 0x00, 0x00 };
         stream->write( empty, 0, 4 );
-        int first_position = stream->getPointer();
+        int64_t first_position = stream->getPointer();
         // トラック名
         MidiEvent::writeDeltaClock( stream, 0x00 );// デルタタイム
         stream->write( 0xff );// ステータスタイプ
@@ -172,7 +171,7 @@ protected:
         stream->write( 0xff );
         stream->write( 0x2f );
         stream->write( 0x00 );
-        int pos = stream->getPointer();
+        int64_t pos = stream->getPointer();
         stream->seek( first_position - 4 );
         writeUnsignedInt( stream, pos - first_position );
         stream->seek( pos );

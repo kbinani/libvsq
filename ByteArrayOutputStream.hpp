@@ -26,7 +26,7 @@ private:
     /**
      * 現在のファイルポインタ
      */
-    int _pointer;
+    int64_t _pointer;
 
     /**
      * @brief 書き込み先のバイト列
@@ -36,12 +36,12 @@ private:
     /**
      * @brief 確保されたバイト列の現在の長さ
      */
-    int _arrayLength;
+    int64_t _arrayLength;
 
     /**
      * @brief 書き込み済みバイト数
      */
-    int _length;
+    int64_t _length;
 
 public:
     /**
@@ -80,7 +80,7 @@ public:
      * @param length (int) 書き込むバイト値の個数
      * @name write<! *2 *>
      */
-    void write( const char *array, int startIndex, int length )
+    void write( const char *array, int64_t startIndex, int64_t length )
     {
         ensureBufferLength( _pointer + length );
         for( int i = 0; i < length; i++ ){
@@ -104,7 +104,7 @@ public:
      * @brief 現在のファイルポインタを取得する
      * @return (int) 現在のファイルポインタ
      */
-    int getPointer()
+    int64_t getPointer()
     {
         return _pointer;
     }
@@ -113,7 +113,7 @@ public:
      * @brief ファイルポインタを指定した位置に変更する
      * @param position (int) 新しいポインタ値
      */
-    void seek( int position ){
+    void seek( int64_t position ){
         _pointer = (position < 0) ? 0 : position;
     }
 
