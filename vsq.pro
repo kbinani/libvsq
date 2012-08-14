@@ -56,7 +56,8 @@ HEADERS += \
     BitConverter.hpp \
     Sequence.hpp \
     VocaloidMidiEventListFactory.hpp \
-    VSQFileWriter.hpp
+    VSQFileWriter.hpp \
+    InputStream.hpp
 
 unix:!symbian {
     maemo5 {
