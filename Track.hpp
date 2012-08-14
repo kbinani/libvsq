@@ -47,7 +47,7 @@ private:
     BPList _pit;
 
     /**
-     * @brief PBS。ピッチベンドセンシティビティ(pitchBendSensBPList)。dfault=2
+     * @brief PBS。ピッチベンドセンシティビティ(pitchBendSensBPList)。default=2
      */
     BPList _pbs;
 
