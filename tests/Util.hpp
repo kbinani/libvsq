@@ -25,7 +25,7 @@ public:
         TestUtil::fixtureRootPath = fixtureRootPath;
     }
 
-    static std::string getFixgtureRootPath(){
+    static std::string getFixtureRootPath(){
         return TestUtil::fixtureRootPath;
     }
 };
