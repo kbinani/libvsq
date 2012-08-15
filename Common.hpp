@@ -91,11 +91,9 @@ public:
             }else if( search == "Color" ){
                 this->color = spl[1];
             }else if( search == "DynamicsMode" ){
-                //TODO: atoiを使わないようにする
-                this->dynamicsMode = (DynamicsMode::DynamicsModeEnum)atoi( spl[1].c_str() );
+                this->dynamicsMode = (DynamicsMode::DynamicsModeEnum)StringUtil::parseInt( spl[1] );
             }else if( search == "PlayMode" ){
-                //TODO: atoiを使わないようにする
-                this->playMode = (PlayMode::PlayModeEnum)atoi( spl[1].c_str() );
+                this->playMode = (PlayMode::PlayModeEnum)StringUtil::parseInt( spl[1] );
             }
             if( !stream.ready() ){
                 break;
@@ -127,13 +125,12 @@ public:
     /**
      * @brief コピーを作成する
      * @return このインスタンスのコピー
-     * @todo atoi使わないように
      */
     Common clone() const{
         std::vector<std::string> spl = StringUtil::explode( ",", this->color );
-        int r = atoi( spl[0].c_str() );
-        int g = atoi( spl[1].c_str() );
-        int b = atoi( spl[2].c_str() );
+        int r = StringUtil::parseInt( spl[0] );
+        int g = StringUtil::parseInt( spl[1] );
+        int b = StringUtil::parseInt( spl[2] );
         Common result( this->name, r, g, b, this->dynamicsMode, this->playMode );
         result.version = this->version;
         result._lastPlayMode = this->_lastPlayMode;
