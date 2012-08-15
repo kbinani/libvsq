@@ -11,9 +11,24 @@ public:
         CPPUNIT_ASSERT_EQUAL( (int64_t)0, stream.getPointer() );
         CPPUNIT_ASSERT_EQUAL( 0x00, stream.read() );
         CPPUNIT_ASSERT_EQUAL( (int64_t)1, stream.getPointer() );
+        stream.seek( 0x05 );
+        CPPUNIT_ASSERT_EQUAL( 0x05, stream.read() );
+        CPPUNIT_ASSERT_EQUAL( (int64_t)0x06, stream.getPointer() );
+
         stream.seek( 0x10 );
-        CPPUNIT_ASSERT_EQUAL( 0x10, stream.read() );
-        CPPUNIT_ASSERT_EQUAL( (int64_t)0x11, stream.getPointer() );
+        char buffer[10] = { 0 };
+        stream.read( buffer, 5, 5 );
+        CPPUNIT_ASSERT_EQUAL( (char)0, buffer[0] );
+        CPPUNIT_ASSERT_EQUAL( (char)0, buffer[1] );
+        CPPUNIT_ASSERT_EQUAL( (char)0, buffer[2] );
+        CPPUNIT_ASSERT_EQUAL( (char)0, buffer[3] );
+        CPPUNIT_ASSERT_EQUAL( (char)0, buffer[4] );
+        CPPUNIT_ASSERT_EQUAL( (char)0x10, buffer[5] );
+        CPPUNIT_ASSERT_EQUAL( (char)0x11, buffer[6] );
+        CPPUNIT_ASSERT_EQUAL( (char)0x12, buffer[7] );
+        CPPUNIT_ASSERT_EQUAL( (char)0x13, buffer[8] );
+        CPPUNIT_ASSERT_EQUAL( (char)0x14, buffer[9] );
+
         stream.close();
     }
 

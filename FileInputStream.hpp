@@ -16,7 +16,7 @@
 
 #include "vsqglobal.hpp"
 #include "InputStream.hpp"
-#include <stdio.h>
+#include <fstream>
 #include <string>
 
 VSQ_BEGIN_NAMESPACE
@@ -26,11 +26,12 @@ VSQ_BEGIN_NAMESPACE
  */
 class FileInputStream : public InputStream{
 private:
-    FILE *fileHandle;
+    std::ifstream stream;
 
 public:
-    explicit FileInputStream( const std::string &filePath ){
-        fileHandle = fopen( filePath.c_str(), "rb" );
+    explicit FileInputStream( const std::string &filePath )
+        : stream( filePath.c_str(), std::ios::binary )
+    {
     }
 
     /**
@@ -38,7 +39,7 @@ public:
      * @return 読み込んだバイト値
      */
     int read(){
-        return fgetc( fileHandle );
+        return stream.get();
     }
 
     /**
@@ -48,7 +49,7 @@ public:
      * @param length 読み込む長さ
      */
     void read( char *buffer, int64_t startIndex, int64_t length ){
-        fread( buffer + sizeof( char ) * startIndex, sizeof( char ), length, fileHandle );
+        stream.get( buffer + sizeof( char ) * startIndex, length + 1 );
     }
 
     /**
@@ -56,8 +57,7 @@ public:
      * @param position ファイルポインター
      */
     void seek( int64_t position ){
-        fpos_t pos = position;
-        fsetpos( fileHandle, &pos );
+        stream.seekg( position );
     }
 
     /**
@@ -65,17 +65,14 @@ public:
      * @return ファイルポインター
      */
     int64_t getPointer(){
-        fpos_t result;
-        fgetpos( fileHandle, &result );
-        return (int64_t)result;
+        return (int64_t)stream.tellg();
     }
 
     /**
      * @brief ストリームを閉じる
      */
     void close(){
-        fclose( fileHandle );
-        fileHandle = 0;
+        stream.close();
     }
 };
 
