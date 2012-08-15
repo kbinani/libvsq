@@ -279,7 +279,7 @@ public:
      * @return (Lyric) このインスタンスのコピー
      */
     Lyric clone() const{
-        Lyric result( "あ", "a" );
+        Lyric result( "", "" );
         result.phrase = phrase;
 
         result._phoneticSymbol.clear();
