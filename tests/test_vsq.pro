@@ -59,7 +59,8 @@ SOURCES += \
     BitConverterTest.cpp \
     SequenceTest.cpp \
     VocaloidMidiEventListFactoryTest.cpp \
-    VSQFileWriterTest.cpp
+    VSQFileWriterTest.cpp \
+    FileInputStreamTest.cpp
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
