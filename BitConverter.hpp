@@ -39,6 +39,18 @@ public:
         result.push_back( ((0x000000ff & value)) & 0xff );
         return result;
     }
+
+    /**
+     * @brief 4 バイトのデータを big endian とみなし、uint32 の整数値を取得する
+     * @param bytes 変換元のデータ
+     * @return 変換後の整数値
+     */
+    static uint32_t makeUInt32BE( char bytes[4] ){
+        return (0xff000000 & (bytes[0] << 24)) |
+               (0x00ff0000 & (bytes[1] << 16)) |
+               (0x0000ff00 & (bytes[2] << 8)) |
+               (0x000000ff & bytes[3]);
+    }
 };
 
 VSQ_END_NAMESPACE
