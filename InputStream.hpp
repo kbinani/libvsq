@@ -26,7 +26,7 @@ class InputStream{
 public:
     /**
      * @brief 1 バイトを読み込む
-     * @return 読み込んだバイト値
+     * @return 読み込んだバイト値。ストリームの末尾に達した場合は負の値を返す
      */
     virtual int read() = 0;
 
@@ -35,8 +35,9 @@ public:
      * @param buffer 読み込んだデータを格納するバッファー
      * @param startIndex 読み込んだデータを格納するオフセット
      * @param length 読み込む長さ
+     * @return 読み込んだ長さ
      */
-    virtual void read( char *buffer, int64_t startIndex, int64_t length ) = 0;
+    virtual int read( char *buffer, int64_t startIndex, int64_t length ) = 0;
 
     /**
      * @brief ファイルポインターを移動する

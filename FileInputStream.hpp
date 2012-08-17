@@ -39,7 +39,12 @@ public:
      * @return 読み込んだバイト値
      */
     int read(){
-        return stream.get();
+        int result = stream.get();
+        if( stream.eof() ){
+            return -1;
+        }else{
+            return result;
+        }
     }
 
     /**
@@ -48,8 +53,8 @@ public:
      * @param startIndex 読み込んだデータを格納するオフセット
      * @param length 読み込む長さ
      */
-    void read( char *buffer, int64_t startIndex, int64_t length ){
-        stream.get( buffer + sizeof( char ) * startIndex, length + 1 );
+    int read( char *buffer, int64_t startIndex, int64_t length ){
+        return stream.read( buffer + sizeof( char ) * startIndex, length + 1 ).gcount();
     }
 
     /**
@@ -57,6 +62,7 @@ public:
      * @param position ファイルポインター
      */
     void seek( int64_t position ){
+        stream.clear();
         stream.seekg( position );
     }
 

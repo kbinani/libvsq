@@ -29,6 +29,15 @@ public:
         CPPUNIT_ASSERT_EQUAL( (char)0x13, buffer[8] );
         CPPUNIT_ASSERT_EQUAL( (char)0x14, buffer[9] );
 
+        stream.seek( 0x2F );
+        int readCount = stream.read( buffer, 0, 2 );
+        CPPUNIT_ASSERT_EQUAL( (char)0x2F, buffer[0] );
+        CPPUNIT_ASSERT_EQUAL( 1, readCount );
+
+        stream.seek( 0x2F );
+        CPPUNIT_ASSERT_EQUAL( 0x2F, stream.read() );
+        CPPUNIT_ASSERT( stream.read() < 0 );
+
         stream.close();
     }
 
