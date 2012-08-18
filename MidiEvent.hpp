@@ -5,6 +5,7 @@
 #include <vector>
 #include "vsqglobal.hpp"
 #include "OutputStream.hpp"
+#include "InputStream.hpp"
 
 using namespace std;
 
@@ -201,23 +202,25 @@ public:
     }
 
     /**
-     * @param stream [ByteArrayInputStream]
-     * @return [long]
-    MidiEvent.readDeltaClock = function( stream ){
-        local ret = 0; // [long]
-        while ( true ) {
-            local i = stream.read();
+     * @brief ストリームから、delta clock を読み込む
+     * @param stream 読み込み元のストリーム
+     * @return delta clock
+     */
+    static tick_t readDeltaClock( InputStream *stream ){
+        tick_t ret = 0;
+        while( 1 ){
+            int i = stream->read();
             if( i < 0 ){
                 break;
             }
-            local d = i; // [byte]
-            ret = (ret << 7) | (d & 0x7f);
+            int d = i;
+            ret = (0xFFFFFFFFFFFFFF80 & (ret << 7)) | (d & 0x7f);
             if( (d & 0x80) == 0x00 ){
                 break;
             }
         }
         return ret;
-    }*/
+    }
 
     /**
      * @param stream [ByteArrayInputStream]

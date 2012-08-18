@@ -5,6 +5,49 @@
 using namespace std;
 using namespace VSQ_NS;
 
+class MemoryInputStream : public InputStream{
+private:
+    char *data;
+    int length;
+    int pointer;
+
+public:
+    explicit MemoryInputStream( char *data, int length ){
+        this->data = data;
+        this->length = length;
+        this->pointer = 0;
+    }
+
+    int read(){
+        if( 0 <= pointer && pointer < length ){
+            return 0xFF & data[this->pointer++];
+        }else{
+            return -1;
+        }
+    }
+
+    int read( char *buffer, int64_t startIndex, int64_t length ){
+        int c;
+        int i = 0;
+        while( (c = read()) < 0 && i < length ){
+            buffer[startIndex + i] = c;
+            i++;
+        }
+    }
+
+    void close(){
+        length = 0;
+    }
+
+    int64_t getPointer(){
+        return pointer;
+    }
+
+    void seek( int64_t pointer ){
+        this->pointer = pointer;
+    }
+};
+
 class MidiEventTest : public CppUnit::TestCase
 {
 public:
@@ -151,10 +194,22 @@ public:
         expected[3] = 0x4e;
         CPPUNIT_ASSERT_EQUAL( expected, stream.toString() );
     }
-    
-    void testReadDeltaClock()
-    {
-        //TODO:
+
+    void testReadDeltaClock(){
+        // 空のストリームが渡された場合
+        char emptyData[] = {};
+        MemoryInputStream emptyStream( emptyData, 0 );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)0, MidiEvent::readDeltaClock( &emptyStream ) );
+
+        // 2バイト読み込む場合
+        char data[] = { 0x81, 0x00 };
+        MemoryInputStream stream( data, 2 );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)128, MidiEvent::readDeltaClock( &stream ) );
+
+        // 読み込みの途中でEOFとなる場合
+        char data2[] = { 0x81 };
+        MemoryInputStream stream2( data2, 1 );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)0x1, MidiEvent::readDeltaClock( &stream2 ) );
     }
     
     void testRead()
