@@ -212,9 +212,136 @@ public:
         CPPUNIT_ASSERT_EQUAL( (tick_t)0x1, MidiEvent::readDeltaClock( &stream2 ) );
     }
     
-    void testRead()
-    {
-        //TODO:
+    void testRead(){
+        {
+            // データ部が3byteの場合(note off)
+            char data[] = { 0x00, 0x81, 0x01, 0x02 };
+            MemoryInputStream stream( data, 4 );
+            tick_t lastClock = 10;
+            uint8_t lastStatus = 0;
+            MidiEvent event = MidiEvent::read( (InputStream *)&stream, lastClock, lastStatus );
+            CPPUNIT_ASSERT_EQUAL( (tick_t)10, lastClock );
+            CPPUNIT_ASSERT_EQUAL( (uint8_t)0x81, lastStatus );
+            CPPUNIT_ASSERT_EQUAL( (tick_t)10, event.clock );
+            CPPUNIT_ASSERT_EQUAL( 0x81, event.firstByte );
+            CPPUNIT_ASSERT_EQUAL( (size_t)2, event.data.size() );
+            CPPUNIT_ASSERT_EQUAL( 0x01, event.data[0] );
+            CPPUNIT_ASSERT_EQUAL( 0x02, event.data[1] );
+        }
+
+        {
+            // データ部が3byteの場合(note off, ランニングステータスが適用されるパターン)
+            char data[] = { 0x00, 0x03, 0x04 };
+            MemoryInputStream stream( data, 3 );
+            tick_t lastClock = 11;
+            uint8_t lastStatus = 0x81;
+            MidiEvent event = MidiEvent::read( (InputStream *)&stream, lastClock, lastStatus );
+            CPPUNIT_ASSERT_EQUAL( (tick_t)11, lastClock );
+            CPPUNIT_ASSERT_EQUAL( (uint8_t)0x81, lastStatus );
+            CPPUNIT_ASSERT_EQUAL( (tick_t)11, event.clock );
+            CPPUNIT_ASSERT_EQUAL( 0x81, event.firstByte );
+            CPPUNIT_ASSERT_EQUAL( (size_t)2, event.data.size() );
+            CPPUNIT_ASSERT_EQUAL( 0x03, event.data[0] );
+            CPPUNIT_ASSERT_EQUAL( 0x04, event.data[1] );
+        }
+
+        {
+            // データ部が2byteの場合
+            char data[] = { 0x01, 0xF3, 0x05 };
+            MemoryInputStream stream( data, 3 );
+            tick_t lastClock = 12;
+            uint8_t lastStatus = 0;
+            MidiEvent event = MidiEvent::read( (InputStream *)&stream, lastClock, lastStatus );
+            CPPUNIT_ASSERT_EQUAL( (tick_t)13, lastClock );
+            CPPUNIT_ASSERT_EQUAL( (uint8_t)0xF3, lastStatus );
+            CPPUNIT_ASSERT_EQUAL( (tick_t)13, event.clock );
+            CPPUNIT_ASSERT_EQUAL( 0xF3, event.firstByte );
+            CPPUNIT_ASSERT_EQUAL( (size_t)1, event.data.size() );
+            CPPUNIT_ASSERT_EQUAL( 0x05, event.data[0] );
+        }
+
+        {
+            // データ部が1byteの場合
+            char data[] = { 0x02, 0xF6 };
+            MemoryInputStream stream( data, 2 );
+            tick_t lastClock = 13;
+            uint8_t lastStatus = 0;
+            MidiEvent event = MidiEvent::read( (InputStream *)&stream, lastClock, lastStatus );
+            CPPUNIT_ASSERT_EQUAL( (tick_t)15, lastClock );
+            CPPUNIT_ASSERT_EQUAL( (uint8_t)0xF6, lastStatus );
+            CPPUNIT_ASSERT_EQUAL( (tick_t)15, event.clock );
+            CPPUNIT_ASSERT_EQUAL( 0xF6, event.firstByte );
+            CPPUNIT_ASSERT_EQUAL( (size_t)0, event.data.size() );
+        }
+
+        {
+            // メタイベントの場合
+            char data[] = { 0x03, 0xFF, 0x06, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05 };
+            MemoryInputStream stream( data, 9 );
+            tick_t lastClock = 14;
+            uint8_t lastStatus = 0;
+            MidiEvent event = MidiEvent::read( (InputStream *)&stream, lastClock, lastStatus );
+            CPPUNIT_ASSERT_EQUAL( (tick_t)17, lastClock );
+            CPPUNIT_ASSERT_EQUAL( (uint8_t)0xFF, lastStatus );
+            CPPUNIT_ASSERT_EQUAL( (tick_t)17, event.clock );
+            CPPUNIT_ASSERT_EQUAL( 0xFF, event.firstByte );
+            CPPUNIT_ASSERT_EQUAL( (size_t)6, event.data.size() );
+            CPPUNIT_ASSERT_EQUAL( 0x06, event.data[0] );
+            CPPUNIT_ASSERT_EQUAL( 0x01, event.data[1] );
+            CPPUNIT_ASSERT_EQUAL( 0x02, event.data[2] );
+            CPPUNIT_ASSERT_EQUAL( 0x03, event.data[3] );
+            CPPUNIT_ASSERT_EQUAL( 0x04, event.data[4] );
+            CPPUNIT_ASSERT_EQUAL( 0x05, event.data[5] );
+        }
+
+        {
+            // f0ステータスのSysEx
+            char data[] = { 0x04, 0xF0, 0x03, 0xF0, 0x06, 0x07, 0xF7 };
+            MemoryInputStream stream( data, 7 );
+            tick_t lastClock = 0;
+            uint8_t lastStatus = 0;
+            MidiEvent event = MidiEvent::read( (InputStream *)&stream, lastClock, lastStatus );
+            CPPUNIT_ASSERT_EQUAL( (tick_t)0x04, lastClock );
+            CPPUNIT_ASSERT_EQUAL( (uint8_t)0xF0, lastStatus );
+            CPPUNIT_ASSERT_EQUAL( (tick_t)0x04, event.clock );
+            CPPUNIT_ASSERT_EQUAL( 0xF0, event.firstByte );
+            CPPUNIT_ASSERT_EQUAL( (size_t)4, event.data.size() );
+            CPPUNIT_ASSERT_EQUAL( 0xF0, event.data[0] );
+            CPPUNIT_ASSERT_EQUAL( 0x06, event.data[1] );
+            CPPUNIT_ASSERT_EQUAL( 0x07, event.data[2] );
+            CPPUNIT_ASSERT_EQUAL( 0xF7, event.data[3] );
+        }
+
+        {
+            // f7ステータスのSysEx
+            char data[] = { 0x05, 0xF7, 0x03, 0x08, 0x09, 0x0A };
+            MemoryInputStream stream( data, 6 );
+            tick_t lastClock = 1440;
+            uint8_t lastStatus = 0x81;
+            MidiEvent event = MidiEvent::read( (InputStream *)&stream, lastClock, lastStatus );
+            CPPUNIT_ASSERT_EQUAL( (tick_t)1445, lastClock );
+            CPPUNIT_ASSERT_EQUAL( (uint8_t)0xF7, lastStatus );
+            CPPUNIT_ASSERT_EQUAL( (tick_t)1445, event.clock );
+            CPPUNIT_ASSERT_EQUAL( 0xF7, event.firstByte );
+            CPPUNIT_ASSERT_EQUAL( (size_t)3, event.data.size() );
+            CPPUNIT_ASSERT_EQUAL( 0x08, event.data[0] );
+            CPPUNIT_ASSERT_EQUAL( 0x09, event.data[1] );
+            CPPUNIT_ASSERT_EQUAL( 0x0A, event.data[2] );
+        }
+
+        {
+            // 処理できないMIDIイベント
+            char data[] = { 0x01, 0xF4 };
+            MemoryInputStream stream( data, 2 );
+            tick_t lastClock = 0;
+            uint8_t lastStatus = 0;
+            try{
+                MidiEvent::read( (InputStream *)&stream, lastClock, lastStatus );
+                CPPUNIT_FAIL( "期待した例外がスローされない" );
+            }catch( MidiEvent::ParseException e ){
+                CPPUNIT_ASSERT_EQUAL( string( "don't know how to process first_byte: 0xF4" ), e.getMessage() );
+            }
+        }
     }
 
     CPPUNIT_TEST_SUITE( MidiEventTest );
