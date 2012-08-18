@@ -19,6 +19,7 @@
 #include <sstream>
 #include <cstdlib>
 #include <algorithm>
+#include <iomanip>
 
 using namespace std;
 
@@ -93,9 +94,9 @@ public:
      * @param value 変換する数値
      * @return 変換後の文字列
      */
-    static std::string toString( int value ){
+    static std::string toString( int value, int baseNumber = 10 ){
         ostringstream oss;
-        oss << value;
+        oss << uppercase << setbase( baseNumber ) << value;
         return oss.str();
     }
 

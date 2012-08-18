@@ -57,8 +57,8 @@ public:
     }
 
     void testToString(){
-        std::string actual = StringUtil::toString( 10 );
-        CPPUNIT_ASSERT_EQUAL( string( "10" ), actual );
+        CPPUNIT_ASSERT_EQUAL( string( "10" ), StringUtil::toString( 10 ) );
+        CPPUNIT_ASSERT_EQUAL( string( "1A" ), StringUtil::toString( 0x1A, 16 ) );
     }
 
     void testToLower(){
