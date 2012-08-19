@@ -54,7 +54,7 @@ public:
      * @param length 読み込む長さ
      */
     int read( char *buffer, int64_t startIndex, int64_t length ){
-        return stream.read( buffer + sizeof( char ) * startIndex, length + 1 ).gcount();
+        return stream.read( buffer + sizeof( char ) * startIndex, length ).gcount();
     }
 
     /**
