@@ -1,5 +1,7 @@
 #include "Util.hpp"
 #include "../CP932Converter.hpp"
+#include <fstream> //TODO:for debug
+#include <time.h>//TODO:for debug
 
 using namespace std;
 using namespace VSQ_NS;
@@ -27,7 +29,7 @@ public:
         CPPUNIT_ASSERT_EQUAL( expected.str(), actual );
     }
 
-    void testConvertToCP932(){
+    void testConvertToUTF8(){
         ostringstream fixture;
         fixture << (char)0x61 << (char)0x82 << (char)0xA0 << "\t\n";
         string actual = CP932Converter::convertToUTF8( fixture.str() );
@@ -166,7 +168,7 @@ public:
 
     CPPUNIT_TEST_SUITE( CP932ConverterTest );
     CPPUNIT_TEST( testConvertFromUTF8 );
-    CPPUNIT_TEST( testConvertToCP932 );
+    CPPUNIT_TEST( testConvertToUTF8 );
     CPPUNIT_TEST( test_getUnicodeBytesFromUTF8Bytes );
     CPPUNIT_TEST_SUITE_END();
 };
