@@ -58,7 +58,8 @@ HEADERS += \
     VocaloidMidiEventListFactory.hpp \
     VSQFileWriter.hpp \
     InputStream.hpp \
-    FileInputStream.hpp
+    FileInputStream.hpp \
+    SMFReader.hpp
 
 unix:!symbian {
     maemo5 {

@@ -60,7 +60,8 @@ SOURCES += \
     SequenceTest.cpp \
     VocaloidMidiEventListFactoryTest.cpp \
     VSQFileWriterTest.cpp \
-    FileInputStreamTest.cpp
+    FileInputStreamTest.cpp \
+    SMFReaderTest.cpp
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
