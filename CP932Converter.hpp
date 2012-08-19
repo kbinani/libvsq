@@ -64,6 +64,54 @@ public:
         return result.str();
     }
 
+    /**
+     * @brief CP932のバイト列をUTF8の文字列に変換します
+     * @param cp932 変換する CP932 のバイト列
+     * @return 変換後の UTF8 文字列
+     */
+    static string convertToUTF8( const string &cp932 ){
+        static int _unicode_to_cp932[256][256][2];
+        static int initialized = 0;
+        if( initialized == 0 ){
+            initializeUnicodeToCp932Dictionary( _unicode_to_cp932 );
+            initialized = 1;
+        }
+        vector<char> result;
+        int i = 0;
+        int length = cp932.size();
+        while( i < length ){
+            int b1 = 0xFF & cp932[i];
+            int b2 = 0;
+            if( i + 1 < length ) b2 = 0xFF & cp932[i + 1];
+            bool found = false;
+            for( int firstByte = 0; firstByte < 256; firstByte++ ){
+                for( int secondByte = 0; secondByte < 256; secondByte++ ){
+                    if( _unicode_to_cp932[firstByte][secondByte][0] == b1 &&
+                       (_unicode_to_cp932[firstByte][secondByte][1] == 0 || _unicode_to_cp932[firstByte][secondByte][1] == b2) )
+                    {
+                        if( 0 == firstByte ){
+                            result.push_back( (char)secondByte );
+                            i++;
+                        }else{
+                            char c1 = 0xE0 | (0xFF & (firstByte >> 4));
+                            char c2 = 0x80 | (0x3C & (firstByte << 2)) | (0xFF & (secondByte >> 6));
+                            char c3 = 0x80 | (0x3F & secondByte);
+                            result.push_back( c1 );
+                            result.push_back( c2 );
+                            result.push_back( c3 );
+                            i += 2;
+                        }
+                        found = true;
+                        break;
+                    }
+                }
+                if( found ) break;
+            }
+            if( ! found ) i++;
+        }
+        return string( result.data() );
+    }
+
 protected:
     /**
      * @brief UTF8 の文字列を unicode のバイト列に変換する
@@ -173,14 +221,6 @@ protected:
             return result;
         }
     }
-
-    //TODO: convertToUTF8未実装
-    /*
-        --
-        -- CP932のバイト列をUTF8の文字列に変換します
-        function CP932Converter.convertToUTF8( byte_array )
-        end
-    */
 
     /**
      * @brief Unicode から CP932 への変換テーブルを初期化する
