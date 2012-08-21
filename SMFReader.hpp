@@ -35,11 +35,12 @@ public:
 
     /**
      * @brief ストリームから、SMF を読み込む
-     * @param stream 読み込むストリーム
-     * @param dest 読み込んだ MIDI イベントのリスト。MIDI イベントは、トラックごとに格納される
-     * @todo m_events を dest に変える
+     * @param [in] stream 読み込むストリーム
+     * @param [out] dest 読み込んだ MIDI イベントのリスト。MIDI イベントは、トラックごとに格納される
+     * @param [out] format SMF のフォーマット
+     * @param [out] timeFormat 時間分解能
      */
-    void read( InputStream *stream, vector<vector<MidiEvent> > &m_events ){
+    void read( InputStream *stream, vector<vector<MidiEvent> > &dest, int &format, int &timeFormat ){
         // ヘッダ
         char byte4[4] = { 0 };
         stream->read( byte4, 0, 4 );
@@ -49,11 +50,10 @@ public:
 
         // データ長
         stream->read( byte4, 0, 4 );
-        long length = BitConverter::makeUInt32BE( byte4 );
 
         // フォーマット
         stream->read( byte4, 0, 2 );
-        int m_format = BitConverter::makeUInt16BE( byte4 );
+        format = BitConverter::makeUInt16BE( byte4 );
 
         // トラック数
         stream->read( byte4, 0, 2 );
@@ -61,12 +61,12 @@ public:
 
         // 時間分解能
         stream->read( byte4, 0, 2 );
-        int m_time_format = BitConverter::makeUInt16BE( byte4 );
+        timeFormat = BitConverter::makeUInt16BE( byte4 );
 
         // 各トラックを読込み
-        m_events.clear();
+        dest.clear();
         for( int track = 0; track < tracks; track++ ){
-            m_events.push_back( vector<MidiEvent>() );
+            dest.push_back( vector<MidiEvent>() );
 
             // ヘッダー
             stream->read( byte4, 0, 4 );
@@ -84,7 +84,7 @@ public:
             uint8_t last_status_byte = 0x00;
             while( stream->getPointer() < startpos + size ){
                 MidiEvent mi = MidiEvent::read( stream, clock, last_status_byte );
-                m_events[track].push_back( mi );
+                dest[track].push_back( mi );
             }
         }
     }
