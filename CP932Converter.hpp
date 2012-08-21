@@ -69,14 +69,14 @@ public:
      * @param cp932 変換する CP932 のバイト列
      * @return 変換後の UTF8 文字列
      */
-    static string convertToUTF8( const string &cp932 ){
+    static std::string convertToUTF8( const std::string &cp932 ){
         static int dict[0xFFFF];
         static int initialized = 0;
         if( initialized == 0 ){
             initializeCP932ToUTF8Dictionary( dict );
             initialized = 1;
         }
-        vector<char> result;
+        std::ostringstream result;
         int i = 0;
         int length = cp932.size();
         while( i < length ){
@@ -84,20 +84,20 @@ public:
             int b2 = 0;
             if( i + 1 < length ) b2 = 0xFF & cp932[i + 1];
             int b1b2 = (0xFF00 & (b1 << 8)) | (0xFF & b2);
-            if( dict[b1] != 0 ){
-                result.push_back( (char)dict[b1] );
+            int value;
+            if( (value = dict[b1]) != 0 ){
+                result << (char)value;
                 i++;
-            }else if( dict[b1b2] != 0 ){
-                int value = dict[b1b2];
-                result.push_back( (char)(0xFF & (value >> 16)) );
-                result.push_back( (char)(0xFF & (value >> 8)) );
-                result.push_back( (char)(0xFF & value) );
+            }else if( (value = dict[b1b2]) != 0 ){
+                result << (char)(0xFF & (value >> 16));
+                result << (char)(0xFF & (value >> 8));
+                result << (char)(0xFF & value);
                 i += 2;
             }else{
                 i++;
             }
         }
-        return string( result.data() );
+        return result.str();
     }
 
 protected:
