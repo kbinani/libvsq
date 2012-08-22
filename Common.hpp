@@ -81,7 +81,7 @@ public:
         this->dynamicsMode = DynamicsMode::STANDARD;
         this->playMode = PlayMode::PLAY_WITH_SYNTH;
         lastLine = stream.readLine();
-        while( lastLine.substr( 1, 1 ) != "[" ){
+        while( lastLine.find( "[" ) != 0 ){
             std::vector<std::string> spl = StringUtil::explode( "=", lastLine );
             std::string search = spl[0];
             if( search == "Version" ){

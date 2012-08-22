@@ -13,6 +13,8 @@ public:
         stream.writeLine( "Color=1,2,3" );
         stream.writeLine( "DynamicsMode=1" );
         stream.writeLine( "PlayMode=1" );
+        stream.writeLine( "[Foo]" );
+        stream.writeLine( "foo=bar" );
         stream.setPointer( -1 );
         string lastLine = "";
         Common common( stream, lastLine );
@@ -21,6 +23,7 @@ public:
         CPPUNIT_ASSERT_EQUAL( string( "1,2,3" ), common.color );
         CPPUNIT_ASSERT_EQUAL( DynamicsMode::EXPERT, common.dynamicsMode );
         CPPUNIT_ASSERT_EQUAL( PlayMode::PLAY_WITH_SYNTH, common.playMode );
+        CPPUNIT_ASSERT_EQUAL( string( "[Foo]" ), lastLine );
     }
 
     void constructFromArguments(){
