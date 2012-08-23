@@ -98,8 +98,8 @@ public:
                         work = StringUtil::replace( work, "\"\"", "\"" ); // "は""として保存される
                         if( work.find( search ) == 0 && work.find_last_of( search ) == (work.size() - search.size()) ){
                             int l = work.size();
-                            if( l > 2 ){
-                                phrase = work.substr( 0, l - 3 );
+                            if( l > search.size() * 2 ){
+                                phrase = work.substr( search.size(), l - search.size() * 2 );
                             }else{
                                 phrase = "a";
                             }
@@ -112,8 +112,8 @@ public:
                         string symbols = "";
                         if( (work.find( search ) == 0) && (work.find_last_of( search ) == (work.size() - search.size())) ){
                             int l = work.size();
-                            if( l > 2 ){
-                                symbols = work.substr( 0, l - 3 );
+                            if( l > search.size() * 2 ){
+                                symbols = work.substr( search.size(), l - search.size() * 2 );
                             }else{
                                 symbols = "a";
                             }
