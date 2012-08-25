@@ -59,7 +59,8 @@ HEADERS += \
     VSQFileWriter.hpp \
     InputStream.hpp \
     FileInputStream.hpp \
-    SMFReader.hpp
+    SMFReader.hpp \
+    VSQFileReader.hpp
 
 unix:!symbian {
     maemo5 {

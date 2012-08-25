@@ -61,7 +61,8 @@ SOURCES += \
     VocaloidMidiEventListFactoryTest.cpp \
     VSQFileWriterTest.cpp \
     FileInputStreamTest.cpp \
-    SMFReaderTest.cpp
+    SMFReaderTest.cpp \
+    VSQFileReaderTest.cpp
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 

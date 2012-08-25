@@ -31,6 +31,7 @@ VSQ_BEGIN_NAMESPACE
  */
 class Event
 {
+    friend class VSQFileReader; //TODO:Track::Track(TextStream &, ...)の機能がVSQFIleREaderに移動したら、ここは不要になるので消す
 public:
     class ListIterator;
 
@@ -526,6 +527,8 @@ public:
 protected:
     /**
      * @brief
+     * @todo iconHandleIndexに名前を変える
+     * @todo _〜Indexというprotectedフィールドは、すべてメタテキストのparse時にしか使わないので、VSQFileReaderでうまいことやる
      */
     int _singerHandleIndex;
 
@@ -607,6 +610,8 @@ public:
      * @param sr [TextStream] 読み込み対象
      * @param value [int]
      * @param last_line [ByRef<string>] 読み込んだ最後の行が返されます
+     * @todo この機能はVSQFileReaderに移す
+     * @todo boost::lexical_cast使っている箇所はStringUtil使うようにする
      */
     explicit Event( TextStream &sr, int value, std::string &lastLine ){
         init();

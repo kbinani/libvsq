@@ -21,6 +21,8 @@
 #include "Mixer.hpp"
 #include "BPList.hpp"
 #include "EventListIndexIterator.hpp"
+#include "MidiEvent.hpp"
+#include "CP932Converter.hpp"
 
 VSQ_BEGIN_NAMESPACE
 
@@ -160,92 +162,6 @@ public:
     explicit Track( std::string name, std::string singer ){
         this->_initCor( name, singer );
     }
-
-    /**
-        -- @param midi_event [Array<MidiEvent>]
-        -- @param encoding [string]
-        function this:_init_2b( midi_event, encoding )
-            local track_name = "";
-
-            local sw = nil;
-            sw = TextStream.new();
-            local count = #midi_event;
-            local buffer = Array.new(); -- Vector<Integer>();
-            local i;
-            for i = 0; i < count; i++
-                local item = midi_event[i];
-                if( item.firstByte == 0xff and #item.data > 0 ){
-                    -- meta textを抽出
-                    local type = item.data[0];
-                    if( type == 0x01 or type == 0x03 ){
-                        if( type == 0x01 ){
-                            local colon_count = 0;
-                            local j;
-                            for j = 0; j < #item.data - 1; j++
-                                local d = item.data[j + 1];
-                                if( d == 0x3a ){
-                                    colon_count++;
-                                    if( colon_count <= 2 ){
-                                        continue;
-                                    }
-                                }
-                                if( colon_count < 2 ){
-                                    continue;
-                                }
-                                buffer.push( d );
-                            }
-
-                            local index_0x0a = org.kbinani.PortUtil.arrayIndexOf( buffer, 0x0a );
-                            while( index_0x0a >= 0 )do
-                                local cpy = Array.new( index_0x0a );
-                                local j;
-                                for j = 0; j < index_0x0a; j++
-                                    cpy[j] = 0xff & buffer[0];
-                                    buffer.shift();
-                                }
-
-                                local line = org.kbinani.Cp932.convertToUTF8( cpy );
---alert( "VsqTrack#_init_2b; line=" + line );
-                                sw:writeLine( line );
-                                buffer.shift();
-                                index_0x0a = org.kbinani.PortUtil.arrayIndexOf( buffer, 0x0a );
-                            }
-                        else
-                            local j;
-                            for j = 0; j < #item.data - 1; j++
-                                buffer.push( item.data[j + 1] );
-                            }
-                            local c = #buffer;
-                            local d = Array.new( c );
-                            local j;
-                            for j = 0; j < c; j++
-                                d[j] = 0xff & buffer[j];
-                            }
-                            track_name = org.kbinani.Cp932.convertToUTF8( d );
-                            buffer.splice( 0, #buffer );
-                        }
-                    }
-                else
-                    continue;
-                }
-            }
-
-            local remain = #buffer;
-            if( remain > 0 ){
-                local cpy = Array.new( remain );
-                local j;
-                for j = 0; j < remain; j++
-                    cpy[j] = 0xff & buffer[j];
-                }
-                local line = org.kbinani.Cp932.convertToUTF8( cpy );
-                sw:writeLine( line );
-            }
-
-            sw:setPointer( -1 );
-            self.MetaText = MetaText.new( sw );
-            self.setName( track_name );
-        }
-*/
 
     /**
      * @brief トラックの名前を取得する
@@ -514,6 +430,7 @@ public:
      * @param printPitch pitch を含めて出力するかどうか(現在は <code>false</code> 固定で、引数は無視される)
      * @param master 出力する Master 情報。出力しない場合は NULL を指定する
      * @param mixer 出力する Mixer 情報。出力しない場合は NULL を指定する
+     * @todo VSQFileWriterに移動
      */
     void printMetaText( TextStream &stream, int eos, tick_t start, bool printPitch = false, Master *master = 0, Mixer *mixer = 0 ){
         //TODO: commonの型を Common* にする
