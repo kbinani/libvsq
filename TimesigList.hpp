@@ -48,15 +48,7 @@ public:
     }
 
     ~TimesigList(){
-        if( this->list ){
-            this->listSize = 0;
-            for( int i = 0; i < this->listSize; i++ ){
-                Timesig *item = this->list[i];
-                delete item;
-            }
-            free( this->list );
-            this->list = NULL;
-        }
+        clear();
     }
 
     /**
@@ -198,6 +190,21 @@ public:
         int initBarCount = item->barCount;
         int clockPerBar = numerator * 480 * 4 / denominator;
         return initClock + (barCount - initBarCount) * clockPerBar;
+    }
+
+    /**
+     * @brief リストをクリアする
+     */
+    void clear(){
+        if( list ){
+            listSize = 0;
+            for( int i = 0; i < listSize; i++ ){
+                Timesig *item = list[i];
+                delete item;
+            }
+            free( list );
+            list = NULL;
+        }
     }
 };
 

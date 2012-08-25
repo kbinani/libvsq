@@ -78,11 +78,22 @@ public:
         CPPUNIT_ASSERT_EQUAL( (tick_t)9760, table.getClockFromBarCount( 7 ) );
     }
 
+    void testClear(){
+        TimesigList table;
+        table.push( Timesig( 4, 6, 2 ) );
+        CPPUNIT_ASSERT_EQUAL( 1, table.size() );
+        table.clear();
+        CPPUNIT_ASSERT_EQUAL( 0, table.size() );
+        table.push( Timesig( 4, 6, 2 ) );
+        CPPUNIT_ASSERT_EQUAL( 1, table.size() );
+    }
+
     CPPUNIT_TEST_SUITE( TimesigListTest );
     CPPUNIT_TEST( testUpdateTimesigInfo );
     CPPUNIT_TEST( testGetTimesigAt );
     CPPUNIT_TEST( testPushDuplicateKey );
     CPPUNIT_TEST( testGetClockFromBarCount );
+    CPPUNIT_TEST( testClear );
     CPPUNIT_TEST_SUITE_END();
 };
 
