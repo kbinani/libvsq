@@ -204,6 +204,13 @@ public:
         }
         return _array[index].tempo;
     }
+
+    /**
+     * @brief リストをクリアする
+     */
+    void clear(){
+        _array.clear();
+    }
 };
 
 VSQ_END_NAMESPACE
