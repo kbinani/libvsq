@@ -7,73 +7,104 @@ using namespace VSQ_NS;
 class HandleTest : public CppUnit::TestCase
 {
 public:
-    void getLyricStream( TextStream &stream )
-    {
-        stream.writeLine( "L0=あ,a,0.4,0,1" );
-        stream.writeLine( "L1=は,h a,0.6,64,0,0" );
-        stream.setPointer( -1 );
+    Handle getLyricHandle(){
+        Handle handle( HandleType::LYRIC );
+        Lyric lyric0( "あ", "a" );
+        lyric0.setConsonantAdjustment( "0" );
+        lyric0.lengthRatio = 0.4;
+        lyric0.isProtected = true;
+        Lyric lyric1( "は", "h a" );
+        lyric1.setConsonantAdjustment( "64,0" );
+        lyric1.lengthRatio = 0.6;
+        lyric1.isProtected = false;
+        handle.setLyricAt( 0, lyric0 );
+        handle.addLyric( lyric1 );
+        handle.index = 1;
+        return handle;
     }
     
-    void getVibratoStream( TextStream &stream )
-    {
-        stream.writeLine( "IconID=$04040004" );
-        stream.writeLine( "IDS=normal-da-yo" );
-        stream.writeLine( "Caption=キャプションです=あ" );
-        stream.writeLine( "Original=5" );
-        stream.writeLine( "Length=120" );
-        stream.writeLine( "StartDepth=64" );
-        stream.writeLine( "DepthBPNum=3" );
-        stream.writeLine( "DepthBPX=0.500000,0.750000,1.000000" );
-        stream.writeLine( "DepthBPY=64,32,0" );
-        stream.writeLine( "StartRate=64" );
-        stream.writeLine( "RateBPNum=3" );
-        stream.writeLine( "RateBPX=0.500000,0.750000,1.000000" );
-        stream.writeLine( "RateBPY=64,32,0" );
-        stream.writeLine( "[h#0002]" );
-        stream.setPointer( -1 );
+    Handle getVibratoHandle(){
+        Handle result( HandleType::VIBRATO );
+        result.iconId = "$04040004";
+        result.ids = "normal-da-yo";
+        result.setCaption( "キャプションです=あ" );
+        result.original = 5;
+        result.setLength( 120 );
+        result.index = 1;
+
+        result.setStartDepth( 64 );
+        vector<double> depthBPX;
+        depthBPX.push_back( 0.5 );
+        depthBPX.push_back( 0.75 );
+        depthBPX.push_back( 1.0 );
+        vector<int> depthBPY;
+        depthBPY.push_back( 64 );
+        depthBPY.push_back( 32 );
+        depthBPY.push_back( 0 );
+        VibratoBPList depthBP( depthBPX, depthBPY );
+        result.setDepthBP( depthBP );
+
+        result.setStartRate( 64 );
+        vector<double> rateBPX;
+        rateBPX.push_back( 0.5 );
+        rateBPX.push_back( 0.75 );
+        rateBPX.push_back( 1.0 );
+        vector<int> rateBPY;
+        rateBPY.push_back( 64 );
+        rateBPY.push_back( 32 );
+        rateBPY.push_back( 0 );
+        VibratoBPList rateBP( rateBPX, rateBPY );
+        result.setRateBP( rateBP );
+
+        return result;
     }
     
-    void getSingerStream( TextStream &stream )
-    {
-        stream.writeLine( "IconID=$07010002" );
-        stream.writeLine( "IDS=Miku3=God" );
-        stream.writeLine( "Original=2" );
-        stream.writeLine( "Caption=" );
-        stream.writeLine( "Length=1" );
-        stream.writeLine( "Language=1" );
-        stream.writeLine( "Program=2" );
-        stream.setPointer( -1 );
+    Handle getSingerHandle(){
+        Handle result( HandleType::SINGER );
+        result.iconId = "$07010002";
+        result.ids = "Miku3=God";
+        result.original = 2;
+        result.setCaption( "" );
+        result.setLength( 1 );
+        result.language = 1;
+        result.program = 2;
+        result.index = 2;
+        return result;
     }
     
-    void getAttackStream( TextStream &stream )
-    {
-        stream.writeLine( "IconID=$01010002" );
-        stream.writeLine( "IDS=accent" );
-        stream.writeLine( "Original=2" );
-        stream.writeLine( "Caption=Accent" );
-        stream.writeLine( "Length=120" );
-        stream.writeLine( "Duration=64" );
-        stream.writeLine( "Depth=63" );
-        stream.setPointer( -1 );
+    Handle getAttackHandle(){
+        Handle result( HandleType::NOTE_HEAD );
+        result.iconId = "$01010002";
+        result.ids = "accent";
+        result.original = 2;
+        result.index = 3;
+        result.setCaption( "Accent" );
+        result.setLength( 120 );
+        result.setDuration( 64 );
+        result.setDepth( 63 );
+        return result;
     }
     
-    void getCrescendoStream( TextStream &stream )
-    {
-        stream.writeLine( "IconID=$05020001" );
-        stream.writeLine( "IDS=Crescendo" );
-        stream.writeLine( "Original=4" );
-        stream.writeLine( "Caption=Zero Crescendo Curve" );
-        stream.writeLine( "Length=960" );
-        stream.writeLine( "StartDyn=2" );
-        stream.writeLine( "EndDyn=38" );
-        stream.writeLine( "DynBPNum=1" );
-        stream.writeLine( "DynBPX=0.5" );
-        stream.writeLine( "DynBPY=11" );
-        stream.setPointer( -1 );
+    Handle getCrescendoHandle(){
+        Handle result( HandleType::DYNAMICS );
+        result.iconId = "$05020001";
+        result.ids = "Crescendo";
+        result.original = 4;
+        result.index = 4;
+        result.setCaption( "Zero Crescendo Curve" );
+        result.setLength( 960 );
+        result.setStartDyn( 2 );
+        result.setEndDyn( 38 );
+        vector<double> dynBPX;
+        dynBPX.push_back( 0.5 );
+        vector<int> dynBPY;
+        dynBPY.push_back( 11 );
+        VibratoBPList dynBP( dynBPX, dynBPY );
+        result.setDynBP( dynBP );
+        return result;
     }
     
-    void testConstructIconDynamicsHandle()
-    {
+    void testConstructIconDynamicsHandle(){
         Handle handle( HandleType::DYNAMICS );
         CPPUNIT_ASSERT_EQUAL( ArticulationType::DYNAFF, handle.getArticulation() );
     }
@@ -143,166 +174,7 @@ public:
         CPPUNIT_ASSERT_EQUAL( string( "0=1,1=2" ), handle.getDynBP().getData() );
     }
     
-    /**
-     * 歌詞ハンドルの読み込みテスト
-     * EOFで読み込みが終了する場合
-     */
-    void testConstructLyricFromTextStreamStopWithEOF()
-    {
-        TextStream stream;
-        getLyricStream( stream );
-        string lastLine = "";
-        int index = 100;
-    
-        Handle handle( stream, index, lastLine );
-        CPPUNIT_ASSERT_EQUAL( HandleType::LYRIC, handle.getHandleType() );
-        CPPUNIT_ASSERT_EQUAL( index, handle.index );
-        CPPUNIT_ASSERT_EQUAL( 2, handle.getLyricCount() );
-    
-        Lyric lyric1 = handle.getLyricAt( 0 );
-        CPPUNIT_ASSERT_EQUAL( string( "あ" ), lyric1.phrase );
-        CPPUNIT_ASSERT_EQUAL( string( "a" ), lyric1.getPhoneticSymbol() );
-        CPPUNIT_ASSERT_EQUAL( 0.4, lyric1.lengthRatio );
-        CPPUNIT_ASSERT_EQUAL( string( "0" ), lyric1.getConsonantAdjustment() );
-        CPPUNIT_ASSERT( lyric1.isProtected );
-    
-        Lyric lyric2 = handle.getLyricAt( 1 );
-        CPPUNIT_ASSERT_EQUAL( string( "は" ), lyric2.phrase );
-        CPPUNIT_ASSERT_EQUAL( string( "h a" ), lyric2.getPhoneticSymbol() );
-        CPPUNIT_ASSERT_EQUAL( 0.6, lyric2.lengthRatio );
-        CPPUNIT_ASSERT_EQUAL( string( "64 0" ), lyric2.getConsonantAdjustment() );
-        CPPUNIT_ASSERT( false == lyric2.isProtected );
-    }
-    
-    /**
-     * 歌詞ハンドルの読み込みテスト
-     * 次の歌詞ハンドルの先頭に到達して読み込みが終了する場合
-     */
-    void testConstructLyricFromTextStreamStopWithNextHandle()
-    {
-        TextStream stream;
-        stream.writeLine( "L0=あ,a,0.4,0,1" );
-        stream.writeLine( "[h#0002]" );
-        stream.setPointer( -1 );
-        string lastLine = "";
-        int index = 100;
-    
-        Handle handle( stream, index, lastLine );
-        CPPUNIT_ASSERT_EQUAL( HandleType::LYRIC, handle.getHandleType() );
-        CPPUNIT_ASSERT_EQUAL( index, handle.index );
-        CPPUNIT_ASSERT_EQUAL( 1, handle.getLyricCount() );
-    
-        CPPUNIT_ASSERT_EQUAL( 0, handle.getRateBP().size() );
-        CPPUNIT_ASSERT_EQUAL( 0, handle.getDepthBP().size() );
-        CPPUNIT_ASSERT_EQUAL( 0, handle.getDynBP().size() );
-    
-        Lyric lyric = handle.getLyricAt( 0 );
-        CPPUNIT_ASSERT_EQUAL( string( "あ" ), lyric.phrase );
-        CPPUNIT_ASSERT_EQUAL( string( "a" ), lyric.getPhoneticSymbol() );
-        CPPUNIT_ASSERT_EQUAL( 0.4, lyric.lengthRatio );
-        CPPUNIT_ASSERT_EQUAL( string( "0" ), lyric.getConsonantAdjustment() );
-        CPPUNIT_ASSERT( lyric.isProtected );
-    
-        CPPUNIT_ASSERT_EQUAL( string( "[h#0002]" ), lastLine );
-    }
-    
-    void testConstructVibratoFromTextStream()
-    {
-        TextStream stream;
-        getVibratoStream( stream );
-        string lastLine = "";
-        int index = 101;
-        Handle handle( stream, index, lastLine );
-    
-        CPPUNIT_ASSERT_EQUAL( HandleType::VIBRATO, handle.getHandleType() );
-        CPPUNIT_ASSERT_EQUAL( string( "$04040004" ), handle.iconId );
-        CPPUNIT_ASSERT_EQUAL( string( "normal-da-yo" ), handle.ids );
-        CPPUNIT_ASSERT_EQUAL( string( "キャプションです=あ" ), handle.getCaption() );
-        CPPUNIT_ASSERT_EQUAL( 5, handle.original );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)120, handle.getLength() );
-        CPPUNIT_ASSERT_EQUAL( 64, handle.getStartDepth() );
-        CPPUNIT_ASSERT_EQUAL( string( "0.5=64,0.75=32,1=0" ), handle.getDepthBP().getData() );
-        CPPUNIT_ASSERT_EQUAL( 64, handle.getStartRate() );
-        CPPUNIT_ASSERT_EQUAL( string( "0.5=64,0.75=32,1=0" ), handle.getRateBP().getData() );
-    
-        CPPUNIT_ASSERT_EQUAL( string( "[h#0002]" ), lastLine );
-    }
-    
-    void testConstructVibratoFromTextStreamWithoutBP(){
-        TextStream stream;
-        stream.writeLine( "IconID=$04040004" );
-        stream.writeLine( "IDS=normal-da-yo" );
-        stream.writeLine( "Caption=キャプションです=あ" );
-        stream.writeLine( "Original=5" );
-        stream.writeLine( "Length=120" );
-        stream.writeLine( "StartDepth=64" );
-        stream.writeLine( "StartRate=64" );
-        stream.writeLine( "[h#0002]" );
-        stream.setPointer( -1 );
-    
-        string lastLine = "";
-        int index = 101;
-        Handle handle( stream, index, lastLine );
-    
-        CPPUNIT_ASSERT_EQUAL( 0, handle.getRateBP().size() );
-        CPPUNIT_ASSERT_EQUAL( 0, handle.getDepthBP().size() );
-    }
-    
-    void testConstructSingerFromTextStream(){
-        TextStream stream;
-        getSingerStream( stream );
-        int index = 101;
-        string lastLine = "";
-        Handle handle( stream, index, lastLine );
-        CPPUNIT_ASSERT_EQUAL( index, handle.index );
-        CPPUNIT_ASSERT_EQUAL( HandleType::SINGER, handle.getHandleType() );
-        CPPUNIT_ASSERT_EQUAL( string( "$07010002" ), handle.iconId );
-        CPPUNIT_ASSERT_EQUAL( string( "Miku3=God" ), handle.ids );
-        CPPUNIT_ASSERT_EQUAL( 2, handle.original );
-        CPPUNIT_ASSERT_EQUAL( string( "" ), handle.getCaption() );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1, handle.getLength() );
-        CPPUNIT_ASSERT_EQUAL( 1, handle.language );
-        CPPUNIT_ASSERT_EQUAL( 2, handle.program );
-    }
-    
-    void testConstructAttackFromTextStream(){
-        TextStream stream;
-        getAttackStream( stream );
-        string lastLine = "";
-        int index = 204;
-        Handle handle( stream, index, lastLine );
-        CPPUNIT_ASSERT_EQUAL( HandleType::NOTE_HEAD, handle.getHandleType() );
-        CPPUNIT_ASSERT_EQUAL( index, handle.index );
-        CPPUNIT_ASSERT_EQUAL( string( "$01010002" ), handle.iconId );
-        CPPUNIT_ASSERT_EQUAL( string( "accent" ), handle.ids );
-        CPPUNIT_ASSERT_EQUAL( 2, handle.original );
-        CPPUNIT_ASSERT_EQUAL( string( "Accent" ), handle.getCaption() );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)120, handle.getLength() );
-        CPPUNIT_ASSERT_EQUAL( 64, handle.getDuration() );
-        CPPUNIT_ASSERT_EQUAL( 63, handle.getDepth() );
-    }
-    
-    void testConstructCrescendFromTextStream()
-    {
-        TextStream stream;
-        getCrescendoStream( stream );
-        string lastLine;
-        int index = 204;
-        Handle handle( stream, index, lastLine );
-        CPPUNIT_ASSERT_EQUAL( index, handle.index );
-        CPPUNIT_ASSERT_EQUAL( HandleType::DYNAMICS, handle.getHandleType() );
-        CPPUNIT_ASSERT_EQUAL( string( "$05020001" ), handle.iconId );
-        CPPUNIT_ASSERT_EQUAL( string( "Crescendo" ), handle.ids );
-        CPPUNIT_ASSERT_EQUAL( 4, handle.original );
-        CPPUNIT_ASSERT_EQUAL( string( "Zero Crescendo Curve" ), handle.getCaption() );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)960, handle.getLength() );
-        CPPUNIT_ASSERT_EQUAL( 2, handle.getStartDyn() );
-        CPPUNIT_ASSERT_EQUAL( 38, handle.getEndDyn() );
-        CPPUNIT_ASSERT_EQUAL( string( "0.5=11" ), handle.getDynBP().getData() );
-    }
-    
-    void testGetterAndSetterLength()
-    {
+    void testGetterAndSetterLength(){
         Handle handle( HandleType::VIBRATO );
         tick_t expected = 847;
         CPPUNIT_ASSERT( expected != handle.getLength() );
@@ -310,12 +182,8 @@ public:
         CPPUNIT_ASSERT_EQUAL( expected, handle.getLength() );
     }
     
-    void testWrite()
-    {
-        TextStream stream;
-        getLyricStream( stream );
-        string lastLine;
-        Handle handle( stream, 1, lastLine );
+    void testWrite(){
+        Handle handle = getLyricHandle();
         TextStream dest;
         handle.write( dest );
         dest.setPointer( -1 );
@@ -324,12 +192,9 @@ public:
         CPPUNIT_ASSERT_EQUAL( string( "L1=\"は\",\"h a\",0.6,64,0,0" ), dest.readLine() );
     }
     
-    void testLyricToString()
-    {
-        TextStream stream;
-        getLyricStream( stream );
-        string lastLine;
-        Handle handle( stream, 1, lastLine );
+    void testLyricToString(){
+        Handle handle = getLyricHandle();
+
         string expected =
             "[h#0001]\n"
             "L0=\"あ\",\"a\",0.4,0,1\n"
@@ -337,12 +202,8 @@ public:
         CPPUNIT_ASSERT_EQUAL( expected, handle.toString() );
     }
     
-    void testVibratoToString()
-    {
-        TextStream stream;
-        getVibratoStream( stream );
-        string lastLine;
-        Handle handle( stream, 1, lastLine );
+    void testVibratoToString(){
+        Handle handle = getVibratoHandle();
         string expected =
             "[h#0001]\n"
             "IconID=$04040004\n"
@@ -376,12 +237,8 @@ public:
         CPPUNIT_ASSERT_EQUAL( expected, handle.toString() );
     }
     
-    void testSingerToString()
-    {
-        TextStream stream;
-        getSingerStream( stream );
-        string lastLine;
-        Handle handle( stream, 2, lastLine );
+    void testSingerToString(){
+        Handle handle = getSingerHandle();
         string expected =
             "[h#0002]\n"
             "IconID=$07010002\n"
@@ -394,12 +251,8 @@ public:
         CPPUNIT_ASSERT_EQUAL( expected, handle.toString() );
     }
     
-    void testAttackToString()
-    {
-        TextStream stream;
-        getAttackStream( stream );
-        string lastLine;
-        Handle handle( stream, 3, lastLine );
+    void testAttackToString(){
+        Handle handle = getAttackHandle();
         string expected =
             "[h#0003]\n"
             "IconID=$01010002\n"
@@ -412,12 +265,8 @@ public:
         CPPUNIT_ASSERT_EQUAL( expected, handle.toString() );
     }
     
-    void testCrescendoToString()
-    {
-        TextStream stream;
-        getCrescendoStream( stream );
-        string lastLine;
-        Handle handle( stream, 4, lastLine );
+    void testCrescendoToString(){
+        Handle handle = getCrescendoHandle();
         string expected =
             "[h#0004]\n"
             "IconID=$05020001\n"
@@ -467,13 +316,11 @@ public:
         CPPUNIT_ASSERT_EQUAL( expected, handle.toString() );
     }
     
-    void testGetHandleIndexFromString()
-    {
+    void testGetHandleIndexFromString(){
         CPPUNIT_ASSERT_EQUAL( 2, Handle::getHandleIndexFromString( "h#0002" ) );
     }
     
-    void testGetterAndSetterDepth()
-    {
+    void testGetterAndSetterDepth(){
         Handle handle( HandleType::NOTE_HEAD );
         int expected = 1234;
         CPPUNIT_ASSERT( expected != handle.getDepth() );
@@ -481,8 +328,7 @@ public:
         CPPUNIT_ASSERT_EQUAL( expected, handle.getDepth() );
     }
     
-    void testGetterAndSetterDuration()
-    {
+    void testGetterAndSetterDuration(){
         Handle handle( HandleType::NOTE_HEAD );
         int expected = 947;
         CPPUNIT_ASSERT( expected != handle.getDuration() );
@@ -490,16 +336,14 @@ public:
         CPPUNIT_ASSERT_EQUAL( expected, handle.getDuration() );
     }
     
-    void testGetDisplayString()
-    {
+    void testGetDisplayString(){
         Handle handle( HandleType::NOTE_HEAD );
         handle.ids = "goo";
         handle.setCaption( "gle" );
         CPPUNIT_ASSERT_EQUAL( string( "google" ), handle.getDisplayString() );
     }
     
-    void testGetterAndSetterRateBP()
-    {
+    void testGetterAndSetterRateBP(){
         Handle handle( HandleType::VIBRATO );
         VibratoBPList rateBP( "2", "0.0,1.0", "1,128" );
         CPPUNIT_ASSERT( "0=1,1=128" != handle.getRateBP().getData() );
@@ -507,8 +351,7 @@ public:
         CPPUNIT_ASSERT_EQUAL( string( "0=1,1=128" ), handle.getRateBP().getData() );
     }
     
-    void testGetterAndSetterDepthBP()
-    {
+    void testGetterAndSetterDepthBP(){
         Handle handle( HandleType::VIBRATO );
         VibratoBPList depthBP( "2", "0.0,1.0", "1,128" );
         CPPUNIT_ASSERT( "0=1,1=128" != handle.getDepthBP().getData() );
@@ -516,8 +359,7 @@ public:
         CPPUNIT_ASSERT_EQUAL( string( "0=1,1=128" ), handle.getDepthBP().getData() );
     }
     
-    void testGetterAndSetterStartRate()
-    {
+    void testGetterAndSetterStartRate(){
         Handle handle( HandleType::VIBRATO );
         int expected = 12345;
         CPPUNIT_ASSERT( expected != handle.getStartRate() );
@@ -525,8 +367,7 @@ public:
         CPPUNIT_ASSERT_EQUAL( expected, handle.getStartRate() );
     }
     
-    void testGetterAndSetterStartDepth()
-    {
+    void testGetterAndSetterStartDepth(){
         Handle handle( HandleType::VIBRATO );
         int expected = 12345;
         CPPUNIT_ASSERT( expected != handle.getStartDepth() );
@@ -534,8 +375,7 @@ public:
         CPPUNIT_ASSERT_EQUAL( expected, handle.getStartDepth() );
     }
     
-    void testGetterAndSetterLyric()
-    {
+    void testGetterAndSetterLyric(){
         Handle handle( HandleType::LYRIC );
         handle.setLyricAt( 0, Lyric( "は", "h a" ) );
         Lyric lyric( "ら", "4 a" );
@@ -544,8 +384,7 @@ public:
         CPPUNIT_ASSERT( handle.getLyricAt( 1 ).equals( lyric ) );
     }
     
-    void testCloneIconDynamicsHandle()
-    {
+    void testCloneIconDynamicsHandle(){
         Handle handle( HandleType::DYNAMICS );
         handle.iconId = "$05010000";
         handle.ids = "foo";
@@ -570,8 +409,7 @@ public:
         CPPUNIT_ASSERT_EQUAL( string( "0=1,1=64" ), copy.getDynBP().getData() );
     }
     
-    void testCloneLyricHandle()
-    {
+    void testCloneLyricHandle(){
         Handle handle( HandleType::LYRIC );
         handle.setLyricAt( 0, Lyric( "ら", "4 a" ) );
         handle.index = 10;
@@ -582,8 +420,7 @@ public:
         CPPUNIT_ASSERT( original.equals( copied ) );
     }
     
-    void testCloneNoteHeadHandle()
-    {
+    void testCloneNoteHeadHandle(){
         Handle handle( HandleType::NOTE_HEAD );
         handle.index = 1;
         handle.iconId = "$05010000";
@@ -605,8 +442,7 @@ public:
         CPPUNIT_ASSERT_EQUAL( 5, copy.getDepth() );
     }
     
-    void testCloneVibratoHandle()
-    {
+    void testCloneVibratoHandle(){
         Handle handle( HandleType::VIBRATO );
         handle.index = 1;
         handle.iconId = "hahaha";
@@ -631,8 +467,7 @@ public:
         CPPUNIT_ASSERT_EQUAL( string( "0=64,1=128" ), copy.getRateBP().getData() );
     }
     
-    void testCloneSingerHandle()
-    {
+    void testCloneSingerHandle(){
         Handle handle( HandleType::SINGER );
         handle.setCaption( "bar" );
         handle.iconId = "$07010001";
@@ -673,13 +508,6 @@ public:
     CPPUNIT_TEST( testGetterAndSetterStartDyn );
     CPPUNIT_TEST( testGetterAndSetterEndDyn );
     CPPUNIT_TEST( testGetterAndSetterDynBP );
-    CPPUNIT_TEST( testConstructLyricFromTextStreamStopWithEOF );
-    CPPUNIT_TEST( testConstructLyricFromTextStreamStopWithNextHandle );
-    CPPUNIT_TEST( testConstructVibratoFromTextStream );
-    CPPUNIT_TEST( testConstructVibratoFromTextStreamWithoutBP );
-    CPPUNIT_TEST( testConstructSingerFromTextStream );
-    CPPUNIT_TEST( testConstructAttackFromTextStream );
-    CPPUNIT_TEST( testConstructCrescendFromTextStream );
     CPPUNIT_TEST( testGetterAndSetterLength );
     CPPUNIT_TEST( testWrite );
     CPPUNIT_TEST( testLyricToString );

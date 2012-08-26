@@ -5,8 +5,80 @@
 using namespace std;
 using namespace VSQ_NS;
 
+class VSQFileReaderStub : public VSQFileReader{
+public:
+    static Handle parseHandle(TextStream &stream, int index, string &lastLine){
+        return VSQFileReader::parseHandle( stream, index, lastLine );
+    }
+};
+
 class VSQFileReaderTest : public CppUnit::TestCase{
 public:
+    void getLyricStream( TextStream &stream )
+    {
+        stream.writeLine( "L0=あ,a,0.4,0,1" );
+        stream.writeLine( "L1=は,h a,0.6,64,0,0" );
+        stream.setPointer( -1 );
+    }
+
+    void getVibratoStream( TextStream &stream )
+    {
+        stream.writeLine( "IconID=$04040004" );
+        stream.writeLine( "IDS=normal-da-yo" );
+        stream.writeLine( "Caption=キャプションです=あ" );
+        stream.writeLine( "Original=5" );
+        stream.writeLine( "Length=120" );
+        stream.writeLine( "StartDepth=64" );
+        stream.writeLine( "DepthBPNum=3" );
+        stream.writeLine( "DepthBPX=0.500000,0.750000,1.000000" );
+        stream.writeLine( "DepthBPY=64,32,0" );
+        stream.writeLine( "StartRate=64" );
+        stream.writeLine( "RateBPNum=3" );
+        stream.writeLine( "RateBPX=0.500000,0.750000,1.000000" );
+        stream.writeLine( "RateBPY=64,32,0" );
+        stream.writeLine( "[h#0002]" );
+        stream.setPointer( -1 );
+    }
+
+    void getSingerStream( TextStream &stream )
+    {
+        stream.writeLine( "IconID=$07010002" );
+        stream.writeLine( "IDS=Miku3=God" );
+        stream.writeLine( "Original=2" );
+        stream.writeLine( "Caption=" );
+        stream.writeLine( "Length=1" );
+        stream.writeLine( "Language=1" );
+        stream.writeLine( "Program=2" );
+        stream.setPointer( -1 );
+    }
+
+    void getAttackStream( TextStream &stream )
+    {
+        stream.writeLine( "IconID=$01010002" );
+        stream.writeLine( "IDS=accent" );
+        stream.writeLine( "Original=2" );
+        stream.writeLine( "Caption=Accent" );
+        stream.writeLine( "Length=120" );
+        stream.writeLine( "Duration=64" );
+        stream.writeLine( "Depth=63" );
+        stream.setPointer( -1 );
+    }
+
+    void getCrescendoStream( TextStream &stream )
+    {
+        stream.writeLine( "IconID=$05020001" );
+        stream.writeLine( "IDS=Crescendo" );
+        stream.writeLine( "Original=4" );
+        stream.writeLine( "Caption=Zero Crescendo Curve" );
+        stream.writeLine( "Length=960" );
+        stream.writeLine( "StartDyn=2" );
+        stream.writeLine( "EndDyn=38" );
+        stream.writeLine( "DynBPNum=1" );
+        stream.writeLine( "DynBPX=0.5" );
+        stream.writeLine( "DynBPY=11" );
+        stream.setPointer( -1 );
+    }
+
     void testRead(){
         Sequence sequence( "singer", 1, 4, 4, 500000 );
         VSQFileReader reader;
@@ -194,8 +266,169 @@ public:
         }
     }
 
+    /**
+     * 歌詞ハンドルの読み込みテスト
+     * EOFで読み込みが終了する場合
+     */
+    void testConstructLyricFromTextStreamStopWithEOF(){
+        TextStream stream;
+        getLyricStream( stream );
+        string lastLine = "";
+        int index = 100;
+
+        Handle handle = VSQFileReaderStub::parseHandle( stream, index, lastLine );
+        CPPUNIT_ASSERT_EQUAL( HandleType::LYRIC, handle.getHandleType() );
+        CPPUNIT_ASSERT_EQUAL( index, handle.index );
+        CPPUNIT_ASSERT_EQUAL( 2, handle.getLyricCount() );
+
+        Lyric lyric1 = handle.getLyricAt( 0 );
+        CPPUNIT_ASSERT_EQUAL( string( "あ" ), lyric1.phrase );
+        CPPUNIT_ASSERT_EQUAL( string( "a" ), lyric1.getPhoneticSymbol() );
+        CPPUNIT_ASSERT_EQUAL( 0.4, lyric1.lengthRatio );
+        CPPUNIT_ASSERT_EQUAL( string( "0" ), lyric1.getConsonantAdjustment() );
+        CPPUNIT_ASSERT( lyric1.isProtected );
+
+        Lyric lyric2 = handle.getLyricAt( 1 );
+        CPPUNIT_ASSERT_EQUAL( string( "は" ), lyric2.phrase );
+        CPPUNIT_ASSERT_EQUAL( string( "h a" ), lyric2.getPhoneticSymbol() );
+        CPPUNIT_ASSERT_EQUAL( 0.6, lyric2.lengthRatio );
+        CPPUNIT_ASSERT_EQUAL( string( "64 0" ), lyric2.getConsonantAdjustment() );
+        CPPUNIT_ASSERT( false == lyric2.isProtected );
+    }
+
+    /**
+     * 歌詞ハンドルの読み込みテスト
+     * 次の歌詞ハンドルの先頭に到達して読み込みが終了する場合
+     */
+    void testConstructLyricFromTextStreamStopWithNextHandle(){
+        TextStream stream;
+        stream.writeLine( "L0=あ,a,0.4,0,1" );
+        stream.writeLine( "[h#0002]" );
+        stream.setPointer( -1 );
+        string lastLine = "";
+        int index = 100;
+
+        Handle handle = VSQFileReaderStub::parseHandle( stream, index, lastLine );
+        CPPUNIT_ASSERT_EQUAL( HandleType::LYRIC, handle.getHandleType() );
+        CPPUNIT_ASSERT_EQUAL( index, handle.index );
+        CPPUNIT_ASSERT_EQUAL( 1, handle.getLyricCount() );
+
+        CPPUNIT_ASSERT_EQUAL( 0, handle.getRateBP().size() );
+        CPPUNIT_ASSERT_EQUAL( 0, handle.getDepthBP().size() );
+        CPPUNIT_ASSERT_EQUAL( 0, handle.getDynBP().size() );
+
+        Lyric lyric = handle.getLyricAt( 0 );
+        CPPUNIT_ASSERT_EQUAL( string( "あ" ), lyric.phrase );
+        CPPUNIT_ASSERT_EQUAL( string( "a" ), lyric.getPhoneticSymbol() );
+        CPPUNIT_ASSERT_EQUAL( 0.4, lyric.lengthRatio );
+        CPPUNIT_ASSERT_EQUAL( string( "0" ), lyric.getConsonantAdjustment() );
+        CPPUNIT_ASSERT( lyric.isProtected );
+
+        CPPUNIT_ASSERT_EQUAL( string( "[h#0002]" ), lastLine );
+    }
+
+    void testConstructVibratoFromTextStream(){
+        TextStream stream;
+        getVibratoStream( stream );
+        string lastLine = "";
+        int index = 101;
+        Handle handle = VSQFileReaderStub::parseHandle( stream, index, lastLine );
+
+        CPPUNIT_ASSERT_EQUAL( HandleType::VIBRATO, handle.getHandleType() );
+        CPPUNIT_ASSERT_EQUAL( string( "$04040004" ), handle.iconId );
+        CPPUNIT_ASSERT_EQUAL( string( "normal-da-yo" ), handle.ids );
+        CPPUNIT_ASSERT_EQUAL( string( "キャプションです=あ" ), handle.getCaption() );
+        CPPUNIT_ASSERT_EQUAL( 5, handle.original );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)120, handle.getLength() );
+        CPPUNIT_ASSERT_EQUAL( 64, handle.getStartDepth() );
+        CPPUNIT_ASSERT_EQUAL( string( "0.5=64,0.75=32,1=0" ), handle.getDepthBP().getData() );
+        CPPUNIT_ASSERT_EQUAL( 64, handle.getStartRate() );
+        CPPUNIT_ASSERT_EQUAL( string( "0.5=64,0.75=32,1=0" ), handle.getRateBP().getData() );
+
+        CPPUNIT_ASSERT_EQUAL( string( "[h#0002]" ), lastLine );
+    }
+
+    void testConstructVibratoFromTextStreamWithoutBP(){
+        TextStream stream;
+        stream.writeLine( "IconID=$04040004" );
+        stream.writeLine( "IDS=normal-da-yo" );
+        stream.writeLine( "Caption=キャプションです=あ" );
+        stream.writeLine( "Original=5" );
+        stream.writeLine( "Length=120" );
+        stream.writeLine( "StartDepth=64" );
+        stream.writeLine( "StartRate=64" );
+        stream.writeLine( "[h#0002]" );
+        stream.setPointer( -1 );
+
+        string lastLine = "";
+        int index = 101;
+        Handle handle = VSQFileReaderStub::parseHandle( stream, index, lastLine );
+
+        CPPUNIT_ASSERT_EQUAL( 0, handle.getRateBP().size() );
+        CPPUNIT_ASSERT_EQUAL( 0, handle.getDepthBP().size() );
+    }
+
+    void testConstructSingerFromTextStream(){
+        TextStream stream;
+        getSingerStream( stream );
+        int index = 101;
+        string lastLine = "";
+        Handle handle = VSQFileReaderStub::parseHandle( stream, index, lastLine );
+        CPPUNIT_ASSERT_EQUAL( index, handle.index );
+        CPPUNIT_ASSERT_EQUAL( HandleType::SINGER, handle.getHandleType() );
+        CPPUNIT_ASSERT_EQUAL( string( "$07010002" ), handle.iconId );
+        CPPUNIT_ASSERT_EQUAL( string( "Miku3=God" ), handle.ids );
+        CPPUNIT_ASSERT_EQUAL( 2, handle.original );
+        CPPUNIT_ASSERT_EQUAL( string( "" ), handle.getCaption() );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1, handle.getLength() );
+        CPPUNIT_ASSERT_EQUAL( 1, handle.language );
+        CPPUNIT_ASSERT_EQUAL( 2, handle.program );
+    }
+
+    void testConstructAttackFromTextStream(){
+        TextStream stream;
+        getAttackStream( stream );
+        string lastLine = "";
+        int index = 204;
+        Handle handle = VSQFileReaderStub::parseHandle( stream, index, lastLine );
+        CPPUNIT_ASSERT_EQUAL( HandleType::NOTE_HEAD, handle.getHandleType() );
+        CPPUNIT_ASSERT_EQUAL( index, handle.index );
+        CPPUNIT_ASSERT_EQUAL( string( "$01010002" ), handle.iconId );
+        CPPUNIT_ASSERT_EQUAL( string( "accent" ), handle.ids );
+        CPPUNIT_ASSERT_EQUAL( 2, handle.original );
+        CPPUNIT_ASSERT_EQUAL( string( "Accent" ), handle.getCaption() );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)120, handle.getLength() );
+        CPPUNIT_ASSERT_EQUAL( 64, handle.getDuration() );
+        CPPUNIT_ASSERT_EQUAL( 63, handle.getDepth() );
+    }
+
+    void testConstructCrescendFromTextStream(){
+        TextStream stream;
+        getCrescendoStream( stream );
+        string lastLine;
+        int index = 204;
+        Handle handle = VSQFileReaderStub::parseHandle( stream, index, lastLine );
+        CPPUNIT_ASSERT_EQUAL( index, handle.index );
+        CPPUNIT_ASSERT_EQUAL( HandleType::DYNAMICS, handle.getHandleType() );
+        CPPUNIT_ASSERT_EQUAL( string( "$05020001" ), handle.iconId );
+        CPPUNIT_ASSERT_EQUAL( string( "Crescendo" ), handle.ids );
+        CPPUNIT_ASSERT_EQUAL( 4, handle.original );
+        CPPUNIT_ASSERT_EQUAL( string( "Zero Crescendo Curve" ), handle.getCaption() );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)960, handle.getLength() );
+        CPPUNIT_ASSERT_EQUAL( 2, handle.getStartDyn() );
+        CPPUNIT_ASSERT_EQUAL( 38, handle.getEndDyn() );
+        CPPUNIT_ASSERT_EQUAL( string( "0.5=11" ), handle.getDynBP().getData() );
+    }
+
     CPPUNIT_TEST_SUITE( VSQFileReaderTest );
     CPPUNIT_TEST( testRead );
+    CPPUNIT_TEST( testConstructLyricFromTextStreamStopWithEOF );
+    CPPUNIT_TEST( testConstructLyricFromTextStreamStopWithNextHandle );
+    CPPUNIT_TEST( testConstructVibratoFromTextStream );
+    CPPUNIT_TEST( testConstructVibratoFromTextStreamWithoutBP );
+    CPPUNIT_TEST( testConstructSingerFromTextStream );
+    CPPUNIT_TEST( testConstructAttackFromTextStream );
+    CPPUNIT_TEST( testConstructCrescendFromTextStream );
     CPPUNIT_TEST_SUITE_END();
 };
 

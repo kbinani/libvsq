@@ -29,6 +29,22 @@ using namespace VSQ_NS;
  */
 class VSQFileReader{
 private:
+    class TentativeHandle : public Handle{
+    public:
+        explicit TentativeHandle( HandleType::HandleTypeEnum type ) :
+            Handle( type )
+        {
+        }
+
+        void setHandleType( HandleType::HandleTypeEnum type ){
+            _type = type;
+        }
+
+        void setLyrics( const vector<Lyric> &lyrics ){
+            _lyrics = lyrics;
+        }
+    };
+
     class TentativeEvent : public Event{
     };
 
@@ -80,6 +96,152 @@ public:
         sequence.tempoList.updateTempoInfo();
         sequence.timesigList.updateTimesigInfo();
         sequence.updateTotalClocks();
+    }
+
+protected:
+    /**
+     * @brief テキストストリームからハンドルの内容を読み込み初期化する
+     * @param stream 読み込み元のテキストストリーム
+     * @param index <code>index</code> フィールドの値
+     * @param lastLine 読み込んだ最後の行。テーブルの ["value"] に文字列が格納される
+     * @todo この機能はVSQFileReaderに移動する
+     * @todo boostでstring->intの変換をやっている箇所を、StringUtilを使うよう変更
+     */
+    static Handle parseHandle( VSQ_NS::TextStream &stream, int index, std::string &lastLine ){
+        TentativeHandle result( HandleType::UNKNOWN );
+        result.index = index;
+
+        // default値で埋める
+        result.setHandleType( HandleType::VIBRATO );
+        result.iconId = "";
+        result.ids = "normal";
+        result.setLyrics( vector<Lyric>() );
+        result.addLyric( Lyric( "" ) );
+        result.original = 0;
+        result.setCaption( "" );
+        result.setLength( 0 );
+        result.setStartDepth( 0 );
+        result.setStartRate( 0 );
+        result.language = 0;
+        result.program = 0;
+        result.setDuration( 0 );
+        result.setDepth( 64 );
+
+        string tmpDepthBPX = "";
+        string tmpDepthBPY = "";
+        string tmpDepthBPNum = "";
+
+        string tmpRateBPX = "";
+        string tmpRateBPY = "";
+        string tmpRateBPNum = "";
+
+        string tmpDynBPX = "";
+        string tmpDynBPY = "";
+        string tmpDynBPNum = "";
+
+        // "["にぶち当たるまで読込む
+        lastLine = stream.readLine();
+        while( lastLine.find( "[" ) != 0 ){
+            vector<string> spl = StringUtil::explode( "=", lastLine );
+            string search = spl[0];
+            if( search == "Language" ){
+                result.setHandleType( HandleType::SINGER );
+                result.language = boost::lexical_cast<int>( spl[1] );
+            }else if( search == "Program" ){
+                result.program = boost::lexical_cast<int>( spl[1] );
+            }else if( search == "IconID" ){
+                result.iconId = spl[1];
+            }else if( search == "IDS" ){
+                result.ids = spl[1];
+                for( int i = 2; i < spl.size(); i++ ){
+                    result.ids = result.ids + "=" + spl[i];
+                }
+            }else if( search == "Original" ){
+                result.original = boost::lexical_cast<int>( spl[1] );
+            }else if( search == "Caption" ){
+                result.setCaption( spl[1] );
+                for( int i = 2; i < spl.size(); i++ ){
+                    result.setCaption( result.getCaption() + "=" + spl[i] );
+                }
+            }else if( search == "Length" ){
+                result.setLength( boost::lexical_cast<tick_t>( spl[1] ) );
+            }else if( search == "StartDepth" ){
+                result.setStartDepth( boost::lexical_cast<int>( spl[1] ) );
+            }else if( search == "DepthBPNum" ){
+                tmpDepthBPNum = spl[1];
+            }else if( search == "DepthBPX" ){
+                tmpDepthBPX = spl[1];
+            }else if( search == "DepthBPY" ){
+                tmpDepthBPY = spl[1];
+            }else if( search == "StartRate" ){
+                result.setHandleType( HandleType::VIBRATO );
+                result.setStartRate( boost::lexical_cast<int>( spl[1] ) );
+            }else if( search == "RateBPNum" ){
+                tmpRateBPNum = spl[1];
+            }else if( search == "RateBPX" ){
+                tmpRateBPX = spl[1];
+            }else if( search == "RateBPY" ){
+                tmpRateBPY = spl[1];
+            }else if( search == "Duration" ){
+                result.setHandleType( HandleType::NOTE_HEAD );
+                result.setDuration( boost::lexical_cast<int>( spl[1] ) );
+            }else if( search == "Depth" ){
+                result.setDepth( boost::lexical_cast<int>( spl[1] ) );
+            }else if( search == "StartDyn" ){
+                result.setHandleType( HandleType::DYNAMICS );
+                result.setStartDyn( boost::lexical_cast<int>( spl[1] ) );
+            }else if( search == "EndDyn" ){
+                result.setHandleType( HandleType::DYNAMICS );
+                result.setEndDyn( boost::lexical_cast<int>( spl[1] ) );
+            }else if( search == "DynBPNum" ){
+                tmpDynBPNum = spl[1];
+            }else if( search == "DynBPX" ){
+                tmpDynBPX = spl[1];
+            }else if( search == "DynBPY" ){
+                tmpDynBPY = spl[1];
+            }else if( search.find( "L" ) == 0 && search.size() >= 2 ){
+                int index = boost::lexical_cast<int>( search.substr( 1, 1 ) );
+                Lyric lyric( spl[1] );
+                result.setHandleType( HandleType::LYRIC );
+                if( result.getLyricCount() <= index + 1 ){
+                    int amount = index + 1 - result.getLyricCount();
+                    for( int i = 0; i < amount; i++ ){
+                        result.addLyric( Lyric( "", "" ) );
+                    }
+                }
+                result.setLyricAt( index, lyric );
+            }
+            if( ! stream.ready() ){
+                break;
+            }
+            lastLine = stream.readLine();
+        }
+
+        // RateBPX, RateBPYの設定
+        if( result.getHandleType() == HandleType::VIBRATO ){
+            if( tmpRateBPNum != "" ){
+                result.setRateBP( VibratoBPList( tmpRateBPNum, tmpRateBPX, tmpRateBPY ) );
+            }else{
+                result.setRateBP( VibratoBPList() );
+            }
+
+            // DepthBPX, DepthBPYの設定
+            if( tmpDepthBPNum != "" ){
+                result.setDepthBP( VibratoBPList( tmpDepthBPNum, tmpDepthBPX, tmpDepthBPY ) );
+            }else{
+                result.setDepthBP( VibratoBPList() );
+            }
+        }else{
+            result.setDepthBP( VibratoBPList() );
+            result.setRateBP( VibratoBPList() );
+        }
+
+        if( tmpDynBPNum != "" ){
+            result.setDynBP( VibratoBPList( tmpDynBPNum, tmpDynBPX, tmpDynBPY ) );
+        }else{
+            result.setDynBP( VibratoBPList() );
+        }
+        return result;
     }
 
 private:
@@ -231,32 +393,29 @@ private:
      * @param 読み込むストリーム
      * @param [out] master 読み込まれた Master 情報
      * @param [out] mixer 読み込まれた Mixer 情報
-     * @todo private メソッド。VSQFileReaderに移動する
-     * @todo sr を stream にリネームする
      */
-    static Track getTrackByTextStream( TextStream &sr, Master *master = 0, Mixer *mixer = 0 ){
-        std::map<int, tick_t> t_event_list;  //Vector<ValuePair<Integer, Integer>> t_event_list = new Vector<ValuePair<Integer, Integer>>();
-        //TODO: __id -> __eventListなどと名前を変える
-        std::map<int, VSQ_NS::Event *> __id;//TreeMap<Integer, VsqID> __id = new TreeMap<Integer, VsqID>();
-        std::map<int, VSQ_NS::Handle> __handle; //TreeMap<Integer, VsqHandle> __handle = new TreeMap<Integer, VsqHandle>();
+    static Track getTrackByTextStream( TextStream &stream, Master *master = 0, Mixer *mixer = 0 ){
+        std::map<int, tick_t> t_event_list;
+        std::map<int, VSQ_NS::Event *> eventList;
+        std::map<int, VSQ_NS::Handle> handleList;
         vector<VSQ_NS::Event *> temporaryEventList;
 
         TentativeTrack result;
 
-        std::string last_line = sr.readLine();
+        std::string last_line = stream.readLine();
         while( 1 ){
             // TextMemoryStreamから順次読込み
             if( last_line.length() == 0 ){
                 break;
             }
             if( last_line == "[Common]" ){
-                result.setCommon( VSQ_NS::Common( sr, last_line ) );
+                result.setCommon( VSQ_NS::Common( stream, last_line ) );
             }else if( last_line == "[Master]" && master != 0 ){
-                *master = VSQ_NS::Master( sr, last_line );
+                *master = VSQ_NS::Master( stream, last_line );
             }else if( last_line == "[Mixer]" && mixer != 0 ){
-                *mixer = VSQ_NS::Mixer( sr, last_line );
+                *mixer = VSQ_NS::Mixer( stream, last_line );
             }else if( last_line == "[EventList]" ){
-                last_line = sr.readLine();
+                last_line = stream.readLine();
                 while( last_line.find( "[" ) != 0 ){
                     std::vector<std::string> spl2 = StringUtil::explode( "=", last_line );
                     tick_t clock = StringUtil::parseInt( spl2[0] );
@@ -271,58 +430,58 @@ private:
                     }else{
                         t_event_list.insert( make_pair( -1, clock ) );
                     }
-                    if( ! sr.ready() ){
+                    if( ! stream.ready() ){
                         break;
                     }else{
-                        last_line = sr.readLine();
+                        last_line = stream.readLine();
                     }
                 }
             }else if( last_line == "[PitchBendBPList]" ){
-                last_line = result.getCurve( "pit" )->appendFromText( sr );
+                last_line = result.getCurve( "pit" )->appendFromText( stream );
             }else if( last_line == "[PitchBendSensBPList]" ){
-                last_line = result.getCurve( "pbs" )->appendFromText( sr );
+                last_line = result.getCurve( "pbs" )->appendFromText( stream );
             }else if( last_line == "[DynamicsBPList]" ){
-                last_line = result.getCurve( "dyn" )->appendFromText( sr );
+                last_line = result.getCurve( "dyn" )->appendFromText( stream );
             }else if( last_line == "[EpRResidualBPList]" ){
-                last_line = result.getCurve( "bre" )->appendFromText( sr );
+                last_line = result.getCurve( "bre" )->appendFromText( stream );
             }else if( last_line == "[EpRESlopeBPList]" ){
-                last_line = result.getCurve( "bri" )->appendFromText( sr );
+                last_line = result.getCurve( "bri" )->appendFromText( stream );
             }else if( last_line == "[EpRESlopeDepthBPList]" ){
-                last_line = result.getCurve( "cle" )->appendFromText( sr );
+                last_line = result.getCurve( "cle" )->appendFromText( stream );
             }else if( last_line == "[EpRSineBPList]" ){
-                last_line = result.getCurve( "harmonics" )->appendFromText( sr );
+                last_line = result.getCurve( "harmonics" )->appendFromText( stream );
             }else if( last_line == "[VibTremDepthBPList]" ){
-                last_line = result.getCurve( "fx2depth" )->appendFromText( sr );
+                last_line = result.getCurve( "fx2depth" )->appendFromText( stream );
             }else if( last_line == "[Reso1FreqBPList]" ){
-                last_line = result.getCurve( "reso1FreqBPList" )->appendFromText( sr );
+                last_line = result.getCurve( "reso1FreqBPList" )->appendFromText( stream );
             }else if( last_line == "[Reso2FreqBPList]" ){
-                last_line = result.getCurve( "reso2FreqBPList" )->appendFromText( sr );
+                last_line = result.getCurve( "reso2FreqBPList" )->appendFromText( stream );
             }else if( last_line == "[Reso3FreqBPList]" ){
-                last_line = result.getCurve( "reso3FreqBPList" )->appendFromText( sr );
+                last_line = result.getCurve( "reso3FreqBPList" )->appendFromText( stream );
             }else if( last_line == "[Reso4FreqBPList]" ){
-                last_line = result.getCurve( "reso4FreqBPList" )->appendFromText( sr );
+                last_line = result.getCurve( "reso4FreqBPList" )->appendFromText( stream );
             }else if( last_line == "[Reso1BWBPList]" ){
-                last_line = result.getCurve( "reso1BWBPList" )->appendFromText( sr );
+                last_line = result.getCurve( "reso1BWBPList" )->appendFromText( stream );
             }else if( last_line == "[Reso2BWBPList]" ){
-                last_line = result.getCurve( "reso2BWBPList" )->appendFromText( sr );
+                last_line = result.getCurve( "reso2BWBPList" )->appendFromText( stream );
             }else if( last_line == "[Reso3BWBPList]" ){
-                last_line = result.getCurve( "reso3BWBPList" )->appendFromText( sr );
+                last_line = result.getCurve( "reso3BWBPList" )->appendFromText( stream );
             }else if( last_line == "[Reso4BWBPList]" ){
-                last_line = result.getCurve( "reso4BWBPList" )->appendFromText( sr );
+                last_line = result.getCurve( "reso4BWBPList" )->appendFromText( stream );
             }else if( last_line == "[Reso1AmpBPList]" ){
-                last_line = result.getCurve( "reso1AmpBPList" )->appendFromText( sr );
+                last_line = result.getCurve( "reso1AmpBPList" )->appendFromText( stream );
             }else if( last_line == "[Reso2AmpBPList]" ){
-                last_line = result.getCurve( "reso2AmpBPList" )->appendFromText( sr );
+                last_line = result.getCurve( "reso2AmpBPList" )->appendFromText( stream );
             }else if( last_line == "[Reso3AmpBPList]" ){
-                last_line = result.getCurve( "reso3AmpBPList" )->appendFromText( sr );
+                last_line = result.getCurve( "reso3AmpBPList" )->appendFromText( stream );
             }else if( last_line == "[Reso4AmpBPList]" ){
-                last_line = result.getCurve( "reso4AmpBPList" )->appendFromText( sr );
+                last_line = result.getCurve( "reso4AmpBPList" )->appendFromText( stream );
             }else if( last_line == "[GenderFactorBPList]" ){
-                last_line = result.getCurve( "gen" )->appendFromText( sr );
+                last_line = result.getCurve( "gen" )->appendFromText( stream );
             }else if( last_line == "[PortamentoTimingBPList]" ){
-                last_line = result.getCurve( "por" )->appendFromText( sr );
+                last_line = result.getCurve( "por" )->appendFromText( stream );
             }else if( last_line == "[OpeningBPList]" ){
-                last_line = result.getCurve( "ope" )->appendFromText( sr );
+                last_line = result.getCurve( "ope" )->appendFromText( stream );
             }else{
                 std::string buffer = last_line;
                 buffer = StringUtil::replace( buffer, "[", "" );
@@ -330,37 +489,37 @@ private:
                 std::vector<std::string> spl = StringUtil::explode( "#", buffer );
                 int index = StringUtil::parseInt( spl[1] );
                 if( last_line.find( "[ID#" ) == 0 ){
-                    Event *item = new VSQ_NS::Event( sr, index, last_line );
+                    Event *item = new VSQ_NS::Event( stream, index, last_line );
                     temporaryEventList.push_back( item );
-                    __id.insert( make_pair( index, item ) );
+                    eventList.insert( make_pair( index, item ) );
                 }else if( last_line.find( "[h#" ) == 0 ){
-                    __handle.insert( make_pair( index, VSQ_NS::Handle( sr, index, last_line ) ) );
+                    handleList.insert( make_pair( index, parseHandle( stream, index, last_line ) ) );
                 }
             }
 
-            if( ! sr.ready() ){
+            if( ! stream.ready() ){
                 break;
             }
         }
 
         // まずhandleをidに埋め込み
-        for( map<int, Event *>::iterator i = __id.begin(); i != __id.end(); ++i ){
+        for( map<int, Event *>::iterator i = eventList.begin(); i != eventList.end(); ++i ){
             VSQ_NS::Event *id = i->second;
-            if( __handle.find( id->_singerHandleIndex ) != __handle.end() ){
+            if( handleList.find( id->_singerHandleIndex ) != handleList.end() ){
                 if( id->type == VSQ_NS::EventType::SINGER ){
-                    id->singerHandle = __handle[id->_singerHandleIndex];
+                    id->singerHandle = handleList[id->_singerHandleIndex];
                 }else if( id->type == VSQ_NS::EventType::ICON ){
-                    id->iconDynamicsHandle = __handle[id->_singerHandleIndex];
+                    id->iconDynamicsHandle = handleList[id->_singerHandleIndex];
                 }
             }
-            if( __handle.find( id->_lyricHandleIndex ) != __handle.end() ){
-                id->lyricHandle = __handle[id->_lyricHandleIndex];
+            if( handleList.find( id->_lyricHandleIndex ) != handleList.end() ){
+                id->lyricHandle = handleList[id->_lyricHandleIndex];
             }
-            if( __handle.find( id->_vibratoHandleIndex ) != __handle.end() ){
-                id->vibratoHandle = __handle[id->_vibratoHandleIndex];
+            if( handleList.find( id->_vibratoHandleIndex ) != handleList.end() ){
+                id->vibratoHandle = handleList[id->_vibratoHandleIndex];
             }
-            if( __handle.find( id->_noteHeadHandleIndex ) != __handle.end() ){
-                id->noteHeadHandle = __handle[id->_noteHeadHandleIndex];
+            if( handleList.find( id->_noteHeadHandleIndex ) != handleList.end() ){
+                id->noteHeadHandle = handleList[id->_noteHeadHandleIndex];
             }
         }
 
@@ -371,9 +530,9 @@ private:
         for( map<int, tick_t>::iterator i = t_event_list.begin(); i != t_event_list.end(); ++i ){
             int id_number = i->first;
             tick_t clock = i->second;
-            if( __id.find( id_number ) != __id.end() ){
+            if( eventList.find( id_number ) != eventList.end() ){
                 count++;
-                Event item = *__id[id_number];
+                Event item = *eventList[id_number];
                 item.clock = clock;
                 events->add( item, count );
             }
