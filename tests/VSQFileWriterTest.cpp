@@ -27,6 +27,10 @@ public:
     int getHowManyDigits( int number ){
         return VSQFileWriter::getHowManyDigits( number );
     }
+
+    void printMetaText(const Track &t, TextStream &stream, int eos, tick_t start, bool printPitch, Master *master, Mixer *mixer){
+        VSQFileWriter::printMetaText( t, stream, eos, start, printPitch, master, mixer );
+    }
 };
 
 class VSQFileWriterTest : public CppUnit::TestCase{
@@ -214,6 +218,312 @@ class VSQFileWriterTest : public CppUnit::TestCase{
         CPPUNIT_ASSERT_EQUAL( expected.str(), actual );
     }
 
+    void testPrintTrackMetaText(){
+        Track track( "DummyTrackName", "DummySingerName" );
+
+        Event singerEvent( 0, EventType::SINGER );
+        singerEvent.singerHandle = Handle( HandleType::SINGER ); //h#0000
+        singerEvent.singerHandle.iconId = "$07010002";
+        singerEvent.singerHandle.ids = "Miku";
+        singerEvent.singerHandle.original = 1;
+        singerEvent.singerHandle.setCaption( "caption for miku" );
+        singerEvent.singerHandle.language = 1;
+        singerEvent.singerHandle.program = 2;
+        track.getEvents()->set( 0, singerEvent );
+
+        Event crescendoEvent( 240, EventType::ICON );
+        crescendoEvent.note = 64;
+        crescendoEvent.iconDynamicsHandle = Handle( HandleType::DYNAMICS ); //h#0001
+        crescendoEvent.iconDynamicsHandle.iconId = "$05020001";
+        crescendoEvent.iconDynamicsHandle.ids = "crescendo";
+        crescendoEvent.iconDynamicsHandle.original = 1;
+        crescendoEvent.iconDynamicsHandle.setCaption( "caption for crescendo" );
+        crescendoEvent.iconDynamicsHandle.setStartDyn( 4 );
+        crescendoEvent.iconDynamicsHandle.setEndDyn( 7 );
+        crescendoEvent.setLength( 10 );
+        track.getEvents()->add( crescendoEvent, 2 );
+
+        Event dynaffEvent( 480, EventType::ICON );
+        dynaffEvent.note = 65;
+        dynaffEvent.iconDynamicsHandle = Handle( HandleType::DYNAMICS );//h#0002
+        dynaffEvent.iconDynamicsHandle.iconId = "$05010001";
+        dynaffEvent.iconDynamicsHandle.ids = "dynaff";
+        dynaffEvent.iconDynamicsHandle.original = 2;
+        dynaffEvent.iconDynamicsHandle.setCaption( "caption for dynaff" );
+        dynaffEvent.iconDynamicsHandle.setStartDyn( 5 );
+        dynaffEvent.iconDynamicsHandle.setEndDyn( 8 );
+        dynaffEvent.setLength( 11 );
+        track.getEvents()->add( dynaffEvent, 3 );
+
+        Event decrescendoEvent( 720, EventType::ICON );
+        decrescendoEvent.note = 66;
+        decrescendoEvent.iconDynamicsHandle = Handle( HandleType::DYNAMICS );//h#0003
+        decrescendoEvent.iconDynamicsHandle.iconId = "$05030001";
+        decrescendoEvent.iconDynamicsHandle.ids = "decrescendo";
+        decrescendoEvent.iconDynamicsHandle.original = 3;
+        decrescendoEvent.iconDynamicsHandle.setCaption( "caption for decrescendo" );
+        decrescendoEvent.iconDynamicsHandle.setStartDyn( 6 );
+        decrescendoEvent.iconDynamicsHandle.setEndDyn( 9 );
+        decrescendoEvent.setLength( 12 );
+        track.getEvents()->add( decrescendoEvent, 4 );
+
+        Event singerEvent2( 1920, EventType::SINGER );
+        singerEvent2.singerHandle = Handle( HandleType::SINGER );//h#0004
+        singerEvent2.singerHandle.iconId = "$07020003";
+        singerEvent2.singerHandle.ids = "Luka_EN";
+        singerEvent2.singerHandle.original = 0x82;
+        singerEvent2.singerHandle.setCaption( "caption for luka" );
+        singerEvent2.singerHandle.language = 2;
+        singerEvent2.singerHandle.program = 3;
+        track.getEvents()->add( singerEvent2, 5 );
+
+        Event noteEvent( 1920, EventType::NOTE );
+        noteEvent.note = 67;
+        noteEvent.dynamics = 68;
+        noteEvent.pmBendDepth = 69;
+        noteEvent.pmBendLength = 70;
+        noteEvent.pmbPortamentoUse = 3;
+        noteEvent.demDecGainRate = 71;
+        noteEvent.demAccent = 72;
+        noteEvent.setLength( 480 );
+        noteEvent.lyricHandle = Handle( HandleType::LYRIC );
+        noteEvent.lyricHandle.setLyricAt( 0, Lyric( "ら", "4 a" ) );//h#0005
+        noteEvent.vibratoHandle = Handle( HandleType::VIBRATO );//h#0006
+        noteEvent.vibratoDelay = 73;
+        noteEvent.vibratoHandle.iconId ="$04040004";
+        noteEvent.vibratoHandle.ids = "vibrato";
+        noteEvent.vibratoHandle.original = 1;
+        noteEvent.vibratoHandle.setCaption( "caption for vibrato" );
+        noteEvent.vibratoHandle.setLength( 407 );
+        noteEvent.vibratoHandle.setStartDepth( 13 );
+        noteEvent.vibratoHandle.setStartRate( 14 );
+        noteEvent.noteHeadHandle = Handle( HandleType::NOTE_HEAD );//h#0007
+        noteEvent.noteHeadHandle.iconId = "$05030000";
+        noteEvent.noteHeadHandle.ids = "attack";
+        noteEvent.noteHeadHandle.original = 15;
+        noteEvent.noteHeadHandle.setCaption( "caption for attack" );
+        noteEvent.noteHeadHandle.setLength( 120 );
+        noteEvent.noteHeadHandle.setDuration( 62 );
+        noteEvent.noteHeadHandle.setDepth( 65 );
+        track.getEvents()->add( noteEvent, 6 );
+
+        Master master;
+        master.preMeasure = 1;
+
+        Mixer mixer;
+        mixer.masterFeder = 1;
+        mixer.masterPanpot = 2;
+        mixer.masterMute = 3;
+        mixer.outputMode = 4;
+        mixer.slave.push_back( MixerItem( 5, 6, 7, 8 ) );
+
+        track.getCommon()->version = "DSB301";
+        track.getCommon()->name = "foo";
+        track.getCommon()->color = "1,2,3";
+        track.getCommon()->dynamicsMode = DynamicsMode::STANDARD;
+        track.getCommon()->playMode = PlayMode::PLAY_WITH_SYNTH;
+
+        vector<string> curves;
+        curves.push_back( "pit" );
+        curves.push_back( "pbs" );
+        curves.push_back( "dyn" );
+        curves.push_back( "bre" );
+        curves.push_back( "bri" );
+        curves.push_back( "cle" );
+        curves.push_back( "RESO1FREQ" );
+        curves.push_back( "RESO2FREQ" );
+        curves.push_back( "RESO3FREQ" );
+        curves.push_back( "RESO4FREQ" );
+        curves.push_back( "RESO1BW" );
+        curves.push_back( "RESO2BW" );
+        curves.push_back( "RESO3BW" );
+        curves.push_back( "RESO4BW" );
+        curves.push_back( "RESO1amp" );
+        curves.push_back( "RESO2amp" );
+        curves.push_back( "RESO3amp" );
+        curves.push_back( "RESO4amp" );
+        curves.push_back( "HARMONICS" );
+        curves.push_back( "fx2depth" );
+        curves.push_back( "GEN" );
+        curves.push_back( "pOr" );
+        curves.push_back( "OPE" );
+        for( int i = 0; i < curves.size(); i++ ){
+            string curveName = curves[i];
+            track.getCurve( curveName )->add( 480 + i, i );
+        }
+
+        TextStream stream;
+        VSQFileWriterStub writer;
+        writer.printMetaText( track, stream, 2400, 0, false, &master, &mixer );
+        string expected =
+            "[Common]\n"
+            "Version=DSB301\n"
+            "Name=foo\n"
+            "Color=1,2,3\n"
+            "DynamicsMode=0\n"
+            "PlayMode=1\n"
+
+            "[Master]\n"
+            "PreMeasure=1\n"
+
+            "[Mixer]\n"
+            "MasterFeder=1\n"
+            "MasterPanpot=2\n"
+            "MasterMute=3\n"
+            "OutputMode=4\n"
+            "Tracks=1\n"
+            "Feder0=5\n"
+            "Panpot0=6\n"
+            "Mute0=7\n"
+            "Solo0=8\n"
+
+            "[EventList]\n"
+            "0=ID#0000\n"
+            "240=ID#0001\n"
+            "480=ID#0002\n"
+            "720=ID#0003\n"
+            "1920=ID#0004,ID#0005\n"
+            "2400=EOS\n"
+
+            "[ID#0000]\n"
+            "Type=Singer\n"
+            "IconHandle=h#0000\n"
+
+            "[ID#0001]\n"
+            "Type=Aicon\n"
+            "IconHandle=h#0001\n"
+            "Note#=64\n"
+
+            "[ID#0002]\n"
+            "Type=Aicon\n"
+            "IconHandle=h#0002\n"
+            "Note#=65\n"
+
+            "[ID#0003]\n"
+            "Type=Aicon\n"
+            "IconHandle=h#0003\n"
+            "Note#=66\n"
+
+            "[ID#0004]\n"
+            "Type=Singer\n"
+            "IconHandle=h#0004\n"
+
+            "[ID#0005]\n"
+            "Type=Anote\n"
+            "Length=480\n"
+            "Note#=67\n"
+            "Dynamics=68\n"
+            "PMBendDepth=69\n"
+            "PMBendLength=70\n"
+            "PMbPortamentoUse=3\n"
+            "DEMdecGainRate=71\n"
+            "DEMaccent=72\n"
+            "LyricHandle=h#0005\n"
+            "VibratoHandle=h#0006\n"
+            "VibratoDelay=73\n"
+            "NoteHeadHandle=h#0007\n"
+
+            "[h#0000]\n"
+            "IconID=$07010002\n"
+            "IDS=Miku\n"
+            "Original=1\n"
+            "Caption=caption for miku\n"
+            "Length=0\n"
+            "Language=1\n"
+            "Program=2\n"
+
+            "[h#0001]\n"
+            "IconID=$05020001\n"
+            "IDS=crescendo\n"
+            "Original=1\n"
+            "Caption=caption for crescendo\n"
+            "StartDyn=4\n"
+            "EndDyn=7\n"
+            "Length=10\n"
+            "DynBPNum=0\n"
+
+            "[h#0002]\n"
+            "IconID=$05010001\n"
+            "IDS=dynaff\n"
+            "Original=2\n"
+            "Caption=caption for dynaff\n"
+            "StartDyn=5\n"
+            "EndDyn=8\n"
+            "Length=11\n"
+            "DynBPNum=0\n"
+
+            "[h#0003]\n"
+            "IconID=$05030001\n"
+            "IDS=decrescendo\n"
+            "Original=3\n"
+            "Caption=caption for decrescendo\n"
+            "StartDyn=6\n"
+            "EndDyn=9\n"
+            "Length=12\n"
+            "DynBPNum=0\n"
+
+            "[h#0004]\n"
+            "IconID=$07020003\n"
+            "IDS=Luka_EN\n"
+            "Original=130\n"
+            "Caption=caption for luka\n"
+            "Length=0\n"
+            "Language=2\n"
+            "Program=3\n"
+
+            "[h#0005]\n"
+            "L0=\"ら\",\"4 a\",1,64,0,0\n"
+
+            "[h#0006]\n"
+            "IconID=$04040004\n"
+            "IDS=vibrato\n"
+            "Original=1\n"
+            "Caption=caption for vibrato\n"
+            "Length=407\n"
+            "StartDepth=13\n"
+            "DepthBPNum=0\n"
+            "StartRate=14\n"
+            "RateBPNum=0\n"
+
+            "[h#0007]\n"
+            "IconID=$05030000\n"
+            "IDS=attack\n"
+            "Original=15\n"
+            "Caption=caption for attack\n"
+            "Length=120\n"
+            "Duration=62\n"
+            "Depth=65\n"
+
+            "[PitchBendBPList]\n"
+            "480=0\n"
+
+            "[PitchBendSensBPList]\n"
+            "481=1\n"
+
+            "[DynamicsBPList]\n"
+            "482=2\n"
+
+            "[EpRResidualBPList]\n"
+            "483=3\n"
+
+            "[EpRESlopeBPList]\n"
+            "484=4\n"
+
+            "[EpRESlopeDepthBPList]\n"
+            "485=5\n"
+
+            "[GenderFactorBPList]\n"
+            "500=20\n"
+
+            "[PortamentoTimingBPList]\n"
+            "501=21\n"
+
+            "[OpeningBPList]\n"
+            "502=22\n";
+
+        CPPUNIT_ASSERT_EQUAL( expected, stream.toString() );
+    }
+
     CPPUNIT_TEST_SUITE( VSQFileWriterTest );
     CPPUNIT_TEST( testWriteWithoutPitch );
     CPPUNIT_TEST( testWriteWithPitch );
@@ -222,6 +532,7 @@ class VSQFileWriterTest : public CppUnit::TestCase{
     CPPUNIT_TEST( test_getHowManyDigits );
     CPPUNIT_TEST( test_writeUnsignedShort );
     CPPUNIT_TEST( test_writeUnsignedInt );
+    CPPUNIT_TEST( testPrintTrackMetaText );
     CPPUNIT_TEST_SUITE_END();
 };
 

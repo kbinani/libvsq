@@ -107,6 +107,117 @@ public:
 
 protected:
     /**
+     * @brief トラックのメタテキストを、テキストストリームに出力する
+     * @param track 出力するトラック
+     * @param stream 出力先のストリーム
+     * @param eos イベントリストの末尾を表す番号
+     * @param start Tick 単位の出力開始時刻
+     * @param printPitch pitch を含めて出力するかどうか(現在は <code>false</code> 固定で、引数は無視される)
+     * @param master 出力する Master 情報。出力しない場合は NULL を指定する
+     * @param mixer 出力する Mixer 情報。出力しない場合は NULL を指定する
+     */
+    void printMetaText( const Track &t, TextStream &stream, int eos, tick_t start, bool printPitch = false, Master *master = 0, Mixer *mixer = 0 ){
+        Track track = t;
+        //TODO: commonの型を Common* にする
+        //if( common ~= nil ){
+            track.getCommon()->write( stream );
+        //}
+        if( master ){
+            master->write( stream );
+        }
+        if( mixer ){
+            mixer->write( stream );
+        }
+        vector<Handle> handle = track.getEvents()->write( stream, eos );
+        Event::ListIterator itr = track.getEvents()->iterator();
+        while( itr.hasNext() ){
+            Event *item = itr.next();
+            item->write( stream );
+        }
+        for( int i = 0; i < handle.size(); ++i ){
+            handle[i].write( stream );
+        }
+        string version = track.getCommon()->version;
+        if( track.getCurve( "pit" )->size() > 0 ){
+            track.getCurve( "pit" )->print( stream, start, "[PitchBendBPList]" );
+        }
+        if( track.getCurve( "pbs" )->size() > 0 ){
+            track.getCurve( "pbs" )->print( stream, start, "[PitchBendSensBPList]" );
+        }
+        if( track.getCurve( "dyn" )->size() > 0 ){
+            track.getCurve( "dyn" )->print( stream, start, "[DynamicsBPList]" );
+        }
+        if( track.getCurve( "bre" )->size() > 0 ){
+            track.getCurve( "bre" )->print( stream, start, "[EpRResidualBPList]" );
+        }
+        if( track.getCurve( "bri" )->size() > 0 ){
+            track.getCurve( "bri" )->print( stream, start, "[EpRESlopeBPList]" );
+        }
+        if( track.getCurve( "cle" )->size() > 0 ){
+            track.getCurve( "cle" )->print( stream, start, "[EpRESlopeDepthBPList]" );
+        }
+        if( version.substr( 0, 4 ) == "DSB2" ){
+            if( track.getCurve( "harmonics" )->size() > 0 ){
+                track.getCurve( "harmonics" )->print( stream, start, "[EpRSineBPList]" );
+            }
+            if( track.getCurve( "fx2depth" )->size() > 0 ){
+                track.getCurve( "fx2depth" )->print( stream, start, "[VibTremDepthBPList]" );
+            }
+
+            if( track.getCurve( "reso1Freq" )->size() > 0 ){
+                track.getCurve( "reso1Freq" )->print( stream, start, "[Reso1FreqBPList]" );
+            }
+            if( track.getCurve( "reso2Freq" )->size() > 0 ){
+                track.getCurve( "reso2Freq" )->print( stream, start, "[Reso2FreqBPList]" );
+            }
+            if( track.getCurve( "reso3Freq" )->size() > 0 ){
+                track.getCurve( "reso3Freq" )->print( stream, start, "[Reso3FreqBPList]" );
+            }
+            if( track.getCurve( "reso4Freq" )->size() > 0 ){
+                track.getCurve( "reso4Freq" )->print( stream, start, "[Reso4FreqBPList]" );
+            }
+
+            if( track.getCurve( "reso1BW" )->size() > 0 ){
+                track.getCurve( "reso1BW" )->print( stream, start, "[Reso1BWBPList]" );
+            }
+            if( track.getCurve( "reso2BW" )->size() > 0 ){
+                track.getCurve( "reso2BW" )->print( stream, start, "[Reso2BWBPList]" );
+            }
+            if( track.getCurve( "reso3BW" )->size() > 0 ){
+                track.getCurve( "reso3BW" )->print( stream, start, "[Reso3BWBPList]" );
+            }
+            if( track.getCurve( "reso4BW" )->size() > 0 ){
+                track.getCurve( "reso4BW" )->print( stream, start, "[Reso4BWBPList]" );
+            }
+
+            if( track.getCurve( "reso1Amp" )->size() > 0 ){
+                track.getCurve( "reso1Amp" )->print( stream, start, "[Reso1AmpBPList]" );
+            }
+            if( track.getCurve( "reso2Amp" )->size() > 0 ){
+                track.getCurve( "reso2Amp" )->print( stream, start, "[Reso2AmpBPList]" );
+            }
+            if( track.getCurve( "reso3Amp" )->size() > 0 ){
+                track.getCurve( "reso3Amp" )->print( stream, start, "[Reso3AmpBPList]" );
+            }
+            if( track.getCurve( "reso4Amp" )->size() > 0 ){
+                track.getCurve( "reso4Amp" )->print( stream, start, "[Reso4AmpBPList]" );
+            }
+        }
+
+        if( track.getCurve( "gen" )->size() > 0 ){
+            track.getCurve( "gen" )->print( stream, start, "[GenderFactorBPList]" );
+        }
+        if( track.getCurve( "por" )->size() > 0 ){
+            track.getCurve( "por" )->print( stream, start, "[PortamentoTimingBPList]" );
+        }
+        if( version.substr( 0, 4 ) == "DSB3" ){
+            if( track.getCurve( "ope" )->size() > 0 ){
+                track.getCurve( "ope" )->print( stream, start, "[OpeningBPList]" );
+            }
+        }
+    }
+
+    /**
      * @brief トラックをストリームに出力する
      * @param sequence (Sequence) 出力するシーケンス
      * @param track (int) 出力するトラックの番号
@@ -135,7 +246,7 @@ protected:
 
         // Meta Textを準備
         TextStream textStream;
-        sequence->track[track].printMetaText( textStream, sequence->getTotalClocks() + 120, 0, printPitch, master, mixer );
+        printMetaText( sequence->track[track], textStream, sequence->getTotalClocks() + 120, 0, printPitch, master, mixer );
         tick_t lastClock = 0;
         vector<MidiEvent> meta = getMidiEventsFromMetaText( &textStream, encoding );
         for( int i = 0; i < meta.size(); i++ ){
