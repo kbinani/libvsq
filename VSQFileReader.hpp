@@ -28,7 +28,7 @@ using namespace VSQ_NS;
  * @brief VSQ ファイルからのシーケンス読み込みを行うクラス
  */
 class VSQFileReader{
-private:
+protected:
     class TentativeHandle : public Handle{
     public:
         explicit TentativeHandle( HandleType::HandleTypeEnum type ) :
@@ -100,11 +100,83 @@ public:
 
 protected:
     /**
+     * @brief テキストストリームからイベントの内容を読み込み初期化する
+     * @param sr [TextStream] 読み込み対象
+     * @param value [int]
+     * @param last_line [ByRef<string>] 読み込んだ最後の行が返されます
+     * @todo boost::lexical_cast使っている箇所はStringUtil使うようにする
+     */
+    static TentativeEvent parseEvent( TextStream &sr, int value, std::string &lastLine ){
+        TentativeEvent result;
+        result.index = value;
+        result.type = EventType::UNKNOWN;
+        result._singerHandleIndex = -2;
+        result._lyricHandleIndex = -1;
+        result._vibratoHandleIndex = -1;
+        result._noteHeadHandleIndex = -1;
+        result.setLength( 0 );
+        result.note = 0;
+        result.dynamics = 64;
+        result.pmBendDepth = 8;
+        result.pmBendLength = 0;
+        result.pmbPortamentoUse = 0;
+        result.demDecGainRate = 50;
+        result.demAccent = 50;
+        result.vibratoDelay = 0;
+        lastLine = sr.readLine();
+        while( lastLine.find( "[" ) != 0 ){
+            vector<string> spl = StringUtil::explode( "=", lastLine );
+            string search = spl[0];
+            if( search == "Type" ){
+                if( spl[1] == "Anote" ){
+                    result.type = EventType::NOTE;
+                }else if( spl[1] == "Singer" ){
+                    result.type = EventType::SINGER;
+                }else if( spl[1] == "Aicon" ){
+                    result.type = EventType::ICON;
+                }else{
+                    result.type = EventType::UNKNOWN;
+                }
+            }else if( search == "Length" ){
+                result.setLength( boost::lexical_cast<tick_t>( spl[1] ) );
+            }else if( search == "Note#" ){
+                result.note = boost::lexical_cast<int>( spl[1] );
+            }else if( search == "Dynamics" ){
+                result.dynamics = boost::lexical_cast<int>( spl[1] );
+            }else if( search == "PMBendDepth" ){
+                result.pmBendDepth = boost::lexical_cast<int>( spl[1] );
+            }else if( search == "PMBendLength" ){
+                result.pmBendLength = boost::lexical_cast<int>( spl[1] );
+            }else if( search == "DEMdecGainRate" ){
+                result.demDecGainRate = boost::lexical_cast<int>( spl[1] );
+            }else if( search ==  "DEMaccent" ){
+                result.demAccent = boost::lexical_cast<int>( spl[1] );
+            }else if( search == "LyricHandle" ){
+                result._lyricHandleIndex = Handle::getHandleIndexFromString( spl[1] );
+            }else if( search == "IconHandle" ){
+                result._singerHandleIndex = Handle::getHandleIndexFromString( spl[1] );
+            }else if( search == "VibratoHandle" ){
+                result._vibratoHandleIndex = Handle::getHandleIndexFromString( spl[1] );
+            }else if( search == "VibratoDelay" ){
+                result.vibratoDelay = boost::lexical_cast<int>( spl[1] );
+            }else if( search == "PMbPortamentoUse" ){
+                result.pmbPortamentoUse = boost::lexical_cast<int>( spl[1] );
+            }else if( search == "NoteHeadHandle" ){
+                result._noteHeadHandleIndex = Handle::getHandleIndexFromString( spl[1] );
+            }
+            if( ! sr.ready() ){
+                break;
+            }
+            lastLine = sr.readLine();
+        }
+        return result;
+    }
+
+    /**
      * @brief テキストストリームからハンドルの内容を読み込み初期化する
      * @param stream 読み込み元のテキストストリーム
      * @param index <code>index</code> フィールドの値
      * @param lastLine 読み込んだ最後の行。テーブルの ["value"] に文字列が格納される
-     * @todo この機能はVSQFileReaderに移動する
      * @todo boostでstring->intの変換をやっている箇所を、StringUtilを使うよう変更
      */
     static Handle parseHandle( VSQ_NS::TextStream &stream, int index, std::string &lastLine ){
@@ -489,7 +561,8 @@ private:
                 std::vector<std::string> spl = StringUtil::explode( "#", buffer );
                 int index = StringUtil::parseInt( spl[1] );
                 if( last_line.find( "[ID#" ) == 0 ){
-                    Event *item = new VSQ_NS::Event( stream, index, last_line );
+                    Event *item = new Event();
+                    *item = parseEvent( stream, index, last_line );
                     temporaryEventList.push_back( item );
                     eventList.insert( make_pair( index, item ) );
                 }else if( last_line.find( "[h#" ) == 0 ){

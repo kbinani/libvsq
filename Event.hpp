@@ -209,6 +209,7 @@ public:
          * @param stream 出力先のストリーム
          * @param eos EOS として出力する Tick 単位の時刻
          * @return リスト中のイベントに含まれるハンドルの一覧
+         * @todo ここの機能はVSQFileWriterに移す
          */
         std::vector<VSQ_NS::Handle> write( TextStream &stream, VSQ_NS::tick_t eos ){
             vector<Handle> handles = _buildHandleList();
@@ -603,79 +604,6 @@ public:
             lyricHandle.setLyricAt( 0, Lyric( "a", "a" ) );
         }
         id = 0;
-    }
-
-    /**
-     * @brief テキストファイルからのコンストラクタ
-     * @param sr [TextStream] 読み込み対象
-     * @param value [int]
-     * @param last_line [ByRef<string>] 読み込んだ最後の行が返されます
-     * @todo この機能はVSQFileReaderに移す
-     * @todo boost::lexical_cast使っている箇所はStringUtil使うようにする
-     */
-    explicit Event( TextStream &sr, int value, std::string &lastLine ){
-        init();
-        index = value;
-        type = EventType::UNKNOWN;
-        _singerHandleIndex = -2;
-        _lyricHandleIndex = -1;
-        _vibratoHandleIndex = -1;
-        _noteHeadHandleIndex = -1;
-        setLength( 0 );
-        note = 0;
-        dynamics = 64;
-        pmBendDepth = 8;
-        pmBendLength = 0;
-        pmbPortamentoUse = 0;
-        demDecGainRate = 50;
-        demAccent = 50;
-        vibratoDelay = 0;
-        lastLine = sr.readLine();
-        while( lastLine.find( "[" ) != 0 ){
-            vector<string> spl = StringUtil::explode( "=", lastLine );
-            string search = spl[0];
-            if( search == "Type" ){
-                if( spl[1] == "Anote" ){
-                    type = EventType::NOTE;
-                }else if( spl[1] == "Singer" ){
-                    type = EventType::SINGER;
-                }else if( spl[1] == "Aicon" ){
-                    type = EventType::ICON;
-                }else{
-                    type = EventType::UNKNOWN;
-                }
-            }else if( search == "Length" ){
-                setLength( boost::lexical_cast<tick_t>( spl[1] ) );
-            }else if( search == "Note#" ){
-                note = boost::lexical_cast<int>( spl[1] );
-            }else if( search == "Dynamics" ){
-                dynamics = boost::lexical_cast<int>( spl[1] );
-            }else if( search == "PMBendDepth" ){
-                pmBendDepth = boost::lexical_cast<int>( spl[1] );
-            }else if( search == "PMBendLength" ){
-                pmBendLength = boost::lexical_cast<int>( spl[1] );
-            }else if( search == "DEMdecGainRate" ){
-                demDecGainRate = boost::lexical_cast<int>( spl[1] );
-            }else if( search ==  "DEMaccent" ){
-                demAccent = boost::lexical_cast<int>( spl[1] );
-            }else if( search == "LyricHandle" ){
-                _lyricHandleIndex = Handle::getHandleIndexFromString( spl[1] );
-            }else if( search == "IconHandle" ){
-                _singerHandleIndex = Handle::getHandleIndexFromString( spl[1] );
-            }else if( search == "VibratoHandle" ){
-                _vibratoHandleIndex = Handle::getHandleIndexFromString( spl[1] );
-            }else if( search == "VibratoDelay" ){
-                vibratoDelay = boost::lexical_cast<int>( spl[1] );
-            }else if( search == "PMbPortamentoUse" ){
-                pmbPortamentoUse = boost::lexical_cast<int>( spl[1] );
-            }else if( search == "NoteHeadHandle" ){
-                _noteHeadHandleIndex = Handle::getHandleIndexFromString( spl[1] );
-            }
-            if( !sr.ready() ){
-                break;
-            }
-            lastLine = sr.readLine();
-        }
     }
 
     /**

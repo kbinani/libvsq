@@ -4,35 +4,6 @@
 using namespace std;
 using namespace VSQ_NS;
 
-class EventStub : public Event
-{
-public:
-    EventStub( TextStream &stream, int value, std::string &lastLine ) :
-        Event( stream, value, lastLine )
-    {
-    }
-
-    int getLyricHandleIndex()
-    {
-        return _lyricHandleIndex;
-    }
-
-    int getVibratoHandleIndex()
-    {
-        return _vibratoHandleIndex;
-    }
-
-    int getNoteHeadHandleIndex()
-    {
-        return _noteHeadHandleIndex;
-    }
-
-    int getIconHandleIndex()
-    {
-        return _singerHandleIndex;
-    }
-};
-
 class EventTest : public CppUnit::TestCase
 {
 public:
@@ -99,43 +70,6 @@ public:
         CPPUNIT_ASSERT_EQUAL( 60, event.note );
     }
     
-    void testConstructByStream()
-    {
-        TextStream stream;
-        stream.writeLine( "Type=Anote" );
-        stream.writeLine( "Length=1" );
-        stream.writeLine( "Note#=2" );
-        stream.writeLine( "Dynamics=3" );
-        stream.writeLine( "PMBendDepth=4" );
-        stream.writeLine( "PMBendLength=5" );
-        stream.writeLine( "DEMdecGainRate=6" );
-        stream.writeLine( "DEMaccent=7" );
-        stream.writeLine( "LyricHandle=h#0001" );
-        stream.writeLine( "IconHandle=h#0002" );
-        stream.writeLine( "VibratoHandle=h#0003" );
-        stream.writeLine( "VibratoDelay=8" );
-        stream.writeLine( "PMbPortamentoUse=3" );
-        stream.writeLine( "NoteHeadHandle=h#0004" );
-        stream.writeLine( "[ID#9999]" );
-        stream.setPointer( -1 );
-        int number = 10;
-        string lastLine = "";
-        EventStub event( stream, number, lastLine );
-
-        assertEqual( EventType::NOTE, event.type );
-        assertEqual( (tick_t)1, event.getLength() );
-        assertEqual( 2, event.note );
-        assertEqual( 3, event.dynamics );
-        assertEqual( 4, event.pmBendDepth );
-        assertEqual( 5, event.pmBendLength );
-        assertEqual( 6, event.demDecGainRate );
-        assertEqual( 7, event.demAccent );
-        assertEqual( 1, event.getLyricHandleIndex() );
-        assertEqual( 2, event.getIconHandleIndex() );
-        assertEqual( 3, event.getVibratoHandleIndex() );
-        assertEqual( 4, event.getNoteHeadHandleIndex() );
-    }
-
     void testEquals()
     {
         //    fail();
@@ -396,7 +330,6 @@ public:
     CPPUNIT_TEST( testConstruct );
     CPPUNIT_TEST( testConstructWithLine );
     CPPUNIT_TEST( testConstructWithClockAndId );
-    CPPUNIT_TEST( testConstructByStream );
     CPPUNIT_TEST( testEquals );
     CPPUNIT_TEST( testWriteNoteWithOption );
     CPPUNIT_TEST( testWriteSinger );

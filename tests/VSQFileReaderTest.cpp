@@ -7,8 +7,38 @@ using namespace VSQ_NS;
 
 class VSQFileReaderStub : public VSQFileReader{
 public:
+    class TentativeEventStub : public VSQFileReader::TentativeEvent{
+    public:
+        TentativeEventStub( const TentativeEvent &event ) :
+            TentativeEvent( event )
+        {
+        }
+
+        int getLyricHandleIndex(){
+            return _lyricHandleIndex;
+        }
+
+        int getNoteHeadHandleIndex(){
+            return _noteHeadHandleIndex;
+        }
+
+        int getSingerHandleIndex(){
+            return _singerHandleIndex;
+        }
+
+        int getVibratoHandleIndex(){
+            return _vibratoHandleIndex;
+        }
+    };
+
     static Handle parseHandle(TextStream &stream, int index, string &lastLine){
         return VSQFileReader::parseHandle( stream, index, lastLine );
+    }
+
+    static TentativeEventStub parseEvent(TextStream &sr, int value, string &lastLine){
+        TentativeEvent event = VSQFileReader::parseEvent( sr, value, lastLine );
+        TentativeEventStub result( event );
+        return result;
     }
 };
 
@@ -420,6 +450,43 @@ public:
         CPPUNIT_ASSERT_EQUAL( string( "0.5=11" ), handle.getDynBP().getData() );
     }
 
+    void testParseEvent()
+    {
+        TextStream stream;
+        stream.writeLine( "Type=Anote" );
+        stream.writeLine( "Length=1" );
+        stream.writeLine( "Note#=2" );
+        stream.writeLine( "Dynamics=3" );
+        stream.writeLine( "PMBendDepth=4" );
+        stream.writeLine( "PMBendLength=5" );
+        stream.writeLine( "DEMdecGainRate=6" );
+        stream.writeLine( "DEMaccent=7" );
+        stream.writeLine( "LyricHandle=h#0001" );
+        stream.writeLine( "IconHandle=h#0002" );
+        stream.writeLine( "VibratoHandle=h#0003" );
+        stream.writeLine( "VibratoDelay=8" );
+        stream.writeLine( "PMbPortamentoUse=3" );
+        stream.writeLine( "NoteHeadHandle=h#0004" );
+        stream.writeLine( "[ID#9999]" );
+        stream.setPointer( -1 );
+        int number = 10;
+        string lastLine = "";
+        VSQFileReaderStub::TentativeEventStub event = VSQFileReaderStub::parseEvent( stream, number, lastLine );
+
+        CPPUNIT_ASSERT_EQUAL( EventType::NOTE, event.type );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1, event.getLength() );
+        CPPUNIT_ASSERT_EQUAL( 2, event.note );
+        CPPUNIT_ASSERT_EQUAL( 3, event.dynamics );
+        CPPUNIT_ASSERT_EQUAL( 4, event.pmBendDepth );
+        CPPUNIT_ASSERT_EQUAL( 5, event.pmBendLength );
+        CPPUNIT_ASSERT_EQUAL( 6, event.demDecGainRate );
+        CPPUNIT_ASSERT_EQUAL( 7, event.demAccent );
+        CPPUNIT_ASSERT_EQUAL( 1, event.getLyricHandleIndex() );
+        CPPUNIT_ASSERT_EQUAL( 2, event.getSingerHandleIndex() );
+        CPPUNIT_ASSERT_EQUAL( 3, event.getVibratoHandleIndex() );
+        CPPUNIT_ASSERT_EQUAL( 4, event.getNoteHeadHandleIndex() );
+    }
+
     CPPUNIT_TEST_SUITE( VSQFileReaderTest );
     CPPUNIT_TEST( testRead );
     CPPUNIT_TEST( testConstructLyricFromTextStreamStopWithEOF );
@@ -429,6 +496,7 @@ public:
     CPPUNIT_TEST( testConstructSingerFromTextStream );
     CPPUNIT_TEST( testConstructAttackFromTextStream );
     CPPUNIT_TEST( testConstructCrescendFromTextStream );
+    CPPUNIT_TEST( testParseEvent );
     CPPUNIT_TEST_SUITE_END();
 };
 
