@@ -31,11 +31,11 @@ public:
         }
     };
 
-    static Handle parseHandle(TextStream &stream, int index, string &lastLine){
+    Handle parseHandle(TextStream &stream, int index, string &lastLine){
         return VSQFileReader::parseHandle( stream, index, lastLine );
     }
 
-    static TentativeEventStub parseEvent(TextStream &sr, int value, string &lastLine){
+    TentativeEventStub parseEvent(TextStream &sr, int value, string &lastLine){
         TentativeEvent event = VSQFileReader::parseEvent( sr, value, lastLine );
         TentativeEventStub result( event );
         return result;
@@ -44,15 +44,13 @@ public:
 
 class VSQFileReaderTest : public CppUnit::TestCase{
 public:
-    void getLyricStream( TextStream &stream )
-    {
+    void getLyricStream( TextStream &stream ){
         stream.writeLine( "L0=あ,a,0.4,0,1" );
         stream.writeLine( "L1=は,h a,0.6,64,0,0" );
         stream.setPointer( -1 );
     }
 
-    void getVibratoStream( TextStream &stream )
-    {
+    void getVibratoStream( TextStream &stream ){
         stream.writeLine( "IconID=$04040004" );
         stream.writeLine( "IDS=normal-da-yo" );
         stream.writeLine( "Caption=キャプションです=あ" );
@@ -70,8 +68,7 @@ public:
         stream.setPointer( -1 );
     }
 
-    void getSingerStream( TextStream &stream )
-    {
+    void getSingerStream( TextStream &stream ){
         stream.writeLine( "IconID=$07010002" );
         stream.writeLine( "IDS=Miku3=God" );
         stream.writeLine( "Original=2" );
@@ -82,8 +79,7 @@ public:
         stream.setPointer( -1 );
     }
 
-    void getAttackStream( TextStream &stream )
-    {
+    void getAttackStream( TextStream &stream ){
         stream.writeLine( "IconID=$01010002" );
         stream.writeLine( "IDS=accent" );
         stream.writeLine( "Original=2" );
@@ -94,8 +90,7 @@ public:
         stream.setPointer( -1 );
     }
 
-    void getCrescendoStream( TextStream &stream )
-    {
+    void getCrescendoStream( TextStream &stream ){
         stream.writeLine( "IconID=$05020001" );
         stream.writeLine( "IDS=Crescendo" );
         stream.writeLine( "Original=4" );
@@ -306,7 +301,8 @@ public:
         string lastLine = "";
         int index = 100;
 
-        Handle handle = VSQFileReaderStub::parseHandle( stream, index, lastLine );
+        VSQFileReaderStub reader;
+        Handle handle = reader.parseHandle( stream, index, lastLine );
         CPPUNIT_ASSERT_EQUAL( HandleType::LYRIC, handle.getHandleType() );
         CPPUNIT_ASSERT_EQUAL( index, handle.index );
         CPPUNIT_ASSERT_EQUAL( 2, handle.getLyricCount() );
@@ -338,7 +334,8 @@ public:
         string lastLine = "";
         int index = 100;
 
-        Handle handle = VSQFileReaderStub::parseHandle( stream, index, lastLine );
+        VSQFileReaderStub reader;
+        Handle handle = reader.parseHandle( stream, index, lastLine );
         CPPUNIT_ASSERT_EQUAL( HandleType::LYRIC, handle.getHandleType() );
         CPPUNIT_ASSERT_EQUAL( index, handle.index );
         CPPUNIT_ASSERT_EQUAL( 1, handle.getLyricCount() );
@@ -362,7 +359,8 @@ public:
         getVibratoStream( stream );
         string lastLine = "";
         int index = 101;
-        Handle handle = VSQFileReaderStub::parseHandle( stream, index, lastLine );
+        VSQFileReaderStub reader;
+        Handle handle = reader.parseHandle( stream, index, lastLine );
 
         CPPUNIT_ASSERT_EQUAL( HandleType::VIBRATO, handle.getHandleType() );
         CPPUNIT_ASSERT_EQUAL( string( "$04040004" ), handle.iconId );
@@ -392,7 +390,8 @@ public:
 
         string lastLine = "";
         int index = 101;
-        Handle handle = VSQFileReaderStub::parseHandle( stream, index, lastLine );
+        VSQFileReaderStub reader;
+        Handle handle = reader.parseHandle( stream, index, lastLine );
 
         CPPUNIT_ASSERT_EQUAL( 0, handle.getRateBP().size() );
         CPPUNIT_ASSERT_EQUAL( 0, handle.getDepthBP().size() );
@@ -403,7 +402,8 @@ public:
         getSingerStream( stream );
         int index = 101;
         string lastLine = "";
-        Handle handle = VSQFileReaderStub::parseHandle( stream, index, lastLine );
+        VSQFileReaderStub reader;
+        Handle handle = reader.parseHandle( stream, index, lastLine );
         CPPUNIT_ASSERT_EQUAL( index, handle.index );
         CPPUNIT_ASSERT_EQUAL( HandleType::SINGER, handle.getHandleType() );
         CPPUNIT_ASSERT_EQUAL( string( "$07010002" ), handle.iconId );
@@ -420,7 +420,8 @@ public:
         getAttackStream( stream );
         string lastLine = "";
         int index = 204;
-        Handle handle = VSQFileReaderStub::parseHandle( stream, index, lastLine );
+        VSQFileReaderStub reader;
+        Handle handle = reader.parseHandle( stream, index, lastLine );
         CPPUNIT_ASSERT_EQUAL( HandleType::NOTE_HEAD, handle.getHandleType() );
         CPPUNIT_ASSERT_EQUAL( index, handle.index );
         CPPUNIT_ASSERT_EQUAL( string( "$01010002" ), handle.iconId );
@@ -437,7 +438,8 @@ public:
         getCrescendoStream( stream );
         string lastLine;
         int index = 204;
-        Handle handle = VSQFileReaderStub::parseHandle( stream, index, lastLine );
+        VSQFileReaderStub reader;
+        Handle handle = reader.parseHandle( stream, index, lastLine );
         CPPUNIT_ASSERT_EQUAL( index, handle.index );
         CPPUNIT_ASSERT_EQUAL( HandleType::DYNAMICS, handle.getHandleType() );
         CPPUNIT_ASSERT_EQUAL( string( "$05020001" ), handle.iconId );
@@ -450,8 +452,7 @@ public:
         CPPUNIT_ASSERT_EQUAL( string( "0.5=11" ), handle.getDynBP().getData() );
     }
 
-    void testParseEvent()
-    {
+    void testParseEvent(){
         TextStream stream;
         stream.writeLine( "Type=Anote" );
         stream.writeLine( "Length=1" );
@@ -471,7 +472,8 @@ public:
         stream.setPointer( -1 );
         int number = 10;
         string lastLine = "";
-        VSQFileReaderStub::TentativeEventStub event = VSQFileReaderStub::parseEvent( stream, number, lastLine );
+        VSQFileReaderStub reader;
+        VSQFileReaderStub::TentativeEventStub event = reader.parseEvent( stream, number, lastLine );
 
         CPPUNIT_ASSERT_EQUAL( EventType::NOTE, event.type );
         CPPUNIT_ASSERT_EQUAL( (tick_t)1, event.getLength() );

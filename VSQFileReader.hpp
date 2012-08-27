@@ -106,7 +106,7 @@ protected:
      * @param last_line [ByRef<string>] 読み込んだ最後の行が返されます
      * @todo boost::lexical_cast使っている箇所はStringUtil使うようにする
      */
-    static TentativeEvent parseEvent( TextStream &sr, int value, std::string &lastLine ){
+    TentativeEvent parseEvent( TextStream &stream, int value, std::string &lastLine ){
         TentativeEvent result;
         result.index = value;
         result.type = EventType::UNKNOWN;
@@ -123,51 +123,51 @@ protected:
         result.demDecGainRate = 50;
         result.demAccent = 50;
         result.vibratoDelay = 0;
-        lastLine = sr.readLine();
+        lastLine = stream.readLine();
         while( lastLine.find( "[" ) != 0 ){
-            vector<string> spl = StringUtil::explode( "=", lastLine );
-            string search = spl[0];
+            vector<string> parameters = StringUtil::explode( "=", lastLine );
+            string search = parameters[0];
             if( search == "Type" ){
-                if( spl[1] == "Anote" ){
+                if( parameters[1] == "Anote" ){
                     result.type = EventType::NOTE;
-                }else if( spl[1] == "Singer" ){
+                }else if( parameters[1] == "Singer" ){
                     result.type = EventType::SINGER;
-                }else if( spl[1] == "Aicon" ){
+                }else if( parameters[1] == "Aicon" ){
                     result.type = EventType::ICON;
                 }else{
                     result.type = EventType::UNKNOWN;
                 }
             }else if( search == "Length" ){
-                result.setLength( boost::lexical_cast<tick_t>( spl[1] ) );
+                result.setLength( boost::lexical_cast<tick_t>( parameters[1] ) );
             }else if( search == "Note#" ){
-                result.note = boost::lexical_cast<int>( spl[1] );
+                result.note = boost::lexical_cast<int>( parameters[1] );
             }else if( search == "Dynamics" ){
-                result.dynamics = boost::lexical_cast<int>( spl[1] );
+                result.dynamics = boost::lexical_cast<int>( parameters[1] );
             }else if( search == "PMBendDepth" ){
-                result.pmBendDepth = boost::lexical_cast<int>( spl[1] );
+                result.pmBendDepth = boost::lexical_cast<int>( parameters[1] );
             }else if( search == "PMBendLength" ){
-                result.pmBendLength = boost::lexical_cast<int>( spl[1] );
+                result.pmBendLength = boost::lexical_cast<int>( parameters[1] );
             }else if( search == "DEMdecGainRate" ){
-                result.demDecGainRate = boost::lexical_cast<int>( spl[1] );
+                result.demDecGainRate = boost::lexical_cast<int>( parameters[1] );
             }else if( search ==  "DEMaccent" ){
-                result.demAccent = boost::lexical_cast<int>( spl[1] );
+                result.demAccent = boost::lexical_cast<int>( parameters[1] );
             }else if( search == "LyricHandle" ){
-                result._lyricHandleIndex = Handle::getHandleIndexFromString( spl[1] );
+                result._lyricHandleIndex = Handle::getHandleIndexFromString( parameters[1] );
             }else if( search == "IconHandle" ){
-                result._singerHandleIndex = Handle::getHandleIndexFromString( spl[1] );
+                result._singerHandleIndex = Handle::getHandleIndexFromString( parameters[1] );
             }else if( search == "VibratoHandle" ){
-                result._vibratoHandleIndex = Handle::getHandleIndexFromString( spl[1] );
+                result._vibratoHandleIndex = Handle::getHandleIndexFromString( parameters[1] );
             }else if( search == "VibratoDelay" ){
-                result.vibratoDelay = boost::lexical_cast<int>( spl[1] );
+                result.vibratoDelay = boost::lexical_cast<int>( parameters[1] );
             }else if( search == "PMbPortamentoUse" ){
-                result.pmbPortamentoUse = boost::lexical_cast<int>( spl[1] );
+                result.pmbPortamentoUse = boost::lexical_cast<int>( parameters[1] );
             }else if( search == "NoteHeadHandle" ){
-                result._noteHeadHandleIndex = Handle::getHandleIndexFromString( spl[1] );
+                result._noteHeadHandleIndex = Handle::getHandleIndexFromString( parameters[1] );
             }
-            if( ! sr.ready() ){
+            if( ! stream.ready() ){
                 break;
             }
-            lastLine = sr.readLine();
+            lastLine = stream.readLine();
         }
         return result;
     }
@@ -179,7 +179,7 @@ protected:
      * @param lastLine 読み込んだ最後の行。テーブルの ["value"] に文字列が格納される
      * @todo boostでstring->intの変換をやっている箇所を、StringUtilを使うよう変更
      */
-    static Handle parseHandle( VSQ_NS::TextStream &stream, int index, std::string &lastLine ){
+    Handle parseHandle( VSQ_NS::TextStream &stream, int index, std::string &lastLine ){
         TentativeHandle result( HandleType::UNKNOWN );
         result.index = index;
 
@@ -214,66 +214,66 @@ protected:
         // "["にぶち当たるまで読込む
         lastLine = stream.readLine();
         while( lastLine.find( "[" ) != 0 ){
-            vector<string> spl = StringUtil::explode( "=", lastLine );
-            string search = spl[0];
+            vector<string> parameters = StringUtil::explode( "=", lastLine );
+            string search = parameters[0];
             if( search == "Language" ){
                 result.setHandleType( HandleType::SINGER );
-                result.language = boost::lexical_cast<int>( spl[1] );
+                result.language = boost::lexical_cast<int>( parameters[1] );
             }else if( search == "Program" ){
-                result.program = boost::lexical_cast<int>( spl[1] );
+                result.program = boost::lexical_cast<int>( parameters[1] );
             }else if( search == "IconID" ){
-                result.iconId = spl[1];
+                result.iconId = parameters[1];
             }else if( search == "IDS" ){
-                result.ids = spl[1];
-                for( int i = 2; i < spl.size(); i++ ){
-                    result.ids = result.ids + "=" + spl[i];
+                result.ids = parameters[1];
+                for( int i = 2; i < parameters.size(); i++ ){
+                    result.ids = result.ids + "=" + parameters[i];
                 }
             }else if( search == "Original" ){
-                result.original = boost::lexical_cast<int>( spl[1] );
+                result.original = boost::lexical_cast<int>( parameters[1] );
             }else if( search == "Caption" ){
-                result.setCaption( spl[1] );
-                for( int i = 2; i < spl.size(); i++ ){
-                    result.setCaption( result.getCaption() + "=" + spl[i] );
+                result.setCaption( parameters[1] );
+                for( int i = 2; i < parameters.size(); i++ ){
+                    result.setCaption( result.getCaption() + "=" + parameters[i] );
                 }
             }else if( search == "Length" ){
-                result.setLength( boost::lexical_cast<tick_t>( spl[1] ) );
+                result.setLength( boost::lexical_cast<tick_t>( parameters[1] ) );
             }else if( search == "StartDepth" ){
-                result.setStartDepth( boost::lexical_cast<int>( spl[1] ) );
+                result.setStartDepth( boost::lexical_cast<int>( parameters[1] ) );
             }else if( search == "DepthBPNum" ){
-                tmpDepthBPNum = spl[1];
+                tmpDepthBPNum = parameters[1];
             }else if( search == "DepthBPX" ){
-                tmpDepthBPX = spl[1];
+                tmpDepthBPX = parameters[1];
             }else if( search == "DepthBPY" ){
-                tmpDepthBPY = spl[1];
+                tmpDepthBPY = parameters[1];
             }else if( search == "StartRate" ){
                 result.setHandleType( HandleType::VIBRATO );
-                result.setStartRate( boost::lexical_cast<int>( spl[1] ) );
+                result.setStartRate( boost::lexical_cast<int>( parameters[1] ) );
             }else if( search == "RateBPNum" ){
-                tmpRateBPNum = spl[1];
+                tmpRateBPNum = parameters[1];
             }else if( search == "RateBPX" ){
-                tmpRateBPX = spl[1];
+                tmpRateBPX = parameters[1];
             }else if( search == "RateBPY" ){
-                tmpRateBPY = spl[1];
+                tmpRateBPY = parameters[1];
             }else if( search == "Duration" ){
                 result.setHandleType( HandleType::NOTE_HEAD );
-                result.setDuration( boost::lexical_cast<int>( spl[1] ) );
+                result.setDuration( boost::lexical_cast<int>( parameters[1] ) );
             }else if( search == "Depth" ){
-                result.setDepth( boost::lexical_cast<int>( spl[1] ) );
+                result.setDepth( boost::lexical_cast<int>( parameters[1] ) );
             }else if( search == "StartDyn" ){
                 result.setHandleType( HandleType::DYNAMICS );
-                result.setStartDyn( boost::lexical_cast<int>( spl[1] ) );
+                result.setStartDyn( boost::lexical_cast<int>( parameters[1] ) );
             }else if( search == "EndDyn" ){
                 result.setHandleType( HandleType::DYNAMICS );
-                result.setEndDyn( boost::lexical_cast<int>( spl[1] ) );
+                result.setEndDyn( boost::lexical_cast<int>( parameters[1] ) );
             }else if( search == "DynBPNum" ){
-                tmpDynBPNum = spl[1];
+                tmpDynBPNum = parameters[1];
             }else if( search == "DynBPX" ){
-                tmpDynBPX = spl[1];
+                tmpDynBPX = parameters[1];
             }else if( search == "DynBPY" ){
-                tmpDynBPY = spl[1];
+                tmpDynBPY = parameters[1];
             }else if( search.find( "L" ) == 0 && search.size() >= 2 ){
                 int index = boost::lexical_cast<int>( search.substr( 1, 1 ) );
-                Lyric lyric( spl[1] );
+                Lyric lyric( parameters[1] );
                 result.setHandleType( HandleType::LYRIC );
                 if( result.getLyricCount() <= index + 1 ){
                     int amount = index + 1 - result.getLyricCount();
@@ -320,35 +320,35 @@ private:
     /**
      * @brief MIDIイベントリストから拍子変更イベントを取り出し、TimesigList のインスタンスを初期化する
      */
-    static void parseTimesigList( const vector<MidiEvent> &midi_event, TimesigList &timesigList ){
+    void parseTimesigList( const vector<MidiEvent> &midiEventList, TimesigList &timesigList ){
         timesigList.clear();
-        int dnomi = 4;
-        int numer = 4;
+        int dnominator = 4;
+        int numerator = 4;
         int count = -1;
-        for( int j = 0; j < midi_event.size(); j++ ){
-            if( midi_event[j].firstByte == 0xff && midi_event[j].data.size() >= 5 && midi_event[j].data[0] == 0x58 ){
+        for( int j = 0; j < midiEventList.size(); j++ ){
+            if( midiEventList[j].firstByte == 0xff && midiEventList[j].data.size() >= 5 && midiEventList[j].data[0] == 0x58 ){
                 count++;
-                numer = midi_event[j].data[1];
-                dnomi = 1;
-                for( int i = 0; i < midi_event[j].data[2]; i++ ){
-                    dnomi = dnomi * 2;
+                numerator = midiEventList[j].data[1];
+                dnominator = 1;
+                for( int i = 0; i < midiEventList[j].data[2]; i++ ){
+                    dnominator = dnominator * 2;
                 }
                 if( count == 0 ){
-                    if( midi_event[j].clock == 0 ){
-                        timesigList.push( Timesig( numer, dnomi, 0 ) );
+                    if( midiEventList[j].clock == 0 ){
+                        timesigList.push( Timesig( numerator, dnominator, 0 ) );
                     }else{
                         timesigList.push( Timesig( 4, 4, 0 ) );
-                        timesigList.push( Timesig( numer, dnomi, (int)midi_event[j].clock / (480 * 4) ) );
+                        timesigList.push( Timesig( numerator, dnominator, (int)midiEventList[j].clock / (480 * 4) ) );
                         count++;
                     }
                 }else{
-                    int numerator = timesigList.get( count - 1 ).numerator;
-                    int denominator = timesigList.get( count - 1 ).denominator;
-                    int clock = timesigList.get( count - 1 ).clock;
-                    int bar_count = timesigList.get( count - 1 ).barCount;
-                    int dif = 480 * 4 / denominator * numerator;//1小節が何クロックか？
-                    bar_count += ((int)midi_event[j].clock - clock) / dif;
-                    timesigList.push( Timesig( numer, dnomi, bar_count ) );
+                    int lastNumerator = timesigList.get( count - 1 ).numerator;
+                    int lastDenominator = timesigList.get( count - 1 ).denominator;
+                    tick_t clock = timesigList.get( count - 1 ).clock;
+                    int barCount = timesigList.get( count - 1 ).barCount;
+                    int dif = 480 * 4 / lastDenominator * lastNumerator;//1小節が何クロックか？
+                    barCount += ((int)midiEventList[j].clock - clock) / dif;
+                    timesigList.push( Timesig( numerator, dnominator, barCount ) );
                 }
             }
         }
@@ -358,24 +358,24 @@ private:
     /**
      * @brief MIDIイベントリストからテンポ変更イベントを取り出し、TempoList のインスタンスを初期化する
      */
-    static void parseTempoList( const vector<MidiEvent> &midi_event, TempoList &tempoList ){
+    static void parseTempoList( const vector<MidiEvent> &midiEventList, TempoList &tempoList ){
         tempoList.clear();
-        int prev_tempo = 500000;
-        tick_t prev_index = 0;
+        int lastTempo = 500000;
+        tick_t lastClock = 0;
         int count = -1;
-        int midi_event_size = midi_event.size();
-        for( int j = 0; j < midi_event_size; j++ ){
-            MidiEvent itemj = midi_event[j];
-            if( itemj.firstByte == 0xff && itemj.data.size() >= 4 && itemj.data[0] == 0x51 ){
+        int listSize = midiEventList.size();
+        for( int j = 0; j < listSize; j++ ){
+            MidiEvent item = midiEventList[j];
+            if( item.firstByte == 0xff && item.data.size() >= 4 && item.data[0] == 0x51 ){
                 count++;
-                if( count == 0 && itemj.clock != 0 ){
-                    tempoList.push( Tempo( 0, prev_tempo ) );
+                if( count == 0 && item.clock != 0 ){
+                    tempoList.push( Tempo( 0, lastTempo ) );
                 }
-                int current_tempo = itemj.data[1] << 16 | itemj.data[2] << 8 | itemj.data[3];
-                tick_t current_index = midi_event[j].clock;
-                tempoList.push( Tempo( current_index, current_tempo ) );
-                prev_tempo = current_tempo;
-                prev_index = current_index;
+                int currentTempo = item.data[1] << 16 | item.data[2] << 8 | item.data[3];
+                tick_t currentClock = midiEventList[j].clock;
+                tempoList.push( Tempo( currentClock, currentTempo ) );
+                lastTempo = currentTempo;
+                lastClock = currentClock;
             }
         }
         tempoList.updateTempoInfo();
@@ -390,55 +390,55 @@ private:
      * @todo midi_event を midiEventList に名前を変える
      * @todo swをstreamに名前変える
      */
-    static void getMetatextByMidiEventList( const std::vector<VSQ_NS::MidiEvent> &midi_event, const std::string &encoding, TextStream &sw, string &track_name ){
-        int count = midi_event.size();
+    void getMetatextByMidiEventList( const std::vector<VSQ_NS::MidiEvent> &midiEventList, const std::string &encoding, TextStream &stream, string &trackName ){
+        int count = midiEventList.size();
         vector<int> buffer;
         for( int i = 0; i < count; i++ ){
-            MidiEvent item = midi_event[i];
+            MidiEvent item = midiEventList[i];
             if( item.firstByte == 0xff && item.data.size() > 0 ){
                 // meta textを抽出
                 int type = item.data[0];
                 if( type == 0x01 || type == 0x03 ){
                     if( type == 0x01 ){
-                        int colon_count = 0;
+                        int colonCount = 0;
                         for( int j = 1; j < item.data.size(); j++ ){
                             int d = item.data[j];
                             if( d == 0x3a ){
-                                colon_count++;
-                                if( colon_count <= 2 ){
+                                colonCount++;
+                                if( colonCount <= 2 ){
                                     continue;
                                 }
                             }
-                            if( colon_count < 2 ){
+                            if( colonCount < 2 ){
                                 continue;
                             }
                             buffer.push_back( d );
                         }
 
-                        std::vector<int>::iterator itr_0x0a = std::find( buffer.begin(), buffer.end(), 0x0a );
-                        while( itr_0x0a != buffer.end() ){
-                            std::ostringstream cpy;
-                            int index_0x0a = itr_0x0a - buffer.begin();
-                            for( int j = 0; j < index_0x0a; j++ ){
-                                cpy << (char)(0xff & buffer[0]);
+                        std::vector<int>::iterator lineFeedPosition = std::find( buffer.begin(), buffer.end(), 0x0a );
+                        while( lineFeedPosition != buffer.end() ){
+                            std::ostringstream copy;
+                            int lineFeedIndex = lineFeedPosition - buffer.begin();
+                            for( int j = 0; j < lineFeedIndex; j++ ){
+                                copy << (char)(0xff & buffer[0]);
                                 buffer.erase( buffer.begin() );
                             }
 
-                            string line = CP932Converter::convertToUTF8( cpy.str() );
-                            sw.writeLine( line );
+                            string line = CP932Converter::convertToUTF8( copy.str() );
+                            stream.writeLine( line );
                             buffer.erase( buffer.begin() );
-                            itr_0x0a = std::find( buffer.begin(), buffer.end(), 0x0a );
+                            lineFeedPosition = std::find( buffer.begin(), buffer.end(), 0x0a );
                         }
                     }else{
                         for( int j = 1; j < item.data.size(); j++ ){
                             buffer.push_back( item.data[j] );
                         }
                         int c = buffer.size();
-                        ostringstream d;
+                        ostringstream copy;
                         for( int j = 0; j < c; j++ ){
-                            d << (char)(0xff & buffer[j]);
+                            copy << (char)(0xff & buffer[j]);
                         }
-                        track_name = CP932Converter::convertToUTF8( d.str() );
+                        trackName = CP932Converter::convertToUTF8( copy.str() );
                         buffer.clear();
                     }
                 }
@@ -449,15 +449,15 @@ private:
 
         int remain = buffer.size();
         if( 0 < remain ){
-            std::ostringstream cpy;
+            std::ostringstream copy;
             for( int j = 0; j < remain; j++ ){
-                cpy << (char)(0xff & buffer[j]);
+                copy << (char)(0xff & buffer[j]);
             }
-            std::string line = VSQ_NS::CP932Converter::convertToUTF8( cpy.str() );
-            sw.writeLine( line );
+            std::string line = VSQ_NS::CP932Converter::convertToUTF8( copy.str() );
+            stream.writeLine( line );
         }
 
-        sw.setPointer( -1 );
+        stream.setPointer( -1 );
     }
 
     /**
@@ -466,107 +466,107 @@ private:
      * @param [out] master 読み込まれた Master 情報
      * @param [out] mixer 読み込まれた Mixer 情報
      */
-    static Track getTrackByTextStream( TextStream &stream, Master *master = 0, Mixer *mixer = 0 ){
-        std::map<int, tick_t> t_event_list;
-        std::map<int, VSQ_NS::Event *> eventList;
-        std::map<int, VSQ_NS::Handle> handleList;
+    Track getTrackByTextStream( TextStream &stream, Master *master = 0, Mixer *mixer = 0 ){
+        std::map<int, tick_t> eventClockMap;
+        std::map<int, VSQ_NS::Event *> eventIdMap;
+        std::map<int, VSQ_NS::Handle> handleIdMap;
         vector<VSQ_NS::Event *> temporaryEventList;
 
         TentativeTrack result;
 
-        std::string last_line = stream.readLine();
+        std::string lastLine = stream.readLine();
         while( 1 ){
             // TextMemoryStreamから順次読込み
-            if( last_line.length() == 0 ){
+            if( lastLine.length() == 0 ){
                 break;
             }
-            if( last_line == "[Common]" ){
-                result.setCommon( VSQ_NS::Common( stream, last_line ) );
-            }else if( last_line == "[Master]" && master != 0 ){
-                *master = VSQ_NS::Master( stream, last_line );
-            }else if( last_line == "[Mixer]" && mixer != 0 ){
-                *mixer = VSQ_NS::Mixer( stream, last_line );
-            }else if( last_line == "[EventList]" ){
-                last_line = stream.readLine();
-                while( last_line.find( "[" ) != 0 ){
-                    std::vector<std::string> spl2 = StringUtil::explode( "=", last_line );
-                    tick_t clock = StringUtil::parseInt( spl2[0] );
-                    int id_number = -1;
-                    if( spl2[1] != "EOS" ){
-                        std::vector<std::string> ids = StringUtil::explode( ",", spl2[1] );
-                        for( int i = 0; i < ids.size(); i++ ){
-                            std::vector<std::string> spl3 = StringUtil::explode( "#", ids[i] );
-                            id_number = StringUtil::parseInt( spl3[1] );
-                            t_event_list.insert( make_pair( id_number, clock ) );
+            if( lastLine == "[Common]" ){
+                result.setCommon( VSQ_NS::Common( stream, lastLine ) );
+            }else if( lastLine == "[Master]" && master != 0 ){
+                *master = VSQ_NS::Master( stream, lastLine );
+            }else if( lastLine == "[Mixer]" && mixer != 0 ){
+                *mixer = VSQ_NS::Mixer( stream, lastLine );
+            }else if( lastLine == "[EventList]" ){
+                lastLine = stream.readLine();
+                while( lastLine.find( "[" ) != 0 ){
+                    std::vector<std::string> parameters = StringUtil::explode( "=", lastLine );
+                    tick_t clock = StringUtil::parseInt( parameters[0] );
+                    int id = -1;
+                    if( parameters[1] != "EOS" ){
+                        std::vector<std::string> idList = StringUtil::explode( ",", parameters[1] );
+                        for( int i = 0; i < idList.size(); i++ ){
+                            std::vector<std::string> idParameters = StringUtil::explode( "#", idList[i] );
+                            id = StringUtil::parseInt( idParameters[1] );
+                            eventClockMap.insert( make_pair( id, clock ) );
                         }
                     }else{
-                        t_event_list.insert( make_pair( -1, clock ) );
+                        eventClockMap.insert( make_pair( -1, clock ) );
                     }
                     if( ! stream.ready() ){
                         break;
                     }else{
-                        last_line = stream.readLine();
+                        lastLine = stream.readLine();
                     }
                 }
-            }else if( last_line == "[PitchBendBPList]" ){
-                last_line = result.getCurve( "pit" )->appendFromText( stream );
-            }else if( last_line == "[PitchBendSensBPList]" ){
-                last_line = result.getCurve( "pbs" )->appendFromText( stream );
-            }else if( last_line == "[DynamicsBPList]" ){
-                last_line = result.getCurve( "dyn" )->appendFromText( stream );
-            }else if( last_line == "[EpRResidualBPList]" ){
-                last_line = result.getCurve( "bre" )->appendFromText( stream );
-            }else if( last_line == "[EpRESlopeBPList]" ){
-                last_line = result.getCurve( "bri" )->appendFromText( stream );
-            }else if( last_line == "[EpRESlopeDepthBPList]" ){
-                last_line = result.getCurve( "cle" )->appendFromText( stream );
-            }else if( last_line == "[EpRSineBPList]" ){
-                last_line = result.getCurve( "harmonics" )->appendFromText( stream );
-            }else if( last_line == "[VibTremDepthBPList]" ){
-                last_line = result.getCurve( "fx2depth" )->appendFromText( stream );
-            }else if( last_line == "[Reso1FreqBPList]" ){
-                last_line = result.getCurve( "reso1FreqBPList" )->appendFromText( stream );
-            }else if( last_line == "[Reso2FreqBPList]" ){
-                last_line = result.getCurve( "reso2FreqBPList" )->appendFromText( stream );
-            }else if( last_line == "[Reso3FreqBPList]" ){
-                last_line = result.getCurve( "reso3FreqBPList" )->appendFromText( stream );
-            }else if( last_line == "[Reso4FreqBPList]" ){
-                last_line = result.getCurve( "reso4FreqBPList" )->appendFromText( stream );
-            }else if( last_line == "[Reso1BWBPList]" ){
-                last_line = result.getCurve( "reso1BWBPList" )->appendFromText( stream );
-            }else if( last_line == "[Reso2BWBPList]" ){
-                last_line = result.getCurve( "reso2BWBPList" )->appendFromText( stream );
-            }else if( last_line == "[Reso3BWBPList]" ){
-                last_line = result.getCurve( "reso3BWBPList" )->appendFromText( stream );
-            }else if( last_line == "[Reso4BWBPList]" ){
-                last_line = result.getCurve( "reso4BWBPList" )->appendFromText( stream );
-            }else if( last_line == "[Reso1AmpBPList]" ){
-                last_line = result.getCurve( "reso1AmpBPList" )->appendFromText( stream );
-            }else if( last_line == "[Reso2AmpBPList]" ){
-                last_line = result.getCurve( "reso2AmpBPList" )->appendFromText( stream );
-            }else if( last_line == "[Reso3AmpBPList]" ){
-                last_line = result.getCurve( "reso3AmpBPList" )->appendFromText( stream );
-            }else if( last_line == "[Reso4AmpBPList]" ){
-                last_line = result.getCurve( "reso4AmpBPList" )->appendFromText( stream );
-            }else if( last_line == "[GenderFactorBPList]" ){
-                last_line = result.getCurve( "gen" )->appendFromText( stream );
-            }else if( last_line == "[PortamentoTimingBPList]" ){
-                last_line = result.getCurve( "por" )->appendFromText( stream );
-            }else if( last_line == "[OpeningBPList]" ){
-                last_line = result.getCurve( "ope" )->appendFromText( stream );
+            }else if( lastLine == "[PitchBendBPList]" ){
+                lastLine = result.getCurve( "pit" )->appendFromText( stream );
+            }else if( lastLine == "[PitchBendSensBPList]" ){
+                lastLine = result.getCurve( "pbs" )->appendFromText( stream );
+            }else if( lastLine == "[DynamicsBPList]" ){
+                lastLine = result.getCurve( "dyn" )->appendFromText( stream );
+            }else if( lastLine == "[EpRResidualBPList]" ){
+                lastLine = result.getCurve( "bre" )->appendFromText( stream );
+            }else if( lastLine == "[EpRESlopeBPList]" ){
+                lastLine = result.getCurve( "bri" )->appendFromText( stream );
+            }else if( lastLine == "[EpRESlopeDepthBPList]" ){
+                lastLine = result.getCurve( "cle" )->appendFromText( stream );
+            }else if( lastLine == "[EpRSineBPList]" ){
+                lastLine = result.getCurve( "harmonics" )->appendFromText( stream );
+            }else if( lastLine == "[VibTremDepthBPList]" ){
+                lastLine = result.getCurve( "fx2depth" )->appendFromText( stream );
+            }else if( lastLine == "[Reso1FreqBPList]" ){
+                lastLine = result.getCurve( "reso1FreqBPList" )->appendFromText( stream );
+            }else if( lastLine == "[Reso2FreqBPList]" ){
+                lastLine = result.getCurve( "reso2FreqBPList" )->appendFromText( stream );
+            }else if( lastLine == "[Reso3FreqBPList]" ){
+                lastLine = result.getCurve( "reso3FreqBPList" )->appendFromText( stream );
+            }else if( lastLine == "[Reso4FreqBPList]" ){
+                lastLine = result.getCurve( "reso4FreqBPList" )->appendFromText( stream );
+            }else if( lastLine == "[Reso1BWBPList]" ){
+                lastLine = result.getCurve( "reso1BWBPList" )->appendFromText( stream );
+            }else if( lastLine == "[Reso2BWBPList]" ){
+                lastLine = result.getCurve( "reso2BWBPList" )->appendFromText( stream );
+            }else if( lastLine == "[Reso3BWBPList]" ){
+                lastLine = result.getCurve( "reso3BWBPList" )->appendFromText( stream );
+            }else if( lastLine == "[Reso4BWBPList]" ){
+                lastLine = result.getCurve( "reso4BWBPList" )->appendFromText( stream );
+            }else if( lastLine == "[Reso1AmpBPList]" ){
+                lastLine = result.getCurve( "reso1AmpBPList" )->appendFromText( stream );
+            }else if( lastLine == "[Reso2AmpBPList]" ){
+                lastLine = result.getCurve( "reso2AmpBPList" )->appendFromText( stream );
+            }else if( lastLine == "[Reso3AmpBPList]" ){
+                lastLine = result.getCurve( "reso3AmpBPList" )->appendFromText( stream );
+            }else if( lastLine == "[Reso4AmpBPList]" ){
+                lastLine = result.getCurve( "reso4AmpBPList" )->appendFromText( stream );
+            }else if( lastLine == "[GenderFactorBPList]" ){
+                lastLine = result.getCurve( "gen" )->appendFromText( stream );
+            }else if( lastLine == "[PortamentoTimingBPList]" ){
+                lastLine = result.getCurve( "por" )->appendFromText( stream );
+            }else if( lastLine == "[OpeningBPList]" ){
+                lastLine = result.getCurve( "ope" )->appendFromText( stream );
             }else{
-                std::string buffer = last_line;
+                std::string buffer = lastLine;
                 buffer = StringUtil::replace( buffer, "[", "" );
                 buffer = StringUtil::replace( buffer, "]", "" );
-                std::vector<std::string> spl = StringUtil::explode( "#", buffer );
-                int index = StringUtil::parseInt( spl[1] );
-                if( last_line.find( "[ID#" ) == 0 ){
+                std::vector<std::string> parameters = StringUtil::explode( "#", buffer );
+                int index = StringUtil::parseInt( parameters[1] );
+                if( lastLine.find( "[ID#" ) == 0 ){
                     Event *item = new Event();
-                    *item = parseEvent( stream, index, last_line );
+                    *item = parseEvent( stream, index, lastLine );
                     temporaryEventList.push_back( item );
-                    eventList.insert( make_pair( index, item ) );
-                }else if( last_line.find( "[h#" ) == 0 ){
-                    handleList.insert( make_pair( index, parseHandle( stream, index, last_line ) ) );
+                    eventIdMap.insert( make_pair( index, item ) );
+                }else if( lastLine.find( "[h#" ) == 0 ){
+                    handleIdMap.insert( make_pair( index, parseHandle( stream, index, lastLine ) ) );
                 }
             }
 
@@ -576,23 +576,23 @@ private:
         }
 
         // まずhandleをidに埋め込み
-        for( map<int, Event *>::iterator i = eventList.begin(); i != eventList.end(); ++i ){
+        for( map<int, Event *>::iterator i = eventIdMap.begin(); i != eventIdMap.end(); ++i ){
             VSQ_NS::Event *id = i->second;
-            if( handleList.find( id->_singerHandleIndex ) != handleList.end() ){
+            if( handleIdMap.find( id->_singerHandleIndex ) != handleIdMap.end() ){
                 if( id->type == VSQ_NS::EventType::SINGER ){
-                    id->singerHandle = handleList[id->_singerHandleIndex];
+                    id->singerHandle = handleIdMap[id->_singerHandleIndex];
                 }else if( id->type == VSQ_NS::EventType::ICON ){
-                    id->iconDynamicsHandle = handleList[id->_singerHandleIndex];
+                    id->iconDynamicsHandle = handleIdMap[id->_singerHandleIndex];
                 }
             }
-            if( handleList.find( id->_lyricHandleIndex ) != handleList.end() ){
-                id->lyricHandle = handleList[id->_lyricHandleIndex];
+            if( handleIdMap.find( id->_lyricHandleIndex ) != handleIdMap.end() ){
+                id->lyricHandle = handleIdMap[id->_lyricHandleIndex];
             }
-            if( handleList.find( id->_vibratoHandleIndex ) != handleList.end() ){
-                id->vibratoHandle = handleList[id->_vibratoHandleIndex];
+            if( handleIdMap.find( id->_vibratoHandleIndex ) != handleIdMap.end() ){
+                id->vibratoHandle = handleIdMap[id->_vibratoHandleIndex];
             }
-            if( handleList.find( id->_noteHeadHandleIndex ) != handleList.end() ){
-                id->noteHeadHandle = handleList[id->_noteHeadHandleIndex];
+            if( handleIdMap.find( id->_noteHeadHandleIndex ) != handleIdMap.end() ){
+                id->noteHeadHandle = handleIdMap[id->_noteHeadHandleIndex];
             }
         }
 
@@ -600,12 +600,12 @@ private:
         Event::List *events = result.getEvents();
         events->clear();
         int count = 0;
-        for( map<int, tick_t>::iterator i = t_event_list.begin(); i != t_event_list.end(); ++i ){
-            int id_number = i->first;
+        for( map<int, tick_t>::iterator i = eventClockMap.begin(); i != eventClockMap.end(); ++i ){
+            int id = i->first;
             tick_t clock = i->second;
-            if( eventList.find( id_number ) != eventList.end() ){
+            if( eventIdMap.find( id ) != eventIdMap.end() ){
                 count++;
-                Event item = *eventList[id_number];
+                Event item = *eventIdMap[id];
                 item.clock = clock;
                 events->add( item, count );
             }
