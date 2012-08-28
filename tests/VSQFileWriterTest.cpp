@@ -35,9 +35,116 @@ public:
     void writeEvent( const Event &item, TextStream &stream, EventWriteOption printTargets = EventWriteOption() )const{
         VSQFileWriter::writeEvent( item, stream, printTargets );
     }
+
+    void writeHandle( const Handle &item, TextStream &stream ){
+        VSQFileWriter::writeHandle( item, stream );
+    }
 };
 
 class VSQFileWriterTest : public CppUnit::TestCase{
+    static string getLF(){
+        static char codeLF[1] = { 0x0A };
+        static string result = codeLF;
+        return result;
+    }
+
+    Handle getLyricHandle(){
+        Handle handle( HandleType::LYRIC );
+        Lyric lyric0( "あ", "a" );
+        lyric0.setConsonantAdjustment( "0" );
+        lyric0.lengthRatio = 0.4;
+        lyric0.isProtected = true;
+        Lyric lyric1( "は", "h a" );
+        lyric1.setConsonantAdjustment( "64,0" );
+        lyric1.lengthRatio = 0.6;
+        lyric1.isProtected = false;
+        handle.setLyricAt( 0, lyric0 );
+        handle.addLyric( lyric1 );
+        handle.index = 1;
+        return handle;
+    }
+
+    Handle getCrescendoHandle(){
+        Handle result( HandleType::DYNAMICS );
+        result.iconId = "$05020001";
+        result.ids = "Crescendo";
+        result.original = 4;
+        result.index = 4;
+        result.setCaption( "Zero Crescendo Curve" );
+        result.setLength( 960 );
+        result.setStartDyn( 2 );
+        result.setEndDyn( 38 );
+        vector<double> dynBPX;
+        dynBPX.push_back( 0.5 );
+        vector<int> dynBPY;
+        dynBPY.push_back( 11 );
+        VibratoBPList dynBP( dynBPX, dynBPY );
+        result.setDynBP( dynBP );
+        return result;
+    }
+
+    Handle getVibratoHandle(){
+        Handle result( HandleType::VIBRATO );
+        result.iconId = "$04040004";
+        result.ids = "normal-da-yo";
+        result.setCaption( "キャプションです=あ" );
+        result.original = 5;
+        result.setLength( 120 );
+        result.index = 1;
+
+        result.setStartDepth( 64 );
+        vector<double> depthBPX;
+        depthBPX.push_back( 0.5 );
+        depthBPX.push_back( 0.75 );
+        depthBPX.push_back( 1.0 );
+        vector<int> depthBPY;
+        depthBPY.push_back( 64 );
+        depthBPY.push_back( 32 );
+        depthBPY.push_back( 0 );
+        VibratoBPList depthBP( depthBPX, depthBPY );
+        result.setDepthBP( depthBP );
+
+        result.setStartRate( 64 );
+        vector<double> rateBPX;
+        rateBPX.push_back( 0.5 );
+        rateBPX.push_back( 0.75 );
+        rateBPX.push_back( 1.0 );
+        vector<int> rateBPY;
+        rateBPY.push_back( 64 );
+        rateBPY.push_back( 32 );
+        rateBPY.push_back( 0 );
+        VibratoBPList rateBP( rateBPX, rateBPY );
+        result.setRateBP( rateBP );
+
+        return result;
+    }
+
+    Handle getSingerHandle(){
+        Handle result( HandleType::SINGER );
+        result.iconId = "$07010002";
+        result.ids = "Miku3=God";
+        result.original = 2;
+        result.setCaption( "" );
+        result.setLength( 1 );
+        result.language = 1;
+        result.program = 2;
+        result.index = 2;
+        return result;
+    }
+
+    Handle getAttackHandle(){
+        Handle result( HandleType::NOTE_HEAD );
+        result.iconId = "$01010002";
+        result.ids = "accent";
+        result.original = 2;
+        result.index = 3;
+        result.setCaption( "Accent" );
+        result.setLength( 120 );
+        result.setDuration( 64 );
+        result.setDepth( 63 );
+        return result;
+    }
+
     void testWriteWithoutPitch(){
         Sequence sequence( "Foo", 1, 4, 4, 500000 );
         const int CURVE_COUNT = 19;
@@ -528,7 +635,7 @@ class VSQFileWriterTest : public CppUnit::TestCase{
         CPPUNIT_ASSERT_EQUAL( expected, stream.toString() );
     }
 
-    void testWriteNoteWithOption(){
+    void testWriteEventNoteWithOption(){
         Event event( 0, EventType::NOTE );
         event.setLength( 2 );
         event.note = 6;
@@ -653,7 +760,7 @@ class VSQFileWriterTest : public CppUnit::TestCase{
         CPPUNIT_ASSERT_EQUAL( expected, stream.toString() );
     }
 
-    void testWriteSinger(){
+    void testWriteEventSinger(){
         Event event( 0, EventType::SINGER );
         event.singerHandle = Handle( HandleType::SINGER );
         event.singerHandle.index = 16;
@@ -670,7 +777,7 @@ class VSQFileWriterTest : public CppUnit::TestCase{
         CPPUNIT_ASSERT_EQUAL( expected, stream.toString() );
     }
 
-    void testWriteIcon(){
+    void testWriteEventIcon(){
         Event event( 0, EventType::ICON );
         event.note = 19;
         event.index = 17;
@@ -689,6 +796,183 @@ class VSQFileWriterTest : public CppUnit::TestCase{
         CPPUNIT_ASSERT_EQUAL( expected, stream.toString() );
     }
 
+    void testWriteHandleLyric(){
+        Handle handle = getLyricHandle();
+
+        TextStream stream;
+        VSQFileWriterStub writer;
+        writer.writeHandle( handle, stream );
+        string expected =
+            "[h#0001]" + getLF() +
+            "L0=\"あ\",\"a\",0.4,0,1" + getLF() +
+            "L1=\"は\",\"h a\",0.6,64,0,0" + getLF();
+        CPPUNIT_ASSERT_EQUAL( expected, stream.toString() );
+    }
+
+    void testWriteHandleVibrato(){
+        string lf = getLF();
+        Handle handle = getVibratoHandle();
+        {
+            TextStream stream;
+            VSQFileWriterStub writer;
+            writer.writeHandle( handle, stream );
+            string expected =
+                "[h#0001]" + lf +
+                "IconID=$04040004" + lf +
+                "IDS=normal-da-yo" + lf +
+                "Original=5" + lf +
+                "Caption=キャプションです=あ" + lf +
+                "Length=120" + lf +
+                "StartDepth=64" + lf +
+                "DepthBPNum=3" + lf +
+                "DepthBPX=0.500000,0.750000,1.000000" + lf +
+                "DepthBPY=64,32,0" + lf +
+                "StartRate=64" + lf +
+                "RateBPNum=3" + lf +
+                "RateBPX=0.500000,0.750000,1.000000" + lf +
+                "RateBPY=64,32,0" + lf;
+            CPPUNIT_ASSERT_EQUAL( expected, stream.toString() );
+        }
+
+        {
+            handle.setRateBP( VibratoBPList( vector<double>(), vector<int>() ) );
+            handle.setDepthBP( VibratoBPList( vector<double>(), vector<int>() ) );
+            TextStream stream;
+            VSQFileWriterStub writer;
+            writer.writeHandle( handle, stream );
+            string expected =
+                "[h#0001]" + lf +
+                "IconID=$04040004" + lf +
+                "IDS=normal-da-yo" + lf +
+                "Original=5" + lf +
+                "Caption=キャプションです=あ" + lf +
+                "Length=120" + lf +
+                "StartDepth=64" + lf +
+                "DepthBPNum=0" + lf +
+                "StartRate=64" + lf +
+                "RateBPNum=0" + lf;
+            CPPUNIT_ASSERT_EQUAL( expected, stream.toString() );
+        }
+    }
+
+    void testWriteHandleSinger(){
+        Handle handle = getSingerHandle();
+        TextStream stream;
+        VSQFileWriterStub writer;
+        writer.writeHandle( handle, stream );
+        string lf = getLF();
+        string expected =
+            "[h#0002]" + lf +
+            "IconID=$07010002" + lf +
+            "IDS=Miku3=God" + lf +
+            "Original=2" + lf +
+            "Caption=" + lf +
+            "Length=1" + lf +
+            "Language=1" + lf +
+            "Program=2" + lf;
+        CPPUNIT_ASSERT_EQUAL( expected, stream.toString() );
+    }
+
+    void testWriteHandleAttack(){
+        Handle handle = getAttackHandle();
+        TextStream stream;
+        VSQFileWriterStub writer;
+        writer.writeHandle( handle, stream );
+        string lf = getLF();
+        string expected =
+            "[h#0003]" + lf +
+            "IconID=$01010002" + lf +
+            "IDS=accent" + lf +
+            "Original=2" + lf +
+            "Caption=Accent" + lf +
+            "Length=120" + lf +
+            "Duration=64" + lf +
+            "Depth=63" + lf;
+        CPPUNIT_ASSERT_EQUAL( expected, stream.toString() );
+    }
+
+    void testWriteHandleCrescendo(){
+        string lf = getLF();
+        Handle handle = getCrescendoHandle();
+        {
+            TextStream stream;
+            VSQFileWriterStub writer;
+            writer.writeHandle( handle, stream );
+            string expected =
+                "[h#0004]" + lf +
+                "IconID=$05020001" + lf +
+                "IDS=Crescendo" + lf +
+                "Original=4" + lf +
+                "Caption=Zero Crescendo Curve" + lf +
+                "StartDyn=2" + lf +
+                "EndDyn=38" + lf +
+                "Length=960" + lf +
+                "DynBPNum=1" + lf +
+                "DynBPX=0.500000" + lf +
+                "DynBPY=11" + lf;
+            CPPUNIT_ASSERT_EQUAL( expected, stream.toString() );
+        }
+
+        {
+            // dynBPのデータ点が複数
+            handle.setDynBP( VibratoBPList( "2", "0.4,0.8", "1,2" ) );
+            TextStream stream;
+            VSQFileWriterStub writer;
+            writer.writeHandle( handle, stream );
+            string expected =
+                "[h#0004]" + lf +
+                "IconID=$05020001" + lf +
+                "IDS=Crescendo" + lf +
+                "Original=4" + lf +
+                "Caption=Zero Crescendo Curve" + lf +
+                "StartDyn=2" + lf +
+                "EndDyn=38" + lf +
+                "Length=960" + lf +
+                "DynBPNum=2" + lf +
+                "DynBPX=0.400000,0.800000" + lf +
+                "DynBPY=1,2" + lf;
+            CPPUNIT_ASSERT_EQUAL( expected, stream.toString() );
+        }
+
+        {
+            // dynBPのデータ点が 0 個
+            handle.setDynBP( VibratoBPList( vector<double>(), vector<int>() ) );
+            TextStream stream;
+            VSQFileWriterStub writer;
+            writer.writeHandle( handle, stream );
+            string expected =
+                "[h#0004]" + lf +
+                "IconID=$05020001" + lf +
+                "IDS=Crescendo" + lf +
+                "Original=4" + lf +
+                "Caption=Zero Crescendo Curve" + lf +
+                "StartDyn=2" + lf +
+                "EndDyn=38" + lf +
+                "Length=960" + lf +
+                "DynBPNum=0" + lf;
+            CPPUNIT_ASSERT_EQUAL( expected, stream.toString() );
+        }
+
+        {
+            // dynBPがから
+            handle.setDynBP( VibratoBPList( vector<double>(), vector<int>() ) );
+            TextStream stream;
+            VSQFileWriterStub writer;
+            writer.writeHandle( handle, stream );
+            string expected =
+                "[h#0004]" + lf +
+                "IconID=$05020001" + lf +
+                "IDS=Crescendo" + lf +
+                "Original=4" + lf +
+                "Caption=Zero Crescendo Curve" + lf +
+                "StartDyn=2" + lf +
+                "EndDyn=38" + lf +
+                "Length=960" + lf +
+                "DynBPNum=0" + lf;
+            CPPUNIT_ASSERT_EQUAL( expected, stream.toString() );
+        }
+    }
+
     CPPUNIT_TEST_SUITE( VSQFileWriterTest );
     CPPUNIT_TEST( testWriteWithoutPitch );
     CPPUNIT_TEST( testWriteWithPitch );
@@ -698,9 +982,14 @@ class VSQFileWriterTest : public CppUnit::TestCase{
     CPPUNIT_TEST( test_writeUnsignedShort );
     CPPUNIT_TEST( test_writeUnsignedInt );
     CPPUNIT_TEST( testPrintTrackMetaText );
-    CPPUNIT_TEST( testWriteNoteWithOption );
-    CPPUNIT_TEST( testWriteSinger );
-    CPPUNIT_TEST( testWriteIcon );
+    CPPUNIT_TEST( testWriteEventNoteWithOption );
+    CPPUNIT_TEST( testWriteEventSinger );
+    CPPUNIT_TEST( testWriteEventIcon );
+    CPPUNIT_TEST( testWriteHandleLyric );
+    CPPUNIT_TEST( testWriteHandleVibrato );
+    CPPUNIT_TEST( testWriteHandleSinger );
+    CPPUNIT_TEST( testWriteHandleAttack );
+    CPPUNIT_TEST( testWriteHandleCrescendo );
     CPPUNIT_TEST_SUITE_END();
 };
 

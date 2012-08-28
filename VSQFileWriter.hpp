@@ -107,6 +107,94 @@ public:
 
 protected:
     /**
+     * @brief ハンドルをストリームに書き込む
+     * @param item 書き込むハンドル
+     * @param stream 書き込み先のストリーム
+     */
+    void writeHandle( const Handle &item, VSQ_NS::TextStream &stream ){
+        stream.writeLine( string( "[h#" ) + StringUtil::toString( item.index, "%04d" ) + string( "]" ) );
+        if( item.getHandleType() == HandleType::LYRIC ){
+            for( int i = 0; i < item.getLyricCount(); i++ ){
+                stream.writeLine( string( "L" ) + StringUtil::toString( i ) + "=" + item.getLyricAt( i ).toString( item.addQuotationMark ) );
+            }
+        }else if( item.getHandleType() == HandleType::VIBRATO ){
+            stream.writeLine( string( "IconID=" ) + item.iconId );
+            stream.writeLine( string( "IDS=" ) + item.ids );
+            stream.writeLine( string( "Original=" ) + StringUtil::toString( item.original ) );
+            stream.writeLine( string( "Caption=" ) + item.getCaption() );
+            stream.writeLine( string( "Length=" ) + StringUtil::toString( item.getLength() ) );
+            stream.writeLine( string( "StartDepth=" ) + StringUtil::toString( item.getStartDepth() ) );
+            stream.writeLine( string( "DepthBPNum=" ) + StringUtil::toString( item.getDepthBP().size() ) );
+            if( item.getDepthBP().size() > 0 ){
+                stream.write( string( "DepthBPX=" ) + StringUtil::toString( item.getDepthBP().get( 0 ).x, "%.6f" ) );
+                for( int i = 1; i < item.getDepthBP().size(); i++ ){
+                    stream.write( string( "," ) + StringUtil::toString( item.getDepthBP().get( i ).x, "%.6f" ) );
+                }
+                stream.writeLine( "" );
+                stream.write( string( "DepthBPY=" ) + StringUtil::toString( item.getDepthBP().get( 0 ).y ) );
+                for( int i = 1; i < item.getDepthBP().size(); i++ ){
+                    stream.write( string( "," ) + StringUtil::toString( item.getDepthBP().get( i ).y ) );
+                }
+                stream.writeLine( "" );
+            }
+            stream.writeLine( string( "StartRate=" ) + StringUtil::toString( item.getStartRate() ) );
+            stream.writeLine( string( "RateBPNum=" ) + StringUtil::toString( item.getRateBP().size() ) );
+            if( item.getRateBP().size() > 0 ){
+                stream.write( string( "RateBPX=" ) + StringUtil::toString( item.getRateBP().get( 0 ).x, "%.6f" ) );
+                for( int i = 1; i < item.getRateBP().size(); i++ ){
+                    stream.write( string( "," ) + StringUtil::toString( item.getRateBP().get( i ).x, "%.6f" ) );
+                }
+                stream.writeLine( "" );
+                stream.write( string( "RateBPY=" ) + StringUtil::toString( item.getRateBP().get( 0 ).y ) );
+                for( int i = 1; i < item.getRateBP().size(); i++ ){
+                    stream.write( string( "," ) + StringUtil::toString( item.getRateBP().get( i ).y ) );
+                }
+                stream.writeLine( "" );
+            }
+        }else if( item.getHandleType() == HandleType::SINGER ){
+            stream.writeLine( string( "IconID=" ) + item.iconId );
+            stream.writeLine( string( "IDS=" ) + item.ids );
+            stream.writeLine( string( "Original=" ) + StringUtil::toString( item.original ) );
+            stream.writeLine( string( "Caption=" ) + item.getCaption() );
+            stream.writeLine( string( "Length=" ) + StringUtil::toString( item.getLength() ) );
+            stream.writeLine( string( "Language=" ) + StringUtil::toString( item.language ) );
+            stream.writeLine( string( "Program=" ) + StringUtil::toString( item.program ) );
+        }else if( item.getHandleType() == HandleType::NOTE_HEAD ){
+            stream.writeLine( string( "IconID=" ) + item.iconId );
+            stream.writeLine( string( "IDS=" ) + item.ids );
+            stream.writeLine( string( "Original=" ) + StringUtil::toString( item.original ) );
+            stream.writeLine( string( "Caption=" ) + item.getCaption() );
+            stream.writeLine( string( "Length=" ) + StringUtil::toString( item.getLength() ) );
+            stream.writeLine( string( "Duration=" ) + StringUtil::toString( item.getDuration() ) );
+            stream.writeLine( string( "Depth=" ) + StringUtil::toString( item.getDepth() ) );
+        }else if( item.getHandleType() == HandleType::DYNAMICS ){
+            stream.writeLine( string( "IconID=" ) + item.iconId );
+            stream.writeLine( string( "IDS=" ) + item.ids );
+            stream.writeLine( string( "Original=" ) + StringUtil::toString( item.original ) );
+            stream.writeLine( string( "Caption=" ) + item.getCaption() );
+            stream.writeLine( string( "StartDyn=" ) + StringUtil::toString( item.getStartDyn() ) );
+            stream.writeLine( string( "EndDyn=" ) + StringUtil::toString( item.getEndDyn() ) );
+            stream.writeLine( string( "Length=" ) + StringUtil::toString( item.getLength() ) );
+            if( item.getDynBP().size() <= 0 ){
+                stream.writeLine( "DynBPNum=0" );
+            }else{
+                int c = item.getDynBP().size();
+                stream.writeLine( string( "DynBPNum=" ) + StringUtil::toString( c ) );
+                stream.write( string( "DynBPX=" ) + StringUtil::toString( item.getDynBP().get( 0 ).x, "%.6f" ) );
+                for( int i = 1; i < c; i++ ){
+                    stream.write( string( "," ) + StringUtil::toString( item.getDynBP().get( i ).x, "%.6f" ) );
+                }
+                stream.writeLine( "" );
+                stream.write( string( "DynBPY=" ) + StringUtil::toString( item.getDynBP().get( 0 ).y ) );
+                for( int i = 1; i < c; i++ ){
+                    stream.write( string( "," ) + StringUtil::toString( item.getDynBP().get( i ).y ) );
+                }
+                stream.writeLine( "" );
+            }
+        }
+    }
+
+    /**
      * @brief テキストストリームにイベントを書き出す
      * @param stream (TextStream) 出力先
      * @param printTargets (table) 出力するアイテムのリスト
@@ -195,7 +283,7 @@ protected:
             writeEvent( *item, stream );
         }
         for( int i = 0; i < handle.size(); ++i ){
-            handle[i].write( stream );
+            writeHandle( handle[i], stream );
         }
         string version = track.getCommon()->version;
         if( track.getCurve( "pit" )->size() > 0 ){
