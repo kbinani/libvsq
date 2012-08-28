@@ -20,6 +20,7 @@
 #include <cstdlib>
 #include <algorithm>
 #include <iomanip>
+#include <boost/format.hpp>
 
 using namespace std;
 
@@ -98,6 +99,17 @@ public:
         ostringstream oss;
         oss << uppercase << setbase( baseNumber ) << value;
         return oss.str();
+    }
+
+    /**
+     * @brief 数値を文字列に変換する
+     * @param value 変換する数値
+     * @param format 変換時のフォーマット
+     * @return 変換後の文字列
+     */
+    template<typename T>
+    static string toString( T value, const string &format ){
+        return (boost::format( format ) % value).str();
     }
 
     /**

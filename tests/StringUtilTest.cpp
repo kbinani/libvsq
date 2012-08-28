@@ -61,6 +61,10 @@ public:
         CPPUNIT_ASSERT_EQUAL( string( "1A" ), StringUtil::toString( 0x1A, 16 ) );
     }
 
+    void testToStringWithFormat(){
+        CPPUNIT_ASSERT_EQUAL( string( "0.500" ), StringUtil::toString( 0.5, "%.3f" ) );
+    }
+
     void testToLower(){
         std::string actual = StringUtil::toLower( "FooBar" );
         CPPUNIT_ASSERT_EQUAL( string( "foobar" ), actual );
@@ -82,6 +86,7 @@ public:
     CPPUNIT_TEST( testToString );
     CPPUNIT_TEST( testRepeat );
     CPPUNIT_TEST( testToLower );
+    CPPUNIT_TEST( testToStringWithFormat );
     CPPUNIT_TEST_SUITE_END();
 };
 
