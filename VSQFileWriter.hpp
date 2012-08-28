@@ -107,6 +107,66 @@ public:
 
 protected:
     /**
+     * @brief テキストストリームにイベントを書き出す
+     * @param stream (TextStream) 出力先
+     * @param printTargets (table) 出力するアイテムのリスト
+     * @todo boost使ってる箇所をStringUtil使うよう変更
+     */
+    void writeEvent( const Event &item, VSQ_NS::TextStream &stream, VSQ_NS::EventWriteOption printTargets = EventWriteOption() ) const{
+        stream.write( "[ID#" ).write( (boost::format( "%04d" ) % item.index).str() ).writeLine( "]" );
+        stream.write( "Type=" ).writeLine( EventType::toString( item.type ) );
+        if( item.type == EventType::NOTE ){
+            if( printTargets.length ){
+                stream.write( "Length=" ).writeLine( (boost::format( "%ld" ) % item.getLength()).str() );
+            }
+            if( printTargets.note ){
+                stream.write( "Note#=" ).writeLine( (boost::format( "%d" ) % item.note).str() );
+            }
+            if( printTargets.dynamics ){
+                stream.write( "Dynamics=" ).writeLine( (boost::format( "%d" ) % item.dynamics).str() );
+            }
+            if( printTargets.pmBendDepth ){
+                stream.write( "PMBendDepth=" ).writeLine( (boost::format( "%d" ) % item.pmBendDepth).str() );
+            }
+            if( printTargets.pmBendLength ){
+                stream.write( "PMBendLength=" ).writeLine( (boost::format( "%d" ) % item.pmBendLength).str() );
+            }
+            if( printTargets.pmbPortamentoUse ){
+                stream.write( "PMbPortamentoUse=" ).writeLine( (boost::format( "%d" ) % item.pmbPortamentoUse).str() );
+            }
+            if( printTargets.demDecGainRate ){
+                stream.write( "DEMdecGainRate=" ).writeLine( (boost::format( "%d" ) % item.demDecGainRate).str() );
+            }
+            if( printTargets.demAccent ){
+                stream.write( "DEMaccent=" ).writeLine( (boost::format( "%d" ) % item.demAccent).str() );
+            }
+            if( printTargets.preUtterance ){
+                //TODO:
+    //            stream.writeLine( "PreUtterance=" + ustEvent.preUtterance );
+            }
+            if( printTargets.voiceOverlap ){
+                //TODO:
+    //            stream.writeLine( "VoiceOverlap=" + ustEvent.voiceOverlap );
+            }
+            if( item.lyricHandle.getHandleType() == HandleType::LYRIC ){
+                stream.write( "LyricHandle=h#" ).writeLine( (boost::format( "%04d" ) % item.lyricHandle.index).str() );
+            }
+            if( item.vibratoHandle.getHandleType() == HandleType::VIBRATO ){
+                stream.write( "VibratoHandle=h#" ).writeLine( (boost::format( "%04d" ) % item.vibratoHandle.index).str() );
+                stream.write( "VibratoDelay=" ).writeLine( (boost::format( "%d" ) % item.vibratoDelay).str() );
+            }
+            if( item.noteHeadHandle.getHandleType() == HandleType::NOTE_HEAD ){
+                stream.write( "NoteHeadHandle=h#" ).writeLine( (boost::format( "%04d" ) % item.noteHeadHandle.index).str() );
+            }
+        }else if( item.type == EventType::SINGER ){
+            stream.write( "IconHandle=h#" ).writeLine( (boost::format( "%04d" ) % item.singerHandle.index).str() );
+        }else if( item.type == EventType::ICON ){
+            stream.write( "IconHandle=h#" ).writeLine( (boost::format( "%04d" ) % item.iconDynamicsHandle.index).str() );
+            stream.write( "Note#=" ).writeLine( (boost::format( "%d" ) % item.note).str() );
+        }
+    }
+
+    /**
      * @brief トラックのメタテキストを、テキストストリームに出力する
      * @param track 出力するトラック
      * @param stream 出力先のストリーム
@@ -132,7 +192,7 @@ protected:
         Event::ListIterator itr = track.getEvents()->iterator();
         while( itr.hasNext() ){
             Event *item = itr.next();
-            item->write( stream );
+            writeEvent( *item, stream );
         }
         for( int i = 0; i < handle.size(); ++i ){
             handle[i].write( stream );

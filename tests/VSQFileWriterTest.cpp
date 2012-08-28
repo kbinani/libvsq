@@ -31,6 +31,10 @@ public:
     void printMetaText(const Track &t, TextStream &stream, int eos, tick_t start, bool printPitch, Master *master, Mixer *mixer){
         VSQFileWriter::printMetaText( t, stream, eos, start, printPitch, master, mixer );
     }
+
+    void writeEvent( const Event &item, TextStream &stream, EventWriteOption printTargets = EventWriteOption() )const{
+        VSQFileWriter::writeEvent( item, stream, printTargets );
+    }
 };
 
 class VSQFileWriterTest : public CppUnit::TestCase{
@@ -524,6 +528,167 @@ class VSQFileWriterTest : public CppUnit::TestCase{
         CPPUNIT_ASSERT_EQUAL( expected, stream.toString() );
     }
 
+    void testWriteNoteWithOption(){
+        Event event( 0, EventType::NOTE );
+        event.setLength( 2 );
+        event.note = 6;
+        event.dynamics = 21;
+        event.pmBendDepth = 4;
+        event.pmBendLength = 5;
+        event.pmbPortamentoUse = 3;
+        event.demDecGainRate = 7;
+        event.demAccent = 8;
+//        noteEvent.preUtterance = 9;
+//        noteEvent.voiceOverlap = 10;
+        event.vibratoDelay = 13;
+        event.lyricHandle.index = 1;
+        event.clock = 20;
+        event.index = 1;
+        EventWriteOption optionAll;
+        optionAll.length = true;
+        optionAll.note = true;
+        optionAll.dynamics = true;
+        optionAll.pmBendDepth = true;
+        optionAll.pmBendLength = true;
+        optionAll.pmbPortamentoUse = true;
+        optionAll.demDecGainRate = true;
+        optionAll.demAccent = true;
+        //TODO. optionAll.preUtterance = true;
+        //TODO. optionAll.voiceOverlap = true;
+
+        TextStream stream;
+
+        // handleがどれもnilな音符イベント
+        VSQFileWriterStub writer;
+        writer.writeEvent( event, stream, optionAll );
+        string expected =
+                "[ID#0001]\n"
+                "Type=Anote\n"
+                "Length=2\n"
+                "Note#=6\n"
+                "Dynamics=21\n"
+                "PMBendDepth=4\n"
+                "PMBendLength=5\n"
+                "PMbPortamentoUse=3\n"
+                "DEMdecGainRate=7\n"
+                "DEMaccent=8\n"
+                "LyricHandle=h#0001\n";
+            //TODO. "PreUtterance=9\n" ..
+            //TODO. "VoiceOverlap=10\n" ..
+        CPPUNIT_ASSERT_EQUAL( expected, stream.toString() );
+
+        // handleに全部値が入っている音符イベント
+        // 現在、PreUtteranceとVoiceOverlapは扱わないようにしているので、
+        // オプション全指定と、オプションが無い場合の動作が全くおなじになってしまっている。
+        // ustEventをちゃんと処理するようになったら、TODOコメントのところを外すこと
+        event.lyricHandle = Handle( HandleType::LYRIC );
+        event.lyricHandle.setLyricAt( 0, Lyric( "わ", "w a" ) );
+        event.lyricHandle.index = 11;
+        event.vibratoHandle = Handle( HandleType::VIBRATO );
+        event.vibratoHandle.index = 12;
+        event.noteHeadHandle = Handle( HandleType::NOTE_HEAD );
+        event.noteHeadHandle.index = 14;
+        stream = TextStream();
+        writer.writeEvent( event, stream, optionAll );
+        expected =
+            "[ID#0001]\n"
+            "Type=Anote\n"
+            "Length=2\n"
+            "Note#=6\n"
+            "Dynamics=21\n"
+            "PMBendDepth=4\n"
+            "PMBendLength=5\n"
+            "PMbPortamentoUse=3\n"
+            "DEMdecGainRate=7\n"
+            "DEMaccent=8\n"
+            //TODO. "PreUtterance=9\n" ..
+            //TODO. "VoiceOverlap=10\n" ..
+            "LyricHandle=h#0011\n"
+            "VibratoHandle=h#0012\n"
+            "VibratoDelay=13\n"
+            "NoteHeadHandle=h#0014\n";
+        CPPUNIT_ASSERT_EQUAL( expected, stream.toString() );
+
+        // オプションが無い場合
+        stream = TextStream();
+        writer.writeEvent( event, stream );
+        expected =
+            "[ID#0001]\n"
+            "Type=Anote\n"
+            "Length=2\n"
+            "Note#=6\n"
+            "Dynamics=21\n"
+            "PMBendDepth=4\n"
+            "PMBendLength=5\n"
+            "PMbPortamentoUse=3\n"
+            "DEMdecGainRate=7\n"
+            "DEMaccent=8\n"
+            "LyricHandle=h#0011\n"
+            "VibratoHandle=h#0012\n"
+            "VibratoDelay=13\n"
+            "NoteHeadHandle=h#0014\n";
+        CPPUNIT_ASSERT_EQUAL( expected, stream.toString() );
+
+        // オプションが空の場合
+        stream = TextStream();
+        EventWriteOption emptyOption;
+        emptyOption.demAccent = false;
+        emptyOption.demDecGainRate = false;
+        emptyOption.dynamics = false;
+        emptyOption.length = false;
+        emptyOption.note = false;
+        emptyOption.pmBendDepth = false;
+        emptyOption.pmBendLength = false;
+        emptyOption.pmbPortamentoUse = false;
+        emptyOption.preUtterance = false;
+        emptyOption.voiceOverlap = false;
+        writer.writeEvent( event, stream, emptyOption );
+        expected =
+            "[ID#0001]\n"
+            "Type=Anote\n"
+            "LyricHandle=h#0011\n"
+            "VibratoHandle=h#0012\n"
+            "VibratoDelay=13\n"
+            "NoteHeadHandle=h#0014\n";
+        CPPUNIT_ASSERT_EQUAL( expected, stream.toString() );
+    }
+
+    void testWriteSinger(){
+        Event event( 0, EventType::SINGER );
+        event.singerHandle = Handle( HandleType::SINGER );
+        event.singerHandle.index = 16;
+        event.index = 16;
+        event.clock = 1;
+        event.index = 15;
+        TextStream stream;
+        VSQFileWriterStub writer;
+        writer.writeEvent( event, stream );
+        string expected =
+            "[ID#0015]\n"
+            "Type=Singer\n"
+            "IconHandle=h#0016\n";
+        CPPUNIT_ASSERT_EQUAL( expected, stream.toString() );
+    }
+
+    void testWriteIcon(){
+        Event event( 0, EventType::ICON );
+        event.note = 19;
+        event.index = 17;
+        event.iconDynamicsHandle = Handle( HandleType::DYNAMICS );
+        event.iconDynamicsHandle.index = 18;
+        event.clock = 2;
+        event.index = 17;
+        TextStream stream;
+        VSQFileWriterStub writer;
+        writer.writeEvent( event, stream );
+        string expected =
+            "[ID#0017]\n"
+            "Type=Aicon\n"
+            "IconHandle=h#0018\n"
+            "Note#=19\n";
+        CPPUNIT_ASSERT_EQUAL( expected, stream.toString() );
+    }
+
     CPPUNIT_TEST_SUITE( VSQFileWriterTest );
     CPPUNIT_TEST( testWriteWithoutPitch );
     CPPUNIT_TEST( testWriteWithPitch );
@@ -533,6 +698,9 @@ class VSQFileWriterTest : public CppUnit::TestCase{
     CPPUNIT_TEST( test_writeUnsignedShort );
     CPPUNIT_TEST( test_writeUnsignedInt );
     CPPUNIT_TEST( testPrintTrackMetaText );
+    CPPUNIT_TEST( testWriteNoteWithOption );
+    CPPUNIT_TEST( testWriteSinger );
+    CPPUNIT_TEST( testWriteIcon );
     CPPUNIT_TEST_SUITE_END();
 };
 

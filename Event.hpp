@@ -623,65 +623,6 @@ public:
     }
 
     /**
-     * @brief テキストストリームに書き出す
-     * @param stream (TextStream) 出力先
-     * @param printTargets (table) 出力するアイテムのリスト
-     */
-    void write( VSQ_NS::TextStream &stream, VSQ_NS::EventWriteOption printTargets = EventWriteOption() ) const{
-        stream.write( "[ID#" ).write( (boost::format( "%04d" ) % index).str() ).writeLine( "]" );
-        stream.write( "Type=" ).writeLine( EventType::toString( type ) );
-        if( type == EventType::NOTE ){
-            if( printTargets.length ){
-                stream.write( "Length=" ).writeLine( (boost::format( "%ld" ) % getLength()).str() );
-            }
-            if( printTargets.note ){
-                stream.write( "Note#=" ).writeLine( (boost::format( "%d" ) % note).str() );
-            }
-            if( printTargets.dynamics ){
-                stream.write( "Dynamics=" ).writeLine( (boost::format( "%d" ) % dynamics).str() );
-            }
-            if( printTargets.pmBendDepth ){
-                stream.write( "PMBendDepth=" ).writeLine( (boost::format( "%d" ) % pmBendDepth).str() );
-            }
-            if( printTargets.pmBendLength ){
-                stream.write( "PMBendLength=" ).writeLine( (boost::format( "%d" ) % pmBendLength).str() );
-            }
-            if( printTargets.pmbPortamentoUse ){
-                stream.write( "PMbPortamentoUse=" ).writeLine( (boost::format( "%d" ) % pmbPortamentoUse).str() );
-            }
-            if( printTargets.demDecGainRate ){
-                stream.write( "DEMdecGainRate=" ).writeLine( (boost::format( "%d" ) % demDecGainRate).str() );
-            }
-            if( printTargets.demAccent ){
-                stream.write( "DEMaccent=" ).writeLine( (boost::format( "%d" ) % demAccent).str() );
-            }
-            if( printTargets.preUtterance ){
-                //TODO:
-    //            stream.writeLine( "PreUtterance=" + ustEvent.preUtterance );
-            }
-            if( printTargets.voiceOverlap ){
-                //TODO:
-    //            stream.writeLine( "VoiceOverlap=" + ustEvent.voiceOverlap );
-            }
-            if( lyricHandle.getHandleType() == HandleType::LYRIC ){
-                stream.write( "LyricHandle=h#" ).writeLine( (boost::format( "%04d" ) % lyricHandle.index).str() );
-            }
-            if( vibratoHandle.getHandleType() == HandleType::VIBRATO ){
-                stream.write( "VibratoHandle=h#" ).writeLine( (boost::format( "%04d" ) % vibratoHandle.index).str() );
-                stream.write( "VibratoDelay=" ).writeLine( (boost::format( "%d" ) % vibratoDelay).str() );
-            }
-            if( noteHeadHandle.getHandleType() == HandleType::NOTE_HEAD ){
-                stream.write( "NoteHeadHandle=h#" ).writeLine( (boost::format( "%04d" ) % noteHeadHandle.index).str() );
-            }
-        }else if( type == EventType::SINGER ){
-            stream.write( "IconHandle=h#" ).writeLine( (boost::format( "%04d" ) % singerHandle.index).str() );
-        }else if( type == EventType::ICON ){
-            stream.write( "IconHandle=h#" ).writeLine( (boost::format( "%04d" ) % iconDynamicsHandle.index).str() );
-            stream.write( "Note#=" ).writeLine( (boost::format( "%d" ) % note).str() );
-        }
-    }
-
-    /**
      * @brief コピーを作成する
      * @return (Event) このインスタンスのコピー
      */
