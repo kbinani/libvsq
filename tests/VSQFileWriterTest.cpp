@@ -8,6 +8,14 @@ using namespace VSQ_NS;
 
 class VSQFileWriterStub : public VSQFileWriter{
 public:
+    class TempEventStub : public TempEvent{
+    public:
+        explicit TempEventStub( const Event &item ) :
+            TempEvent( item )
+        {
+        }
+    };
+
     void writeUnsignedShort( OutputStream *stream, int data ){
         VSQFileWriter::writeUnsignedShort( stream, data );
     }
@@ -32,7 +40,7 @@ public:
         VSQFileWriter::printMetaText( t, stream, eos, start, printPitch, master, mixer );
     }
 
-    void writeEvent( const Event &item, TextStream &stream, EventWriteOption printTargets = EventWriteOption() )const{
+    void writeEvent( const TempEventStub &item, TextStream &stream, EventWriteOption printTargets = EventWriteOption() )const{
         VSQFileWriter::writeEvent( item, stream, printTargets );
     }
 
@@ -636,7 +644,7 @@ class VSQFileWriterTest : public CppUnit::TestCase{
     }
 
     void testWriteEventNoteWithOption(){
-        Event event( 0, EventType::NOTE );
+        VSQFileWriterStub::TempEventStub event( Event( 0, EventType::NOTE ) );
         event.setLength( 2 );
         event.note = 6;
         event.dynamics = 21;
@@ -761,7 +769,7 @@ class VSQFileWriterTest : public CppUnit::TestCase{
     }
 
     void testWriteEventSinger(){
-        Event event( 0, EventType::SINGER );
+        VSQFileWriterStub::TempEventStub event( Event( 0, EventType::SINGER ) );
         event.singerHandle = Handle( HandleType::SINGER );
         event.singerHandle.index = 16;
         event.index = 16;
@@ -778,7 +786,7 @@ class VSQFileWriterTest : public CppUnit::TestCase{
     }
 
     void testWriteEventIcon(){
-        Event event( 0, EventType::ICON );
+        VSQFileWriterStub::TempEventStub event( Event( 0, EventType::ICON ) );
         event.note = 19;
         event.index = 17;
         event.iconDynamicsHandle = Handle( HandleType::DYNAMICS );

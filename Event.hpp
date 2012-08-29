@@ -204,43 +204,6 @@ public:
             }
         }
 
-        /**
-         * @brief イベントリストをテキストストリームに出力する
-         * @param stream 出力先のストリーム
-         * @param eos EOS として出力する Tick 単位の時刻
-         * @return リスト中のイベントに含まれるハンドルの一覧
-         * @todo ここの機能はVSQFileWriterに移す
-         */
-        std::vector<VSQ_NS::Handle> write( TextStream &stream, VSQ_NS::tick_t eos ){
-            vector<Handle> handles = _buildHandleList();
-            stream.writeLine( "[EventList]" );
-            vector<Event> temp;
-            ListIterator itr = iterator();
-            while( itr.hasNext() ){
-                temp.push_back( *itr.next() );
-            }
-            std::sort( temp.begin(), temp.end(), Event::compare );
-            int i = 0;
-            while( i < temp.size() ){
-                Event item = temp[i];
-                if( !item.isEOS() ){
-                    ostringstream ids;
-                    ids << "ID#" << (boost::format( "%04d" ) % item.index).str();
-                    tick_t clock = temp[i].clock;
-                    while( i + 1 < temp.size() && clock == temp[i + 1].clock ){
-                        i++;
-                        ids << ",ID#" << (boost::format( "%04d" ) % temp[i].index).str();
-                    }
-                    ostringstream oss;
-                    oss << clock << "=" << ids.str();
-                    stream.writeLine( oss.str() );
-                }
-                i++;
-            }
-            stream.write( (boost::format( "%d" ) % eos).str() ).writeLine( "=EOS" );
-            return handles;
-        }
-
     private:
         /**
          * @brief イベントを追加する
@@ -268,66 +231,6 @@ public:
             }
             return max + 1 + next;
         }
-
-        /**
-         * @brief リスト内のイベントから、ハンドルの一覧を作成する。同時に、各イベント、ハンドルの番号を設定する
-         * @return (table<Handle>) ハンドルの一覧
-         */
-        const std::vector<Handle> _buildHandleList(){
-            vector<Handle> handle;
-            int current_id = -1;
-            int current_handle = -1;
-            bool add_quotation_mark = true;
-            ListIterator itr = iterator();
-            while( itr.hasNext() ){
-                Event *item = itr.next();
-                current_id = current_id + 1;
-                item->index = current_id;
-                // SingerHandle
-                if( item->singerHandle.getHandleType() == HandleType::SINGER ){
-                    current_handle = current_handle + 1;
-                    item->singerHandle.index = current_handle;
-                    handle.push_back( item->singerHandle );
-                    item->_singerHandleIndex = current_handle;
-                    VoiceLanguage::VoiceLanguageEnum lang = VoiceLanguage::valueFromSingerName( item->singerHandle.ids );
-                    add_quotation_mark = lang == VoiceLanguage::JAPANESE;
-                }
-                // LyricHandle
-                if( item->lyricHandle.getHandleType() == HandleType::LYRIC ){
-                    current_handle = current_handle + 1;
-                    item->lyricHandle.index = current_handle;
-                    item->lyricHandle.addQuotationMark = add_quotation_mark;
-                    handle.push_back( item->lyricHandle );
-                    item->_lyricHandleIndex = current_handle;
-                }
-                // VibratoHandle
-                if( item->vibratoHandle.getHandleType() == HandleType::VIBRATO ){
-                    current_handle = current_handle + 1;
-                    item->vibratoHandle.index = current_handle;
-                    handle.push_back( item->vibratoHandle );
-                    item->_vibratoHandleIndex = current_handle;
-                }
-                // NoteHeadHandle
-                if( item->noteHeadHandle.getHandleType() == HandleType::NOTE_HEAD ){
-                    current_handle = current_handle + 1;
-                    item->noteHeadHandle.index = current_handle;
-                    handle.push_back( item->noteHeadHandle );
-                    item->_noteHeadHandleIndex = current_handle;
-                }
-                // IconDynamicsHandle
-                if( item->iconDynamicsHandle.getHandleType() == HandleType::DYNAMICS ){
-                    current_handle = current_handle + 1;
-                    item->iconDynamicsHandle.index = current_handle;
-                    item->iconDynamicsHandle.setLength( item->getLength() );
-                    handle.push_back( item->iconDynamicsHandle );
-                    // IconDynamicsHandleは、歌手ハンドルと同じ扱いなので
-                    // _singerHandleIndexでよい
-                    item->_singerHandleIndex = current_handle;
-                }
-            }
-            return handle;
-        }
-
     };
 
     /**
@@ -418,6 +321,7 @@ public:
     /**
      * VSQ メタテキストに出力されるこのオブジェクトの ID
      * @var int
+     * @todo VSQへの書き出し時にのみ使っているので、うまいことして削除する
      */
     int index;
 

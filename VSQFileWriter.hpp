@@ -21,6 +21,31 @@
 VSQ_BEGIN_NAMESPACE
 
 class VSQFileWriter{
+protected:
+    class TempEvent : public Event{
+    public:
+        explicit TempEvent( const Event &item ) :
+            Event( item )
+        {
+        }
+
+        void setSingerHandleIndex( int value ){
+            _singerHandleIndex = value;
+        }
+
+        void setLyricHandleIndex( int value ){
+            _lyricHandleIndex = value;
+        }
+
+        void setVibratoHandleIndex( int value ){
+            _vibratoHandleIndex = value;
+        }
+
+        void setNoteHeadHandleIndex( int value ){
+            _noteHeadHandleIndex = value;
+        }
+    };
+
 public:
     /**
      * @brief ストリームに出力する
@@ -200,7 +225,7 @@ protected:
      * @param printTargets (table) 出力するアイテムのリスト
      * @todo boost使ってる箇所をStringUtil使うよう変更
      */
-    void writeEvent( const Event &item, VSQ_NS::TextStream &stream, VSQ_NS::EventWriteOption printTargets = EventWriteOption() ) const{
+    void writeEvent( const TempEvent &item, VSQ_NS::TextStream &stream, VSQ_NS::EventWriteOption printTargets = EventWriteOption() ) const{
         stream.write( "[ID#" ).write( (boost::format( "%04d" ) % item.index).str() ).writeLine( "]" );
         stream.write( "Type=" ).writeLine( EventType::toString( item.type ) );
         if( item.type == EventType::NOTE ){
@@ -276,11 +301,22 @@ protected:
         if( mixer ){
             mixer->write( stream );
         }
-        vector<Handle> handle = track.getEvents()->write( stream, eos );
-        Event::ListIterator itr = track.getEvents()->iterator();
-        while( itr.hasNext() ){
-            Event *item = itr.next();
-            writeEvent( *item, stream );
+
+        vector<Handle> handle;
+        {
+            vector<TempEvent *> eventList;
+            Event::ListIterator itr = track.getEvents()->iterator();
+            while( itr.hasNext() ){
+                Event *item = itr.next();
+                eventList.push_back( new TempEvent( *item ) );
+            }
+
+            handle = writeEventList( eventList, stream, eos );
+            for( vector<TempEvent *>::iterator itr = eventList.begin(); itr != eventList.end(); ++itr ){
+                TempEvent *item = *itr;
+                writeEvent( *item, stream );
+                delete item;
+            }
         }
         for( int i = 0; i < handle.size(); ++i ){
             writeHandle( handle[i], stream );
@@ -583,6 +619,100 @@ protected:
     }
 
 private:
+    /**
+     * @brief イベントリストをテキストストリームに出力する
+     * @param stream 出力先のストリーム
+     * @param eos EOS として出力する Tick 単位の時刻
+     * @return リスト中のイベントに含まれるハンドルの一覧
+     * @todo ここの機能はVSQFileWriterに移す
+     */
+    std::vector<VSQ_NS::Handle> writeEventList( vector<TempEvent *> &eventList, TextStream &stream, VSQ_NS::tick_t eos ){
+        vector<Handle> handles = getHandleList( eventList );
+        stream.writeLine( "[EventList]" );
+        vector<TempEvent> temp;
+        for( vector<TempEvent *>::iterator itr = eventList.begin(); itr != eventList.end(); ++itr ){
+            temp.push_back( **itr );
+        }
+        std::sort( temp.begin(), temp.end(), Event::compare );
+        int i = 0;
+        while( i < temp.size() ){
+            TempEvent item = temp[i];
+            if( ! item.isEOS() ){
+                ostringstream ids;
+                ids << "ID#" << (boost::format( "%04d" ) % item.index).str();
+                tick_t clock = temp[i].clock;
+                while( i + 1 < temp.size() && clock == temp[i + 1].clock ){
+                    i++;
+                    ids << ",ID#" << (boost::format( "%04d" ) % temp[i].index).str();
+                }
+                ostringstream oss;
+                oss << clock << "=" << ids.str();
+                stream.writeLine( oss.str() );
+            }
+            i++;
+        }
+        stream.write( (boost::format( "%d" ) % eos).str() ).writeLine( "=EOS" );
+        return handles;
+    }
+
+    /**
+     * @brief リスト内のイベントから、ハンドルの一覧を作成する。同時に、各イベント、ハンドルの番号を設定する
+     * @return (table<Handle>) ハンドルの一覧
+     */
+    const std::vector<Handle> getHandleList( vector<TempEvent *> &eventList ){
+        vector<Handle> handle;
+        int current_id = -1;
+        int current_handle = -1;
+        bool add_quotation_mark = true;
+        for( vector<TempEvent *>::iterator itr = eventList.begin(); itr != eventList.end(); ++itr ){
+            TempEvent *item = *itr;
+            current_id = current_id + 1;
+            item->index = current_id;
+            // SingerHandle
+            if( item->singerHandle.getHandleType() == HandleType::SINGER ){
+                current_handle = current_handle + 1;
+                item->singerHandle.index = current_handle;
+                handle.push_back( item->singerHandle );
+                item->setSingerHandleIndex( current_handle );
+                VoiceLanguage::VoiceLanguageEnum lang = VoiceLanguage::valueFromSingerName( item->singerHandle.ids );
+                add_quotation_mark = lang == VoiceLanguage::JAPANESE;
+            }
+            // LyricHandle
+            if( item->lyricHandle.getHandleType() == HandleType::LYRIC ){
+                current_handle = current_handle + 1;
+                item->lyricHandle.index = current_handle;
+                item->lyricHandle.addQuotationMark = add_quotation_mark;
+                handle.push_back( item->lyricHandle );
+                item->setLyricHandleIndex( current_handle );
+            }
+            // VibratoHandle
+            if( item->vibratoHandle.getHandleType() == HandleType::VIBRATO ){
+                current_handle = current_handle + 1;
+                item->vibratoHandle.index = current_handle;
+                handle.push_back( item->vibratoHandle );
+                item->setVibratoHandleIndex( current_handle );
+            }
+            // NoteHeadHandle
+            if( item->noteHeadHandle.getHandleType() == HandleType::NOTE_HEAD ){
+                current_handle = current_handle + 1;
+                item->noteHeadHandle.index = current_handle;
+                handle.push_back( item->noteHeadHandle );
+                item->setNoteHeadHandleIndex( current_handle );
+            }
+            // IconDynamicsHandle
+            if( item->iconDynamicsHandle.getHandleType() == HandleType::DYNAMICS ){
+                current_handle = current_handle + 1;
+                item->iconDynamicsHandle.index = current_handle;
+                item->iconDynamicsHandle.setLength( item->getLength() );
+                handle.push_back( item->iconDynamicsHandle );
+                // IconDynamicsHandleは、歌手ハンドルと同じ扱いなので
+                // _singerHandleIndexでよい
+                item->setSingerHandleIndex( current_handle );
+            }
+        }
+        return handle;
+    }
+
     /**
      * @brief SMF のトラックヘッダー文字列を取得する
      */
