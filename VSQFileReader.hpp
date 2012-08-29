@@ -111,9 +111,8 @@ protected:
      * @param last_line [ByRef<string>] 読み込んだ最後の行が返されます
      * @todo boost::lexical_cast使っている箇所はStringUtil使うようにする
      */
-    TentativeEvent parseEvent( TextStream &stream, int value, std::string &lastLine ){
+    TentativeEvent parseEvent( TextStream &stream, std::string &lastLine ){
         TentativeEvent result;
-        result.index = value;
         result.type = EventType::UNKNOWN;
         result.singerHandleIndex = -2;
         result.lyricHandleIndex = -1;
@@ -567,7 +566,7 @@ private:
                 int index = StringUtil::parseInt( parameters[1] );
                 if( lastLine.find( "[ID#" ) == 0 ){
                     TentativeEvent *item = new TentativeEvent();
-                    *item = parseEvent( stream, index, lastLine );
+                    *item = parseEvent( stream, lastLine );
                     temporaryEventList.push_back( item );
                     eventIdMap.insert( make_pair( index, item ) );
                 }else if( lastLine.find( "[h#" ) == 0 ){

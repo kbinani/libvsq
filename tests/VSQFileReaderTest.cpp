@@ -19,8 +19,8 @@ public:
         return VSQFileReader::parseHandle( stream, index, lastLine );
     }
 
-    TentativeEventStub parseEvent(TextStream &sr, int value, string &lastLine){
-        TentativeEvent event = VSQFileReader::parseEvent( sr, value, lastLine );
+    TentativeEventStub parseEvent(TextStream &sr, string &lastLine){
+        TentativeEvent event = VSQFileReader::parseEvent( sr, lastLine );
         TentativeEventStub result( event );
         return result;
     }
@@ -454,10 +454,9 @@ public:
         stream.writeLine( "NoteHeadHandle=h#0004" );
         stream.writeLine( "[ID#9999]" );
         stream.setPointer( -1 );
-        int number = 10;
         string lastLine = "";
         VSQFileReaderStub reader;
-        VSQFileReaderStub::TentativeEventStub event = reader.parseEvent( stream, number, lastLine );
+        VSQFileReaderStub::TentativeEventStub event = reader.parseEvent( stream, lastLine );
 
         CPPUNIT_ASSERT_EQUAL( EventType::NOTE, event.type );
         CPPUNIT_ASSERT_EQUAL( (tick_t)1, event.getLength() );

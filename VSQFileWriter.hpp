@@ -24,6 +24,11 @@ class VSQFileWriter{
 protected:
     class TempEvent : public Event{
     public:
+        /**
+         * VSQ メタテキストに出力されるこのオブジェクトの ID
+         */
+        int index;
+
         int singerHandleIndex;
         int lyricHandleIndex;
         int vibratoHandleIndex;

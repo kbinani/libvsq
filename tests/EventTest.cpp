@@ -25,20 +25,16 @@ public:
         return noteEvent;
     }
     
-    Event getSingerEvent()
-    {
+    Event getSingerEvent(){
         Event singerEvent( 0, EventType::SINGER );
         singerEvent.singerHandle = Handle( HandleType::SINGER );
         singerEvent.singerHandle.index = 16;
-        singerEvent.index = 16;
         return singerEvent;
     }
     
-    Event getIconEvent()
-    {
+    Event getIconEvent(){
         Event iconEvent( 0, EventType::ICON );
         iconEvent.note = 19;
-        iconEvent.index = 17;
         return iconEvent;
     }
     
@@ -59,15 +55,11 @@ public:
         CPPUNIT_ASSERT( event.isEOS() );
     }
     
-    void testConstructWithClockAndId()
-    {
+    void testConstructWithClockAndId(){
         Event event( 1, EventType::NOTE );
-        event.note = 60;
-        event.index = 12;
     
         CPPUNIT_ASSERT_EQUAL( (tick_t)1, event.clock );
-        CPPUNIT_ASSERT_EQUAL( 12, event.index );
-        CPPUNIT_ASSERT_EQUAL( 60, event.note );
+        CPPUNIT_ASSERT_EQUAL( EventType::NOTE, event.type );
     }
     
     void testEquals()
@@ -123,7 +115,6 @@ public:
         CPPUNIT_ASSERT_EQUAL( 12, copy.singerHandle.index );
 
         Event id( 0, EventType::NOTE );
-        id.index = 1;
         id.note = 6;
         id.dynamics = 7;
         id.pmBendDepth = 8;
@@ -143,7 +134,6 @@ public:
         //assert_nil( id.iconDynamicsHandle );
 
         copy = id.clone();
-        CPPUNIT_ASSERT_EQUAL( 1, copy.index );
         CPPUNIT_ASSERT_EQUAL( EventType::NOTE, copy.type );
         CPPUNIT_ASSERT_EQUAL( 6, copy.note );
         CPPUNIT_ASSERT_EQUAL( 7, copy.dynamics );

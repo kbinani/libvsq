@@ -319,13 +319,6 @@ public:
     VSQ_NS::tick_t clock;
 
     /**
-     * VSQ メタテキストに出力されるこのオブジェクトの ID
-     * @var int
-     * @todo VSQへの書き出し時にのみ使っているので、うまいことして削除する
-     */
-    int index;
-
-    /**
      * イベントの種類
      * @var EventTypeEnum
      */
@@ -429,6 +422,11 @@ public:
      */
     VSQ_NS::Handle iconDynamicsHandle;
 
+    /**
+     * @brief EOSイベントかどうか
+     */
+    bool isEos;
+
 private:
     /**
      * Tick 単位のイベント長さ
@@ -454,9 +452,7 @@ public:
         init();
         vector<string> spl = StringUtil::explode( "=", line );
         clock = boost::lexical_cast<tick_t>( spl[0] );
-        if( spl[1] == "EOS" ){
-            index = -1;
-        }
+        isEos = (spl[1] == "EOS");
     }
 
     /**
@@ -465,7 +461,7 @@ public:
     explicit Event(){
         init();
         clock = 0;
-        index = -1;
+        isEos = false;
         id = 0;
     }
 
@@ -529,7 +525,7 @@ public:
         result.vibratoDelay = vibratoDelay;
         result.noteHeadHandle = noteHeadHandle.clone();
         result.iconDynamicsHandle = iconDynamicsHandle.clone();
-        result.index = index;
+        result.isEos = isEos;
 
         result.id = id;
         result.tag = tag;
@@ -541,11 +537,7 @@ public:
      * @return (boolean) このオブジェクトが EOS 要素であれば <code>true</code> を、そうでなければ <code>false</code> を返す
      */
     bool isEOS() const{
-        if( index == -1 ){
-            return true;
-        }else{
-            return false;
-        }
+        return isEos;
     }
 
     /**
@@ -766,7 +758,7 @@ private:
         tag = "";
         id = -1;
         clock = 0;
-        index = -1;
+        isEos = false;
         type = EventType::NOTE;
         _length = 0;
         note = 0;
