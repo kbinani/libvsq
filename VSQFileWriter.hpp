@@ -24,25 +24,14 @@ class VSQFileWriter{
 protected:
     class TempEvent : public Event{
     public:
+        int singerHandleIndex;
+        int lyricHandleIndex;
+        int vibratoHandleIndex;
+        int noteHeadHandleIndex;
+
         explicit TempEvent( const Event &item ) :
             Event( item )
         {
-        }
-
-        void setSingerHandleIndex( int value ){
-            _singerHandleIndex = value;
-        }
-
-        void setLyricHandleIndex( int value ){
-            _lyricHandleIndex = value;
-        }
-
-        void setVibratoHandleIndex( int value ){
-            _vibratoHandleIndex = value;
-        }
-
-        void setNoteHeadHandleIndex( int value ){
-            _noteHeadHandleIndex = value;
         }
     };
 
@@ -673,7 +662,7 @@ private:
                 current_handle = current_handle + 1;
                 item->singerHandle.index = current_handle;
                 handle.push_back( item->singerHandle );
-                item->setSingerHandleIndex( current_handle );
+                item->singerHandleIndex = current_handle;
                 VoiceLanguage::VoiceLanguageEnum lang = VoiceLanguage::valueFromSingerName( item->singerHandle.ids );
                 add_quotation_mark = lang == VoiceLanguage::JAPANESE;
             }
@@ -683,21 +672,21 @@ private:
                 item->lyricHandle.index = current_handle;
                 item->lyricHandle.addQuotationMark = add_quotation_mark;
                 handle.push_back( item->lyricHandle );
-                item->setLyricHandleIndex( current_handle );
+                item->lyricHandleIndex = current_handle;
             }
             // VibratoHandle
             if( item->vibratoHandle.getHandleType() == HandleType::VIBRATO ){
                 current_handle = current_handle + 1;
                 item->vibratoHandle.index = current_handle;
                 handle.push_back( item->vibratoHandle );
-                item->setVibratoHandleIndex( current_handle );
+                item->vibratoHandleIndex = current_handle;
             }
             // NoteHeadHandle
             if( item->noteHeadHandle.getHandleType() == HandleType::NOTE_HEAD ){
                 current_handle = current_handle + 1;
                 item->noteHeadHandle.index = current_handle;
                 handle.push_back( item->noteHeadHandle );
-                item->setNoteHeadHandleIndex( current_handle );
+                item->noteHeadHandleIndex = current_handle;
             }
             // IconDynamicsHandle
             if( item->iconDynamicsHandle.getHandleType() == HandleType::DYNAMICS ){
@@ -707,7 +696,7 @@ private:
                 handle.push_back( item->iconDynamicsHandle );
                 // IconDynamicsHandleは、歌手ハンドルと同じ扱いなので
                 // _singerHandleIndexでよい
-                item->setSingerHandleIndex( current_handle );
+                item->singerHandleIndex = current_handle;
             }
         }
         return handle;

@@ -13,22 +13,6 @@ public:
             TentativeEvent( event )
         {
         }
-
-        int getLyricHandleIndex(){
-            return _lyricHandleIndex;
-        }
-
-        int getNoteHeadHandleIndex(){
-            return _noteHeadHandleIndex;
-        }
-
-        int getSingerHandleIndex(){
-            return _singerHandleIndex;
-        }
-
-        int getVibratoHandleIndex(){
-            return _vibratoHandleIndex;
-        }
     };
 
     Handle parseHandle(TextStream &stream, int index, string &lastLine){
@@ -483,10 +467,10 @@ public:
         CPPUNIT_ASSERT_EQUAL( 5, event.pmBendLength );
         CPPUNIT_ASSERT_EQUAL( 6, event.demDecGainRate );
         CPPUNIT_ASSERT_EQUAL( 7, event.demAccent );
-        CPPUNIT_ASSERT_EQUAL( 1, event.getLyricHandleIndex() );
-        CPPUNIT_ASSERT_EQUAL( 2, event.getSingerHandleIndex() );
-        CPPUNIT_ASSERT_EQUAL( 3, event.getVibratoHandleIndex() );
-        CPPUNIT_ASSERT_EQUAL( 4, event.getNoteHeadHandleIndex() );
+        CPPUNIT_ASSERT_EQUAL( 1, event.lyricHandleIndex );
+        CPPUNIT_ASSERT_EQUAL( 2, event.singerHandleIndex );
+        CPPUNIT_ASSERT_EQUAL( 3, event.vibratoHandleIndex );
+        CPPUNIT_ASSERT_EQUAL( 4, event.noteHeadHandleIndex );
     }
 
     CPPUNIT_TEST_SUITE( VSQFileReaderTest );

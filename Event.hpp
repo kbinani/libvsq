@@ -429,29 +429,6 @@ public:
      */
     VSQ_NS::Handle iconDynamicsHandle;
 
-protected:
-    /**
-     * @brief
-     * @todo iconHandleIndexに名前を変える
-     * @todo _〜Indexというprotectedフィールドは、すべてメタテキストのparse時にしか使わないので、VSQFileReaderでうまいことやる
-     */
-    int _singerHandleIndex;
-
-    /**
-     * @brief
-     */
-    int _lyricHandleIndex;
-
-    /**
-     * @brief
-     */
-    int _vibratoHandleIndex;
-
-    /**
-     * @brief
-     */
-    int _noteHeadHandleIndex;
-
 private:
     /**
      * Tick 単位のイベント長さ
@@ -805,10 +782,6 @@ private:
         d4mean = 24;
         pMeanEndingNote = 12;
     //    ustEvent = nil;
-        _lyricHandleIndex = 0;
-        _noteHeadHandleIndex = 0;
-        _singerHandleIndex = 0;
-        _vibratoHandleIndex = 0;
     }
 
 };

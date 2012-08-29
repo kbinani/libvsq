@@ -46,6 +46,11 @@ protected:
     };
 
     class TentativeEvent : public Event{
+    public:
+        int singerHandleIndex;
+        int lyricHandleIndex;
+        int vibratoHandleIndex;
+        int noteHeadHandleIndex;
     };
 
     class TentativeTrack : public Track{
@@ -110,10 +115,10 @@ protected:
         TentativeEvent result;
         result.index = value;
         result.type = EventType::UNKNOWN;
-        result._singerHandleIndex = -2;
-        result._lyricHandleIndex = -1;
-        result._vibratoHandleIndex = -1;
-        result._noteHeadHandleIndex = -1;
+        result.singerHandleIndex = -2;
+        result.lyricHandleIndex = -1;
+        result.vibratoHandleIndex = -1;
+        result.noteHeadHandleIndex = -1;
         result.setLength( 0 );
         result.note = 0;
         result.dynamics = 64;
@@ -152,17 +157,17 @@ protected:
             }else if( search ==  "DEMaccent" ){
                 result.demAccent = boost::lexical_cast<int>( parameters[1] );
             }else if( search == "LyricHandle" ){
-                result._lyricHandleIndex = Handle::getHandleIndexFromString( parameters[1] );
+                result.lyricHandleIndex = Handle::getHandleIndexFromString( parameters[1] );
             }else if( search == "IconHandle" ){
-                result._singerHandleIndex = Handle::getHandleIndexFromString( parameters[1] );
+                result.singerHandleIndex = Handle::getHandleIndexFromString( parameters[1] );
             }else if( search == "VibratoHandle" ){
-                result._vibratoHandleIndex = Handle::getHandleIndexFromString( parameters[1] );
+                result.vibratoHandleIndex = Handle::getHandleIndexFromString( parameters[1] );
             }else if( search == "VibratoDelay" ){
                 result.vibratoDelay = boost::lexical_cast<int>( parameters[1] );
             }else if( search == "PMbPortamentoUse" ){
                 result.pmbPortamentoUse = boost::lexical_cast<int>( parameters[1] );
             }else if( search == "NoteHeadHandle" ){
-                result._noteHeadHandleIndex = Handle::getHandleIndexFromString( parameters[1] );
+                result.noteHeadHandleIndex = Handle::getHandleIndexFromString( parameters[1] );
             }
             if( ! stream.ready() ){
                 break;
@@ -468,7 +473,7 @@ private:
      */
     Track getTrackByTextStream( TextStream &stream, Master *master = 0, Mixer *mixer = 0 ){
         std::map<int, tick_t> eventClockMap;
-        std::map<int, VSQ_NS::Event *> eventIdMap;
+        std::map<int, TentativeEvent *> eventIdMap;
         std::map<int, VSQ_NS::Handle> handleIdMap;
         vector<VSQ_NS::Event *> temporaryEventList;
 
@@ -561,7 +566,7 @@ private:
                 std::vector<std::string> parameters = StringUtil::explode( "#", buffer );
                 int index = StringUtil::parseInt( parameters[1] );
                 if( lastLine.find( "[ID#" ) == 0 ){
-                    Event *item = new Event();
+                    TentativeEvent *item = new TentativeEvent();
                     *item = parseEvent( stream, index, lastLine );
                     temporaryEventList.push_back( item );
                     eventIdMap.insert( make_pair( index, item ) );
@@ -576,23 +581,23 @@ private:
         }
 
         // まずhandleをidに埋め込み
-        for( map<int, Event *>::iterator i = eventIdMap.begin(); i != eventIdMap.end(); ++i ){
-            VSQ_NS::Event *id = i->second;
-            if( handleIdMap.find( id->_singerHandleIndex ) != handleIdMap.end() ){
+        for( map<int, TentativeEvent *>::iterator i = eventIdMap.begin(); i != eventIdMap.end(); ++i ){
+            TentativeEvent *id = i->second;
+            if( handleIdMap.find( id->singerHandleIndex ) != handleIdMap.end() ){
                 if( id->type == VSQ_NS::EventType::SINGER ){
-                    id->singerHandle = handleIdMap[id->_singerHandleIndex];
+                    id->singerHandle = handleIdMap[id->singerHandleIndex];
                 }else if( id->type == VSQ_NS::EventType::ICON ){
-                    id->iconDynamicsHandle = handleIdMap[id->_singerHandleIndex];
+                    id->iconDynamicsHandle = handleIdMap[id->singerHandleIndex];
                 }
             }
-            if( handleIdMap.find( id->_lyricHandleIndex ) != handleIdMap.end() ){
-                id->lyricHandle = handleIdMap[id->_lyricHandleIndex];
+            if( handleIdMap.find( id->lyricHandleIndex ) != handleIdMap.end() ){
+                id->lyricHandle = handleIdMap[id->lyricHandleIndex];
             }
-            if( handleIdMap.find( id->_vibratoHandleIndex ) != handleIdMap.end() ){
-                id->vibratoHandle = handleIdMap[id->_vibratoHandleIndex];
+            if( handleIdMap.find( id->vibratoHandleIndex ) != handleIdMap.end() ){
+                id->vibratoHandle = handleIdMap[id->vibratoHandleIndex];
             }
-            if( handleIdMap.find( id->_noteHeadHandleIndex ) != handleIdMap.end() ){
-                id->noteHeadHandle = handleIdMap[id->_noteHeadHandleIndex];
+            if( handleIdMap.find( id->noteHeadHandleIndex ) != handleIdMap.end() ){
+                id->noteHeadHandle = handleIdMap[id->noteHeadHandleIndex];
             }
         }
 
