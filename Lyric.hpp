@@ -55,6 +55,7 @@ public:
      * 発音記号のリスト
      * @var table
      * @access private
+     * @todo privateにする
      */
     std::vector<std::string> _phoneticSymbol;// = { "a" };
 
@@ -62,6 +63,7 @@ public:
      * Consonant Adjustment のリスト
      * @var table
      * @access private
+     * @todo privateにする
      */
     std::vector<int> _consonantAdjustment;// = { 0 };
 

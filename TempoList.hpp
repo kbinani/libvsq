@@ -35,6 +35,9 @@ public:
         std::vector<Tempo>::iterator iterator;
 
     public:
+        /**
+         * @todo このコンストラクタは隠蔽すべき
+         */
         Iterator( std::vector<Tempo> *list ){
             this->list = list;
             this->iterator = list->begin();
@@ -192,6 +195,7 @@ public:
      * @brief 指定した時刻におけるテンポを取得する
      * @param clock (int) Tick 単位の時刻
      * @return (int) テンポ値。四分音符の長さをマイクロ秒単位で表した値
+     * @todo clock の型をtick_tに修正
      */
     int getTempoAt( int clock ) const{
         int index = 0;

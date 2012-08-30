@@ -29,7 +29,9 @@ public:
     bool pmbPortamentoUse;
     bool demDecGainRate;
     bool demAccent;
+    //TODO:UTAU専用のフィールドなので消す
     bool preUtterance;
+    //TODO:UTAU専用のフィールドなので消す
     bool voiceOverlap;
 
     EventWriteOption()

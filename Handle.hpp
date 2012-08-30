@@ -27,12 +27,14 @@ VSQ_BEGIN_NAMESPACE
 
 /**
  * @brief ハンドルを取り扱います。ハンドルにはLyricHandle、VibratoHandle、SingerHandleおよびNoteHeadHandleがある
+ * @todo get, set両方あるプロパティについては、fieldにしてよいのでは
  */
 class Handle
 {
 public:
     /**
      * @brief メタテキストに出力されるこのオブジェクトの ID
+     * @todo VSQへの書き出し時にのみ使っているので、うまいことして削除する
      */
     int index;
 
@@ -450,7 +452,6 @@ public:
             ret.setCaption( getCaption() );
             ret.setStartDyn( getStartDyn() );
             ret.setEndDyn( getEndDyn() );
-            //TODO: _dynBPの型をVibratoBPList*に変える
             //if( 0 != _dynBP ){
                 ret.setDynBP( _dynBP.clone() );
             //}
@@ -495,12 +496,10 @@ public:
             result.setCaption( _caption );
             result.setLength( getLength() );
             result.setStartDepth( _startDepth );
-            //TODO: _depthBPの型をVibratoBPList*に変える
             //if( 0 != _depthBP ){
                 result.setDepthBP( _depthBP.clone() );
             //}
             result.setStartRate( _startRate );
-            //TODO: _rateBPの型をVibratoBPList*に変える
             //if( 0 != _rateBP ){
                 result.setRateBP( _rateBP.clone() );
             //}

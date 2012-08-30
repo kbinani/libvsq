@@ -24,14 +24,6 @@ public:
 
         //TODO:
 /*
-        assert_not_nil( track.common );
-        assert_nil( track.master );
-        assert_nil( track.mixer );
-        assert_not_nil( track.events );
-*/
-
-        //TODO:
-/*
         assert_not_nil( track.getCurve( "pit" ) );
         assert_not_nil( track.getCurve( "pbs" ) );
         assert_not_nil( track.getCurve( "dyn" ) );

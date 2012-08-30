@@ -391,8 +391,6 @@ private:
      * @param encoding [string]
      * @param [out] sw 取得したメタテキストの格納先
      * @param [out] track_name 取得したトラック名
-     * @todo midi_event を midiEventList に名前を変える
-     * @todo swをstreamに名前変える
      */
     void getMetatextByMidiEventList( const std::vector<VSQ_NS::MidiEvent> &midiEventList, const std::string &encoding, TextStream &stream, string &trackName ){
         int count = midiEventList.size();

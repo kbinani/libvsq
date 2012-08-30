@@ -285,7 +285,6 @@ protected:
      */
     void printMetaText( const Track &t, TextStream &stream, int eos, tick_t start, bool printPitch = false, Master *master = 0, Mixer *mixer = 0 ){
         Track track = t;
-        //TODO: commonの型を Common* にする
         //if( common ~= nil ){
             track.getCommon()->write( stream );
         //}
@@ -618,7 +617,6 @@ private:
      * @param stream 出力先のストリーム
      * @param eos EOS として出力する Tick 単位の時刻
      * @return リスト中のイベントに含まれるハンドルの一覧
-     * @todo ここの機能はVSQFileWriterに移す
      */
     std::vector<VSQ_NS::Handle> writeEventList( vector<TempEvent *> &eventList, TextStream &stream, VSQ_NS::tick_t eos ){
         vector<Handle> handles = getHandleList( eventList );

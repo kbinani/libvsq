@@ -321,12 +321,12 @@ public:
     /**
      * イベントの種類
      * @var EventTypeEnum
+     * @todo private|protectedにするべきでは
      */
     VSQ_NS::EventType::EventTypeEnum type;
 
     /**
      * @brief 歌手ハンドル
-     * @todo 型をHandle*に変える
      */
     VSQ_NS::Handle singerHandle;
 
@@ -374,13 +374,11 @@ public:
 
     /**
      * @brief 歌詞ハンドル
-     * @todo 型をHandle*に変える
      */
     VSQ_NS::Handle lyricHandle;
 
     /**
      * @brief ビブラートハンドル
-     * @todo 型をHandle*に変える
      */
     VSQ_NS::Handle vibratoHandle;
 
@@ -392,7 +390,6 @@ public:
 
     /**
      * @brief アタックハンドル
-     * @todo 型をHandle*に変える
      */
     VSQ_NS::Handle noteHeadHandle;
 

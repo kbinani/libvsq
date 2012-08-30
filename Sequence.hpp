@@ -32,6 +32,8 @@ using namespace std;
 
 /**
  * @brief VSQ ファイルのシーケンスを保持するクラス
+ * @todo track の0番目が常に使われないので、なんとかする。C#の時代では、0番目はMasterTrackとしてMaster, Mixerあたりの情報を持っていたが、もはやこれらはSequenceの持ち物となったので。
+ * @todo PreMeasureの取得方法が２通り以上ある。Sequence::master.preMeasureとSequence::getPreMeasure
  */
 class Sequence{
 public:
@@ -216,7 +218,7 @@ public:
     }
 
 
-    //TODO:
+    //TODO:not implemented yet; getMaximumNoteLengthAt method
     /*
         --
         -- 指定したクロックにおける、音符長さ(ゲートタイム単位)の最大値を調べます

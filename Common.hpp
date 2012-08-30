@@ -72,6 +72,7 @@ public:
      * @brief 初期化を行う
      * @param stream 読み込み元のテキストストリーム
      * @param lastLine 読み込んだ最後の行。テーブルの ["value"] に文字列が格納される
+     * @todo VSQFileReaderに移動する
      */
     explicit Common( TextStream &stream, std::string &lastLine ){
         init();
@@ -140,6 +141,7 @@ public:
     /**
      * @brief テキストストリームに出力する
      * @param stream (TextStream) 出力先のストリーム
+     * @todo VSQFileWriterに移動する
      */
     void write( TextStream &stream ) const{
         stream.writeLine( "[Common]" );

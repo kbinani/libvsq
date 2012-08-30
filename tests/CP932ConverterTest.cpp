@@ -1,7 +1,5 @@
 #include "Util.hpp"
 #include "../CP932Converter.hpp"
-#include <fstream> //TODO:for debug
-#include <time.h>//TODO:for debug
 
 using namespace std;
 using namespace VSQ_NS;

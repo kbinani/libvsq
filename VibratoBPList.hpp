@@ -24,8 +24,7 @@ VSQ_BEGIN_NAMESPACE
 
 /**
  * @brief ビブラートデータポイントのリストを表すクラス
- * @class table
- * @name VibratoBPList
+ * @todo ビブラート用とは限らないので、クラス名を良いものに変える。例えば、NoteHeadHandleのDyn
  */
 class VibratoBPList
 {
