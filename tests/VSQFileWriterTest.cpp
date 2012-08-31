@@ -1,7 +1,7 @@
 #include "Util.hpp"
 #include "../VSQFileWriter.hpp"
 #include "../ByteArrayOutputStream.hpp"
-#include "iostream"
+#include <iostream>
 
 using namespace std;
 using namespace VSQ_NS;
@@ -51,8 +51,7 @@ public:
 
 class VSQFileWriterTest : public CppUnit::TestCase{
     static string getLF(){
-        static char codeLF[2] = { 0x0A, 0x00 };
-        static string result = codeLF;
+        static string result = "\x0A";
         return result;
     }
 
