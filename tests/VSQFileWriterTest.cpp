@@ -78,16 +78,15 @@ class VSQFileWriterTest : public CppUnit::TestCase{
         result.ids = "Crescendo";
         result.original = 4;
         result.index = 4;
-        result.setCaption( "Zero Crescendo Curve" );
+        result.caption = "Zero Crescendo Curve";
         result.setLength( 960 );
-        result.setStartDyn( 2 );
-        result.setEndDyn( 38 );
+        result.startDyn = 2;
+        result.endDyn = 38;
         vector<double> dynBPX;
         dynBPX.push_back( 0.5 );
         vector<int> dynBPY;
         dynBPY.push_back( 11 );
-        VibratoBPList dynBP( dynBPX, dynBPY );
-        result.setDynBP( dynBP );
+        result.dynBP = VibratoBPList( dynBPX, dynBPY );;
         return result;
     }
 
@@ -95,12 +94,12 @@ class VSQFileWriterTest : public CppUnit::TestCase{
         Handle result( HandleType::VIBRATO );
         result.iconId = "$04040004";
         result.ids = "normal-da-yo";
-        result.setCaption( "キャプションです=あ" );
+        result.caption = "キャプションです=あ";
         result.original = 5;
         result.setLength( 120 );
         result.index = 1;
 
-        result.setStartDepth( 64 );
+        result.startDepth = 64;
         vector<double> depthBPX;
         depthBPX.push_back( 0.5 );
         depthBPX.push_back( 0.75 );
@@ -109,10 +108,9 @@ class VSQFileWriterTest : public CppUnit::TestCase{
         depthBPY.push_back( 64 );
         depthBPY.push_back( 32 );
         depthBPY.push_back( 0 );
-        VibratoBPList depthBP( depthBPX, depthBPY );
-        result.setDepthBP( depthBP );
+        result.depthBP = VibratoBPList( depthBPX, depthBPY );
 
-        result.setStartRate( 64 );
+        result.startRate = 64;
         vector<double> rateBPX;
         rateBPX.push_back( 0.5 );
         rateBPX.push_back( 0.75 );
@@ -121,8 +119,7 @@ class VSQFileWriterTest : public CppUnit::TestCase{
         rateBPY.push_back( 64 );
         rateBPY.push_back( 32 );
         rateBPY.push_back( 0 );
-        VibratoBPList rateBP( rateBPX, rateBPY );
-        result.setRateBP( rateBP );
+        result.rateBP = VibratoBPList( rateBPX, rateBPY );
 
         return result;
     }
@@ -132,7 +129,7 @@ class VSQFileWriterTest : public CppUnit::TestCase{
         result.iconId = "$07010002";
         result.ids = "Miku3=God";
         result.original = 2;
-        result.setCaption( "" );
+        result.caption = "";
         result.setLength( 1 );
         result.language = 1;
         result.program = 2;
@@ -146,10 +143,10 @@ class VSQFileWriterTest : public CppUnit::TestCase{
         result.ids = "accent";
         result.original = 2;
         result.index = 3;
-        result.setCaption( "Accent" );
+        result.caption = "Accent";
         result.setLength( 120 );
-        result.setDuration( 64 );
-        result.setDepth( 63 );
+        result.duration = 64;
+        result.depth = 63;
         return result;
     }
 
@@ -345,7 +342,7 @@ class VSQFileWriterTest : public CppUnit::TestCase{
         singerEvent.singerHandle.iconId = "$07010002";
         singerEvent.singerHandle.ids = "Miku";
         singerEvent.singerHandle.original = 1;
-        singerEvent.singerHandle.setCaption( "caption for miku" );
+        singerEvent.singerHandle.caption = "caption for miku";
         singerEvent.singerHandle.language = 1;
         singerEvent.singerHandle.program = 2;
         track.getEvents()->set( 0, singerEvent );
@@ -356,9 +353,9 @@ class VSQFileWriterTest : public CppUnit::TestCase{
         crescendoEvent.iconDynamicsHandle.iconId = "$05020001";
         crescendoEvent.iconDynamicsHandle.ids = "crescendo";
         crescendoEvent.iconDynamicsHandle.original = 1;
-        crescendoEvent.iconDynamicsHandle.setCaption( "caption for crescendo" );
-        crescendoEvent.iconDynamicsHandle.setStartDyn( 4 );
-        crescendoEvent.iconDynamicsHandle.setEndDyn( 7 );
+        crescendoEvent.iconDynamicsHandle.caption = "caption for crescendo";
+        crescendoEvent.iconDynamicsHandle.startDyn = 4;
+        crescendoEvent.iconDynamicsHandle.endDyn = 7;
         crescendoEvent.setLength( 10 );
         track.getEvents()->add( crescendoEvent, 2 );
 
@@ -368,9 +365,9 @@ class VSQFileWriterTest : public CppUnit::TestCase{
         dynaffEvent.iconDynamicsHandle.iconId = "$05010001";
         dynaffEvent.iconDynamicsHandle.ids = "dynaff";
         dynaffEvent.iconDynamicsHandle.original = 2;
-        dynaffEvent.iconDynamicsHandle.setCaption( "caption for dynaff" );
-        dynaffEvent.iconDynamicsHandle.setStartDyn( 5 );
-        dynaffEvent.iconDynamicsHandle.setEndDyn( 8 );
+        dynaffEvent.iconDynamicsHandle.caption = "caption for dynaff";
+        dynaffEvent.iconDynamicsHandle.startDyn = 5;
+        dynaffEvent.iconDynamicsHandle.endDyn = 8;
         dynaffEvent.setLength( 11 );
         track.getEvents()->add( dynaffEvent, 3 );
 
@@ -380,9 +377,9 @@ class VSQFileWriterTest : public CppUnit::TestCase{
         decrescendoEvent.iconDynamicsHandle.iconId = "$05030001";
         decrescendoEvent.iconDynamicsHandle.ids = "decrescendo";
         decrescendoEvent.iconDynamicsHandle.original = 3;
-        decrescendoEvent.iconDynamicsHandle.setCaption( "caption for decrescendo" );
-        decrescendoEvent.iconDynamicsHandle.setStartDyn( 6 );
-        decrescendoEvent.iconDynamicsHandle.setEndDyn( 9 );
+        decrescendoEvent.iconDynamicsHandle.caption = "caption for decrescendo";
+        decrescendoEvent.iconDynamicsHandle.startDyn = 6;
+        decrescendoEvent.iconDynamicsHandle.endDyn = 9;
         decrescendoEvent.setLength( 12 );
         track.getEvents()->add( decrescendoEvent, 4 );
 
@@ -391,7 +388,7 @@ class VSQFileWriterTest : public CppUnit::TestCase{
         singerEvent2.singerHandle.iconId = "$07020003";
         singerEvent2.singerHandle.ids = "Luka_EN";
         singerEvent2.singerHandle.original = 0x82;
-        singerEvent2.singerHandle.setCaption( "caption for luka" );
+        singerEvent2.singerHandle.caption = "caption for luka";
         singerEvent2.singerHandle.language = 2;
         singerEvent2.singerHandle.program = 3;
         track.getEvents()->add( singerEvent2, 5 );
@@ -412,18 +409,18 @@ class VSQFileWriterTest : public CppUnit::TestCase{
         noteEvent.vibratoHandle.iconId ="$04040004";
         noteEvent.vibratoHandle.ids = "vibrato";
         noteEvent.vibratoHandle.original = 1;
-        noteEvent.vibratoHandle.setCaption( "caption for vibrato" );
+        noteEvent.vibratoHandle.caption = "caption for vibrato";
         noteEvent.vibratoHandle.setLength( 407 );
-        noteEvent.vibratoHandle.setStartDepth( 13 );
-        noteEvent.vibratoHandle.setStartRate( 14 );
+        noteEvent.vibratoHandle.startDepth = 13;
+        noteEvent.vibratoHandle.startRate = 14;
         noteEvent.noteHeadHandle = Handle( HandleType::NOTE_HEAD );//h#0007
         noteEvent.noteHeadHandle.iconId = "$05030000";
         noteEvent.noteHeadHandle.ids = "attack";
         noteEvent.noteHeadHandle.original = 15;
-        noteEvent.noteHeadHandle.setCaption( "caption for attack" );
+        noteEvent.noteHeadHandle.caption = "caption for attack";
         noteEvent.noteHeadHandle.setLength( 120 );
-        noteEvent.noteHeadHandle.setDuration( 62 );
-        noteEvent.noteHeadHandle.setDepth( 65 );
+        noteEvent.noteHeadHandle.duration = 62;
+        noteEvent.noteHeadHandle.depth = 65;
         track.getEvents()->add( noteEvent, 6 );
 
         Master master;
@@ -843,8 +840,8 @@ class VSQFileWriterTest : public CppUnit::TestCase{
         }
 
         {
-            handle.setRateBP( VibratoBPList( vector<double>(), vector<int>() ) );
-            handle.setDepthBP( VibratoBPList( vector<double>(), vector<int>() ) );
+            handle.rateBP = VibratoBPList( vector<double>(), vector<int>() );
+            handle.depthBP = VibratoBPList( vector<double>(), vector<int>() );
             TextStream stream;
             VSQFileWriterStub writer;
             writer.writeHandle( handle, stream );
@@ -923,7 +920,7 @@ class VSQFileWriterTest : public CppUnit::TestCase{
 
         {
             // dynBPのデータ点が複数
-            handle.setDynBP( VibratoBPList( "2", "0.4,0.8", "1,2" ) );
+            handle.dynBP = VibratoBPList( "2", "0.4,0.8", "1,2" );
             TextStream stream;
             VSQFileWriterStub writer;
             writer.writeHandle( handle, stream );
@@ -944,7 +941,7 @@ class VSQFileWriterTest : public CppUnit::TestCase{
 
         {
             // dynBPのデータ点が 0 個
-            handle.setDynBP( VibratoBPList( vector<double>(), vector<int>() ) );
+            handle.dynBP = VibratoBPList( vector<double>(), vector<int>() );
             TextStream stream;
             VSQFileWriterStub writer;
             writer.writeHandle( handle, stream );
@@ -963,7 +960,7 @@ class VSQFileWriterTest : public CppUnit::TestCase{
 
         {
             // dynBPがから
-            handle.setDynBP( VibratoBPList( vector<double>(), vector<int>() ) );
+            handle.dynBP = VibratoBPList( vector<double>(), vector<int>() );
             TextStream stream;
             VSQFileWriterStub writer;
             writer.writeHandle( handle, stream );

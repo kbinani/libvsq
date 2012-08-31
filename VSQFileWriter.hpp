@@ -140,33 +140,33 @@ protected:
             stream.writeLine( string( "IconID=" ) + item.iconId );
             stream.writeLine( string( "IDS=" ) + item.ids );
             stream.writeLine( string( "Original=" ) + StringUtil::toString( item.original ) );
-            stream.writeLine( string( "Caption=" ) + item.getCaption() );
+            stream.writeLine( string( "Caption=" ) + item.caption );
             stream.writeLine( string( "Length=" ) + StringUtil::toString( item.getLength() ) );
-            stream.writeLine( string( "StartDepth=" ) + StringUtil::toString( item.getStartDepth() ) );
-            stream.writeLine( string( "DepthBPNum=" ) + StringUtil::toString( item.getDepthBP().size() ) );
-            if( item.getDepthBP().size() > 0 ){
-                stream.write( string( "DepthBPX=" ) + StringUtil::toString( item.getDepthBP().get( 0 ).x, "%.6f" ) );
-                for( int i = 1; i < item.getDepthBP().size(); i++ ){
-                    stream.write( string( "," ) + StringUtil::toString( item.getDepthBP().get( i ).x, "%.6f" ) );
+            stream.writeLine( string( "StartDepth=" ) + StringUtil::toString( item.startDepth ) );
+            stream.writeLine( string( "DepthBPNum=" ) + StringUtil::toString( item.depthBP.size() ) );
+            if( item.depthBP.size() > 0 ){
+                stream.write( string( "DepthBPX=" ) + StringUtil::toString( item.depthBP.get( 0 ).x, "%.6f" ) );
+                for( int i = 1; i < item.depthBP.size(); i++ ){
+                    stream.write( string( "," ) + StringUtil::toString( item.depthBP.get( i ).x, "%.6f" ) );
                 }
                 stream.writeLine( "" );
-                stream.write( string( "DepthBPY=" ) + StringUtil::toString( item.getDepthBP().get( 0 ).y ) );
-                for( int i = 1; i < item.getDepthBP().size(); i++ ){
-                    stream.write( string( "," ) + StringUtil::toString( item.getDepthBP().get( i ).y ) );
+                stream.write( string( "DepthBPY=" ) + StringUtil::toString( item.depthBP.get( 0 ).y ) );
+                for( int i = 1; i < item.depthBP.size(); i++ ){
+                    stream.write( string( "," ) + StringUtil::toString( item.depthBP.get( i ).y ) );
                 }
                 stream.writeLine( "" );
             }
-            stream.writeLine( string( "StartRate=" ) + StringUtil::toString( item.getStartRate() ) );
-            stream.writeLine( string( "RateBPNum=" ) + StringUtil::toString( item.getRateBP().size() ) );
-            if( item.getRateBP().size() > 0 ){
-                stream.write( string( "RateBPX=" ) + StringUtil::toString( item.getRateBP().get( 0 ).x, "%.6f" ) );
-                for( int i = 1; i < item.getRateBP().size(); i++ ){
-                    stream.write( string( "," ) + StringUtil::toString( item.getRateBP().get( i ).x, "%.6f" ) );
+            stream.writeLine( string( "StartRate=" ) + StringUtil::toString( item.startRate ) );
+            stream.writeLine( string( "RateBPNum=" ) + StringUtil::toString( item.rateBP.size() ) );
+            if( item.rateBP.size() > 0 ){
+                stream.write( string( "RateBPX=" ) + StringUtil::toString( item.rateBP.get( 0 ).x, "%.6f" ) );
+                for( int i = 1; i < item.rateBP.size(); i++ ){
+                    stream.write( string( "," ) + StringUtil::toString( item.rateBP.get( i ).x, "%.6f" ) );
                 }
                 stream.writeLine( "" );
-                stream.write( string( "RateBPY=" ) + StringUtil::toString( item.getRateBP().get( 0 ).y ) );
-                for( int i = 1; i < item.getRateBP().size(); i++ ){
-                    stream.write( string( "," ) + StringUtil::toString( item.getRateBP().get( i ).y ) );
+                stream.write( string( "RateBPY=" ) + StringUtil::toString( item.rateBP.get( 0 ).y ) );
+                for( int i = 1; i < item.rateBP.size(); i++ ){
+                    stream.write( string( "," ) + StringUtil::toString( item.rateBP.get( i ).y ) );
                 }
                 stream.writeLine( "" );
             }
@@ -174,7 +174,7 @@ protected:
             stream.writeLine( string( "IconID=" ) + item.iconId );
             stream.writeLine( string( "IDS=" ) + item.ids );
             stream.writeLine( string( "Original=" ) + StringUtil::toString( item.original ) );
-            stream.writeLine( string( "Caption=" ) + item.getCaption() );
+            stream.writeLine( string( "Caption=" ) + item.caption );
             stream.writeLine( string( "Length=" ) + StringUtil::toString( item.getLength() ) );
             stream.writeLine( string( "Language=" ) + StringUtil::toString( item.language ) );
             stream.writeLine( string( "Program=" ) + StringUtil::toString( item.program ) );
@@ -182,31 +182,31 @@ protected:
             stream.writeLine( string( "IconID=" ) + item.iconId );
             stream.writeLine( string( "IDS=" ) + item.ids );
             stream.writeLine( string( "Original=" ) + StringUtil::toString( item.original ) );
-            stream.writeLine( string( "Caption=" ) + item.getCaption() );
+            stream.writeLine( string( "Caption=" ) + item.caption );
             stream.writeLine( string( "Length=" ) + StringUtil::toString( item.getLength() ) );
-            stream.writeLine( string( "Duration=" ) + StringUtil::toString( item.getDuration() ) );
-            stream.writeLine( string( "Depth=" ) + StringUtil::toString( item.getDepth() ) );
+            stream.writeLine( string( "Duration=" ) + StringUtil::toString( item.duration ) );
+            stream.writeLine( string( "Depth=" ) + StringUtil::toString( item.depth ) );
         }else if( item.getHandleType() == HandleType::DYNAMICS ){
             stream.writeLine( string( "IconID=" ) + item.iconId );
             stream.writeLine( string( "IDS=" ) + item.ids );
             stream.writeLine( string( "Original=" ) + StringUtil::toString( item.original ) );
-            stream.writeLine( string( "Caption=" ) + item.getCaption() );
-            stream.writeLine( string( "StartDyn=" ) + StringUtil::toString( item.getStartDyn() ) );
-            stream.writeLine( string( "EndDyn=" ) + StringUtil::toString( item.getEndDyn() ) );
+            stream.writeLine( string( "Caption=" ) + item.caption );
+            stream.writeLine( string( "StartDyn=" ) + StringUtil::toString( item.startDyn ) );
+            stream.writeLine( string( "EndDyn=" ) + StringUtil::toString( item.endDyn ) );
             stream.writeLine( string( "Length=" ) + StringUtil::toString( item.getLength() ) );
-            if( item.getDynBP().size() <= 0 ){
+            if( item.dynBP.size() <= 0 ){
                 stream.writeLine( "DynBPNum=0" );
             }else{
-                int c = item.getDynBP().size();
+                int c = item.dynBP.size();
                 stream.writeLine( string( "DynBPNum=" ) + StringUtil::toString( c ) );
-                stream.write( string( "DynBPX=" ) + StringUtil::toString( item.getDynBP().get( 0 ).x, "%.6f" ) );
+                stream.write( string( "DynBPX=" ) + StringUtil::toString( item.dynBP.get( 0 ).x, "%.6f" ) );
                 for( int i = 1; i < c; i++ ){
-                    stream.write( string( "," ) + StringUtil::toString( item.getDynBP().get( i ).x, "%.6f" ) );
+                    stream.write( string( "," ) + StringUtil::toString( item.dynBP.get( i ).x, "%.6f" ) );
                 }
                 stream.writeLine( "" );
-                stream.write( string( "DynBPY=" ) + StringUtil::toString( item.getDynBP().get( 0 ).y ) );
+                stream.write( string( "DynBPY=" ) + StringUtil::toString( item.dynBP.get( 0 ).y ) );
                 for( int i = 1; i < c; i++ ){
-                    stream.write( string( "," ) + StringUtil::toString( item.getDynBP().get( i ).y ) );
+                    stream.write( string( "," ) + StringUtil::toString( item.dynBP.get( i ).y ) );
                 }
                 stream.writeLine( "" );
             }

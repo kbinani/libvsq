@@ -462,12 +462,12 @@ public:
         noteEvent.setLength( 480 );
         noteEvent.vibratoDelay = 240;
         noteEvent.vibratoHandle.setLength( 240 );
-        noteEvent.vibratoHandle.setStartDepth( 71 );
-        noteEvent.vibratoHandle.setStartRate( 72 );
+        noteEvent.vibratoHandle.startDepth = 71;
+        noteEvent.vibratoHandle.startRate = 72;
         VibratoBPList rateCurve( "2", "0.5,1.0", "11,12" );
         VibratoBPList depthCurve( "2", "0.4,0.9", "13,14" );
-        noteEvent.vibratoHandle.setRateBP( rateCurve );
-        noteEvent.vibratoHandle.setDepthBP( depthCurve );
+        noteEvent.vibratoHandle.rateBP = rateCurve;
+        noteEvent.vibratoHandle.depthBP = depthCurve;
         actual = VocaloidMidiEventListFactoryStub::generateVibratoNRPN( &sequence.tempoList, &noteEvent, 500 );
         CPPUNIT_ASSERT_EQUAL( (size_t)5, actual.size() );
 

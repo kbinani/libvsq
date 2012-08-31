@@ -68,6 +68,56 @@ public:
      */
     bool addQuotationMark;
 
+    /**
+     * @brief キャプション
+     */
+    std::string caption;
+
+    /**
+     * @brief Dyn の開始値
+     */
+    int startDyn;
+
+    /**
+     * @brief Dyn の終了値
+     */
+    int endDyn;
+
+    /**
+     * @brief Depth
+     */
+    int depth;
+
+    /**
+     * @brief Duration
+     */
+    int duration;
+
+    /**
+     * @brief Rate の開始値
+     */
+    int startRate;
+
+    /**
+     * @brief Depth の開始値
+     */
+    int startDepth;
+
+    /**
+     * @brief Depth のカーブ
+     */
+    VSQ_NS::VibratoBPList depthBP;
+
+    /**
+     * @brief Rate のカーブ
+     */
+    VSQ_NS::VibratoBPList rateBP;
+
+    /**
+     * @brief Dyn のカーブ
+     */
+    VSQ_NS::VibratoBPList dynBP;
+
 protected:
     VSQ_NS::HandleType::HandleTypeEnum _type;
 
@@ -79,59 +129,9 @@ protected:
     std::vector<VSQ_NS::Lyric> _lyrics;
 
     /**
-     * @brief キャプション
-     */
-    std::string _caption;
-
-    /**
      * @brief 長さ
      */
     int _length;
-
-    /**
-     * @brief Depth の開始値
-     */
-    int _startDepth;
-
-    /**
-     * @brief Depth のカーブ
-     */
-    VSQ_NS::VibratoBPList _depthBP;
-
-    /**
-     * @brief Rate の開始値
-     */
-    int _startRate;
-
-    /**
-     * @brief Rate のカーブ
-     */
-    VSQ_NS::VibratoBPList _rateBP;
-
-    /**
-     * @brief Duration
-     */
-    int _duration;
-
-    /**
-     * @brief Depth
-     */
-    int _depth;
-
-    /**
-     * @brief Dyn の開始値
-     */
-    int _startDyn;
-
-    /**
-     * @brief Dyn の終了値
-     */
-    int _endDyn;
-
-    /**
-     * @brief Dyn のカーブ
-     */
-    VSQ_NS::VibratoBPList _dynBP;
 
 public:
     /**
@@ -224,166 +224,6 @@ public:
     }
 
     /**
-     * @brief キャプションを取得する
-     * @return キャプション
-     */
-    const std::string getCaption() const{
-        return _caption;
-    }
-
-    /**
-     * @brief キャプションを設定する
-     * @param value キャプション
-     */
-    void setCaption( const std::string &value ){
-        _caption = value;
-    }
-
-    /**
-     * @brief DYN の開始値を取得する
-     * @return DYN の開始値
-     */
-    int getStartDyn() const{
-        return _startDyn;
-    }
-
-    /**
-     * @brief DYN の開始値を設定する
-     * @param value DYN の開始値
-     */
-    void setStartDyn( int value ){
-        _startDyn = value;
-    }
-
-    /**
-     * @brief DYN の終了値を取得する
-     * @return DYN の終了値
-     */
-    int getEndDyn() const{
-        return _endDyn;
-    }
-
-    /**
-     * @brief DYN の終了値を設定する
-     * @param value DYN の終了値
-     */
-    void setEndDyn( int value ){
-        _endDyn = value;
-    }
-
-    /**
-     * @brief DYN カーブを取得する
-     * @return DYN カーブ
-     */
-    const VSQ_NS::VibratoBPList getDynBP() const{
-        return _dynBP;
-    }
-
-    /**
-     * @brief DYN カーブを設定する
-     * @param value DYN カーブ
-     */
-    void setDynBP( const VSQ_NS::VibratoBPList &value ){
-        _dynBP = value;
-    }
-
-    /**
-     * @brief Depth 値を取得する
-     * @return  Depth 値
-     */
-    int getDepth() const{
-        return _depth;
-    }
-
-    /**
-     * @brief Depth 値を設定する
-     * @param value Depth 値
-     */
-    void setDepth( int value ){
-        _depth = value;
-    }
-
-    /**
-     * @brief Duration 値を取得する
-     * @return Duration 値
-     */
-    int getDuration() const{
-        return _duration;
-    }
-
-    /**
-     * @brief Duration 値を設定する
-     * @param value Duration 値
-     */
-    void setDuration( int value ){
-        _duration = value;
-    }
-
-    /**
-     * @brief Rate のビブラートカーブを取得する
-     * @return Rate のビブラートカーブ
-     */
-    const VSQ_NS::VibratoBPList getRateBP() const{
-        return _rateBP;
-    }
-
-    /**
-     * @brief Rate のビブラートカーブを設定する
-     * @param value 設定するビブラートカーブ
-     */
-    void setRateBP( const VSQ_NS::VibratoBPList &value ){
-        _rateBP = value;
-    }
-
-    /**
-     * @brief Depth のビブラートカーブを取得する
-     * @return Depth のビビラートカーブ
-     */
-    const VSQ_NS::VibratoBPList getDepthBP() const{
-        return _depthBP;
-    }
-
-    /**
-     * @brief Depth のビブラートカーブを設定する
-     * @param value 設定するビブラートカーブ
-     */
-    void setDepthBP( const VSQ_NS::VibratoBPList &value ){
-        _depthBP = value;
-    }
-
-    /**
-     * @brief Rate の開始値を取得する
-     * @return Rate の開始値
-     */
-    int getStartRate() const{
-        return _startRate;
-    }
-
-    /**
-     * @brief Rate の開始値を設定する
-     * @param value Rate の開始値
-     */
-    void setStartRate( int value ){
-        _startRate = value;
-    }
-
-    /**
-     * @brief Depth の開始値を取得する
-     * @return Depth の開始値
-     */
-    int getStartDepth() const{
-        return _startDepth;
-    }
-
-    /**
-     * @brief Depth の開始値を設定する
-     * @param value Depth の開始値
-     */
-    void setStartDepth( int value ){
-        _startDepth = value;
-    }
-
-    /**
      * @brief 指定した位置にある歌詞を取得する
      * @param index 取得する要素のインデックス(最初のインデックスは0)
      * @return 歌詞
@@ -428,7 +268,7 @@ public:
      * @return Display String 値
      */
     const std::string getDisplayString() const{
-        return ids + _caption;
+        return ids + caption;
     }
 
     /**
@@ -449,11 +289,11 @@ public:
             ret.iconId = iconId;
             ret.ids = ids;
             ret.original = original;
-            ret.setCaption( getCaption() );
-            ret.setStartDyn( getStartDyn() );
-            ret.setEndDyn( getEndDyn() );
+            ret.caption = caption;
+            ret.startDyn = startDyn;
+            ret.endDyn = endDyn;
             //if( 0 != _dynBP ){
-                ret.setDynBP( _dynBP.clone() );
+                ret.dynBP = dynBP.clone();
             //}
             ret.setLength( getLength() );
             return ret;
@@ -471,14 +311,14 @@ public:
             result.iconId = iconId;
             result.ids = ids;
             result.original = original;
-            result.setCaption( getCaption() );
+            result.caption = caption;
             result.setLength( getLength() );
-            result.setDuration( getDuration() );
-            result.setDepth( getDepth() );
+            result.duration = duration;
+            result.depth = depth;
             return result;
         }else if( _type == HandleType::SINGER ){
             Handle ret( HandleType::SINGER );
-            ret._caption = _caption;
+            ret.caption = caption;
             ret.iconId = iconId;
             ret.ids = ids;
             ret.index = index;
@@ -493,15 +333,15 @@ public:
             result.iconId = iconId;
             result.ids = ids;
             result.original = original;
-            result.setCaption( _caption );
+            result.caption = caption;
             result.setLength( getLength() );
-            result.setStartDepth( _startDepth );
+            result.startDepth = startDepth;
             //if( 0 != _depthBP ){
-                result.setDepthBP( _depthBP.clone() );
+                result.depthBP = depthBP.clone();
             //}
-            result.setStartRate( _startRate );
+            result.startRate = startRate;
             //if( 0 != _rateBP ){
-                result.setRateBP( _rateBP.clone() );
+                result.rateBP = rateBP.clone();
             //}
             return result;
         }else{
@@ -527,16 +367,16 @@ protected:
         iconId = "";
         ids = "";
         original = 0;
-        _caption = "";
+        caption = "";
         _length = 0;
-        _startDepth = 0;
-        _startRate = 0;
+        startDepth = 0;
+        startRate = 0;
         language = 0;
         program = 0;
-        _duration = 0;
-        _depth = 0;
-        _startDyn = 0;
-        _endDyn = 0;
+        duration = 0;
+        depth = 0;
+        startDyn = 0;
+        endDyn = 0;
         addQuotationMark = true;
     }
 
@@ -549,10 +389,10 @@ protected:
         iconId = "$04040000";
         ids = "";
         original = 0;
-        _startRate = 64;
-        _startDepth = 64;
-        _rateBP = VibratoBPList();
-        _depthBP = VibratoBPList();
+        startRate = 64;
+        startDepth = 64;
+        rateBP = VibratoBPList();
+        depthBP = VibratoBPList();
     }
 
     /**
