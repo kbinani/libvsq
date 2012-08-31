@@ -28,12 +28,7 @@ private:
     /**
      * @brief 拍子情報を格納したリスト。tick の昇順で格納する
      */
-    Timesig **list;
-
-    /**
-     * @brief リストのサイズ
-     */
-    int listSize;
+    vector<Timesig> list;
 
     /**
      * @brief updateTimesigInfo メソッドが呼ばれたかどうか
@@ -42,9 +37,7 @@ private:
 
 public:
     explicit TimesigList(){
-        this->listSize = 0;
-        this->list = NULL;
-        this->updated = false;
+        updated = false;
     }
 
     ~TimesigList(){
@@ -57,32 +50,29 @@ public:
      * @return 拍子変更情報
      */
     Timesig get( int index ) const{
-        Timesig *item = this->list[index];
-        Timesig result( item->numerator, item->denominator, item->barCount );
-        result.clock = item->clock;
-        return result;
+        return list[index];
     }
 
     /**
      * @brief リスト内の拍子変更情報の clock の部分を更新する
      */
     void updateTimesigInfo(){
-        if( 0 < this->listSize ){
-            qsort( this->list, this->listSize, sizeof( Timesig * ), Timesig::compare );
+        if( 0 < list.size() ){
+            std::sort( list.begin(), list.end(), Timesig::compare );
 
-            int count = this->listSize;
+            int count = list.size();
             for( int j = 1; j < count; j++ ){
-                Timesig *item = this->list[j - 1];
-                int numerator = item->numerator;
-                int denominator = item->denominator;
-                tick_t clock = item->clock;
-                int bar_count = item->barCount;
+                Timesig item = list[j - 1];
+                int numerator = item.numerator;
+                int denominator = item.denominator;
+                tick_t clock = item.clock;
+                int bar_count = item.barCount;
                 int diff = (int)::floor( (double)(480 * 4 / denominator * numerator) );
-                clock = clock + (this->list[j]->barCount - bar_count) * diff;
-                this->list[j]->clock = clock;
+                clock = clock + (list[j].barCount - bar_count) * diff;
+                list[j].clock = clock;
             }
 
-            this->updated = true;
+            updated = true;
         }
     }
 
@@ -92,32 +82,28 @@ public:
      */
     void push( Timesig item ){
         int index = -1;
-        for( int i = 0; i < listSize; i++ ){
-            if( list[i]->barCount == item.barCount ){
+        int count = list.size();
+        for( int i = 0; i < count; i++ ){
+            if( list[i].barCount == item.barCount ){
                 index = i;
                 break;
             }
         }
 
         if( 0 <= index ){
-            list[index]->barCount = item.barCount;
-            list[index]->numerator = item.numerator;
-            list[index]->denominator = item.denominator;
+            list[index] = item;
         }else{
-            Timesig *add = new Timesig( item.numerator, item.denominator, item.barCount );
-            add->clock = item.clock;
-            this->list = (Timesig **)realloc( this->list, sizeof( Timesig * ) * (this->listSize + 1) );
-            this->list[this->listSize] = add;
-            this->listSize++;
+            list.push_back( item );
         }
-        this->updated = false;
+        updated = false;
     }
 
     /**
      * @brief データ点の個数を返す
+     * @return データ点の個数
      */
     int size() const{
-        return this->listSize;
+        return list.size();
     }
 
     /**
@@ -142,21 +128,22 @@ public:
         ret.barCount = 0;
 
         int index = -1;
-        if( 0 < listSize ){
-            for( int i = listSize - 1; i >= 0; i-- ){
+        int count = list.size();
+        if( 0 < count ){
+            for( int i = count - 1; i >= 0; i-- ){
                 index = i;
-                if( list[i]->clock <= clock ){
+                if( list[i].clock <= clock ){
                     break;
                 }
             }
         }
 
         if( 0 <= index ){
-            ret.numerator = list[index]->numerator;
-            ret.denominator = list[index]->denominator;
+            ret.numerator = list[index].numerator;
+            ret.denominator = list[index].denominator;
             int tickPerBar = 480 * 4 / ret.denominator * ret.numerator;
-            int deltaBar = (int)::floor( (double)((clock - list[index]->clock) / tickPerBar) );
-            ret.barCount = list[index]->barCount + deltaBar;
+            int deltaBar = (int)::floor( (double)((clock - list[index].clock) / tickPerBar) );
+            ret.barCount = list[index].barCount + deltaBar;
         }else{
             int tickPerBar = 480 * 4 / ret.denominator * ret.numerator;
             int deltaBar = (int)::floor( (double)(clock / tickPerBar) );
@@ -177,17 +164,17 @@ public:
             updateTimesigInfo();
         }
         int index = 0;
-        for( int i = listSize - 1; i >= 0; i-- ){
+        for( int i = list.size() - 1; i >= 0; i-- ){
             index = i;
-            if( list[i]->barCount <= barCount ){
+            if( list[i].barCount <= barCount ){
                 break;
             }
         }
-        Timesig *item = list[index];
-        int numerator = item->numerator;
-        int denominator = item->denominator;
-        tick_t initClock = item->clock;
-        int initBarCount = item->barCount;
+        Timesig item = list[index];
+        int numerator = item.numerator;
+        int denominator = item.denominator;
+        tick_t initClock = item.clock;
+        int initBarCount = item.barCount;
         int clockPerBar = numerator * 480 * 4 / denominator;
         return initClock + (barCount - initBarCount) * clockPerBar;
     }
@@ -196,15 +183,7 @@ public:
      * @brief リストをクリアする
      */
     void clear(){
-        if( list ){
-            listSize = 0;
-            for( int i = 0; i < listSize; i++ ){
-                Timesig *item = list[i];
-                delete item;
-            }
-            free( list );
-            list = NULL;
-        }
+        list.clear();
     }
 };
 

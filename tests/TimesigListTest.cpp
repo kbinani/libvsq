@@ -88,12 +88,23 @@ public:
         CPPUNIT_ASSERT_EQUAL( 1, table.size() );
     }
 
+    void testCopy(){
+        TimesigList a;
+        a.push( Timesig( 4, 4, 0 ) );
+        TimesigList b = a;
+        a.push( Timesig( 3, 4, 1 ) );
+
+        CPPUNIT_ASSERT_EQUAL( 2, a.size() );
+        CPPUNIT_ASSERT_EQUAL( 1, b.size() );
+    }
+
     CPPUNIT_TEST_SUITE( TimesigListTest );
     CPPUNIT_TEST( testUpdateTimesigInfo );
     CPPUNIT_TEST( testGetTimesigAt );
     CPPUNIT_TEST( testPushDuplicateKey );
     CPPUNIT_TEST( testGetClockFromBarCount );
     CPPUNIT_TEST( testClear );
+    CPPUNIT_TEST( testCopy );
     CPPUNIT_TEST_SUITE_END();
 };
 

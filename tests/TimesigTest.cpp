@@ -29,9 +29,9 @@ public:
     {
         Timesig a( 4, 4, 0 );
         Timesig b( 4, 4, 1 );
-        assertEqual( -1, a.compareTo( b ) );
-        assertEqual( 1, b.compareTo( a ) );
-        assertEqual( 0, a.compareTo( a ) );
+        assertEqual( true, a.compareTo( b ) );
+        assertEqual( false, b.compareTo( a ) );
+        assertEqual( false, a.compareTo( a ) );
     }
 
     void testClone(){

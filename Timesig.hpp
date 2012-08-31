@@ -82,10 +82,10 @@ public:
     /**
      * @brief 順序を比較する
      * @param item 比較対象のアイテム
-     * @return このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
+     * @return 比較対象がこのインスタンスより大であれば true を、そうでなければ false を返す
      */
-    int compareTo( Timesig &item ) const{
-        return this->barCount - item.barCount;
+    bool compareTo( const Timesig &item ) const{
+        return (this->barCount - item.barCount) < 0;
     }
 
     /**
@@ -102,10 +102,8 @@ public:
      * @brief 順序を比較する
      * @return b が a より大であれば true を、そうでなければ false を返す
      */
-    static int compare( const void *a, const void *b ){
-        Timesig *castedA = *(Timesig **)a;
-        Timesig *castedB = *(Timesig **)b;
-        return castedA->compareTo( *castedB );
+    static bool compare( const Timesig &a, const Timesig &b ){
+        return a.compareTo( b );
     }
 };
 
