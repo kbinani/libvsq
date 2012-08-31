@@ -37,6 +37,11 @@ protected:
         explicit TempEvent( const Event &item ) :
             Event( item )
         {
+            index = -1;
+            singerHandleIndex = -1;
+            lyricHandleIndex = -1;
+            vibratoHandleIndex = -1;
+            noteHeadHandleIndex = -1;
         }
     };
 

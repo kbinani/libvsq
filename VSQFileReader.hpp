@@ -363,7 +363,6 @@ private:
     static void parseTempoList( const vector<MidiEvent> &midiEventList, TempoList &tempoList ){
         tempoList.clear();
         int lastTempo = 500000;
-        tick_t lastClock = 0;
         int count = -1;
         int listSize = midiEventList.size();
         for( int j = 0; j < listSize; j++ ){
@@ -377,7 +376,6 @@ private:
                 tick_t currentClock = midiEventList[j].clock;
                 tempoList.push( Tempo( currentClock, currentTempo ) );
                 lastTempo = currentTempo;
-                lastClock = currentClock;
             }
         }
         tempoList.updateTempoInfo();
@@ -491,12 +489,11 @@ private:
                 while( lastLine.find( "[" ) != 0 ){
                     std::vector<std::string> parameters = StringUtil::explode( "=", lastLine );
                     tick_t clock = StringUtil::parseInt( parameters[0] );
-                    int id = -1;
                     if( parameters[1] != "EOS" ){
                         std::vector<std::string> idList = StringUtil::explode( ",", parameters[1] );
                         for( int i = 0; i < idList.size(); i++ ){
                             std::vector<std::string> idParameters = StringUtil::explode( "#", idList[i] );
-                            id = StringUtil::parseInt( idParameters[1] );
+                            int id = StringUtil::parseInt( idParameters[1] );
                             eventClockMap.insert( make_pair( id, clock ) );
                         }
                     }else{

@@ -51,7 +51,7 @@ public:
 
 class VSQFileWriterTest : public CppUnit::TestCase{
     static string getLF(){
-        static char codeLF[1] = { 0x0A };
+        static char codeLF[2] = { 0x0A, 0x00 };
         static string result = codeLF;
         return result;
     }

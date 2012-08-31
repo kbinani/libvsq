@@ -160,7 +160,7 @@ protected:
      * @brief リスト内の拍子変更情報の clock の部分を更新する
      */
     void updateTimesigInfo(){
-        if( 0 < list.size() ){
+        if( ! list.empty() ){
             std::sort( list.begin(), list.end(), Timesig::compare );
 
             int count = list.size();
