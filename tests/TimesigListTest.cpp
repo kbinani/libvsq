@@ -3,16 +3,13 @@
 
 using namespace VSQ_NS;
 
-class TimesigListTest : public CppUnit::TestCase
-{
+class TimesigListTest : public CppUnit::TestCase{
 public:
-    void testUpdateTimesigInfo()
-    {
+    void testUpdateTimesigInfo(){
         TimesigList table;
         table.push( Timesig( 4, 4, 2 ) );
         table.push( Timesig( 4, 4, 0 ) );
         table.push( Timesig( 3, 4, 1 ) );
-        table.updateTimesigInfo();
 
         CPPUNIT_ASSERT_EQUAL( (tick_t)0, table.get( 0 ).clock );
         CPPUNIT_ASSERT_EQUAL( 0, table.get( 0 ).barCount );
@@ -22,8 +19,7 @@ public:
         CPPUNIT_ASSERT_EQUAL( 2, table.get( 2 ).barCount );
     }
 
-    void testGetTimesigAt()
-    {
+    void testGetTimesigAt(){
         TimesigList table;
         table.push( Timesig( 4, 8, 2 ) );
         table.push( Timesig( 4, 4, 0 ) );

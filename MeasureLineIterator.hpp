@@ -153,10 +153,6 @@ public:
         this->clock_step = 0;
         this->local_clock = 0;
         this->bar_counter = 0;
-
-        if( false == this->m_list->isUpdated() ){
-            this->m_list->updateTimesigInfo();
-        }
     }
 };
 

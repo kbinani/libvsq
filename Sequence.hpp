@@ -120,9 +120,11 @@ public:
             ret.tempoList.push( tempoList.get( i ).clone() );
         }
 
-        for( int i = 0; i < timesigList.size(); i++ ){
-            ret.timesigList.push( timesigList.get( i ).clone() );
+        TimesigList copy = timesigList;
+        for( int i = 0; i < copy.size(); i++ ){
+            ret.timesigList.push( copy.get( i ).clone() );
         }
+
         ret._totalClocks = _totalClocks;
         ret.master = master.clone();
         ret.mixer = mixer.clone();

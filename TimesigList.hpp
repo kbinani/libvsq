@@ -30,14 +30,8 @@ private:
      */
     vector<Timesig> list;
 
-    /**
-     * @brief updateTimesigInfo メソッドが呼ばれたかどうか
-     */
-    bool updated;
-
 public:
     explicit TimesigList(){
-        updated = false;
     }
 
     ~TimesigList(){
@@ -49,53 +43,17 @@ public:
      * @param index 取得するデータ点のインデックス(0から始まる)
      * @return 拍子変更情報
      */
-    Timesig get( int index ) const{
+    Timesig get( int index )const{
         return list[index];
-    }
-
-    /**
-     * @brief リスト内の拍子変更情報の clock の部分を更新する
-     */
-    void updateTimesigInfo(){
-        if( 0 < list.size() ){
-            std::sort( list.begin(), list.end(), Timesig::compare );
-
-            int count = list.size();
-            for( int j = 1; j < count; j++ ){
-                Timesig item = list[j - 1];
-                int numerator = item.numerator;
-                int denominator = item.denominator;
-                tick_t clock = item.clock;
-                int bar_count = item.barCount;
-                int diff = (int)::floor( (double)(480 * 4 / denominator * numerator) );
-                clock = clock + (list[j].barCount - bar_count) * diff;
-                list[j].clock = clock;
-            }
-
-            updated = true;
-        }
     }
 
     /**
      * @brief データ点を追加する
      * @param item 追加する拍子変更情報
      */
-    void push( Timesig item ){
-        int index = -1;
-        int count = list.size();
-        for( int i = 0; i < count; i++ ){
-            if( list[i].barCount == item.barCount ){
-                index = i;
-                break;
-            }
-        }
-
-        if( 0 <= index ){
-            list[index] = item;
-        }else{
-            list.push_back( item );
-        }
-        updated = false;
+    void push( const Timesig &item ){
+        pushWithoutSort( item );
+        updateTimesigInfo();
     }
 
     /**
@@ -107,21 +65,11 @@ public:
     }
 
     /**
-     * @brief updateTimesigInfo メソッドが呼ばれたかどうかを取得する
-     */
-    bool isUpdated() const{
-        return this->updated;
-    }
-
-    /**
      * @brief 指定された時刻における拍子情報を取得する
      * @param clock Tick 単位の時刻
      * @return 指定された時刻での拍子情報
      */
-    Timesig getTimesigAt( tick_t clock ){
-        if( !updated ){
-            updateTimesigInfo();
-        }
+    Timesig getTimesigAt( tick_t clock )const{
         Timesig ret;
         ret.numerator = 4;
         ret.denominator = 4;
@@ -159,10 +107,7 @@ public:
      * @param barCount 小節数
      * @return Tick 単位の時刻
      */
-    tick_t getClockFromBarCount( int barCount ){
-        if( !updated ){
-            updateTimesigInfo();
-        }
+    tick_t getClockFromBarCount( int barCount )const{
         int index = 0;
         for( int i = list.size() - 1; i >= 0; i-- ){
             index = i;
@@ -184,6 +129,51 @@ public:
      */
     void clear(){
         list.clear();
+    }
+
+protected:
+    /**
+     * @brief データ点を追加する。追加後のソートは行わない
+     * push を頻繁に行い、速度の改善を行いたい場合は、TimesigList をオーバーライドし、
+     * pushWithoutSort を必要回呼んだ後最後に updateTimesigInfo を呼ぶような実装にすると良いだろう
+     * @param item 追加する拍子変更情報
+     */
+    void pushWithoutSort( const Timesig &item ){
+        int index = -1;
+        int count = list.size();
+        for( int i = 0; i < count; i++ ){
+            if( list[i].barCount == item.barCount ){
+                index = i;
+                break;
+            }
+        }
+
+        if( 0 <= index ){
+            list[index] = item;
+        }else{
+            list.push_back( item );
+        }
+    }
+
+    /**
+     * @brief リスト内の拍子変更情報の clock の部分を更新する
+     */
+    void updateTimesigInfo(){
+        if( 0 < list.size() ){
+            std::sort( list.begin(), list.end(), Timesig::compare );
+
+            int count = list.size();
+            for( int j = 1; j < count; j++ ){
+                Timesig item = list[j - 1];
+                int numerator = item.numerator;
+                int denominator = item.denominator;
+                tick_t clock = item.clock;
+                int bar_count = item.barCount;
+                int diff = (int)::floor( (double)(480 * 4 / denominator * numerator) );
+                clock = clock + (list[j].barCount - bar_count) * diff;
+                list[j].clock = clock;
+            }
+        }
     }
 };
 

@@ -99,7 +99,6 @@ public:
 
         // 曲の長さを計算
         sequence.tempoList.updateTempoInfo();
-        sequence.timesigList.updateTimesigInfo();
         sequence.updateTotalClocks();
     }
 
@@ -356,7 +355,6 @@ private:
                 }
             }
         }
-        timesigList.updateTimesigInfo();
     }
 
     /**
