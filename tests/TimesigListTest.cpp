@@ -11,11 +11,11 @@ public:
         table.push( Timesig( 4, 4, 0 ) );
         table.push( Timesig( 3, 4, 1 ) );
 
-        CPPUNIT_ASSERT_EQUAL( (tick_t)0, table.get( 0 ).clock );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)0, table.get( 0 ).getClock() );
         CPPUNIT_ASSERT_EQUAL( 0, table.get( 0 ).barCount );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1920, table.get( 1 ).clock );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1920, table.get( 1 ).getClock() );
         CPPUNIT_ASSERT_EQUAL( 1, table.get( 1 ).barCount );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)3360, table.get( 2 ).clock );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)3360, table.get( 2 ).getClock() );
         CPPUNIT_ASSERT_EQUAL( 2, table.get( 2 ).barCount );
     }
 

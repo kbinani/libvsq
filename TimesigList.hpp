@@ -80,7 +80,7 @@ public:
         if( 0 < count ){
             for( int i = count - 1; i >= 0; i-- ){
                 index = i;
-                if( list[i].clock <= clock ){
+                if( list[i].getClock() <= clock ){
                     break;
                 }
             }
@@ -90,7 +90,7 @@ public:
             ret.numerator = list[index].numerator;
             ret.denominator = list[index].denominator;
             int tickPerBar = 480 * 4 / ret.denominator * ret.numerator;
-            int deltaBar = (int)::floor( (double)((clock - list[index].clock) / tickPerBar) );
+            int deltaBar = (int)::floor( (double)((clock - list[index].getClock()) / tickPerBar) );
             ret.barCount = list[index].barCount + deltaBar;
         }else{
             int tickPerBar = 480 * 4 / ret.denominator * ret.numerator;
@@ -118,7 +118,7 @@ public:
         Timesig item = list[index];
         int numerator = item.numerator;
         int denominator = item.denominator;
-        tick_t initClock = item.clock;
+        tick_t initClock = item.getClock();
         int initBarCount = item.barCount;
         int clockPerBar = numerator * 480 * 4 / denominator;
         return initClock + (barCount - initBarCount) * clockPerBar;
@@ -167,7 +167,7 @@ protected:
                 Timesig item = list[j - 1];
                 int numerator = item.numerator;
                 int denominator = item.denominator;
-                tick_t clock = item.clock;
+                tick_t clock = item.getClock();
                 int bar_count = item.barCount;
                 int diff = (int)::floor( (double)(480 * 4 / denominator * numerator) );
                 clock = clock + (list[j].barCount - bar_count) * diff;

@@ -25,14 +25,10 @@ using namespace std;
 /**
  * 拍子変更情報テーブル内の要素を表現するためのクラス
  */
-class Timesig
-{
-public:
-    /**
-     * @brief Tick 単位の時刻
-     */
-    tick_t clock;
+class Timesig{
+    friend class TimesigList;
 
+public:
     /**
      * @brief 拍子の分子
      */
@@ -47,6 +43,12 @@ public:
      * @brief 何小節目か
      */
     int barCount;
+
+protected:
+    /**
+     * @brief Tick 単位の時刻
+     */
+    tick_t clock;
 
 public:
     explicit Timesig(){
@@ -67,6 +69,14 @@ public:
         this->numerator = numerator;
         this->denominator = denominator;
         this->barCount = barCount;
+    }
+
+    /**
+     * @brief このイベントの tick 単位の時刻を取得する
+     * @return tick 単位の時刻
+     */
+    tick_t getClock()const{
+        return clock;
     }
 
     /**

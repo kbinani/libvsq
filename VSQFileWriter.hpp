@@ -90,7 +90,7 @@ public:
         vector<MidiEvent> events;
         for( int i = 0; i < sequence->timesigList.size(); i++ ){
             Timesig entry = sequence->timesigList.get( i );
-            events.push_back( MidiEvent::generateTimeSigEvent( entry.clock, entry.numerator, entry.denominator ) );
+            events.push_back( MidiEvent::generateTimeSigEvent( entry.getClock(), entry.numerator, entry.denominator ) );
         }
         TempoList::Iterator itr = sequence->tempoList.iterator();
         while( itr.hasNext() ){

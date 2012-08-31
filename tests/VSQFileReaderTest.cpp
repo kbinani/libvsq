@@ -263,14 +263,14 @@ public:
                 CPPUNIT_ASSERT_EQUAL( 0, timesig.barCount );
                 CPPUNIT_ASSERT_EQUAL( 4, timesig.numerator );
                 CPPUNIT_ASSERT_EQUAL( 4, timesig.denominator );
-                CPPUNIT_ASSERT_EQUAL( (tick_t)0, timesig.clock );
+                CPPUNIT_ASSERT_EQUAL( (tick_t)0, timesig.getClock() );
             }
             {
                 Timesig timesig = sequence.timesigList.get( 1 );
                 CPPUNIT_ASSERT_EQUAL( 1, timesig.barCount );
                 CPPUNIT_ASSERT_EQUAL( 3, timesig.numerator );
                 CPPUNIT_ASSERT_EQUAL( 4, timesig.denominator );
-                CPPUNIT_ASSERT_EQUAL( (tick_t)1920, timesig.clock );
+                CPPUNIT_ASSERT_EQUAL( (tick_t)1920, timesig.getClock() );
             }
         }
     }

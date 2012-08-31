@@ -347,7 +347,7 @@ private:
                 }else{
                     int lastNumerator = timesigList.get( count - 1 ).numerator;
                     int lastDenominator = timesigList.get( count - 1 ).denominator;
-                    tick_t clock = timesigList.get( count - 1 ).clock;
+                    tick_t clock = timesigList.get( count - 1 ).getClock();
                     int barCount = timesigList.get( count - 1 ).barCount;
                     int dif = 480 * 4 / lastDenominator * lastNumerator;//1小節が何クロックか？
                     barCount += ((int)midiEventList[j].clock - clock) / dif;

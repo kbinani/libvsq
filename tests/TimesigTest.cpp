@@ -4,6 +4,18 @@
 using namespace std;
 using namespace VSQ_NS;
 
+class TimesigStub : public Timesig{
+public:
+    explicit TimesigStub( const Timesig &value ) :
+        Timesig( value )
+    {
+    }
+
+    void setClock( tick_t clock ){
+        this->clock = clock;
+    }
+};
+
 class TimesigTest : public CppUnit::TestFixture{
 public:
     void testConstruct(){
@@ -35,13 +47,13 @@ public:
     }
 
     void testClone(){
-        Timesig a( 3, 4, 1 );
-        a.clock = 10;
+        TimesigStub a( Timesig( 3, 4, 1 ) );
+        a.setClock( 10 );
         Timesig b = a.clone();
         CPPUNIT_ASSERT_EQUAL( 3, b.numerator );
         CPPUNIT_ASSERT_EQUAL( 4, b.denominator );
         CPPUNIT_ASSERT_EQUAL( 1, b.barCount );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)10, b.clock );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)10, b.getClock() );
     }
 
     CPPUNIT_TEST_SUITE( TimesigTest );
