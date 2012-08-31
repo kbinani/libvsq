@@ -16,6 +16,7 @@
 
 #include <vector>
 #include <math.h>
+#include <algorithm>
 #include "Timesig.hpp"
 
 VSQ_BEGIN_NAMESPACE
