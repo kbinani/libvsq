@@ -132,7 +132,7 @@ public:
                     CPPUNIT_ASSERT_EQUAL( string( "$07010000" ), item.singerHandle.iconId );
                     CPPUNIT_ASSERT_EQUAL( string( "Foo" ), item.singerHandle.ids );
                     CPPUNIT_ASSERT_EQUAL( 0, item.singerHandle.original );
-                    CPPUNIT_ASSERT_EQUAL( string( "" ), item.singerHandle.getCaption() );
+                    CPPUNIT_ASSERT_EQUAL( string( "" ), item.singerHandle.caption );
                     CPPUNIT_ASSERT_EQUAL( (tick_t)1, item.singerHandle.getLength() );
                     CPPUNIT_ASSERT_EQUAL( 0, item.singerHandle.language );
                     CPPUNIT_ASSERT_EQUAL( 0, item.singerHandle.program );
@@ -263,14 +263,14 @@ public:
                 CPPUNIT_ASSERT_EQUAL( 0, timesig.barCount );
                 CPPUNIT_ASSERT_EQUAL( 4, timesig.numerator );
                 CPPUNIT_ASSERT_EQUAL( 4, timesig.denominator );
-                CPPUNIT_ASSERT_EQUAL( (tick_t)0, timesig.clock );
+                CPPUNIT_ASSERT_EQUAL( (tick_t)0, timesig.getClock() );
             }
             {
                 Timesig timesig = sequence.timesigList.get( 1 );
                 CPPUNIT_ASSERT_EQUAL( 1, timesig.barCount );
                 CPPUNIT_ASSERT_EQUAL( 3, timesig.numerator );
                 CPPUNIT_ASSERT_EQUAL( 4, timesig.denominator );
-                CPPUNIT_ASSERT_EQUAL( (tick_t)1920, timesig.clock );
+                CPPUNIT_ASSERT_EQUAL( (tick_t)1920, timesig.getClock() );
             }
         }
     }
@@ -324,9 +324,9 @@ public:
         CPPUNIT_ASSERT_EQUAL( index, handle.index );
         CPPUNIT_ASSERT_EQUAL( 1, handle.getLyricCount() );
 
-        CPPUNIT_ASSERT_EQUAL( 0, handle.getRateBP().size() );
-        CPPUNIT_ASSERT_EQUAL( 0, handle.getDepthBP().size() );
-        CPPUNIT_ASSERT_EQUAL( 0, handle.getDynBP().size() );
+        CPPUNIT_ASSERT_EQUAL( 0, handle.rateBP.size() );
+        CPPUNIT_ASSERT_EQUAL( 0, handle.depthBP.size() );
+        CPPUNIT_ASSERT_EQUAL( 0, handle.dynBP.size() );
 
         Lyric lyric = handle.getLyricAt( 0 );
         CPPUNIT_ASSERT_EQUAL( string( "あ" ), lyric.phrase );
@@ -349,13 +349,13 @@ public:
         CPPUNIT_ASSERT_EQUAL( HandleType::VIBRATO, handle.getHandleType() );
         CPPUNIT_ASSERT_EQUAL( string( "$04040004" ), handle.iconId );
         CPPUNIT_ASSERT_EQUAL( string( "normal-da-yo" ), handle.ids );
-        CPPUNIT_ASSERT_EQUAL( string( "キャプションです=あ" ), handle.getCaption() );
+        CPPUNIT_ASSERT_EQUAL( string( "キャプションです=あ" ), handle.caption );
         CPPUNIT_ASSERT_EQUAL( 5, handle.original );
         CPPUNIT_ASSERT_EQUAL( (tick_t)120, handle.getLength() );
-        CPPUNIT_ASSERT_EQUAL( 64, handle.getStartDepth() );
-        CPPUNIT_ASSERT_EQUAL( string( "0.5=64,0.75=32,1=0" ), handle.getDepthBP().getData() );
-        CPPUNIT_ASSERT_EQUAL( 64, handle.getStartRate() );
-        CPPUNIT_ASSERT_EQUAL( string( "0.5=64,0.75=32,1=0" ), handle.getRateBP().getData() );
+        CPPUNIT_ASSERT_EQUAL( 64, handle.startDepth );
+        CPPUNIT_ASSERT_EQUAL( string( "0.5=64,0.75=32,1=0" ), handle.depthBP.getData() );
+        CPPUNIT_ASSERT_EQUAL( 64, handle.startRate );
+        CPPUNIT_ASSERT_EQUAL( string( "0.5=64,0.75=32,1=0" ), handle.rateBP.getData() );
 
         CPPUNIT_ASSERT_EQUAL( string( "[h#0002]" ), lastLine );
     }
@@ -377,8 +377,8 @@ public:
         VSQFileReaderStub reader;
         Handle handle = reader.parseHandle( stream, index, lastLine );
 
-        CPPUNIT_ASSERT_EQUAL( 0, handle.getRateBP().size() );
-        CPPUNIT_ASSERT_EQUAL( 0, handle.getDepthBP().size() );
+        CPPUNIT_ASSERT_EQUAL( 0, handle.rateBP.size() );
+        CPPUNIT_ASSERT_EQUAL( 0, handle.depthBP.size() );
     }
 
     void testConstructSingerFromTextStream(){
@@ -393,7 +393,7 @@ public:
         CPPUNIT_ASSERT_EQUAL( string( "$07010002" ), handle.iconId );
         CPPUNIT_ASSERT_EQUAL( string( "Miku3=God" ), handle.ids );
         CPPUNIT_ASSERT_EQUAL( 2, handle.original );
-        CPPUNIT_ASSERT_EQUAL( string( "" ), handle.getCaption() );
+        CPPUNIT_ASSERT_EQUAL( string( "" ), handle.caption );
         CPPUNIT_ASSERT_EQUAL( (tick_t)1, handle.getLength() );
         CPPUNIT_ASSERT_EQUAL( 1, handle.language );
         CPPUNIT_ASSERT_EQUAL( 2, handle.program );
@@ -411,10 +411,10 @@ public:
         CPPUNIT_ASSERT_EQUAL( string( "$01010002" ), handle.iconId );
         CPPUNIT_ASSERT_EQUAL( string( "accent" ), handle.ids );
         CPPUNIT_ASSERT_EQUAL( 2, handle.original );
-        CPPUNIT_ASSERT_EQUAL( string( "Accent" ), handle.getCaption() );
+        CPPUNIT_ASSERT_EQUAL( string( "Accent" ), handle.caption );
         CPPUNIT_ASSERT_EQUAL( (tick_t)120, handle.getLength() );
-        CPPUNIT_ASSERT_EQUAL( 64, handle.getDuration() );
-        CPPUNIT_ASSERT_EQUAL( 63, handle.getDepth() );
+        CPPUNIT_ASSERT_EQUAL( 64, handle.duration );
+        CPPUNIT_ASSERT_EQUAL( 63, handle.depth );
     }
 
     void testConstructCrescendFromTextStream(){
@@ -429,11 +429,11 @@ public:
         CPPUNIT_ASSERT_EQUAL( string( "$05020001" ), handle.iconId );
         CPPUNIT_ASSERT_EQUAL( string( "Crescendo" ), handle.ids );
         CPPUNIT_ASSERT_EQUAL( 4, handle.original );
-        CPPUNIT_ASSERT_EQUAL( string( "Zero Crescendo Curve" ), handle.getCaption() );
+        CPPUNIT_ASSERT_EQUAL( string( "Zero Crescendo Curve" ), handle.caption );
         CPPUNIT_ASSERT_EQUAL( (tick_t)960, handle.getLength() );
-        CPPUNIT_ASSERT_EQUAL( 2, handle.getStartDyn() );
-        CPPUNIT_ASSERT_EQUAL( 38, handle.getEndDyn() );
-        CPPUNIT_ASSERT_EQUAL( string( "0.5=11" ), handle.getDynBP().getData() );
+        CPPUNIT_ASSERT_EQUAL( 2, handle.startDyn );
+        CPPUNIT_ASSERT_EQUAL( 38, handle.endDyn );
+        CPPUNIT_ASSERT_EQUAL( string( "0.5=11" ), handle.dynBP.getData() );
     }
 
     void testParseEvent(){

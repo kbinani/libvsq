@@ -149,7 +149,7 @@ public:
         CPPUNIT_ASSERT_EQUAL( 17, copy.pMeanEndingNote );
 
         Handle iconHandle( HandleType::SINGER );
-        iconHandle.setCaption( "foo" );
+        iconHandle.caption = "foo";
         id.singerHandle = iconHandle;
         Handle lyricHandle( HandleType::LYRIC );
         lyricHandle.index = 102;
@@ -161,15 +161,15 @@ public:
         noteHeadHandle.ids = "baka";
         id.noteHeadHandle = noteHeadHandle;
         Handle iconDynamicsHandle( HandleType::DYNAMICS );
-        iconDynamicsHandle.setStartDyn( 183635 );
+        iconDynamicsHandle.startDyn = 183635;
         id.iconDynamicsHandle = iconDynamicsHandle;
 
         copy = id.clone();
-        CPPUNIT_ASSERT_EQUAL( string( "foo" ), copy.singerHandle.getCaption() );
+        CPPUNIT_ASSERT_EQUAL( string( "foo" ), copy.singerHandle.caption );
         CPPUNIT_ASSERT_EQUAL( 102, copy.lyricHandle.index );
         CPPUNIT_ASSERT_EQUAL( string( "aho" ), copy.vibratoHandle.iconId );
         CPPUNIT_ASSERT_EQUAL( string( "baka" ), copy.noteHeadHandle.ids );
-        CPPUNIT_ASSERT_EQUAL( 183635, copy.iconDynamicsHandle.getStartDyn() );
+        CPPUNIT_ASSERT_EQUAL( 183635, copy.iconDynamicsHandle.startDyn );
     }
 
     CPPUNIT_TEST_SUITE( EventTest );

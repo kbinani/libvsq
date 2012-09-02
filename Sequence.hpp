@@ -120,9 +120,11 @@ public:
             ret.tempoList.push( tempoList.get( i ).clone() );
         }
 
-        for( int i = 0; i < timesigList.size(); i++ ){
-            ret.timesigList.push( timesigList.get( i ).clone() );
+        TimesigList copy = timesigList;
+        for( int i = 0; i < copy.size(); i++ ){
+            ret.timesigList.push( copy.get( i ).clone() );
         }
+
         ret._totalClocks = _totalClocks;
         ret.master = master.clone();
         ret.mixer = mixer.clone();
@@ -269,7 +271,7 @@ private:
     tick_t _calculatePreMeasureInClock() const{
         int pre_measure = master.preMeasure;
         int last_bar_count = timesigList.get( 0 ).barCount;
-        tick_t last_clock = timesigList.get( 0 ).clock;
+        tick_t last_clock = timesigList.get( 0 ).getClock();
         int last_denominator = timesigList.get( 0 ).denominator;
         int last_numerator = timesigList.get( 0 ).numerator;
         for( int i = 1; i < timesigList.size(); i++ ){
@@ -277,7 +279,7 @@ private:
                 break;
             }else{
                 last_bar_count = timesigList.get( i ).barCount;
-                last_clock = timesigList.get( i ).clock;
+                last_clock = timesigList.get( i ).getClock();
                 last_denominator = timesigList.get( i ).denominator;
                 last_numerator = timesigList.get( i ).numerator;
             }

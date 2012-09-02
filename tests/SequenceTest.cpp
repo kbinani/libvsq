@@ -92,7 +92,7 @@ public:
 
         // timesigTable
         CPPUNIT_ASSERT_EQUAL( 1, sequence.timesigList.size() );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)0, sequence.timesigList.get( 0 ).clock );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)0, sequence.timesigList.get( 0 ).getClock() );
         CPPUNIT_ASSERT_EQUAL( 4, sequence.timesigList.get( 0 ).denominator );
         CPPUNIT_ASSERT_EQUAL( 4, sequence.timesigList.get( 0 ).numerator );
         CPPUNIT_ASSERT_EQUAL( 0, sequence.timesigList.get( 0 ).barCount );

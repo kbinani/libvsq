@@ -99,7 +99,6 @@ public:
 
         // 曲の長さを計算
         sequence.tempoList.updateTempoInfo();
-        sequence.timesigList.updateTimesigInfo();
         sequence.updateTotalClocks();
     }
 
@@ -194,14 +193,14 @@ protected:
         result.setLyrics( vector<Lyric>() );
         result.addLyric( Lyric( "" ) );
         result.original = 0;
-        result.setCaption( "" );
+        result.caption = "";
         result.setLength( 0 );
-        result.setStartDepth( 0 );
-        result.setStartRate( 0 );
+        result.startDepth = 0;
+        result.startRate = 0;
         result.language = 0;
         result.program = 0;
-        result.setDuration( 0 );
-        result.setDepth( 64 );
+        result.duration = 0;
+        result.depth = 64;
 
         string tmpDepthBPX = "";
         string tmpDepthBPY = "";
@@ -235,14 +234,14 @@ protected:
             }else if( search == "Original" ){
                 result.original = boost::lexical_cast<int>( parameters[1] );
             }else if( search == "Caption" ){
-                result.setCaption( parameters[1] );
+                result.caption = parameters[1];
                 for( int i = 2; i < parameters.size(); i++ ){
-                    result.setCaption( result.getCaption() + "=" + parameters[i] );
+                    result.caption = result.caption + "=" + parameters[i];
                 }
             }else if( search == "Length" ){
                 result.setLength( boost::lexical_cast<tick_t>( parameters[1] ) );
             }else if( search == "StartDepth" ){
-                result.setStartDepth( boost::lexical_cast<int>( parameters[1] ) );
+                result.startDepth = boost::lexical_cast<int>( parameters[1] );
             }else if( search == "DepthBPNum" ){
                 tmpDepthBPNum = parameters[1];
             }else if( search == "DepthBPX" ){
@@ -251,7 +250,7 @@ protected:
                 tmpDepthBPY = parameters[1];
             }else if( search == "StartRate" ){
                 result.setHandleType( HandleType::VIBRATO );
-                result.setStartRate( boost::lexical_cast<int>( parameters[1] ) );
+                result.startRate = boost::lexical_cast<int>( parameters[1] );
             }else if( search == "RateBPNum" ){
                 tmpRateBPNum = parameters[1];
             }else if( search == "RateBPX" ){
@@ -260,15 +259,15 @@ protected:
                 tmpRateBPY = parameters[1];
             }else if( search == "Duration" ){
                 result.setHandleType( HandleType::NOTE_HEAD );
-                result.setDuration( boost::lexical_cast<int>( parameters[1] ) );
+                result.duration = boost::lexical_cast<int>( parameters[1] );
             }else if( search == "Depth" ){
-                result.setDepth( boost::lexical_cast<int>( parameters[1] ) );
+                result.depth = boost::lexical_cast<int>( parameters[1] );
             }else if( search == "StartDyn" ){
                 result.setHandleType( HandleType::DYNAMICS );
-                result.setStartDyn( boost::lexical_cast<int>( parameters[1] ) );
+                result.startDyn = boost::lexical_cast<int>( parameters[1] );
             }else if( search == "EndDyn" ){
                 result.setHandleType( HandleType::DYNAMICS );
-                result.setEndDyn( boost::lexical_cast<int>( parameters[1] ) );
+                result.endDyn = boost::lexical_cast<int>( parameters[1] );
             }else if( search == "DynBPNum" ){
                 tmpDynBPNum = parameters[1];
             }else if( search == "DynBPX" ){
@@ -296,26 +295,26 @@ protected:
         // RateBPX, RateBPYの設定
         if( result.getHandleType() == HandleType::VIBRATO ){
             if( tmpRateBPNum != "" ){
-                result.setRateBP( VibratoBPList( tmpRateBPNum, tmpRateBPX, tmpRateBPY ) );
+                result.rateBP = VibratoBPList( tmpRateBPNum, tmpRateBPX, tmpRateBPY );
             }else{
-                result.setRateBP( VibratoBPList() );
+                result.rateBP = VibratoBPList();
             }
 
             // DepthBPX, DepthBPYの設定
             if( tmpDepthBPNum != "" ){
-                result.setDepthBP( VibratoBPList( tmpDepthBPNum, tmpDepthBPX, tmpDepthBPY ) );
+                result.depthBP = VibratoBPList( tmpDepthBPNum, tmpDepthBPX, tmpDepthBPY );
             }else{
-                result.setDepthBP( VibratoBPList() );
+                result.depthBP = VibratoBPList();
             }
         }else{
-            result.setDepthBP( VibratoBPList() );
-            result.setRateBP( VibratoBPList() );
+            result.depthBP = VibratoBPList();
+            result.rateBP = VibratoBPList();
         }
 
         if( tmpDynBPNum != "" ){
-            result.setDynBP( VibratoBPList( tmpDynBPNum, tmpDynBPX, tmpDynBPY ) );
+            result.dynBP = VibratoBPList( tmpDynBPNum, tmpDynBPX, tmpDynBPY );
         }else{
-            result.setDynBP( VibratoBPList() );
+            result.dynBP = VibratoBPList();
         }
         return result;
     }
@@ -348,7 +347,7 @@ private:
                 }else{
                     int lastNumerator = timesigList.get( count - 1 ).numerator;
                     int lastDenominator = timesigList.get( count - 1 ).denominator;
-                    tick_t clock = timesigList.get( count - 1 ).clock;
+                    tick_t clock = timesigList.get( count - 1 ).getClock();
                     int barCount = timesigList.get( count - 1 ).barCount;
                     int dif = 480 * 4 / lastDenominator * lastNumerator;//1小節が何クロックか？
                     barCount += ((int)midiEventList[j].clock - clock) / dif;
@@ -356,7 +355,6 @@ private:
                 }
             }
         }
-        timesigList.updateTimesigInfo();
     }
 
     /**
@@ -365,7 +363,6 @@ private:
     static void parseTempoList( const vector<MidiEvent> &midiEventList, TempoList &tempoList ){
         tempoList.clear();
         int lastTempo = 500000;
-        tick_t lastClock = 0;
         int count = -1;
         int listSize = midiEventList.size();
         for( int j = 0; j < listSize; j++ ){
@@ -379,7 +376,6 @@ private:
                 tick_t currentClock = midiEventList[j].clock;
                 tempoList.push( Tempo( currentClock, currentTempo ) );
                 lastTempo = currentTempo;
-                lastClock = currentClock;
             }
         }
         tempoList.updateTempoInfo();
@@ -493,12 +489,11 @@ private:
                 while( lastLine.find( "[" ) != 0 ){
                     std::vector<std::string> parameters = StringUtil::explode( "=", lastLine );
                     tick_t clock = StringUtil::parseInt( parameters[0] );
-                    int id = -1;
                     if( parameters[1] != "EOS" ){
                         std::vector<std::string> idList = StringUtil::explode( ",", parameters[1] );
                         for( int i = 0; i < idList.size(); i++ ){
                             std::vector<std::string> idParameters = StringUtil::explode( "#", idList[i] );
-                            id = StringUtil::parseInt( idParameters[1] );
+                            int id = StringUtil::parseInt( idParameters[1] );
                             eventClockMap.insert( make_pair( id, clock ) );
                         }
                     }else{
