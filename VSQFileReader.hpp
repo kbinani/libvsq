@@ -527,29 +527,29 @@ private:
             }else if( lastLine == "[VibTremDepthBPList]" ){
                 lastLine = result.getCurve( "fx2depth" )->appendFromText( stream );
             }else if( lastLine == "[Reso1FreqBPList]" ){
-                lastLine = result.getCurve( "reso1FreqBPList" )->appendFromText( stream );
+                lastLine = result.getCurve( "reso1Freq" )->appendFromText( stream );
             }else if( lastLine == "[Reso2FreqBPList]" ){
-                lastLine = result.getCurve( "reso2FreqBPList" )->appendFromText( stream );
+                lastLine = result.getCurve( "reso2Freq" )->appendFromText( stream );
             }else if( lastLine == "[Reso3FreqBPList]" ){
-                lastLine = result.getCurve( "reso3FreqBPList" )->appendFromText( stream );
+                lastLine = result.getCurve( "reso3Freq" )->appendFromText( stream );
             }else if( lastLine == "[Reso4FreqBPList]" ){
-                lastLine = result.getCurve( "reso4FreqBPList" )->appendFromText( stream );
+                lastLine = result.getCurve( "reso4Freq" )->appendFromText( stream );
             }else if( lastLine == "[Reso1BWBPList]" ){
-                lastLine = result.getCurve( "reso1BWBPList" )->appendFromText( stream );
+                lastLine = result.getCurve( "reso1BW" )->appendFromText( stream );
             }else if( lastLine == "[Reso2BWBPList]" ){
-                lastLine = result.getCurve( "reso2BWBPList" )->appendFromText( stream );
+                lastLine = result.getCurve( "reso2BW" )->appendFromText( stream );
             }else if( lastLine == "[Reso3BWBPList]" ){
-                lastLine = result.getCurve( "reso3BWBPList" )->appendFromText( stream );
+                lastLine = result.getCurve( "reso3BW" )->appendFromText( stream );
             }else if( lastLine == "[Reso4BWBPList]" ){
-                lastLine = result.getCurve( "reso4BWBPList" )->appendFromText( stream );
+                lastLine = result.getCurve( "reso4BW" )->appendFromText( stream );
             }else if( lastLine == "[Reso1AmpBPList]" ){
-                lastLine = result.getCurve( "reso1AmpBPList" )->appendFromText( stream );
+                lastLine = result.getCurve( "reso1Amp" )->appendFromText( stream );
             }else if( lastLine == "[Reso2AmpBPList]" ){
-                lastLine = result.getCurve( "reso2AmpBPList" )->appendFromText( stream );
+                lastLine = result.getCurve( "reso2Amp" )->appendFromText( stream );
             }else if( lastLine == "[Reso3AmpBPList]" ){
-                lastLine = result.getCurve( "reso3AmpBPList" )->appendFromText( stream );
+                lastLine = result.getCurve( "reso3Amp" )->appendFromText( stream );
             }else if( lastLine == "[Reso4AmpBPList]" ){
-                lastLine = result.getCurve( "reso4AmpBPList" )->appendFromText( stream );
+                lastLine = result.getCurve( "reso4Amp" )->appendFromText( stream );
             }else if( lastLine == "[GenderFactorBPList]" ){
                 lastLine = result.getCurve( "gen" )->appendFromText( stream );
             }else if( lastLine == "[PortamentoTimingBPList]" ){
