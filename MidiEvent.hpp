@@ -125,7 +125,7 @@ public:
         MidiEvent ret;
         ret.clock = clock;
         ret.firstByte = 0xff;
-        int b_numer = (int)::floor( ::log2( denominator ) + 0.1 );
+        int b_numer = (int)::floor( ::log( (double)denominator ) / ::log( 2.0 ) + 0.1 );
         ret.data.push_back( 0x58 );
         ret.data.push_back( numerator );
         ret.data.push_back( b_numer );

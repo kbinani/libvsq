@@ -282,7 +282,7 @@ private:
         }
 
         int remained = pre_measure - last_bar_count;// プリメジャーの終わりまでの残り小節数
-        return last_clock + (int)::floor( remained * last_numerator * 480 * 4 / last_denominator );
+        return last_clock + (int)::floor( remained * last_numerator * 480 * 4 / (double)last_denominator );
     }
 };
 
