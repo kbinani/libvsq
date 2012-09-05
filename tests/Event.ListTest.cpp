@@ -201,64 +201,6 @@ public:
         CPPUNIT_ASSERT( false == iterator.hasNext() );
     }
     
-    void testWrite()
-    {
-        Event::List list;
-    
-        Event singerEvent( 0, EventType::SINGER );
-        singerEvent.singerHandle = Handle( HandleType::SINGER );
-        list.add( singerEvent, 1 );
-    
-        Event crescendoEvent( 240, EventType::ICON );
-        crescendoEvent.iconDynamicsHandle = Handle( HandleType::DYNAMICS );
-        crescendoEvent.iconDynamicsHandle.iconId = "$05020001";
-        list.add( crescendoEvent, 2 );
-    
-        Event dynaffEvent( 480, EventType::ICON );
-        dynaffEvent.iconDynamicsHandle = Handle( HandleType::DYNAMICS );
-        dynaffEvent.iconDynamicsHandle.iconId = "$05010001";
-        list.add( dynaffEvent, 3 );
-    
-        Event decrescendoEvent( 720, EventType::ICON );
-        decrescendoEvent.iconDynamicsHandle = Handle( HandleType::DYNAMICS );
-        decrescendoEvent.iconDynamicsHandle.iconId = "$05030001";
-        list.add( decrescendoEvent, 4 );
-    
-        Event singerEvent2( 1920, EventType::SINGER );
-        singerEvent2.singerHandle = Handle( HandleType::SINGER );
-        list.add( singerEvent2, 5 );
-    
-        Event noteEvent( 1920, EventType::NOTE );
-        noteEvent.setLength( 480 );
-        noteEvent.lyricHandle = Handle( HandleType::LYRIC );
-        noteEvent.lyricHandle.setLyricAt( 0, Lyric( "ら", "4 a" ) );
-        noteEvent.noteHeadHandle = Handle( HandleType::NOTE_HEAD );
-        noteEvent.vibratoHandle = Handle( HandleType::VIBRATO );
-        list.add( noteEvent, 6 );
-    
-        TextStream stream;
-        vector<Handle> handles = list.write( stream, 2400 );
-        string expected =
-            "[EventList]\n"
-            "0=ID#0000\n"
-            "240=ID#0001\n"
-            "480=ID#0002\n"
-            "720=ID#0003\n"
-            "1920=ID#0004,ID#0005\n"
-            "2400=EOS\n";
-        CPPUNIT_ASSERT_EQUAL( expected, stream.toString() );
-    
-        CPPUNIT_ASSERT_EQUAL( 8, (int)handles.size() );
-        CPPUNIT_ASSERT_EQUAL( HandleType::SINGER, handles[0].getHandleType() );
-        CPPUNIT_ASSERT_EQUAL( HandleType::DYNAMICS, handles[1].getHandleType() );
-        CPPUNIT_ASSERT_EQUAL( HandleType::DYNAMICS, handles[2].getHandleType() );
-        CPPUNIT_ASSERT_EQUAL( HandleType::DYNAMICS, handles[3].getHandleType() );
-        CPPUNIT_ASSERT_EQUAL( HandleType::SINGER, handles[4].getHandleType() );
-        CPPUNIT_ASSERT_EQUAL( HandleType::LYRIC, handles[5].getHandleType() );
-        CPPUNIT_ASSERT_EQUAL( HandleType::VIBRATO, handles[6].getHandleType() );
-        CPPUNIT_ASSERT_EQUAL( HandleType::NOTE_HEAD, handles[7].getHandleType() );
-    }
-
     CPPUNIT_TEST_SUITE( EventListTest );
     CPPUNIT_TEST( testConstruct );
     CPPUNIT_TEST( testFindIndexFromId );
@@ -273,7 +215,6 @@ public:
     CPPUNIT_TEST( testSize );
     CPPUNIT_TEST( testGetAndSetElement );
     CPPUNIT_TEST( testIterator );
-    CPPUNIT_TEST( testWrite );
     CPPUNIT_TEST_SUITE_END();
 };
 

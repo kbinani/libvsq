@@ -28,6 +28,11 @@ public:
         CPPUNIT_ASSERT_EQUAL( 2, (int)symbols.size() );
         CPPUNIT_ASSERT_EQUAL( string( "h" ), symbols[0] );
         CPPUNIT_ASSERT_EQUAL( string( "a" ), symbols[1] );
+
+        line = "\"a\",\"b\",1,0,0";
+        lyric = Lyric( line );
+        CPPUNIT_ASSERT_EQUAL( string( "a" ), lyric.phrase );
+        CPPUNIT_ASSERT_EQUAL( string( "b" ), lyric.getPhoneticSymbol() );
     }
 
     void testConstructWithPhrase()

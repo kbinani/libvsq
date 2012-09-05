@@ -5,6 +5,8 @@
 #include <vector>
 #include "vsqglobal.hpp"
 #include "OutputStream.hpp"
+#include "InputStream.hpp"
+#include "StringUtil.hpp"
 
 using namespace std;
 
@@ -20,6 +22,22 @@ VSQ_BEGIN_NAMESPACE
 class MidiEvent
 {
 public:
+    class ParseException : public std::exception{
+        std::string message;
+    public:
+        explicit ParseException( const std::string &message )
+            : message( message )
+        {
+        }
+
+        ~ParseException() throw() {
+        }
+
+        std::string getMessage() const{
+            return message;
+        }
+    };
+
     /**
      * @brief Tick 単位の時刻
      */
@@ -201,41 +219,45 @@ public:
     }
 
     /**
-     * @param stream [ByteArrayInputStream]
-     * @return [long]
-    MidiEvent.readDeltaClock = function( stream ){
-        local ret = 0; // [long]
-        while ( true ) {
-            local i = stream.read();
+     * @brief ストリームから、delta clock を読み込む
+     * @param stream 読み込み元のストリーム
+     * @return delta clock
+     */
+    static tick_t readDeltaClock( InputStream *stream ){
+        tick_t ret = 0;
+        while( 1 ){
+            int i = stream->read();
             if( i < 0 ){
                 break;
             }
-            local d = i; // [byte]
-            ret = (ret << 7) | (d & 0x7f);
+            int d = i;
+            ret = (0xFFFFFFFFFFFFFF80 & (ret << 7)) | (d & 0x7f);
             if( (d & 0x80) == 0x00 ){
                 break;
             }
         }
         return ret;
-    }*/
+    }
 
     /**
-     * @param stream [ByteArrayInputStream]
+     * @brief ストリームから MIDI イベントを一つ読み込む
+     * @param stream 読み込み元のストリーム
      * @param last_clock [ByRef<Long>]
      * @param last_status_byte [ByRef<Integer>]
-    MidiEvent.read = function( stream, last_clock, last_status_byte ){
-        local delta_clock = this.readDeltaClock( stream ); // [long]
-        last_clock.value += delta_clock;
-        local first_byte = stream.read(); // [int]
+     */
+    static MidiEvent read( InputStream *stream, tick_t &last_clock, uint8_t &last_status_byte ){
+        tick_t delta_clock = readDeltaClock( stream );
+        last_clock += delta_clock;
+        int first_byte = stream->read();
         if( first_byte < 0x80 ){
             // ランニングステータスが適用される
-            local pos = stream.getFilePointer();
-            stream.seek( pos - 1 );
-            first_byte = last_status_byte.value;
+            int64_t pos = stream->getPointer();
+            stream->seek( pos - 1 );
+            first_byte = last_status_byte;
         }else{
-            last_status_byte.value = first_byte;
+            last_status_byte = first_byte;
         }
-        local ctrl = first_byte & 0xf0;
+        int ctrl = first_byte & 0xf0;
         if( ctrl == 0x80 || ctrl == 0x90 || ctrl == 0xA0 || ctrl == 0xB0 || ctrl == 0xE0 || first_byte == 0xF2 ){
             // 3byte使用するチャンネルメッセージ：
             //     0x8*: ノートオフ
@@ -245,30 +267,25 @@ public:
             //     0xE*: ピッチベンドチェンジ
             // 3byte使用するシステムメッセージ
             //     0xF2: ソングポジション・ポインタ
-            local me = new MidiEvent(); // [MidiEvent]
-            me.clock = last_clock.value;
+            MidiEvent me;
+            me.clock = last_clock;
             me.firstByte = first_byte;
-            me.data = new Array( 2 ); //int[2];
-            local d = new Array( 2 ); // byte[2];
-            stream.readArray( d, 0, 2 );
-            for ( local i = 0; i < 2; i++ ) {
-                me.data[i] = 0xff & d[i];
-            }
+            me.data.clear();
+            me.data.push_back( 0xff & stream->read() );
+            me.data.push_back( 0xff & stream->read() );
             return me;
-        }else if( ctrl == 0xC0 || ctrl == 0xD0 || first_byte == 0xF1 || first_byte == 0xF2 ){
+        }else if( ctrl == 0xC0 || ctrl == 0xD0 || first_byte == 0xF1 || first_byte == 0xF3 ){
             // 2byte使用するチャンネルメッセージ
             //     0xC*: プログラムチェンジ
             //     0xD*: チャンネルプレッシャ
             // 2byte使用するシステムメッセージ
             //     0xF1: クォータフレーム
             //     0xF3: ソングセレクト
-            local me = new MidiEvent(); // [MidiEvent]
-            me.clock = last_clock.value;
+            MidiEvent me;
+            me.clock = last_clock;
             me.firstByte = first_byte;
-            me.data = new Array( 1 );// int[1];
-            local d = new Array( 1 );// byte[1];
-            stream.readArray( d, 0, 1 );
-            me.data[0] = 0xff & d[0];
+            me.data.clear();
+            me.data.push_back( 0xff & stream->read() );
             return me;
         }else if( first_byte == 0xF6 ){
             // 1byte使用するシステムメッセージ
@@ -280,56 +297,50 @@ public:
             //     0xFC: ストップ
             //     0xFE: アクティブセンシング
             //     0xFF: システムリセット
-            local me = new MidiEvent(); // [MidiEvent]
-            me.clock = last_clock.value;
+            MidiEvent me;
+            me.clock = last_clock;
             me.firstByte = first_byte;
-            me.data = new Array(); //int[0];
+            me.data.clear();
             return me;
         }else if( first_byte == 0xff ){
             // メタイベント
-            local meta_event_type = stream.read(); //[int]
-            local meta_event_length = this.readDeltaClock( stream ); // [long]
-            local me = new MidiEvent(); //[MidiEvent]
-            me.clock = last_clock.value;
+            int meta_event_type = stream->read();
+            tick_t meta_event_length = readDeltaClock( stream );
+            MidiEvent me;
+            me.clock = last_clock;
             me.firstByte = first_byte;
-            me.data = new Array( meta_event_length + 1 ); // int[]
-            me.data[0] = meta_event_type;
-            local d = new Array( meta_event_length + 1 ); // byte[]
-            stream.readArray( d, 1, meta_event_length );
-            for ( local i = 1; i < meta_event_length + 1; i++ ) {
-                me.data[i] = 0xff & d[i];
+            me.data.clear();
+            me.data.push_back( meta_event_type );
+            for( int i = 0; i < meta_event_length; i++ ){
+                me.data.push_back( stream->read() );
             }
             return me;
         }else if( first_byte == 0xf0 ){
             // f0ステータスのSysEx
-            local me = new MidiEvent();// [MidiEvent]
-            me.clock = last_clock.value;
+            MidiEvent me;
+            me.clock = last_clock;
             me.firstByte = first_byte;
-            local sysex_length = this.readDeltaClock( stream ); // [long]
-            me.data = new Array( sysex_length + 1 ); // int[]
-            local d = new Array( sysex_length + 1 ); // byte[]
-            stream.readArray( d, 0, sysex_length + 1 );
-            for ( local i = 0; i < sysex_length + 1; i++ ) {
-                me.data[i] = 0xff & d[i];
+            int sysex_length = (int)readDeltaClock( stream );
+            me.data.clear();
+            for( int i = 0; i < sysex_length + 1; i++ ){
+                me.data.push_back( stream->read() );
             }
             return me;
         }else if( first_byte == 0xf7 ){
             // f7ステータスのSysEx
-            local me = new MidiEvent();
-            me.clock = last_clock.value;
+            MidiEvent me;
+            me.clock = last_clock;
             me.firstByte = first_byte;
-            local sysex_length = this.readDeltaClock( stream );
-            me.data = new Array( sysex_length );
-            local d = new Array( sysex_length );//byte[]
-            stream.readArray( d, 0, sysex_length );
-            for ( local i = 0; i < sysex_length; i++ ) {
-                me.data[i] = 0xff & d[i];
+            int sysex_length = (int)readDeltaClock( stream );
+            me.data.clear();
+            for( int i = 0; i < sysex_length; i++ ){
+                me.data.push_back( stream->read() );
             }
             return me;
         }else{
-            throw new Exception( "don't know how to process first_byte: 0x" + PortUtil.toHexString( first_byte ) );
+            throw ParseException( "don't know how to process first_byte: 0x" + StringUtil::toString( first_byte, 16 ) );
         }
-    }*/
+    }
 
     /**
      * 2 つの {@link MidiEvent} を比較する

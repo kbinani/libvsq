@@ -776,7 +776,7 @@ private:
             if( _clocks.size() <= 0 ){
                 newLength = (int)::floor( length * 1.2 );
             }else{
-                int order = (int)::floor( (double)length / (double)_clocks.size() );
+                int order = length / _clocks.size();
                 if( order <= 1 ){
                     order = 2;
                 }

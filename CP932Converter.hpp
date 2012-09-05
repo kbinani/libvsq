@@ -64,6 +64,42 @@ public:
         return result.str();
     }
 
+    /**
+     * @brief CP932のバイト列をUTF8の文字列に変換します
+     * @param cp932 変換する CP932 のバイト列
+     * @return 変換後の UTF8 文字列
+     */
+    static std::string convertToUTF8( const std::string &cp932 ){
+        static int dict[0xFFFF];
+        static int initialized = 0;
+        if( initialized == 0 ){
+            initializeCP932ToUTF8Dictionary( dict );
+            initialized = 1;
+        }
+        std::ostringstream result;
+        int i = 0;
+        int length = cp932.size();
+        while( i < length ){
+            int b1 = 0xFF & cp932[i];
+            int b2 = 0;
+            if( i + 1 < length ) b2 = 0xFF & cp932[i + 1];
+            int b1b2 = (0xFF00 & (b1 << 8)) | (0xFF & b2);
+            int value;
+            if( (value = dict[b1]) != 0 ){
+                result << (char)value;
+                i++;
+            }else if( (value = dict[b1b2]) != 0 ){
+                result << (char)(0xFF & (value >> 16));
+                result << (char)(0xFF & (value >> 8));
+                result << (char)(0xFF & value);
+                i += 2;
+            }else{
+                i++;
+            }
+        }
+        return result.str();
+    }
+
 protected:
     /**
      * @brief UTF8 の文字列を unicode のバイト列に変換する
@@ -174,14 +210,7 @@ protected:
         }
     }
 
-    //TODO: convertToUTF8未実装
-    /*
-        --
-        -- CP932のバイト列をUTF8の文字列に変換します
-        function CP932Converter.convertToUTF8( byte_array )
-        end
-    */
-
+private:
     /**
      * @brief Unicode から CP932 への変換テーブルを初期化する
      */
@@ -193,6 +222,36 @@ protected:
             }
         }
         #include "CP932ConverterData.hpp"
+    }
+
+    /**
+     * @brief CP932 から UTF8 への変換テーブルを初期化する
+     */
+    static void initializeCP932ToUTF8Dictionary( int dict[0xFFFF] ){
+        int baseDictionary[256][256][2];
+        initializeUnicodeToCp932Dictionary( baseDictionary );
+        for( int i = 0; i < 0xFFFF; i++ ){
+            dict[i] = 0;
+        }
+        for( int firstByte = 0; firstByte < 256; firstByte++ ){
+            for( int secondByte = 0; secondByte < 256; secondByte++ ){
+                int key = baseDictionary[firstByte][secondByte][0];
+                if( key == 0 ) continue;
+                if( baseDictionary[firstByte][secondByte][1] != 0 ){
+                    key = (0xFF00 & (key << 8)) | (0xFF & baseDictionary[firstByte][secondByte][1]);
+                }
+                int value = 0;
+                if( 0 == firstByte ){
+                    value = secondByte;
+                }else{
+                    int c1 = 0xE0 | (0xFF & (firstByte >> 4));
+                    int c2 = 0x80 | (0x3C & (firstByte << 2)) | (0xFF & (secondByte >> 6));
+                    int c3 = 0x80 | (0x3F & secondByte);
+                    value = (0xFF0000 & (c1 << 16)) | (0x00FF00 & (c2 << 8)) | (0x0000FF & c3);
+                }
+                dict[key] = value;
+            }
+        }
     }
 };
 

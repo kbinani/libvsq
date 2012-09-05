@@ -106,7 +106,7 @@ public:
         while( _position + 1 < _length ){
             _position++;
             char c = _array[_position];
-            if( c == '\n' || c == 0 ){
+            if( c == (char)0x0A || c == 0 ){
                 break;
             }
             sb << c;
@@ -156,7 +156,7 @@ public:
         for( int i = 0; i < len; i++ ){
             _array[offset + i] = str[i];
         }
-        _array[offset + len] = '\n';
+        _array[offset + len] = (char)0x0A;
         _position += len + 1;
         _length = std::max( _length, newSize );
         return *this;

@@ -10,11 +10,10 @@ the BSD License.
 
 http://www.kbinani.info:8080/job/libvsq/doxygen/
 
-## Building the project
+## Usage
 
-    make
-
-then link to your own project with `-lvsq` option.
+You don't need to build this library because libvsq is header-only library.
+Please just `#include` header file(s).
 
 ## Notice
 

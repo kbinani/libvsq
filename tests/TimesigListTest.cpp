@@ -3,27 +3,23 @@
 
 using namespace VSQ_NS;
 
-class TimesigListTest : public CppUnit::TestCase
-{
+class TimesigListTest : public CppUnit::TestCase{
 public:
-    void testUpdateTimesigInfo()
-    {
+    void testUpdateTimesigInfo(){
         TimesigList table;
         table.push( Timesig( 4, 4, 2 ) );
         table.push( Timesig( 4, 4, 0 ) );
         table.push( Timesig( 3, 4, 1 ) );
-        table.updateTimesigInfo();
 
-        CPPUNIT_ASSERT_EQUAL( (tick_t)0, table.get( 0 ).clock );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)0, table.get( 0 ).getClock() );
         CPPUNIT_ASSERT_EQUAL( 0, table.get( 0 ).barCount );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1920, table.get( 1 ).clock );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1920, table.get( 1 ).getClock() );
         CPPUNIT_ASSERT_EQUAL( 1, table.get( 1 ).barCount );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)3360, table.get( 2 ).clock );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)3360, table.get( 2 ).getClock() );
         CPPUNIT_ASSERT_EQUAL( 2, table.get( 2 ).barCount );
     }
 
-    void testGetTimesigAt()
-    {
+    void testGetTimesigAt(){
         TimesigList table;
         table.push( Timesig( 4, 8, 2 ) );
         table.push( Timesig( 4, 4, 0 ) );
@@ -78,11 +74,33 @@ public:
         CPPUNIT_ASSERT_EQUAL( (tick_t)9760, table.getClockFromBarCount( 7 ) );
     }
 
+    void testClear(){
+        TimesigList table;
+        table.push( Timesig( 4, 6, 2 ) );
+        CPPUNIT_ASSERT_EQUAL( 1, table.size() );
+        table.clear();
+        CPPUNIT_ASSERT_EQUAL( 0, table.size() );
+        table.push( Timesig( 4, 6, 2 ) );
+        CPPUNIT_ASSERT_EQUAL( 1, table.size() );
+    }
+
+    void testCopy(){
+        TimesigList a;
+        a.push( Timesig( 4, 4, 0 ) );
+        TimesigList b = a;
+        a.push( Timesig( 3, 4, 1 ) );
+
+        CPPUNIT_ASSERT_EQUAL( 2, a.size() );
+        CPPUNIT_ASSERT_EQUAL( 1, b.size() );
+    }
+
     CPPUNIT_TEST_SUITE( TimesigListTest );
     CPPUNIT_TEST( testUpdateTimesigInfo );
     CPPUNIT_TEST( testGetTimesigAt );
     CPPUNIT_TEST( testPushDuplicateKey );
     CPPUNIT_TEST( testGetClockFromBarCount );
+    CPPUNIT_TEST( testClear );
+    CPPUNIT_TEST( testCopy );
     CPPUNIT_TEST_SUITE_END();
 };
 

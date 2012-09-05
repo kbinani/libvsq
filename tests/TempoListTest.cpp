@@ -115,6 +115,14 @@ public:
         CPPUNIT_ASSERT_EQUAL( 480000, list.getTempoAt( 480 ) );
     }
 
+    void testClear(){
+        TempoList list;
+        list.push( Tempo( 480, 480000 ) );
+        CPPUNIT_ASSERT_EQUAL( 1, list.size() );
+        list.clear();
+        CPPUNIT_ASSERT_EQUAL( 0, list.size() );
+    }
+
     CPPUNIT_TEST_SUITE( TempoListTest );
     CPPUNIT_TEST( test );
     CPPUNIT_TEST( testIterator );
@@ -123,6 +131,7 @@ public:
     CPPUNIT_TEST( testUpdateTempoInfo );
     CPPUNIT_TEST( testGetSecFromClock );
     CPPUNIT_TEST( testGetTempoAt );
+    CPPUNIT_TEST( testClear );
     CPPUNIT_TEST_SUITE_END();
 };
 

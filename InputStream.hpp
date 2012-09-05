@@ -1,5 +1,5 @@
 /**
- * OutputStream.hpp
+ * InputStream.hpp
  * Copyright © 2012 kbinani
  *
  * This file is part of libvsq.
@@ -11,8 +11,8 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-#ifndef __OutputStream_hpp__
-#define __OutputStream_hpp__
+#ifndef __InputStream_hpp__
+#define __InputStream_hpp__
 
 #include "vsqglobal.hpp"
 #include <stdint.h>
@@ -20,27 +20,28 @@
 VSQ_BEGIN_NAMESPACE
 
 /**
- * @brief 書き込みストリーム
+ * @brief 読み込みストリーム
  */
-class OutputStream{
+class InputStream{
 public:
     /**
-     * @brief 1 バイト書き込む
-     * @param value 書き込む値
+     * @brief 1 バイトを読み込む
+     * @return 読み込んだバイト値。ストリームの末尾に達した場合は負の値を返す
      */
-    virtual void write( int value ) = 0;
+    virtual int read() = 0;
 
     /**
-     * @brief バッファーを書き込む
-     * @param buffer 書き込むバッファー
-     * @param startIndex 書き込みを開始するインデックス
-     * @param length 書き込む長さ
+     * @brief バッファーに読み込む
+     * @param buffer 読み込んだデータを格納するバッファー
+     * @param startIndex 読み込んだデータを格納するオフセット
+     * @param length 読み込む長さ
+     * @return 読み込んだ長さ
      */
-    virtual void write( const char *buffer, int64_t startIndex, int64_t length ) = 0;
+    virtual int read( char *buffer, int64_t startIndex, int64_t length ) = 0;
 
     /**
-     * @brief ポインターを移動する
-     * @param position ポインターの位置。ファイル先頭からの位置を指定する
+     * @brief ファイルポインターを移動する
+     * @param position ファイルポインター
      */
     virtual void seek( int64_t position ) = 0;
 
@@ -58,4 +59,4 @@ public:
 
 VSQ_END_NAMESPACE
 
-#endif // __OutputStream_hpp__
+#endif // __InputStream_hpp__

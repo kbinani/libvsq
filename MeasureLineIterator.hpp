@@ -89,7 +89,7 @@ public:
         if( i < m_list->size() ){
             local_denominator = m_list->get( i ).denominator;
             local_numerator = m_list->get( i ).numerator;
-            local_clock = m_list->get( i ).clock;
+            local_clock = m_list->get( i ).getClock();
             int local_bar_count = m_list->get( i ).barCount;
             int denom = local_denominator;
             if( denom <= 0 ){
@@ -100,7 +100,7 @@ public:
             bar_counter = local_bar_count - 1;
             t_end = m_end_clock;
             if( i + 1 < m_list->size() ){
-                t_end = m_list->get( i + 1 ).clock;
+                t_end = m_list->get( i + 1 ).getClock();
             }
             i++;
             clock = local_clock;
@@ -153,10 +153,6 @@ public:
         this->clock_step = 0;
         this->local_clock = 0;
         this->bar_counter = 0;
-
-        if( false == this->m_list->isUpdated() ){
-            this->m_list->updateTimesigInfo();
-        }
     }
 };
 

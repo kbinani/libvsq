@@ -19,6 +19,8 @@
 #include <sstream>
 #include <cstdlib>
 #include <algorithm>
+#include <iomanip>
+#include <boost/format.hpp>
 
 using namespace std;
 
@@ -81,7 +83,6 @@ public:
      * @brief 文字列を整数に変換する
      * @param text 変換する文字列
      * @return 変換後の数値
-     * @todo baseを指定できるようにする
      * @todo 例外を投げる
      */
     static int parseInt( std::string text, int baseNumber = 10 ){
@@ -93,10 +94,21 @@ public:
      * @param value 変換する数値
      * @return 変換後の文字列
      */
-    static std::string toString( int value ){
+    static std::string toString( int value, int baseNumber = 10 ){
         ostringstream oss;
-        oss << value;
+        oss << uppercase << setbase( baseNumber ) << value;
         return oss.str();
+    }
+
+    /**
+     * @brief 数値を文字列に変換する
+     * @param value 変換する数値
+     * @param format 変換時のフォーマット
+     * @return 変換後の文字列
+     */
+    template<typename T>
+    static string toString( T value, const string &format ){
+        return (boost::format( format ) % value).str();
     }
 
     /**

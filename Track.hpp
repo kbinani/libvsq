@@ -21,6 +21,8 @@
 #include "Mixer.hpp"
 #include "BPList.hpp"
 #include "EventListIndexIterator.hpp"
+#include "MidiEvent.hpp"
+#include "CP932Converter.hpp"
 
 VSQ_BEGIN_NAMESPACE
 
@@ -47,7 +49,7 @@ private:
     BPList _pit;
 
     /**
-     * @brief PBS。ピッチベンドセンシティビティ(pitchBendSensBPList)。dfault=2
+     * @brief PBS。ピッチベンドセンシティビティ(pitchBendSensBPList)。default=2
      */
     BPList _pbs;
 
@@ -160,92 +162,6 @@ public:
     explicit Track( std::string name, std::string singer ){
         this->_initCor( name, singer );
     }
-
-    /**
-        -- @param midi_event [Array<MidiEvent>]
-        -- @param encoding [string]
-        function this:_init_2b( midi_event, encoding )
-            local track_name = "";
-
-            local sw = nil;
-            sw = TextStream.new();
-            local count = #midi_event;
-            local buffer = Array.new(); -- Vector<Integer>();
-            local i;
-            for i = 0; i < count; i++
-                local item = midi_event[i];
-                if( item.firstByte == 0xff and #item.data > 0 ){
-                    -- meta textを抽出
-                    local type = item.data[0];
-                    if( type == 0x01 or type == 0x03 ){
-                        if( type == 0x01 ){
-                            local colon_count = 0;
-                            local j;
-                            for j = 0; j < #item.data - 1; j++
-                                local d = item.data[j + 1];
-                                if( d == 0x3a ){
-                                    colon_count++;
-                                    if( colon_count <= 2 ){
-                                        continue;
-                                    }
-                                }
-                                if( colon_count < 2 ){
-                                    continue;
-                                }
-                                buffer.push( d );
-                            }
-
-                            local index_0x0a = org.kbinani.PortUtil.arrayIndexOf( buffer, 0x0a );
-                            while( index_0x0a >= 0 )do
-                                local cpy = Array.new( index_0x0a );
-                                local j;
-                                for j = 0; j < index_0x0a; j++
-                                    cpy[j] = 0xff & buffer[0];
-                                    buffer.shift();
-                                }
-
-                                local line = org.kbinani.Cp932.convertToUTF8( cpy );
---alert( "VsqTrack#_init_2b; line=" + line );
-                                sw:writeLine( line );
-                                buffer.shift();
-                                index_0x0a = org.kbinani.PortUtil.arrayIndexOf( buffer, 0x0a );
-                            }
-                        else
-                            local j;
-                            for j = 0; j < #item.data - 1; j++
-                                buffer.push( item.data[j + 1] );
-                            }
-                            local c = #buffer;
-                            local d = Array.new( c );
-                            local j;
-                            for j = 0; j < c; j++
-                                d[j] = 0xff & buffer[j];
-                            }
-                            track_name = org.kbinani.Cp932.convertToUTF8( d );
-                            buffer.splice( 0, #buffer );
-                        }
-                    }
-                else
-                    continue;
-                }
-            }
-
-            local remain = #buffer;
-            if( remain > 0 ){
-                local cpy = Array.new( remain );
-                local j;
-                for j = 0; j < remain; j++
-                    cpy[j] = 0xff & buffer[j];
-                }
-                local line = org.kbinani.Cp932.convertToUTF8( cpy );
-                sw:writeLine( line );
-            }
-
-            sw:setPointer( -1 );
-            self.MetaText = MetaText.new( sw );
-            self.setName( track_name );
-        }
-*/
 
     /**
      * @brief トラックの名前を取得する
@@ -505,115 +421,6 @@ public:
             self.events:sort();
         }
         */
-
-    /**
-     * @brief トラックのメタテキストを、テキストストリームに出力する
-     * @param stream 出力先のストリーム
-     * @param eos イベントリストの末尾を表す番号
-     * @param start Tick 単位の出力開始時刻
-     * @param printPitch pitch を含めて出力するかどうか(現在は <code>false</code> 固定で、引数は無視される)
-     * @param master 出力する Master 情報。出力しない場合は NULL を指定する
-     * @param mixer 出力する Mixer 情報。出力しない場合は NULL を指定する
-     */
-    void printMetaText( TextStream &stream, int eos, tick_t start, bool printPitch = false, Master *master = 0, Mixer *mixer = 0 ){
-        //TODO: commonの型を Common* にする
-        //if( common ~= nil ){
-            common.write( stream );
-        //}
-        if( master ){
-            master->write( stream );
-        }
-        if( mixer ){
-            mixer->write( stream );
-        }
-        vector<Handle> handle = events.write( stream, eos );
-        Event::ListIterator itr = events.iterator();
-        while( itr.hasNext() ){
-            Event *item = itr.next();
-            item->write( stream );
-        }
-        for( int i = 0; i < handle.size(); ++i ){
-            handle[i].write( stream );
-        }
-        string version = common.version;
-        if( _pit.size() > 0 ){
-            _pit.print( stream, start, "[PitchBendBPList]" );
-        }
-        if( _pbs.size() > 0 ){
-            _pbs.print( stream, start, "[PitchBendSensBPList]" );
-        }
-        if( _dyn.size() > 0 ){
-            _dyn.print( stream, start, "[DynamicsBPList]" );
-        }
-        if( _bre.size() > 0 ){
-            _bre.print( stream, start, "[EpRResidualBPList]" );
-        }
-        if( _bri.size() > 0 ){
-            _bri.print( stream, start, "[EpRESlopeBPList]" );
-        }
-        if( _cle.size() > 0 ){
-            _cle.print( stream, start, "[EpRESlopeDepthBPList]" );
-        }
-        if( version.substr( 0, 4 ) == "DSB2" ){
-            if( _harmonics.size() > 0 ){
-                _harmonics.print( stream, start, "[EpRSineBPList]" );
-            }
-            if( _fx2depth.size() > 0 ){
-                _fx2depth.print( stream, start, "[VibTremDepthBPList]" );
-            }
-
-            if( _reso1FreqBPList.size() > 0 ){
-                _reso1FreqBPList.print( stream, start, "[Reso1FreqBPList]" );
-            }
-            if( _reso2FreqBPList.size() > 0 ){
-                _reso2FreqBPList.print( stream, start, "[Reso2FreqBPList]" );
-            }
-            if( _reso3FreqBPList.size() > 0 ){
-                _reso3FreqBPList.print( stream, start, "[Reso3FreqBPList]" );
-            }
-            if( _reso4FreqBPList.size() > 0 ){
-                _reso4FreqBPList.print( stream, start, "[Reso4FreqBPList]" );
-            }
-
-            if( _reso1BWBPList.size() > 0 ){
-                _reso1BWBPList.print( stream, start, "[Reso1BWBPList]" );
-            }
-            if( _reso2BWBPList.size() > 0 ){
-                _reso2BWBPList.print( stream, start, "[Reso2BWBPList]" );
-            }
-            if( _reso3BWBPList.size() > 0 ){
-                _reso3BWBPList.print( stream, start, "[Reso3BWBPList]" );
-            }
-            if( _reso4BWBPList.size() > 0 ){
-                _reso4BWBPList.print( stream, start, "[Reso4BWBPList]" );
-            }
-
-            if( _reso1AmpBPList.size() > 0 ){
-                _reso1AmpBPList.print( stream, start, "[Reso1AmpBPList]" );
-            }
-            if( _reso2AmpBPList.size() > 0 ){
-                _reso2AmpBPList.print( stream, start, "[Reso2AmpBPList]" );
-            }
-            if( _reso3AmpBPList.size() > 0 ){
-                _reso3AmpBPList.print( stream, start, "[Reso3AmpBPList]" );
-            }
-            if( _reso4AmpBPList.size() > 0 ){
-                _reso4AmpBPList.print( stream, start, "[Reso4AmpBPList]" );
-            }
-        }
-
-        if( _gen.size() > 0 ){
-            _gen.print( stream, start, "[GenderFactorBPList]" );
-        }
-        if( _por.size() > 0 ){
-            _por.print( stream, start, "[PortamentoTimingBPList]" );
-        }
-        if( version.substr( 0, 4 ) == "DSB3" ){
-            if( _ope.size() > 0 ){
-                _ope.print( stream, start, "[OpeningBPList]" );
-            }
-        }
-    }
 
     /**
         -- レンダラーを変更します

@@ -27,6 +27,24 @@ public:
         CPPUNIT_ASSERT_EQUAL( expected.str(), actual );
     }
 
+    void testConvertToUTF8(){
+        {
+            ostringstream fixture;
+            fixture << (char)0x61 << (char)0x82 << (char)0xA0 << "\t\n";
+            string actual = CP932Converter::convertToUTF8( fixture.str() );
+            ostringstream expected;
+            expected << (char)0x61 << (char)0xE3 << (char)0x81 << (char)0x82 << (char)0x09 << (char)0x0A;
+            CPPUNIT_ASSERT_EQUAL( expected.str(), actual );
+        }
+
+        {
+            ostringstream fixture;
+            fixture << (char)0x5b << (char)0x4d << (char)0x69 << (char)0x78 << (char)0x65 << (char)0x72 << (char)0x5d;
+            string actual = CP932Converter::convertToUTF8( fixture.str() );
+            CPPUNIT_ASSERT_EQUAL( fixture.str(), actual );
+        }
+    }
+
     void test_getUnicodeBytesFromUTF8Bytes(){
         vector<int> a;
 
@@ -157,6 +175,7 @@ public:
 
     CPPUNIT_TEST_SUITE( CP932ConverterTest );
     CPPUNIT_TEST( testConvertFromUTF8 );
+    CPPUNIT_TEST( testConvertToUTF8 );
     CPPUNIT_TEST( test_getUnicodeBytesFromUTF8Bytes );
     CPPUNIT_TEST_SUITE_END();
 };

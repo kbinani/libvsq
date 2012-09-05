@@ -497,12 +497,12 @@ protected:
             add2.append( MidiParameterType::CC_VD_DELAY, delayMsb, delayLsb );
             add2.append( MidiParameterType::CC_VR_DELAY, delayMsb, delayLsb );
             // CC_VD_VIBRATO_DEPTH, CC_VR_VIBRATO_RATE では、NRPN の MSB を省略してはいけない
-            add2.append( MidiParameterType::CC_VD_VIBRATO_DEPTH, noteEvent->vibratoHandle.getStartDepth() );
-            add2.append( MidiParameterType::CC_VR_VIBRATO_RATE, noteEvent->vibratoHandle.getStartRate() );
+            add2.append( MidiParameterType::CC_VD_VIBRATO_DEPTH, noteEvent->vibratoHandle.startDepth );
+            add2.append( MidiParameterType::CC_VR_VIBRATO_RATE, noteEvent->vibratoHandle.startRate );
             ret.push_back( add2 );
             tick_t vlength = noteEvent->getLength() - noteEvent->vibratoDelay;
 
-            VibratoBPList depthBP = noteEvent->vibratoHandle.getDepthBP();
+            VibratoBPList depthBP = noteEvent->vibratoHandle.depthBP;
             int count = depthBP.size();
             if( count > 0 ){
                 int lastDelay = 0;
@@ -524,7 +524,7 @@ protected:
                 }
             }
 
-            VibratoBPList rateBP = noteEvent->vibratoHandle.getRateBP();
+            VibratoBPList rateBP = noteEvent->vibratoHandle.rateBP;
             count = rateBP.size();
             if( count > 0 ){
                 int lastDelay = 0;

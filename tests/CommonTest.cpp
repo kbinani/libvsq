@@ -6,9 +6,6 @@ using namespace VSQ_NS;
 
 class CommonTest : public CppUnit::TestCase{
 public:
-    /**
-     * @todo
-     */
     void constructFromStream(){
         TextStream stream;
         stream.writeLine( "Version=DSB303" );
@@ -16,6 +13,8 @@ public:
         stream.writeLine( "Color=1,2,3" );
         stream.writeLine( "DynamicsMode=1" );
         stream.writeLine( "PlayMode=1" );
+        stream.writeLine( "[Foo]" );
+        stream.writeLine( "foo=bar" );
         stream.setPointer( -1 );
         string lastLine = "";
         Common common( stream, lastLine );
@@ -24,6 +23,7 @@ public:
         CPPUNIT_ASSERT_EQUAL( string( "1,2,3" ), common.color );
         CPPUNIT_ASSERT_EQUAL( DynamicsMode::EXPERT, common.dynamicsMode );
         CPPUNIT_ASSERT_EQUAL( PlayMode::PLAY_WITH_SYNTH, common.playMode );
+        CPPUNIT_ASSERT_EQUAL( string( "[Foo]" ), lastLine );
     }
 
     void constructFromArguments(){
@@ -34,9 +34,6 @@ public:
         CPPUNIT_ASSERT_EQUAL( PlayMode::PLAY_AFTER_SYNTH, common.playMode );
     }
 
-    /**
-     * @todo
-     */
     void clone(){
         Common common( "__foo__", 3, 4, 5, DynamicsMode::STANDARD, PlayMode::PLAY_AFTER_SYNTH );
         Common copy = common.clone();
@@ -46,9 +43,6 @@ public:
         CPPUNIT_ASSERT_EQUAL( PlayMode::PLAY_AFTER_SYNTH, copy.playMode );
     }
 
-    /**
-     * @todo
-     */
     void write(){
         Common common( "__foo__", 3, 4, 5, DynamicsMode::STANDARD, PlayMode::PLAY_AFTER_SYNTH );
         TextStream stream;

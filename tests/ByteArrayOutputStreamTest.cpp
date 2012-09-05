@@ -17,15 +17,15 @@ class ByteArrayOutputStreamTest : public CppUnit::TestCase{
 public:
     void test(){
         ByteArrayOutputStream stream;
-        CPPUNIT_ASSERT_EQUAL( 0, stream.getPointer() );
+        CPPUNIT_ASSERT_EQUAL( (int64_t)0, stream.getPointer() );
         stream.write( 0 );
         stream.write( 1 );
-        CPPUNIT_ASSERT_EQUAL( 2, stream.getPointer() );
+        CPPUNIT_ASSERT_EQUAL( (int64_t)2, stream.getPointer() );
         char bufferA[] = { 0, 0, 127, 0, 0 };
         stream.write( bufferA, 2, 1 );
         char bufferB[] = { 128, 255 };
         stream.write( bufferB, 0, 2 );
-        CPPUNIT_ASSERT_EQUAL( 5, stream.getPointer() );
+        CPPUNIT_ASSERT_EQUAL( (int64_t)5, stream.getPointer() );
         string actual = stream.toString();
         ostringstream expected;
         expected << (char)0 << (char)1 << (char)127 << (char)128 << (char)255;
@@ -33,7 +33,7 @@ public:
     
         stream.seek( 0 );
         stream.write( 64 );
-        CPPUNIT_ASSERT_EQUAL( 1, stream.getPointer() );
+        CPPUNIT_ASSERT_EQUAL( (int64_t)1, stream.getPointer() );
         expected.str( "" );
         expected.setstate( ostringstream::goodbit );
         expected << (char)64 << (char)1 << (char)127 << (char)128 << (char)255;
@@ -47,7 +47,7 @@ public:
 
         // 負の値を指定した場合、0になる
         stream.seek( -100 );
-        CPPUNIT_ASSERT_EQUAL( 0, stream.getPointer() );
+        CPPUNIT_ASSERT_EQUAL( (int64_t)0, stream.getPointer() );
 
         // 初期に確保されるバッファーより後ろにseekしても、正しくseekできる
         stream.seek( ByteArrayOutputStreamStub::getUnitBufferLength() + 10 );

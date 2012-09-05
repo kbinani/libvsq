@@ -21,6 +21,30 @@
 VSQ_BEGIN_NAMESPACE
 
 class VSQFileWriter{
+protected:
+    class TempEvent : public Event{
+    public:
+        /**
+         * VSQ メタテキストに出力されるこのオブジェクトの ID
+         */
+        int index;
+
+        int singerHandleIndex;
+        int lyricHandleIndex;
+        int vibratoHandleIndex;
+        int noteHeadHandleIndex;
+
+        explicit TempEvent( const Event &item ) :
+            Event( item )
+        {
+            index = -1;
+            singerHandleIndex = -1;
+            lyricHandleIndex = -1;
+            vibratoHandleIndex = -1;
+            noteHeadHandleIndex = -1;
+        }
+    };
+
 public:
     /**
      * @brief ストリームに出力する
@@ -31,8 +55,7 @@ public:
      */
     void write( Sequence *sequence, OutputStream *stream, int msPreSend, const string &encoding, bool printPitch = false ){
         sequence->updateTotalClocks();
-        //TODO: 型を要検討
-        size_t first_position; //チャンクの先頭のファイル位置
+        int64_t first_position; //チャンクの先頭のファイル位置
 
         // ヘッダ
         // チャンクタイプ
@@ -72,7 +95,7 @@ public:
         vector<MidiEvent> events;
         for( int i = 0; i < sequence->timesigList.size(); i++ ){
             Timesig entry = sequence->timesigList.get( i );
-            events.push_back( MidiEvent::generateTimeSigEvent( entry.clock, entry.numerator, entry.denominator ) );
+            events.push_back( MidiEvent::generateTimeSigEvent( entry.getClock(), entry.numerator, entry.denominator ) );
         }
         TempoList::Iterator itr = sequence->tempoList.iterator();
         while( itr.hasNext() ){
@@ -92,7 +115,7 @@ public:
         stream->write( 0xff );
         stream->write( 0x2f );// イベントタイプEnd of Track
         stream->write( 0x00 );
-        int pos = stream->getPointer();
+        int64_t pos = stream->getPointer();
         stream->seek( first_position - 4 );
         writeUnsignedInt( stream, pos - first_position );
         stream->seek( pos );
@@ -107,6 +130,275 @@ public:
     }
 
 protected:
+    /**
+     * @brief ハンドルをストリームに書き込む
+     * @param item 書き込むハンドル
+     * @param stream 書き込み先のストリーム
+     */
+    void writeHandle( const Handle &item, VSQ_NS::TextStream &stream ){
+        stream.writeLine( string( "[h#" ) + StringUtil::toString( item.index, "%04d" ) + string( "]" ) );
+        if( item.getHandleType() == HandleType::LYRIC ){
+            for( int i = 0; i < item.getLyricCount(); i++ ){
+                stream.writeLine( string( "L" ) + StringUtil::toString( i ) + "=" + item.getLyricAt( i ).toString( item.addQuotationMark ) );
+            }
+        }else if( item.getHandleType() == HandleType::VIBRATO ){
+            stream.writeLine( string( "IconID=" ) + item.iconId );
+            stream.writeLine( string( "IDS=" ) + item.ids );
+            stream.writeLine( string( "Original=" ) + StringUtil::toString( item.original ) );
+            stream.writeLine( string( "Caption=" ) + item.caption );
+            stream.writeLine( string( "Length=" ) + StringUtil::toString( item.getLength() ) );
+            stream.writeLine( string( "StartDepth=" ) + StringUtil::toString( item.startDepth ) );
+            stream.writeLine( string( "DepthBPNum=" ) + StringUtil::toString( item.depthBP.size() ) );
+            if( item.depthBP.size() > 0 ){
+                stream.write( string( "DepthBPX=" ) + StringUtil::toString( item.depthBP.get( 0 ).x, "%.6f" ) );
+                for( int i = 1; i < item.depthBP.size(); i++ ){
+                    stream.write( string( "," ) + StringUtil::toString( item.depthBP.get( i ).x, "%.6f" ) );
+                }
+                stream.writeLine( "" );
+                stream.write( string( "DepthBPY=" ) + StringUtil::toString( item.depthBP.get( 0 ).y ) );
+                for( int i = 1; i < item.depthBP.size(); i++ ){
+                    stream.write( string( "," ) + StringUtil::toString( item.depthBP.get( i ).y ) );
+                }
+                stream.writeLine( "" );
+            }
+            stream.writeLine( string( "StartRate=" ) + StringUtil::toString( item.startRate ) );
+            stream.writeLine( string( "RateBPNum=" ) + StringUtil::toString( item.rateBP.size() ) );
+            if( item.rateBP.size() > 0 ){
+                stream.write( string( "RateBPX=" ) + StringUtil::toString( item.rateBP.get( 0 ).x, "%.6f" ) );
+                for( int i = 1; i < item.rateBP.size(); i++ ){
+                    stream.write( string( "," ) + StringUtil::toString( item.rateBP.get( i ).x, "%.6f" ) );
+                }
+                stream.writeLine( "" );
+                stream.write( string( "RateBPY=" ) + StringUtil::toString( item.rateBP.get( 0 ).y ) );
+                for( int i = 1; i < item.rateBP.size(); i++ ){
+                    stream.write( string( "," ) + StringUtil::toString( item.rateBP.get( i ).y ) );
+                }
+                stream.writeLine( "" );
+            }
+        }else if( item.getHandleType() == HandleType::SINGER ){
+            stream.writeLine( string( "IconID=" ) + item.iconId );
+            stream.writeLine( string( "IDS=" ) + item.ids );
+            stream.writeLine( string( "Original=" ) + StringUtil::toString( item.original ) );
+            stream.writeLine( string( "Caption=" ) + item.caption );
+            stream.writeLine( string( "Length=" ) + StringUtil::toString( item.getLength() ) );
+            stream.writeLine( string( "Language=" ) + StringUtil::toString( item.language ) );
+            stream.writeLine( string( "Program=" ) + StringUtil::toString( item.program ) );
+        }else if( item.getHandleType() == HandleType::NOTE_HEAD ){
+            stream.writeLine( string( "IconID=" ) + item.iconId );
+            stream.writeLine( string( "IDS=" ) + item.ids );
+            stream.writeLine( string( "Original=" ) + StringUtil::toString( item.original ) );
+            stream.writeLine( string( "Caption=" ) + item.caption );
+            stream.writeLine( string( "Length=" ) + StringUtil::toString( item.getLength() ) );
+            stream.writeLine( string( "Duration=" ) + StringUtil::toString( item.duration ) );
+            stream.writeLine( string( "Depth=" ) + StringUtil::toString( item.depth ) );
+        }else if( item.getHandleType() == HandleType::DYNAMICS ){
+            stream.writeLine( string( "IconID=" ) + item.iconId );
+            stream.writeLine( string( "IDS=" ) + item.ids );
+            stream.writeLine( string( "Original=" ) + StringUtil::toString( item.original ) );
+            stream.writeLine( string( "Caption=" ) + item.caption );
+            stream.writeLine( string( "StartDyn=" ) + StringUtil::toString( item.startDyn ) );
+            stream.writeLine( string( "EndDyn=" ) + StringUtil::toString( item.endDyn ) );
+            stream.writeLine( string( "Length=" ) + StringUtil::toString( item.getLength() ) );
+            if( item.dynBP.size() <= 0 ){
+                stream.writeLine( "DynBPNum=0" );
+            }else{
+                int c = item.dynBP.size();
+                stream.writeLine( string( "DynBPNum=" ) + StringUtil::toString( c ) );
+                stream.write( string( "DynBPX=" ) + StringUtil::toString( item.dynBP.get( 0 ).x, "%.6f" ) );
+                for( int i = 1; i < c; i++ ){
+                    stream.write( string( "," ) + StringUtil::toString( item.dynBP.get( i ).x, "%.6f" ) );
+                }
+                stream.writeLine( "" );
+                stream.write( string( "DynBPY=" ) + StringUtil::toString( item.dynBP.get( 0 ).y ) );
+                for( int i = 1; i < c; i++ ){
+                    stream.write( string( "," ) + StringUtil::toString( item.dynBP.get( i ).y ) );
+                }
+                stream.writeLine( "" );
+            }
+        }
+    }
+
+    /**
+     * @brief テキストストリームにイベントを書き出す
+     * @param stream (TextStream) 出力先
+     * @param printTargets (table) 出力するアイテムのリスト
+     * @todo boost使ってる箇所をStringUtil使うよう変更
+     */
+    void writeEvent( const TempEvent &item, VSQ_NS::TextStream &stream, VSQ_NS::EventWriteOption printTargets = EventWriteOption() ) const{
+        stream.write( "[ID#" ).write( (boost::format( "%04d" ) % item.index).str() ).writeLine( "]" );
+        stream.write( "Type=" ).writeLine( EventType::toString( item.type ) );
+        if( item.type == EventType::NOTE ){
+            if( printTargets.length ){
+                stream.write( "Length=" ).writeLine( (boost::format( "%ld" ) % item.getLength()).str() );
+            }
+            if( printTargets.note ){
+                stream.write( "Note#=" ).writeLine( (boost::format( "%d" ) % item.note).str() );
+            }
+            if( printTargets.dynamics ){
+                stream.write( "Dynamics=" ).writeLine( (boost::format( "%d" ) % item.dynamics).str() );
+            }
+            if( printTargets.pmBendDepth ){
+                stream.write( "PMBendDepth=" ).writeLine( (boost::format( "%d" ) % item.pmBendDepth).str() );
+            }
+            if( printTargets.pmBendLength ){
+                stream.write( "PMBendLength=" ).writeLine( (boost::format( "%d" ) % item.pmBendLength).str() );
+            }
+            if( printTargets.pmbPortamentoUse ){
+                stream.write( "PMbPortamentoUse=" ).writeLine( (boost::format( "%d" ) % item.pmbPortamentoUse).str() );
+            }
+            if( printTargets.demDecGainRate ){
+                stream.write( "DEMdecGainRate=" ).writeLine( (boost::format( "%d" ) % item.demDecGainRate).str() );
+            }
+            if( printTargets.demAccent ){
+                stream.write( "DEMaccent=" ).writeLine( (boost::format( "%d" ) % item.demAccent).str() );
+            }
+            if( printTargets.preUtterance ){
+                //TODO:
+    //            stream.writeLine( "PreUtterance=" + ustEvent.preUtterance );
+            }
+            if( printTargets.voiceOverlap ){
+                //TODO:
+    //            stream.writeLine( "VoiceOverlap=" + ustEvent.voiceOverlap );
+            }
+            if( item.lyricHandle.getHandleType() == HandleType::LYRIC ){
+                stream.write( "LyricHandle=h#" ).writeLine( (boost::format( "%04d" ) % item.lyricHandle.index).str() );
+            }
+            if( item.vibratoHandle.getHandleType() == HandleType::VIBRATO ){
+                stream.write( "VibratoHandle=h#" ).writeLine( (boost::format( "%04d" ) % item.vibratoHandle.index).str() );
+                stream.write( "VibratoDelay=" ).writeLine( (boost::format( "%d" ) % item.vibratoDelay).str() );
+            }
+            if( item.noteHeadHandle.getHandleType() == HandleType::NOTE_HEAD ){
+                stream.write( "NoteHeadHandle=h#" ).writeLine( (boost::format( "%04d" ) % item.noteHeadHandle.index).str() );
+            }
+        }else if( item.type == EventType::SINGER ){
+            stream.write( "IconHandle=h#" ).writeLine( (boost::format( "%04d" ) % item.singerHandle.index).str() );
+        }else if( item.type == EventType::ICON ){
+            stream.write( "IconHandle=h#" ).writeLine( (boost::format( "%04d" ) % item.iconDynamicsHandle.index).str() );
+            stream.write( "Note#=" ).writeLine( (boost::format( "%d" ) % item.note).str() );
+        }
+    }
+
+    /**
+     * @brief トラックのメタテキストを、テキストストリームに出力する
+     * @param track 出力するトラック
+     * @param stream 出力先のストリーム
+     * @param eos イベントリストの末尾を表す番号
+     * @param start Tick 単位の出力開始時刻
+     * @param printPitch pitch を含めて出力するかどうか(現在は <code>false</code> 固定で、引数は無視される)
+     * @param master 出力する Master 情報。出力しない場合は NULL を指定する
+     * @param mixer 出力する Mixer 情報。出力しない場合は NULL を指定する
+     */
+    void printMetaText( const Track &t, TextStream &stream, int eos, tick_t start, bool printPitch = false, Master *master = 0, Mixer *mixer = 0 ){
+        Track track = t;
+        //if( common ~= nil ){
+            track.getCommon()->write( stream );
+        //}
+        if( master ){
+            master->write( stream );
+        }
+        if( mixer ){
+            mixer->write( stream );
+        }
+
+        vector<Handle> handle;
+        {
+            vector<TempEvent *> eventList;
+            Event::ListIterator itr = track.getEvents()->iterator();
+            while( itr.hasNext() ){
+                Event *item = itr.next();
+                eventList.push_back( new TempEvent( *item ) );
+            }
+
+            handle = writeEventList( eventList, stream, eos );
+            for( vector<TempEvent *>::iterator itr = eventList.begin(); itr != eventList.end(); ++itr ){
+                TempEvent *item = *itr;
+                writeEvent( *item, stream );
+                delete item;
+            }
+        }
+        for( int i = 0; i < handle.size(); ++i ){
+            writeHandle( handle[i], stream );
+        }
+        string version = track.getCommon()->version;
+        if( track.getCurve( "pit" )->size() > 0 ){
+            track.getCurve( "pit" )->print( stream, start, "[PitchBendBPList]" );
+        }
+        if( track.getCurve( "pbs" )->size() > 0 ){
+            track.getCurve( "pbs" )->print( stream, start, "[PitchBendSensBPList]" );
+        }
+        if( track.getCurve( "dyn" )->size() > 0 ){
+            track.getCurve( "dyn" )->print( stream, start, "[DynamicsBPList]" );
+        }
+        if( track.getCurve( "bre" )->size() > 0 ){
+            track.getCurve( "bre" )->print( stream, start, "[EpRResidualBPList]" );
+        }
+        if( track.getCurve( "bri" )->size() > 0 ){
+            track.getCurve( "bri" )->print( stream, start, "[EpRESlopeBPList]" );
+        }
+        if( track.getCurve( "cle" )->size() > 0 ){
+            track.getCurve( "cle" )->print( stream, start, "[EpRESlopeDepthBPList]" );
+        }
+        if( version.substr( 0, 4 ) == "DSB2" ){
+            if( track.getCurve( "harmonics" )->size() > 0 ){
+                track.getCurve( "harmonics" )->print( stream, start, "[EpRSineBPList]" );
+            }
+            if( track.getCurve( "fx2depth" )->size() > 0 ){
+                track.getCurve( "fx2depth" )->print( stream, start, "[VibTremDepthBPList]" );
+            }
+
+            if( track.getCurve( "reso1Freq" )->size() > 0 ){
+                track.getCurve( "reso1Freq" )->print( stream, start, "[Reso1FreqBPList]" );
+            }
+            if( track.getCurve( "reso2Freq" )->size() > 0 ){
+                track.getCurve( "reso2Freq" )->print( stream, start, "[Reso2FreqBPList]" );
+            }
+            if( track.getCurve( "reso3Freq" )->size() > 0 ){
+                track.getCurve( "reso3Freq" )->print( stream, start, "[Reso3FreqBPList]" );
+            }
+            if( track.getCurve( "reso4Freq" )->size() > 0 ){
+                track.getCurve( "reso4Freq" )->print( stream, start, "[Reso4FreqBPList]" );
+            }
+
+            if( track.getCurve( "reso1BW" )->size() > 0 ){
+                track.getCurve( "reso1BW" )->print( stream, start, "[Reso1BWBPList]" );
+            }
+            if( track.getCurve( "reso2BW" )->size() > 0 ){
+                track.getCurve( "reso2BW" )->print( stream, start, "[Reso2BWBPList]" );
+            }
+            if( track.getCurve( "reso3BW" )->size() > 0 ){
+                track.getCurve( "reso3BW" )->print( stream, start, "[Reso3BWBPList]" );
+            }
+            if( track.getCurve( "reso4BW" )->size() > 0 ){
+                track.getCurve( "reso4BW" )->print( stream, start, "[Reso4BWBPList]" );
+            }
+
+            if( track.getCurve( "reso1Amp" )->size() > 0 ){
+                track.getCurve( "reso1Amp" )->print( stream, start, "[Reso1AmpBPList]" );
+            }
+            if( track.getCurve( "reso2Amp" )->size() > 0 ){
+                track.getCurve( "reso2Amp" )->print( stream, start, "[Reso2AmpBPList]" );
+            }
+            if( track.getCurve( "reso3Amp" )->size() > 0 ){
+                track.getCurve( "reso3Amp" )->print( stream, start, "[Reso3AmpBPList]" );
+            }
+            if( track.getCurve( "reso4Amp" )->size() > 0 ){
+                track.getCurve( "reso4Amp" )->print( stream, start, "[Reso4AmpBPList]" );
+            }
+        }
+
+        if( track.getCurve( "gen" )->size() > 0 ){
+            track.getCurve( "gen" )->print( stream, start, "[GenderFactorBPList]" );
+        }
+        if( track.getCurve( "por" )->size() > 0 ){
+            track.getCurve( "por" )->print( stream, start, "[PortamentoTimingBPList]" );
+        }
+        if( version.substr( 0, 4 ) == "DSB3" ){
+            if( track.getCurve( "ope" )->size() > 0 ){
+                track.getCurve( "ope" )->print( stream, start, "[OpeningBPList]" );
+            }
+        }
+    }
+
     /**
      * @brief トラックをストリームに出力する
      * @param sequence (Sequence) 出力するシーケンス
@@ -124,7 +416,7 @@ protected:
         // データ長。とりあえず0
         char empty[] = { 0x00, 0x00, 0x00, 0x00 };
         stream->write( empty, 0, 4 );
-        int first_position = stream->getPointer();
+        int64_t first_position = stream->getPointer();
         // トラック名
         MidiEvent::writeDeltaClock( stream, 0x00 );// デルタタイム
         stream->write( 0xff );// ステータスタイプ
@@ -136,7 +428,7 @@ protected:
 
         // Meta Textを準備
         TextStream textStream;
-        sequence->track[track].printMetaText( textStream, sequence->getTotalClocks() + 120, 0, printPitch, master, mixer );
+        printMetaText( sequence->track[track], textStream, sequence->getTotalClocks() + 120, 0, printPitch, master, mixer );
         tick_t lastClock = 0;
         vector<MidiEvent> meta = getMidiEventsFromMetaText( &textStream, encoding );
         for( int i = 0; i < meta.size(); i++ ){
@@ -172,7 +464,7 @@ protected:
         stream->write( 0xff );
         stream->write( 0x2f );
         stream->write( 0x00 );
-        int pos = stream->getPointer();
+        int64_t pos = stream->getPointer();
         stream->seek( first_position - 4 );
         writeUnsignedInt( stream, pos - first_position );
         stream->seek( pos );
@@ -325,6 +617,99 @@ protected:
     }
 
 private:
+    /**
+     * @brief イベントリストをテキストストリームに出力する
+     * @param stream 出力先のストリーム
+     * @param eos EOS として出力する Tick 単位の時刻
+     * @return リスト中のイベントに含まれるハンドルの一覧
+     */
+    std::vector<VSQ_NS::Handle> writeEventList( vector<TempEvent *> &eventList, TextStream &stream, VSQ_NS::tick_t eos ){
+        vector<Handle> handles = getHandleList( eventList );
+        stream.writeLine( "[EventList]" );
+        vector<TempEvent> temp;
+        for( vector<TempEvent *>::iterator itr = eventList.begin(); itr != eventList.end(); ++itr ){
+            temp.push_back( **itr );
+        }
+        std::sort( temp.begin(), temp.end(), Event::compare );
+        int i = 0;
+        while( i < temp.size() ){
+            TempEvent item = temp[i];
+            if( ! item.isEOS() ){
+                ostringstream ids;
+                ids << "ID#" << (boost::format( "%04d" ) % item.index).str();
+                tick_t clock = temp[i].clock;
+                while( i + 1 < temp.size() && clock == temp[i + 1].clock ){
+                    i++;
+                    ids << ",ID#" << (boost::format( "%04d" ) % temp[i].index).str();
+                }
+                ostringstream oss;
+                oss << clock << "=" << ids.str();
+                stream.writeLine( oss.str() );
+            }
+            i++;
+        }
+        stream.write( (boost::format( "%d" ) % eos).str() ).writeLine( "=EOS" );
+        return handles;
+    }
+
+    /**
+     * @brief リスト内のイベントから、ハンドルの一覧を作成する。同時に、各イベント、ハンドルの番号を設定する
+     * @return (table<Handle>) ハンドルの一覧
+     */
+    const std::vector<Handle> getHandleList( vector<TempEvent *> &eventList ){
+        vector<Handle> handle;
+        int current_id = -1;
+        int current_handle = -1;
+        bool add_quotation_mark = true;
+        for( vector<TempEvent *>::iterator itr = eventList.begin(); itr != eventList.end(); ++itr ){
+            TempEvent *item = *itr;
+            current_id = current_id + 1;
+            item->index = current_id;
+            // SingerHandle
+            if( item->singerHandle.getHandleType() == HandleType::SINGER ){
+                current_handle = current_handle + 1;
+                item->singerHandle.index = current_handle;
+                handle.push_back( item->singerHandle );
+                item->singerHandleIndex = current_handle;
+                VoiceLanguage::VoiceLanguageEnum lang = VoiceLanguage::valueFromSingerName( item->singerHandle.ids );
+                add_quotation_mark = lang == VoiceLanguage::JAPANESE;
+            }
+            // LyricHandle
+            if( item->lyricHandle.getHandleType() == HandleType::LYRIC ){
+                current_handle = current_handle + 1;
+                item->lyricHandle.index = current_handle;
+                item->lyricHandle.addQuotationMark = add_quotation_mark;
+                handle.push_back( item->lyricHandle );
+                item->lyricHandleIndex = current_handle;
+            }
+            // VibratoHandle
+            if( item->vibratoHandle.getHandleType() == HandleType::VIBRATO ){
+                current_handle = current_handle + 1;
+                item->vibratoHandle.index = current_handle;
+                handle.push_back( item->vibratoHandle );
+                item->vibratoHandleIndex = current_handle;
+            }
+            // NoteHeadHandle
+            if( item->noteHeadHandle.getHandleType() == HandleType::NOTE_HEAD ){
+                current_handle = current_handle + 1;
+                item->noteHeadHandle.index = current_handle;
+                handle.push_back( item->noteHeadHandle );
+                item->noteHeadHandleIndex = current_handle;
+            }
+            // IconDynamicsHandle
+            if( item->iconDynamicsHandle.getHandleType() == HandleType::DYNAMICS ){
+                current_handle = current_handle + 1;
+                item->iconDynamicsHandle.index = current_handle;
+                item->iconDynamicsHandle.setLength( item->getLength() );
+                handle.push_back( item->iconDynamicsHandle );
+                // IconDynamicsHandleは、歌手ハンドルと同じ扱いなので
+                // _singerHandleIndexでよい
+                item->singerHandleIndex = current_handle;
+            }
+        }
+        return handle;
+    }
+
     /**
      * @brief SMF のトラックヘッダー文字列を取得する
      */
