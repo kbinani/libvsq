@@ -70,7 +70,7 @@ public:
         stream->write( 0x00 );
         stream->write( 0x01 );
         // トラック数
-        writeUnsignedShort( stream, sequence->track.size() );
+        writeUnsignedShort( stream, sequence->track.size() + 1 );
         // 時間単位
         stream->write( 0x01 );
         stream->write( 0xe0 );
@@ -122,9 +122,9 @@ public:
 
         // トラック
         Sequence temp = sequence->clone();
-        _printTrack( &temp, 1, stream, msPreSend, encoding, printPitch, &sequence->master, &sequence->mixer );
+        _printTrack( &temp, 0, stream, msPreSend, encoding, printPitch, &sequence->master, &sequence->mixer );
         int count = sequence->track.size();
-        for( int track = 2; track < count; track++ ){
+        for( int track = 1; track < count; track++ ){
             _printTrack( sequence, track, stream, msPreSend, encoding, printPitch, 0, 0 );
         }
     }

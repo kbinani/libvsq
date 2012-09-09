@@ -66,7 +66,7 @@ class VocaloidMidiEventListFactoryTest : public CppUnit::TestCase{
 public:
     void test_generateExpressionNRPN(){
         Sequence sequence( "Miku", 1, 4, 4, 500000 );
-        Track *track = &(sequence.track[1]);
+        Track *track = &(sequence.track[0]);
         BPList *dynamics = track->getCurve( "DYN" );
         dynamics->add( 480, 127 );
         dynamics->add( 1920, 0 );
@@ -183,15 +183,15 @@ public:
         noteEvent.vibratoHandle.iconId = "$04040005";
         noteEvent.lyricHandle = Handle( HandleType::LYRIC );
         noteEvent.lyricHandle.setLyricAt( 0, Lyric( "あ", "a" ) );
-        sequence.track[1].getCommon()->version = "DSB3";
+        sequence.track[0].getCommon()->version = "DSB3";
 
         // lastDelay が nil であるために、CVM_NM_VERSION_AND_DEVICE が出力されるケース
         int lastDelay;// = nil;
         int noteLocation = 1;
         int msPreSend = 500;
-        int track = 1;
+        int track = 0;
         int delay;
-        NrpnEvent actual = VocaloidMidiEventListFactoryStub::generateNoteNRPN( &sequence.track[1], &sequence.tempoList, &noteEvent, msPreSend, noteLocation, (int *)0, &delay );
+        NrpnEvent actual = VocaloidMidiEventListFactoryStub::generateNoteNRPN( &sequence.track[0], &sequence.tempoList, &noteEvent, msPreSend, noteLocation, (int *)0, &delay );
         vector<NrpnEvent> actualExpanded = actual.expand();
         CPPUNIT_ASSERT_EQUAL( (size_t)24, actualExpanded.size() );
         CPPUNIT_ASSERT_EQUAL( 500, delay );
@@ -369,7 +369,7 @@ public:
         CPPUNIT_ASSERT_EQUAL( (size_t)19, actualExpanded.size() );
         CPPUNIT_ASSERT_EQUAL( 500, delay );
 
-        sequence.track[1].getCommon()->version = "DSB2";
+        sequence.track[0].getCommon()->version = "DSB2";
         // VOCALOID1 であるために、0x5011が出力され、CVM_NM_PHONETIC_SYMBOL_CONTINUATIONとVOCALOID2用のNRPNが出力されない
         lastDelay = 500;
         noteEvent.vibratoHandle = Handle();
@@ -386,11 +386,11 @@ public:
 
     void testGeneratePitchBendNRPN(){
         Sequence sequence( "Miku", 1, 4, 4, 500000 );
-        BPList *pit = sequence.track[1].getCurve( "PIT" );
+        BPList *pit = sequence.track[0].getCurve( "PIT" );
         pit->add( 480, 8191 );
         pit->add( 1920, -8192 );
 
-        vector<NrpnEvent> actual = VocaloidMidiEventListFactoryStub::generatePitchBendNRPN( &sequence.track[1], &sequence.tempoList, 500 );
+        vector<NrpnEvent> actual = VocaloidMidiEventListFactoryStub::generatePitchBendNRPN( &sequence.track[0], &sequence.tempoList, 500 );
         CPPUNIT_ASSERT_EQUAL( (size_t)2, actual.size() );
 
         vector<NrpnEvent> expandedActual = actual[0].expand();
@@ -418,11 +418,11 @@ public:
 
     void testGeneratePitchBendSensitivityNRPN(){
         Sequence sequence( "Miku", 1, 4, 4, 500000 );
-        BPList *pbs = sequence.track[1].getCurve( "PBS" );
+        BPList *pbs = sequence.track[0].getCurve( "PBS" );
         pbs->add( 480, 0 );
         pbs->add( 1920, 24 );
 
-        vector<NrpnEvent> actual = VocaloidMidiEventListFactoryStub::generatePitchBendSensitivityNRPN( &sequence.track[1], &sequence.tempoList, 500 );
+        vector<NrpnEvent> actual = VocaloidMidiEventListFactoryStub::generatePitchBendSensitivityNRPN( &sequence.track[0], &sequence.tempoList, 500 );
         CPPUNIT_ASSERT_EQUAL( (size_t)2, actual.size() );
 
         vector<NrpnEvent> expandedActual = actual[0].expand();
@@ -564,7 +564,7 @@ public:
 
     void testGenerateVoiceChangeParameterNRPN(){
         Sequence sequence( "Foo", 1, 4, 4, 500000 );
-        Track *track = &sequence.track[1];
+        Track *track = &sequence.track[0];
 
         // 全種類のカーブに、データ点を1個ずつ入れる
         vector<string> curveNames;
@@ -621,7 +621,7 @@ public:
 
     void testAddVoiceChangeParameters(){
         Sequence sequence( "Foo", 1, 4, 4, 500000 );
-        BPList *list = sequence.track[1].getCurve( "BRE" );
+        BPList *list = sequence.track[0].getCurve( "BRE" );
         list->clear();
         list->add( 480, 0 );
         list->add( 1920, 127 );
@@ -666,7 +666,7 @@ public:
 
     void testGenerateFx2DepthNRPN(){
         Sequence sequence( "Miku", 1, 4, 4, 500000 );
-        Track *track = &sequence.track[1];
+        Track *track = &sequence.track[0];
         BPList *list = track->getCurve( "fx2depth" );
         list->clear();
         list->add( 480, 64 );
@@ -734,7 +734,7 @@ public:
 
     void testGenerateNRPN(){
         Sequence sequence( "Miku", 1, 4, 4, 500000 );
-        Track *track = &sequence.track[1];
+        Track *track = &sequence.track[0];
 
         // singerEvent
         Event singerEvent( 1920, EventType::SINGER );

@@ -96,7 +96,7 @@ public:
         stream.close();
 
         // シーケンス全体
-        CPPUNIT_ASSERT_EQUAL( (size_t)2, sequence.track.size() );
+        CPPUNIT_ASSERT_EQUAL( (size_t)1, sequence.track.size() );
         // [Master]
         CPPUNIT_ASSERT_EQUAL( 1, sequence.master.preMeasure );
         // [Mixer]
@@ -111,7 +111,7 @@ public:
         CPPUNIT_ASSERT_EQUAL( 0, sequence.mixer.slave[0].solo );
 
         // トラック1
-        Track *track1 = &sequence.track[1];
+        Track *track1 = &sequence.track[0];
         // [Common]
         CPPUNIT_ASSERT_EQUAL( string( "DSB301" ), track1->getCommon()->version );
         CPPUNIT_ASSERT_EQUAL( string( "Voice1" ), track1->getCommon()->name );

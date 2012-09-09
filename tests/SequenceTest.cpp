@@ -14,37 +14,9 @@ public:
         CPPUNIT_ASSERT_EQUAL( (tick_t)(1 * 480 * 4 / 4 * 4), sequence.getTotalClocks() );
 
         // track
-        CPPUNIT_ASSERT_EQUAL( (size_t)2, sequence.track.size() );
-        // 第1トラック, master track
-        Track track0 = sequence.track[0];
-        /*assert_nil( track0.common );
-        assert_nil( track0:getCurve( "pit" ) );
-        assert_nil( track0:getCurve( "pbs" ) );
-        assert_nil( track0:getCurve( "dyn" ) );
-        assert_nil( track0:getCurve( "bre" ) );
-        assert_nil( track0:getCurve( "bri" ) );
-        assert_nil( track0:getCurve( "cle" ) );
-        assert_nil( track0:getCurve( "reso1Freq" ) );
-        assert_nil( track0:getCurve( "reso2Freq" ) );
-        assert_nil( track0:getCurve( "reso3Freq" ) );
-        assert_nil( track0:getCurve( "reso4Freq" ) );
-        assert_nil( track0:getCurve( "reso1BW" ) );
-        assert_nil( track0:getCurve( "reso2BW" ) );
-        assert_nil( track0:getCurve( "reso3BW" ) );
-        assert_nil( track0:getCurve( "reso4BW" ) );
-        assert_nil( track0:getCurve( "reso1Amp" ) );
-        assert_nil( track0:getCurve( "reso2Amp" ) );
-        assert_nil( track0:getCurve( "reso3Amp" ) );
-        assert_nil( track0:getCurve( "reso4Amp" ) );
-        assert_nil( track0:getCurve( "harmonics" ) );
-        assert_nil( track0:getCurve( "fx2depth" ) );
-        assert_nil( track0:getCurve( "gen" ) );
-        assert_nil( track0:getCurve( "por" ) );
-        assert_nil( track0:getCurve( "ope" ) );
-        assert_nil( track0:getCurve( "pitch" ) );
-        assert_nil( track0.events );*/
-        // 第2トラック, 普通のトラック
-        Track track1 = sequence.track[1];
+        CPPUNIT_ASSERT_EQUAL( (size_t)1, sequence.track.size() );
+        // 第1トラック
+        Track track1 = sequence.track[0];
         /*assert_not_nil( track1.common );
         assert_not_nil( track1:getCurve( "pit" ) );
         assert_not_nil( track1:getCurve( "pbs" ) );
@@ -142,7 +114,7 @@ public:
         Event note( 1920, EventType::NOTE );
         note.setLength( 480 );
         note.note = 60;
-        sequence.track[1].getEvents()->add( note );
+        sequence.track[0].getEvents()->add( note );
         sequence.updateTotalClocks();
         CPPUNIT_ASSERT_EQUAL( (tick_t)2400, sequence.getTotalClocks() );
     }

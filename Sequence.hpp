@@ -32,13 +32,12 @@ using namespace std;
 
 /**
  * @brief VSQ ファイルのシーケンスを保持するクラス
- * @todo track の0番目が常に使われないので、なんとかする。C#の時代では、0番目はMasterTrackとしてMaster, Mixerあたりの情報を持っていたが、もはやこれらはSequenceの持ち物となったので。
  * @todo PreMeasureの取得方法が２通り以上ある。Sequence::master.preMeasureとSequence::getPreMeasure
  */
 class Sequence{
 public:
     /**
-     * @brief トラックのリスト。最初のトラックは MasterTrack であり、通常の音符が格納されるトラックはインデックス 1 以降となる
+     * @brief トラックのリスト
      */
     vector<Track> track;
 
@@ -95,7 +94,6 @@ public:
     explicit Sequence( const string &singer, int preMeasure, int numerator, int denominator, int tempo ){
         _totalClocks = preMeasure * 480 * 4 / denominator * numerator;
 
-        track.push_back( Track() );
         track.push_back( Track( "Voice1", singer ) );
         master = Master( preMeasure );
         mixer = Mixer( 0, 0, 0, 0 );
@@ -197,7 +195,7 @@ public:
     void updateTotalClocks(){
         tick_t max = getPreMeasureClocks();
         vector<string> curveNameList = getCurveNameList();
-        for( int i = 1; i < track.size(); i++ ){
+        for( int i = 0; i < track.size(); i++ ){
             Track *track = &(this->track[i]);
             int numEvents = track->getEvents()->size();
             if( 0 < numEvents ){

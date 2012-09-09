@@ -158,13 +158,13 @@ class VSQFileWriterTest : public CppUnit::TestCase{
                        "reso3amp", "reso3bw", "reso3freq",
                        "reso4amp", "reso4bw", "reso4freq" };
         for( int i = 0; i < CURVE_COUNT; i++ ){
-            BPList *list = sequence.track[1].getCurve( curveNames[i] );
+            BPList *list = sequence.track[0].getCurve( curveNames[i] );
             list->add( 1920, 1 + i );
         }
         Event noteEvent( 1920, EventType::NOTE );
         noteEvent.note = 60;
         noteEvent.setLength( 480 );
-        sequence.track[1].getEvents()->add( noteEvent );
+        sequence.track[0].getEvents()->add( noteEvent );
 
         ByteArrayOutputStream stream;
         VSQFileWriter writer;

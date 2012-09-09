@@ -76,7 +76,7 @@ public:
 
         int num_track = events.size();
         sequence.track.clear();
-        for( int i = 0; i < num_track; i++ ){
+        for( int i = 1; i < num_track; i++ ){
             TextStream textStream;
             string trackName;
             getMetatextByMidiEventList( events[i], encoding, textStream, trackName );
