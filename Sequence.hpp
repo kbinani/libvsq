@@ -85,6 +85,13 @@ private:
 public:
     /**
      * @brief 初期化を行う
+     */
+    explicit Sequence(){
+        init( "", 1, 4, 4, baseTempo );
+    }
+
+    /**
+     * @brief 初期化を行う
      * @param singer (string) 歌手名
      * @param preMeasure (int) 小節単位のプリメジャー
      * @param numerator (int) 拍子の分子の値
@@ -92,14 +99,7 @@ public:
      * @param tempo (int) テンポ値。四分音符の長さのマイクロ秒単位の長さ
      */
     explicit Sequence( const string &singer, int preMeasure, int numerator, int denominator, int tempo ){
-        _totalClocks = preMeasure * 480 * 4 / denominator * numerator;
-
-        track.push_back( Track( "Voice1", singer ) );
-        master = Master( preMeasure );
-        mixer = Mixer( 0, 0, 0, 0 );
-        mixer.slave.push_back( MixerItem( 0, 0, 0, 0 ) );
-        timesigList.push( Timesig( numerator, denominator, 0 ) );
-        tempoList.push( Tempo( 0, tempo ) );
+        init( singer, preMeasure, numerator, denominator, tempo );
     }
 
     /**
@@ -285,6 +285,24 @@ private:
 
         int remained = pre_measure - last_bar_count;// プリメジャーの終わりまでの残り小節数
         return last_clock + (int)::floor( remained * last_numerator * 480 * 4 / (double)last_denominator );
+    }
+
+    /**
+     * @brief 初期化を行う
+     * @param singer (string) 歌手名
+     * @param preMeasure (int) 小節単位のプリメジャー
+     * @param numerator (int) 拍子の分子の値
+     * @param denominator (int) 拍子の分母の値
+     * @param tempo (int) テンポ値。四分音符の長さのマイクロ秒単位の長さ
+     */
+    void init( const string &singer, int preMeasure, int numerator, int denominator, int tempo ){
+        _totalClocks = preMeasure * 480 * 4 / denominator * numerator;
+        track.push_back( Track( "Voice1", singer ) );
+        master = Master( preMeasure );
+        mixer = Mixer( 0, 0, 0, 0 );
+        mixer.slave.push_back( MixerItem( 0, 0, 0, 0 ) );
+        timesigList.push( Timesig( numerator, denominator, 0 ) );
+        tempoList.push( Tempo( 0, tempo ) );
     }
 };
 
