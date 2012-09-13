@@ -151,7 +151,7 @@ protected:
         }
         if( singer_event >= 0 ){
             // 見つかった場合
-            vector<NrpnEvent> singerNrpnList = generateSingerNRPN( tempoList, &events->get( singer_event ), 0 );
+            vector<NrpnEvent> singerNrpnList = generateSingerNRPN( tempoList, events->get( singer_event ), 0 );
             list.insert( list.end(), singerNrpnList.begin(), singerNrpnList.end() );
         }else{
             // 多分ありえないと思うが、歌手が不明の場合。
@@ -221,7 +221,7 @@ protected:
                 last_note_end = item.clock + item.getLength();
             }else if( item.type == EventType::SINGER ){
                 if( i > note_start && i != singer_event ){
-                    vector<NrpnEvent> singerNrpn = generateSingerNRPN( tempoList, &item, msPreSend );
+                    vector<NrpnEvent> singerNrpn = generateSingerNRPN( tempoList, item, msPreSend );
                     list.insert( list.end(), singerNrpn.begin(), singerNrpn.end() );
                 }
             }
@@ -272,13 +272,13 @@ protected:
      * @param msPreSend (int) ミリ秒単位のプリセンド時間
      * @return (table<NrpnEvent>) NrpnEvent の配列
      */
-    static vector<NrpnEvent> generateSingerNRPN( TempoList *tempoList, const Event *singerEvent, int preSendMilliseconds ){
-        tick_t clock = singerEvent->clock;
+    static vector<NrpnEvent> generateSingerNRPN( TempoList *tempoList, const Event &singerEvent, int preSendMilliseconds ){
+        tick_t clock = singerEvent.clock;
         Handle singer_handle;
 
         double clock_msec = tempoList->getSecFromClock( clock ) * 1000.0;
 
-        double msEnd = tempoList->getSecFromClock( singerEvent->clock + singerEvent->getLength() ) * 1000.0;
+        double msEnd = tempoList->getSecFromClock( singerEvent.clock + singerEvent.getLength() ) * 1000.0;
         int duration = (int)::floor( ::ceil( msEnd - clock_msec ) );
 
         int duration0, duration1;
