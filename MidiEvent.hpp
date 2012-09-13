@@ -187,7 +187,7 @@ public:
     static void writeDeltaClock( VSQ_NS::OutputStream *stream, int number )
     {
         std::vector<bool> bits;
-        long val = 0x1;
+        uint64_t val = 0x1;
         bits.push_back( (number & val) == val );
         for ( int i = 1; i < 64; i++ ) {
             val = val << 1;
