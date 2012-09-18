@@ -51,6 +51,11 @@ protected:
         int lyricHandleIndex;
         int vibratoHandleIndex;
         int noteHeadHandleIndex;
+
+    public:
+        void setEOS( bool value ){
+            isEos = value;
+        }
     };
 
     class TentativeTrack : public Track{
@@ -126,6 +131,7 @@ protected:
         result.demDecGainRate = 50;
         result.demAccent = 50;
         result.vibratoDelay = 0;
+        result.setEOS( false );
         lastLine = stream.readLine();
         while( lastLine.find( "[" ) != 0 ){
             vector<string> parameters = StringUtil::explode( "=", lastLine );

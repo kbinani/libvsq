@@ -43,12 +43,14 @@ public:
         Event event;
         CPPUNIT_ASSERT_EQUAL( (tick_t)0, event.clock );
         CPPUNIT_ASSERT_EQUAL( 0, event.id );
+        CPPUNIT_ASSERT( event.isEOS() );
     }
     
     void testConstructWithLine()
     {
         Event event( "123=ID#0001" );
         CPPUNIT_ASSERT_EQUAL( (tick_t)123, event.clock );
+        CPPUNIT_ASSERT( false == event.isEOS() );
     
         event = Event( "1230=EOS" );
         CPPUNIT_ASSERT_EQUAL( (tick_t)1230, event.clock );
@@ -60,6 +62,7 @@ public:
     
         CPPUNIT_ASSERT_EQUAL( (tick_t)1, event.clock );
         CPPUNIT_ASSERT_EQUAL( EventType::NOTE, event.type );
+        CPPUNIT_ASSERT( false == event.isEOS() );
     }
     
     void testEquals()

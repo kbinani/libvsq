@@ -126,6 +126,7 @@ public:
                 Event item = track1->getEvents()->get( 0 );
                 CPPUNIT_ASSERT_EQUAL( (tick_t)0, item.clock );
                 CPPUNIT_ASSERT_EQUAL( EventType::SINGER, item.type );
+                CPPUNIT_ASSERT( false == item.isEOS() );
                 {
                     //歌手ハンドルの内容物をテスト
                     CPPUNIT_ASSERT_EQUAL( HandleType::SINGER, item.singerHandle.getHandleType() );
@@ -158,6 +159,7 @@ public:
                 CPPUNIT_ASSERT_EQUAL( 0, item.pmbPortamentoUse );
                 CPPUNIT_ASSERT_EQUAL( 0, item.demDecGainRate );
                 CPPUNIT_ASSERT_EQUAL( 0, item.demAccent );
+                CPPUNIT_ASSERT( false == item.isEOS() );
                 {
                     // 歌詞ハンドルの内容物が正しいこと
                     CPPUNIT_ASSERT_EQUAL( HandleType::LYRIC, item.lyricHandle.getHandleType() );
