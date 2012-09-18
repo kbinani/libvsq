@@ -195,13 +195,45 @@ public:
         //fail();
     }
     
-    /**
-     * @todo
-     */
     void testGetSingerEventAt(){
-        //fail();
+        Track track( "", "" );
+        track.getEvents()->clear();
+        {
+            Event actual = track.getSingerEventAt( 0 );
+            CPPUNIT_ASSERT( actual.isEOS() );
+        }
+
+        Event singer1( 0, EventType::SINGER );
+        track.getEvents()->add( singer1, 1 );
+
+        Event note1( 480, EventType::NOTE );
+        track.getEvents()->add( note1, 2 );
+
+        Event singer2( 480, EventType::SINGER );
+        track.getEvents()->add( singer2, 3 );
+
+        {
+            Event actual = track.getSingerEventAt( 0 );
+            CPPUNIT_ASSERT_EQUAL( 1, actual.id );
+        }
+        {
+            Event actual = track.getSingerEventAt( 479 );
+            CPPUNIT_ASSERT_EQUAL( 1, actual.id );
+        }
+        {
+            Event actual = track.getSingerEventAt( 480 );
+            CPPUNIT_ASSERT_EQUAL( 3, actual.id );
+        }
+        {
+            Event actual = track.getSingerEventAt( 10000 );
+            CPPUNIT_ASSERT_EQUAL( 3, actual.id );
+        }
+        {
+            Event actual = track.getSingerEventAt( -100 );
+            CPPUNIT_ASSERT( actual.isEOS() );
+        }
     }
-    
+
     /**
      * @todo
      */

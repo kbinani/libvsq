@@ -395,23 +395,25 @@ public:
         */
 
     /**
-        -- 指定したゲートタイムにおいて、歌唱を担当している歌手のVsqEventを取得します．
-        --
-        -- @param clock [int]
-        -- @return [VsqEvent]
-        function this:getSingerEventAt( clock )
-            local last = nil;
-            local itr;
-            for itr = self.getSingerEventIterator(); itr.hasNext();
-                local item = itr.next();
-                if( clock < item.Clock ){
-                    return last;
-                }
-                last = item;
+     * @brief 指定したゲートタイムにおいて、歌唱を担当している歌手の歌手変更イベントを取得する
+     * @param clock ゲートタイム
+     * @return 歌手イベント。存在しなければ EOS イベント (isEOS メソッドが true を返すイベント) を返す
+     */
+    VSQ_NS::Event getSingerEventAt( VSQ_NS::tick_t clock ){
+        VSQ_NS::Event last = VSQ_NS::Event::getEOS();
+        VSQ_NS::Event::List *events = getEvents();
+        VSQ_NS::EventListIndexIterator itr = getIndexIterator( VSQ_NS::EventListIndexIteratorKind::SINGER );
+        while( itr.hasNext() ){
+            int index = itr.next();
+            VSQ_NS::Event item = events->get( index );
+            if( clock < item.clock ){
+                return last;
             }
-            return last;
+            last = item;
         }
-*/
+        return last;
+    }
+
 
     /**
         -- このトラックに設定されているイベントを，ゲートタイム順に並べ替えます．
