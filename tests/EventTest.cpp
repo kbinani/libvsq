@@ -172,6 +172,11 @@ public:
         CPPUNIT_ASSERT_EQUAL( 183635, copy.iconDynamicsHandle.startDyn );
     }
 
+    void testIsEos(){
+        Event eos = Event::getEOS();
+        CPPUNIT_ASSERT( eos.isEOS() );
+    }
+
     CPPUNIT_TEST_SUITE( EventTest );
     CPPUNIT_TEST( testConstruct );
     CPPUNIT_TEST( testConstructWithLine );
@@ -180,6 +185,7 @@ public:
     CPPUNIT_TEST( testCompareTo );
     CPPUNIT_TEST( testCompare );
     CPPUNIT_TEST( testClone );
+    CPPUNIT_TEST( testIsEos );
     CPPUNIT_TEST_SUITE_END();
 };
 

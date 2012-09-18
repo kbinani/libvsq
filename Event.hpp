@@ -421,6 +421,7 @@ public:
 
     /**
      * @brief EOSイベントかどうか
+     * @todo protected に変える
      */
     bool isEos;
 
@@ -458,7 +459,7 @@ public:
     explicit Event(){
         init();
         clock = 0;
-        isEos = false;
+        isEos = true;
         id = 0;
     }
 
