@@ -54,6 +54,8 @@ public:
         isBorder = true;
         tick = 0;
         barCount = 0;
+        numerator = 4;
+        denominator = 4;
     }
 };
 
