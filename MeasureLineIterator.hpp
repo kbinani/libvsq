@@ -76,6 +76,8 @@ public:
                 ret.tick = clock;
                 ret.isBorder = true;
                 ret.barCount = bar_counter;
+                ret.numerator = local_numerator;
+                ret.denominator = local_denominator;
                 clock += clock_step;
                 return ret;
             }else{
@@ -83,6 +85,8 @@ public:
                 ret.tick = clock;
                 ret.isBorder = false;
                 ret.barCount = bar_counter;
+                ret.numerator = local_numerator;
+                ret.denominator = local_denominator;
                 clock += clock_step;
                 return ret;
             }
@@ -113,6 +117,8 @@ public:
                     ret.tick = clock;
                     ret.isBorder = true;
                     ret.barCount = bar_counter;
+                    ret.numerator = local_numerator;
+                    ret.denominator = local_denominator;
                     clock += clock_step;
                     return ret;
                 }else{
@@ -120,6 +126,8 @@ public:
                     ret.tick = clock;
                     ret.isBorder = false;
                     ret.barCount = bar_counter;
+                    ret.numerator = local_numerator;
+                    ret.denominator = local_denominator;
                     clock += clock_step;
                     return ret;
                 }
@@ -131,6 +139,8 @@ public:
                 ret.tick = clock;
                 ret.isBorder = true;
                 ret.barCount = bar_counter;
+                ret.numerator = local_numerator;
+                ret.denominator = local_denominator;
                 clock += clock_step;
                 return ret;
             }else{
@@ -138,6 +148,8 @@ public:
                 ret.tick = clock;
                 ret.isBorder = false;
                 ret.barCount = bar_counter;
+                ret.numerator = local_numerator;
+                ret.denominator = local_denominator;
                 clock += clock_step;
                 return ret;
             }
