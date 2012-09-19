@@ -34,10 +34,16 @@ public:
      */
     bool isBorder;
 
+    /**
+     * @brief 小節数
+     */
+    int barCount;
+
 public:
     explicit MeasureLine(){
-        this->isBorder = true;
-        this->tick = 0;
+        isBorder = true;
+        tick = 0;
+        barCount = 0;
     }
 };
 

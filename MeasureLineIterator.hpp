@@ -75,12 +75,14 @@ public:
                 MeasureLine ret;
                 ret.tick = clock;
                 ret.isBorder = true;
+                ret.barCount = bar_counter;
                 clock += clock_step;
                 return ret;
             }else{
                 MeasureLine ret;
                 ret.tick = clock;
                 ret.isBorder = false;
+                ret.barCount = bar_counter;
                 clock += clock_step;
                 return ret;
             }
@@ -110,12 +112,14 @@ public:
                     MeasureLine ret;
                     ret.tick = clock;
                     ret.isBorder = true;
+                    ret.barCount = bar_counter;
                     clock += clock_step;
                     return ret;
                 }else{
                     MeasureLine ret;
                     ret.tick = clock;
                     ret.isBorder = false;
+                    ret.barCount = bar_counter;
                     clock += clock_step;
                     return ret;
                 }
@@ -126,12 +130,14 @@ public:
                 MeasureLine ret;
                 ret.tick = clock;
                 ret.isBorder = true;
+                ret.barCount = bar_counter;
                 clock += clock_step;
                 return ret;
             }else{
                 MeasureLine ret;
                 ret.tick = clock;
                 ret.isBorder = false;
+                ret.barCount = bar_counter;
                 clock += clock_step;
                 return ret;
             }
