@@ -18,41 +18,49 @@ public:
         MeasureLine actual = i.next();
         CPPUNIT_ASSERT_EQUAL( (tick_t)0, actual.tick );
         CPPUNIT_ASSERT_EQUAL( true, actual.isBorder );
+        CPPUNIT_ASSERT_EQUAL( 0, actual.barCount );
 
         CPPUNIT_ASSERT( i.hasNext() );
         actual = i.next();
         CPPUNIT_ASSERT_EQUAL( (tick_t)480, actual.tick );
         CPPUNIT_ASSERT_EQUAL( false, actual.isBorder );
+        CPPUNIT_ASSERT_EQUAL( 0, actual.barCount );
 
         CPPUNIT_ASSERT( i.hasNext() );
         actual = i.next();
         CPPUNIT_ASSERT_EQUAL( (tick_t)960, actual.tick );
         CPPUNIT_ASSERT_EQUAL( false, actual.isBorder );
+        CPPUNIT_ASSERT_EQUAL( 0, actual.barCount );
 
         CPPUNIT_ASSERT( i.hasNext() );
         actual = i.next();
         CPPUNIT_ASSERT_EQUAL( (tick_t)1440, actual.tick );
         CPPUNIT_ASSERT_EQUAL( false, actual.isBorder );
+        CPPUNIT_ASSERT_EQUAL( 0, actual.barCount );
 
         CPPUNIT_ASSERT( i.hasNext() );
         actual = i.next();
         CPPUNIT_ASSERT_EQUAL( (tick_t)1920, actual.tick );
         CPPUNIT_ASSERT_EQUAL( true, actual.isBorder );
+        CPPUNIT_ASSERT_EQUAL( 1, actual.barCount );
 
         CPPUNIT_ASSERT( i.hasNext() );
         actual = i.next();
         CPPUNIT_ASSERT_EQUAL( (tick_t)2400, actual.tick );
         CPPUNIT_ASSERT_EQUAL( false, actual.isBorder );
+        CPPUNIT_ASSERT_EQUAL( 1, actual.barCount );
 
         CPPUNIT_ASSERT( i.hasNext() );
         actual = i.next();
         CPPUNIT_ASSERT_EQUAL( (tick_t)2880, actual.tick );
         CPPUNIT_ASSERT_EQUAL( false, actual.isBorder );
+        CPPUNIT_ASSERT_EQUAL( 1, actual.barCount );
 
         CPPUNIT_ASSERT( i.hasNext() );
         actual = i.next();
         CPPUNIT_ASSERT_EQUAL( (tick_t)3360, actual.tick );
         CPPUNIT_ASSERT_EQUAL( true, actual.isBorder );
+        CPPUNIT_ASSERT_EQUAL( 2, actual.barCount );
 
         CPPUNIT_ASSERT_EQUAL( false, i.hasNext() );
     }
