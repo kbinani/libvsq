@@ -39,6 +39,16 @@ public:
      */
     int barCount;
 
+    /**
+     * @brief 拍子の分子
+     */
+    int numerator;
+
+    /**
+     * @brief 拍子の分母
+     */
+    int denominator;
+
 public:
     explicit MeasureLine(){
         isBorder = true;
