@@ -68,6 +68,17 @@ public:
         }
     }
 
+    void testParseFloat(){
+        CPPUNIT_ASSERT_EQUAL( 1.0, StringUtil::parseFloat<double>( "1.0" ) );
+        CPPUNIT_ASSERT_EQUAL( -1.0f, StringUtil::parseFloat<float>( "-1.0" ) );
+        try{
+            StringUtil::parseFloat<double>( "A" );
+            CPPUNIT_FAIL( "期待した例外がスローされない" );
+        }catch( StringUtil::FloatParseException &e ){
+            // 成功
+        }
+    }
+
     void testToString(){
         CPPUNIT_ASSERT_EQUAL( string( "10" ), StringUtil::toString( 10 ) );
         CPPUNIT_ASSERT_EQUAL( string( "1A" ), StringUtil::toString( 0x1A, 16 ) );
@@ -95,6 +106,7 @@ public:
     CPPUNIT_TEST( explodeDelimiterNotFound );
     CPPUNIT_TEST( testReplace );
     CPPUNIT_TEST( testParseInt );
+    CPPUNIT_TEST( testParseFloat );
     CPPUNIT_TEST( testToString );
     CPPUNIT_TEST( testRepeat );
     CPPUNIT_TEST( testToLower );

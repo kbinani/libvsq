@@ -37,6 +37,12 @@ public:
     class IntegerParseException : public std::exception{
     };
 
+    /**
+     * @brief parseFloat メソッドが投げる例外
+     */
+    class FloatParseException : public std::exception{
+    };
+
 public:
     /**
      * 文字列を区切り文字で分割する
@@ -108,6 +114,20 @@ public:
             }else{
                 return result;
             }
+        }
+    }
+
+    /**
+     * @brief 文字列を浮動小数点数に変換する
+     * @param text 変換する文字列
+     * @return 変換後の数値
+     */
+    template<typename T>
+    static T parseFloat( const std::string &text ){
+        try{
+            return boost::lexical_cast<T>( text );
+        }catch( boost::bad_lexical_cast & ){
+            throw FloatParseException();
         }
     }
 
