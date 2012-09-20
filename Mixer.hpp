@@ -92,15 +92,15 @@ public:
         while( lastLine.at( 0 ) != '[' ){
             std::vector<std::string> params = StringUtil::explode( "=", lastLine );
             if( params[0] == "MasterFeder" ){
-                this->masterFeder = StringUtil::parseInt( params[1] );
+                this->masterFeder = StringUtil::parseInt<int>( params[1] );
             }else if( params[0] == "MasterPanpot" ){
-                this->masterPanpot = StringUtil::parseInt( params[1] );
+                this->masterPanpot = StringUtil::parseInt<int>( params[1] );
             }else if( params[0] == "MasterMute" ){
-                this->masterMute = StringUtil::parseInt( params[1] );
+                this->masterMute = StringUtil::parseInt<int>( params[1] );
             }else if( params[0] == "OutputMode" ){
-                this->outputMode = StringUtil::parseInt( params[1] );
+                this->outputMode = StringUtil::parseInt<int>( params[1] );
             }else if( params[0] == "Tracks" ){
-                tracks = StringUtil::parseInt( params[1] );
+                tracks = StringUtil::parseInt<int>( params[1] );
             }else{
                 if( params[0].find( "Feder" ) == 0 ||
                     params[0].find( "Panpot" ) == 0 ||
@@ -126,20 +126,20 @@ public:
             std::vector<std::string> spl2 = StringUtil::explode( "=", spl[i] );
             if( spl2[0].find( "Feder" ) == 0 ){
                 ind = spl2[0].substr( std::string( "Feder" ).size() );
-                index = StringUtil::parseInt( ind );
-                this->slave[index].feder = StringUtil::parseInt( spl2[1] );
+                index = StringUtil::parseInt<int>( ind );
+                this->slave[index].feder = StringUtil::parseInt<int>( spl2[1] );
             }else if( spl2[0].find( "Panpot" ) == 0 ){
                 ind = spl2[0].substr( std::string( "Panpot" ).size() );
-                index = StringUtil::parseInt( ind );
-                this->slave[index].panpot = StringUtil::parseInt( spl2[1] );
+                index = StringUtil::parseInt<int>( ind );
+                this->slave[index].panpot = StringUtil::parseInt<int>( spl2[1] );
             }else if( spl2[0].find( "Mute" ) == 0 ){
                 ind = spl2[0].substr( std::string( "Mute" ).size() );
-                index = StringUtil::parseInt( ind );
-                this->slave[index].mute = StringUtil::parseInt( spl2[1] );
+                index = StringUtil::parseInt<int>( ind );
+                this->slave[index].mute = StringUtil::parseInt<int>( spl2[1] );
             }else if( spl2[0].find( "Solo" ) == 0 ){
                 ind = spl2[0].substr( std::string( "Solo" ).size() );
-                index = StringUtil::parseInt( ind );
-                this->slave[index].solo = StringUtil::parseInt( spl2[1] );
+                index = StringUtil::parseInt<int>( ind );
+                this->slave[index].solo = StringUtil::parseInt<int>( spl2[1] );
             }
         }
     }

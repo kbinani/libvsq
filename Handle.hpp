@@ -356,7 +356,7 @@ public:
      */
     static int getHandleIndexFromString( const std::string &s ){
         vector<string> spl = StringUtil::explode( "#", s );
-        return boost::lexical_cast<int>( spl[1] );
+        return StringUtil::parseInt<int>( spl[1] );
     }
 
 protected:

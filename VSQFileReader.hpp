@@ -113,7 +113,6 @@ protected:
      * @param sr [TextStream] 読み込み対象
      * @param value [int]
      * @param last_line [ByRef<string>] 読み込んだ最後の行が返されます
-     * @todo boost::lexical_cast使っている箇所はStringUtil使うようにする
      */
     TentativeEvent parseEvent( TextStream &stream, std::string &lastLine ){
         TentativeEvent result;
@@ -147,19 +146,19 @@ protected:
                     result.type = EventType::UNKNOWN;
                 }
             }else if( search == "Length" ){
-                result.setLength( boost::lexical_cast<tick_t>( parameters[1] ) );
+                result.setLength( StringUtil::parseInt<tick_t>( parameters[1] ) );
             }else if( search == "Note#" ){
-                result.note = boost::lexical_cast<int>( parameters[1] );
+                result.note = StringUtil::parseInt<int>( parameters[1] );
             }else if( search == "Dynamics" ){
-                result.dynamics = boost::lexical_cast<int>( parameters[1] );
+                result.dynamics = StringUtil::parseInt<int>( parameters[1] );
             }else if( search == "PMBendDepth" ){
-                result.pmBendDepth = boost::lexical_cast<int>( parameters[1] );
+                result.pmBendDepth = StringUtil::parseInt<int>( parameters[1] );
             }else if( search == "PMBendLength" ){
-                result.pmBendLength = boost::lexical_cast<int>( parameters[1] );
+                result.pmBendLength = StringUtil::parseInt<int>( parameters[1] );
             }else if( search == "DEMdecGainRate" ){
-                result.demDecGainRate = boost::lexical_cast<int>( parameters[1] );
+                result.demDecGainRate = StringUtil::parseInt<int>( parameters[1] );
             }else if( search ==  "DEMaccent" ){
-                result.demAccent = boost::lexical_cast<int>( parameters[1] );
+                result.demAccent = StringUtil::parseInt<int>( parameters[1] );
             }else if( search == "LyricHandle" ){
                 result.lyricHandleIndex = Handle::getHandleIndexFromString( parameters[1] );
             }else if( search == "IconHandle" ){
@@ -167,9 +166,9 @@ protected:
             }else if( search == "VibratoHandle" ){
                 result.vibratoHandleIndex = Handle::getHandleIndexFromString( parameters[1] );
             }else if( search == "VibratoDelay" ){
-                result.vibratoDelay = boost::lexical_cast<int>( parameters[1] );
+                result.vibratoDelay = StringUtil::parseInt<int>( parameters[1] );
             }else if( search == "PMbPortamentoUse" ){
-                result.pmbPortamentoUse = boost::lexical_cast<int>( parameters[1] );
+                result.pmbPortamentoUse = StringUtil::parseInt<int>( parameters[1] );
             }else if( search == "NoteHeadHandle" ){
                 result.noteHeadHandleIndex = Handle::getHandleIndexFromString( parameters[1] );
             }
@@ -227,9 +226,9 @@ protected:
             string search = parameters[0];
             if( search == "Language" ){
                 result.setHandleType( HandleType::SINGER );
-                result.language = boost::lexical_cast<int>( parameters[1] );
+                result.language = StringUtil::parseInt<int>( parameters[1] );
             }else if( search == "Program" ){
-                result.program = boost::lexical_cast<int>( parameters[1] );
+                result.program = StringUtil::parseInt<int>( parameters[1] );
             }else if( search == "IconID" ){
                 result.iconId = parameters[1];
             }else if( search == "IDS" ){
@@ -238,16 +237,16 @@ protected:
                     result.ids = result.ids + "=" + parameters[i];
                 }
             }else if( search == "Original" ){
-                result.original = boost::lexical_cast<int>( parameters[1] );
+                result.original = StringUtil::parseInt<int>( parameters[1] );
             }else if( search == "Caption" ){
                 result.caption = parameters[1];
                 for( int i = 2; i < parameters.size(); i++ ){
                     result.caption = result.caption + "=" + parameters[i];
                 }
             }else if( search == "Length" ){
-                result.setLength( boost::lexical_cast<tick_t>( parameters[1] ) );
+                result.setLength( StringUtil::parseInt<tick_t>( parameters[1] ) );
             }else if( search == "StartDepth" ){
-                result.startDepth = boost::lexical_cast<int>( parameters[1] );
+                result.startDepth = StringUtil::parseInt<int>( parameters[1] );
             }else if( search == "DepthBPNum" ){
                 tmpDepthBPNum = parameters[1];
             }else if( search == "DepthBPX" ){
@@ -256,7 +255,7 @@ protected:
                 tmpDepthBPY = parameters[1];
             }else if( search == "StartRate" ){
                 result.setHandleType( HandleType::VIBRATO );
-                result.startRate = boost::lexical_cast<int>( parameters[1] );
+                result.startRate = StringUtil::parseInt<int>( parameters[1] );
             }else if( search == "RateBPNum" ){
                 tmpRateBPNum = parameters[1];
             }else if( search == "RateBPX" ){
@@ -265,15 +264,15 @@ protected:
                 tmpRateBPY = parameters[1];
             }else if( search == "Duration" ){
                 result.setHandleType( HandleType::NOTE_HEAD );
-                result.duration = boost::lexical_cast<int>( parameters[1] );
+                result.duration = StringUtil::parseInt<int>( parameters[1] );
             }else if( search == "Depth" ){
-                result.depth = boost::lexical_cast<int>( parameters[1] );
+                result.depth = StringUtil::parseInt<int>( parameters[1] );
             }else if( search == "StartDyn" ){
                 result.setHandleType( HandleType::DYNAMICS );
-                result.startDyn = boost::lexical_cast<int>( parameters[1] );
+                result.startDyn = StringUtil::parseInt<int>( parameters[1] );
             }else if( search == "EndDyn" ){
                 result.setHandleType( HandleType::DYNAMICS );
-                result.endDyn = boost::lexical_cast<int>( parameters[1] );
+                result.endDyn = StringUtil::parseInt<int>( parameters[1] );
             }else if( search == "DynBPNum" ){
                 tmpDynBPNum = parameters[1];
             }else if( search == "DynBPX" ){
@@ -281,7 +280,7 @@ protected:
             }else if( search == "DynBPY" ){
                 tmpDynBPY = parameters[1];
             }else if( search.find( "L" ) == 0 && search.size() >= 2 ){
-                int index = boost::lexical_cast<int>( search.substr( 1, 1 ) );
+                int index = StringUtil::parseInt<int>( search.substr( 1, 1 ) );
                 Lyric lyric( parameters[1] );
                 result.setHandleType( HandleType::LYRIC );
                 if( result.getLyricCount() <= index + 1 ){
@@ -494,12 +493,12 @@ private:
                 lastLine = stream.readLine();
                 while( lastLine.find( "[" ) != 0 ){
                     std::vector<std::string> parameters = StringUtil::explode( "=", lastLine );
-                    tick_t clock = StringUtil::parseInt( parameters[0] );
+                    tick_t clock = StringUtil::parseInt<tick_t>( parameters[0] );
                     if( parameters[1] != "EOS" ){
                         std::vector<std::string> idList = StringUtil::explode( ",", parameters[1] );
                         for( int i = 0; i < idList.size(); i++ ){
                             std::vector<std::string> idParameters = StringUtil::explode( "#", idList[i] );
-                            int id = StringUtil::parseInt( idParameters[1] );
+                            int id = StringUtil::parseInt<int>( idParameters[1] );
                             eventClockMap.insert( make_pair( id, clock ) );
                         }
                     }else{
@@ -562,7 +561,7 @@ private:
                 buffer = StringUtil::replace( buffer, "[", "" );
                 buffer = StringUtil::replace( buffer, "]", "" );
                 std::vector<std::string> parameters = StringUtil::explode( "#", buffer );
-                int index = StringUtil::parseInt( parameters[1] );
+                int index = StringUtil::parseInt<int>( parameters[1] );
                 if( lastLine.find( "[ID#" ) == 0 ){
                     TentativeEvent *item = new TentativeEvent();
                     *item = parseEvent( stream, lastLine );

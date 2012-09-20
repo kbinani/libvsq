@@ -21,14 +21,28 @@
 #include <algorithm>
 #include <iomanip>
 #include <boost/format.hpp>
+#include <boost/lexical_cast.hpp>
 
 using namespace std;
 
 /**
- * 文字列関連のユーティリティ
+ * @brief 文字列関連のユーティリティ
  */
 class StringUtil
 {
+public:
+    /**
+     * @brief parseInt メソッドが投げる例外
+     */
+    class IntegerParseException : public std::exception{
+    };
+
+    /**
+     * @brief parseFloat メソッドが投げる例外
+     */
+    class FloatParseException : public std::exception{
+    };
+
 public:
     /**
      * 文字列を区切り文字で分割する
@@ -83,10 +97,38 @@ public:
      * @brief 文字列を整数に変換する
      * @param text 変換する文字列
      * @return 変換後の数値
-     * @todo 例外を投げる
      */
-    static int parseInt( std::string text, int baseNumber = 10 ){
-        return strtol( text.c_str(), 0, baseNumber );
+    template<typename T>
+    static T parseInt( const std::string &text, int baseNumber = 10 )throw( IntegerParseException ){
+        if( baseNumber == 10 ){
+            try{
+                return boost::lexical_cast<T>( text );
+            }catch( boost::bad_lexical_cast &e ){
+                throw IntegerParseException();
+            }
+        }else{
+            char *endptr;
+            T result = (T)strtol( text.c_str(), &endptr, baseNumber );
+            if( *endptr != '\0' ){
+                throw IntegerParseException();
+            }else{
+                return result;
+            }
+        }
+    }
+
+    /**
+     * @brief 文字列を浮動小数点数に変換する
+     * @param text 変換する文字列
+     * @return 変換後の数値
+     */
+    template<typename T>
+    static T parseFloat( const std::string &text ){
+        try{
+            return boost::lexical_cast<T>( text );
+        }catch( boost::bad_lexical_cast & ){
+            throw FloatParseException();
+        }
     }
 
     /**

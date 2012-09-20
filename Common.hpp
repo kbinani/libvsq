@@ -92,9 +92,9 @@ public:
             }else if( search == "Color" ){
                 this->color = spl[1];
             }else if( search == "DynamicsMode" ){
-                this->dynamicsMode = (DynamicsMode::DynamicsModeEnum)StringUtil::parseInt( spl[1] );
+                this->dynamicsMode = (DynamicsMode::DynamicsModeEnum)StringUtil::parseInt<int>( spl[1] );
             }else if( search == "PlayMode" ){
-                this->playMode = (PlayMode::PlayModeEnum)StringUtil::parseInt( spl[1] );
+                this->playMode = (PlayMode::PlayModeEnum)StringUtil::parseInt<int>( spl[1] );
             }
             if( !stream.ready() ){
                 break;
@@ -129,9 +129,9 @@ public:
      */
     Common clone() const{
         std::vector<std::string> spl = StringUtil::explode( ",", this->color );
-        int r = StringUtil::parseInt( spl[0] );
-        int g = StringUtil::parseInt( spl[1] );
-        int b = StringUtil::parseInt( spl[2] );
+        int r = StringUtil::parseInt<int>( spl[0] );
+        int g = StringUtil::parseInt<int>( spl[1] );
+        int b = StringUtil::parseInt<int>( spl[2] );
         Common result( this->name, r, g, b, this->dynamicsMode, this->playMode );
         result.version = this->version;
         result._lastPlayMode = this->_lastPlayMode;
