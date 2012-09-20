@@ -419,9 +419,9 @@ public:
      */
     VSQ_NS::Handle iconDynamicsHandle;
 
+protected:
     /**
      * @brief EOSイベントかどうか
-     * @todo protected に変える
      */
     bool isEos;
 
