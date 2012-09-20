@@ -60,7 +60,7 @@ public:
                 }
             }catch( StringUtil::FloatParseException & ){
                 delete [] x;
-                x = NULL;
+                x = 0;
             }
             try{
                 for( int i = 0; i < actNum; i++ ){
@@ -68,7 +68,7 @@ public:
                 }
             }catch( StringUtil::IntegerParseException & ){
                 delete [] y;
-                y = NULL;
+                y = 0;
             }
 
             if( x && y ){
@@ -76,9 +76,9 @@ public:
                     _list.push_back( VibratoBP( x[i], y[i] ) );
                 }
                 std::sort( _list.begin(), _list.end(), VibratoBP::compare );
-                delete [] x;
-                delete [] y;
             }
+            if( x ) delete [] x;
+            if( y ) delete [] y;
         }
     }
 
