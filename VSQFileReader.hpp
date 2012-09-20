@@ -494,12 +494,12 @@ private:
                 lastLine = stream.readLine();
                 while( lastLine.find( "[" ) != 0 ){
                     std::vector<std::string> parameters = StringUtil::explode( "=", lastLine );
-                    tick_t clock = StringUtil::parseInt( parameters[0] );
+                    tick_t clock = StringUtil::parseInt<tick_t>( parameters[0] );
                     if( parameters[1] != "EOS" ){
                         std::vector<std::string> idList = StringUtil::explode( ",", parameters[1] );
                         for( int i = 0; i < idList.size(); i++ ){
                             std::vector<std::string> idParameters = StringUtil::explode( "#", idList[i] );
-                            int id = StringUtil::parseInt( idParameters[1] );
+                            int id = StringUtil::parseInt<int>( idParameters[1] );
                             eventClockMap.insert( make_pair( id, clock ) );
                         }
                     }else{
@@ -562,7 +562,7 @@ private:
                 buffer = StringUtil::replace( buffer, "[", "" );
                 buffer = StringUtil::replace( buffer, "]", "" );
                 std::vector<std::string> parameters = StringUtil::explode( "#", buffer );
-                int index = StringUtil::parseInt( parameters[1] );
+                int index = StringUtil::parseInt<int>( parameters[1] );
                 if( lastLine.find( "[ID#" ) == 0 ){
                     TentativeEvent *item = new TentativeEvent();
                     *item = parseEvent( stream, lastLine );

@@ -52,8 +52,20 @@ public:
     }
 
     void testParseInt(){
-        CPPUNIT_ASSERT_EQUAL( 1, StringUtil::parseInt( "1" ) );
-        CPPUNIT_ASSERT_EQUAL( 10, StringUtil::parseInt( "A", 16 ) );
+        CPPUNIT_ASSERT_EQUAL( 1, StringUtil::parseInt<int>( "1" ) );
+        CPPUNIT_ASSERT_EQUAL( 10, StringUtil::parseInt<int>( "A", 16 ) );
+        try{
+            StringUtil::parseInt<int>( "A" );
+            CPPUNIT_FAIL( "期待した例外がスローされない" );
+        }catch( StringUtil::IntegerParseException &e ){
+            // 成功
+        }
+        try{
+            StringUtil::parseInt<int>( "W", 16 );
+            CPPUNIT_FAIL( "期待した例外がスローされない" );
+        }catch( StringUtil::IntegerParseException &e ){
+            // 成功
+        }
     }
 
     void testToString(){

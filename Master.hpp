@@ -55,7 +55,7 @@ public:
         while( lastLine.find( "[" ) == std::string::npos ){
             std::vector<std::string> spl = StringUtil::explode( "=", lastLine );
             if( spl[0] == "PreMeasure" ){
-                this->preMeasure = StringUtil::parseInt( spl[1] );
+                this->preMeasure = StringUtil::parseInt<int>( spl[1] );
             }
             if( !stream.ready() ){
                 break;

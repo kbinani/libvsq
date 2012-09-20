@@ -374,7 +374,7 @@ protected:
             add.append( MidiParameterType::CVM_NM_INDEX_OF_VIBRATO_DB, 0x00, 0x00, true );
             string icon_id = noteEvent->vibratoHandle.iconId;
             string num = icon_id.substr( icon_id.length() - 3 );
-            int vibrato_type = (int)::floor( StringUtil::parseInt( num, 16 ) );
+            int vibrato_type = StringUtil::parseInt<int>( num, 16 );
             int note_length = noteEvent->getLength();
             int vibrato_delay = noteEvent->vibratoDelay;
             int bVibratoDuration = (int)::floor( (note_length - vibrato_delay) / (double)note_length * 127.0 );
