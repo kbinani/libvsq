@@ -16,7 +16,7 @@
 
 #include "vsqglobal.hpp"
 #include <string>
-#include <boost/lexical_cast.hpp>
+#include "StringUtil.hpp"
 
 VSQ_BEGIN_NAMESPACE
 
@@ -69,9 +69,9 @@ public:
             // br001とかをfalseにするためのチェック
             string s = symbol.substr( 2 );
             try{
-                boost::lexical_cast<int>( s );
+                StringUtil::parseInt<int>( s );
                 return true;
-            }catch( boost::bad_lexical_cast & ){
+            }catch( StringUtil::IntegerParseException & ){
                 return false;
             }
         }

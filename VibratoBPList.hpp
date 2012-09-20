@@ -18,7 +18,6 @@
 #include "VibratoBP.hpp"
 #include "StringUtil.hpp"
 #include <vector>
-#include <boost/lexical_cast.hpp>
 
 VSQ_BEGIN_NAMESPACE
 
@@ -45,8 +44,8 @@ public:
     explicit VibratoBPList( const std::string &textNum, const std::string &textBPX, const std::string &textBPY ){
         int num = 0;
         try{
-            num = boost::lexical_cast<int>( textNum );
-        }catch( boost::bad_lexical_cast & ){
+            num = StringUtil::parseInt<int>( textNum );
+        }catch( StringUtil::IntegerParseException & ){
             num = 0;
         }
         vector<string> bpx = StringUtil::explode( ",", textBPX );
@@ -57,13 +56,18 @@ public:
             int *y = new int[actNum]();
             try{
                 for( int i = 0; i < actNum; i++ ){
-                    x[i] = boost::lexical_cast<double>( bpx[i] );
-                    y[i] = boost::lexical_cast<int>( bpy[i] );
+                    x[i] = StringUtil::parseFloat<double>( bpx[i] );
                 }
-            }catch( boost::bad_lexical_cast & ){
+            }catch( StringUtil::FloatParseException & ){
                 delete [] x;
-                delete [] y;
                 x = NULL;
+            }
+            try{
+                for( int i = 0; i < actNum; i++ ){
+                    y[i] = StringUtil::parseInt<int>( bpy[i] );
+                }
+            }catch( StringUtil::IntegerParseException & ){
+                delete [] y;
                 y = NULL;
             }
 
@@ -183,9 +187,13 @@ public:
                 double x;
                 int y;
                 try{
-                    x = boost::lexical_cast<double>( spl2[0] );
-                    y = boost::lexical_cast<int>( spl2[1] );
-                }catch( boost::bad_lexical_cast & ){
+                    x = StringUtil::parseFloat<double>( spl2[0] );
+                }catch( StringUtil::FloatParseException & ){
+                    continue;
+                }
+                try{
+                    y = StringUtil::parseInt<int>( spl2[1] );
+                }catch( StringUtil::IntegerParseException & ){
                     continue;
                 }
                 _list.push_back( VibratoBP( x, y ) );

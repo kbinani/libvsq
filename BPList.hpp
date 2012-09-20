@@ -22,7 +22,6 @@
 #include <sstream>
 #include <cmath>
 #include <vector>
-#include <boost/lexical_cast.hpp>
 #include <boost/format.hpp>
 
 VSQ_BEGIN_NAMESPACE
@@ -265,9 +264,9 @@ public:
             tick_t clock;
             int value;
             try{
-                clock = boost::lexical_cast<tick_t>( spl2[0] );
-                value = boost::lexical_cast<int>( spl2[1] );
-            }catch( boost::bad_lexical_cast & ){
+                clock = StringUtil::parseInt<tick_t>( spl2[0] );
+                value = StringUtil::parseInt<int>( spl2[1] );
+            }catch( StringUtil::IntegerParseException & ){
                 continue;
             }
             if( value < _minValue ){

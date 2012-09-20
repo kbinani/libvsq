@@ -449,7 +449,7 @@ public:
     {
         init();
         vector<string> spl = StringUtil::explode( "=", line );
-        clock = boost::lexical_cast<tick_t>( spl[0] );
+        clock = StringUtil::parseInt<tick_t>( spl[0] );
         isEos = (spl[1] == "EOS");
     }
 
