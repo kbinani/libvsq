@@ -1,5 +1,5 @@
 /**
- * MeasureLineIterator.h
+ * MeasureLineIterator.hpp
  * Copyright © 2012 kbinani
  *
  * This file is part of libvsq.
@@ -11,8 +11,8 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-#ifndef __MeasureLineIterator_h__
-#define __MeasureLineIterator_h__
+#ifndef __MeasureLineIterator_hpp__
+#define __MeasureLineIterator_hpp__
 
 #include "vsqglobal.hpp"
 #include "TimesigList.hpp"
@@ -41,6 +41,7 @@ private:
     tick_t currentTick;
     int barCounter;
     tick_t assistLineStep;
+    tick_t originalStepLength;
 
 public:
     class InvalidAssistLineStep : public std::exception{
@@ -57,7 +58,7 @@ public:
         i = 0;
         temporaryEndTick = -1;
         tick = 0;
-        if( assistLineStep < 0 || assistLineStep % 15 != 0 ){
+        if( assistLineStep < 0 || assistLineStep % MIN_ASSIST_LINE_STEP != 0 ){
             throw InvalidAssistLineStep();
         }
         this->assistLineStep = assistLineStep;
@@ -84,14 +85,9 @@ public:
         int mod = stepLength * currentNumerator;
         if( tick < temporaryEndTick ){
             if( (tick - currentTick) % mod == 0 ){
-                barCounter++;
-                MeasureLine ret( tick, barCounter, currentNumerator, currentDenominator, true, /*TODO*/false );
-                tick += stepLength;
-                return ret;
+                return returnBorder();
             }else{
-                MeasureLine ret( tick, barCounter, currentNumerator, currentDenominator, false, /*TODO*/false );
-                tick += stepLength;
-                return ret;
+                return returnOther();
             }
         }
 
@@ -104,9 +100,11 @@ public:
             if( denom <= 0 ){
                 denom = 4;
             }
-            stepLength = 480 * 4 / denom;
-            if( 0 < assistLineStep && assistLineStep < stepLength ){
+            originalStepLength = 480 * 4 / denom;
+            if( 0 < assistLineStep && assistLineStep < originalStepLength ){
                 stepLength = assistLineStep;
+            }else{
+                stepLength = originalStepLength;
             }
             mod = stepLength * currentNumerator;
             barCounter = local_bar_count - 1;
@@ -118,26 +116,16 @@ public:
             tick = currentTick;
             if( tick < temporaryEndTick ){
                 if( (tick - currentTick) % mod == 0 ){
-                    barCounter++;
-                    MeasureLine ret( tick, barCounter, currentNumerator, currentDenominator, true, /*TODO*/false );
-                    tick += stepLength;
-                    return ret;
+                    return returnBorder();
                 }else{
-                    MeasureLine ret( tick, barCounter, currentNumerator, currentDenominator, false, /*TODO*/false );
-                    tick += stepLength;
-                    return ret;
+                    return returnOther();
                 }
             }
         }else{
             if( (tick - currentTick) % mod == 0 ){
-                barCounter++;
-                MeasureLine ret( tick, barCounter, currentNumerator, currentDenominator, true, /*TODO*/false );
-                tick += stepLength;
-                return ret;
+                return returnBorder();
             }else{
-                MeasureLine ret( tick, barCounter, currentNumerator, currentDenominator, false, /*TODO*/false );
-                tick += stepLength;
-                return ret;
+                return returnOther();
             }
         }
         return MeasureLine( 0, 0, 4, 4, true, false );
@@ -158,6 +146,27 @@ public:
         this->stepLength = 0;
         this->currentTick = 0;
         this->barCounter = 0;
+        this->originalStepLength = 0;
+    }
+
+private:
+    /**
+     * @brief 小節の境界を表す MeasureLine のインスタンスを返す
+     */
+    MeasureLine returnBorder(){
+        barCounter++;
+        MeasureLine ret( tick, barCounter, currentNumerator, currentDenominator, true, false );
+        tick += stepLength;
+        return ret;
+    }
+
+    /**
+     * @brief 小節の境界でない MeasureLine のインスタンスを返す
+     */
+    MeasureLine returnOther(){
+        MeasureLine ret( tick, barCounter, currentNumerator, currentDenominator, false, (tick - currentTick) % originalStepLength != 0 );
+        tick += stepLength;
+        return ret;
     }
 };
 
