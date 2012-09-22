@@ -108,16 +108,17 @@ public:
 
     void testWithAssistLineStep(){
         TimesigList list;
-        list.push( Timesig( 3, 4, 0 ) );
+        list.push( Timesig( 1, 4, 0 ) );
         MeasureLineIterator i( &list, 120 );
-        i.reset( 240 );
+        i.reset( 480 );
 
         CPPUNIT_ASSERT_EQUAL( true, i.hasNext() );
         {
             MeasureLine actual = i.next();
             CPPUNIT_ASSERT_EQUAL( (tick_t)0, actual.tick );
+            CPPUNIT_ASSERT_EQUAL( 0, actual.barCount );
             CPPUNIT_ASSERT_EQUAL( true, actual.isBorder );
-            CPPUNIT_ASSERT_EQUAL( 3, actual.numerator );
+            CPPUNIT_ASSERT_EQUAL( 1, actual.numerator );
             CPPUNIT_ASSERT_EQUAL( 4, actual.denominator );
             CPPUNIT_ASSERT_EQUAL( false, actual.isAssistLine );
         }
@@ -125,8 +126,9 @@ public:
         {
             MeasureLine actual = i.next();
             CPPUNIT_ASSERT_EQUAL( (tick_t)120, actual.tick );
+            CPPUNIT_ASSERT_EQUAL( 0, actual.barCount );
             CPPUNIT_ASSERT_EQUAL( false, actual.isBorder );
-            CPPUNIT_ASSERT_EQUAL( 3, actual.numerator );
+            CPPUNIT_ASSERT_EQUAL( 1, actual.numerator );
             CPPUNIT_ASSERT_EQUAL( 4, actual.denominator );
             CPPUNIT_ASSERT_EQUAL( true, actual.isAssistLine );
         }
@@ -134,10 +136,31 @@ public:
         {
             MeasureLine actual = i.next();
             CPPUNIT_ASSERT_EQUAL( (tick_t)240, actual.tick );
+            CPPUNIT_ASSERT_EQUAL( 0, actual.barCount );
             CPPUNIT_ASSERT_EQUAL( false, actual.isBorder );
-            CPPUNIT_ASSERT_EQUAL( 3, actual.numerator );
+            CPPUNIT_ASSERT_EQUAL( 1, actual.numerator );
             CPPUNIT_ASSERT_EQUAL( 4, actual.denominator );
             CPPUNIT_ASSERT_EQUAL( true, actual.isAssistLine );
+        }
+        CPPUNIT_ASSERT_EQUAL( true, i.hasNext() );
+        {
+            MeasureLine actual = i.next();
+            CPPUNIT_ASSERT_EQUAL( (tick_t)360, actual.tick );
+            CPPUNIT_ASSERT_EQUAL( 0, actual.barCount );
+            CPPUNIT_ASSERT_EQUAL( false, actual.isBorder );
+            CPPUNIT_ASSERT_EQUAL( 1, actual.numerator );
+            CPPUNIT_ASSERT_EQUAL( 4, actual.denominator );
+            CPPUNIT_ASSERT_EQUAL( true, actual.isAssistLine );
+        }
+        CPPUNIT_ASSERT_EQUAL( true, i.hasNext() );
+        {
+            MeasureLine actual = i.next();
+            CPPUNIT_ASSERT_EQUAL( (tick_t)480, actual.tick );
+            CPPUNIT_ASSERT_EQUAL( 1, actual.barCount );
+            CPPUNIT_ASSERT_EQUAL( true, actual.isBorder );
+            CPPUNIT_ASSERT_EQUAL( 1, actual.numerator );
+            CPPUNIT_ASSERT_EQUAL( 4, actual.denominator );
+            CPPUNIT_ASSERT_EQUAL( false, actual.isAssistLine );
         }
         CPPUNIT_ASSERT_EQUAL( false, i.hasNext() );
     }
