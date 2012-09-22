@@ -55,16 +55,13 @@ public:
     int denominator;
 
 public:
-    /**
-     * @todo コンストラクタで値を指定するようにすべき
-     */
-    explicit MeasureLine(){
-        isBorder = true;
-        tick = 0;
-        barCount = 0;
-        numerator = 4;
-        denominator = 4;
-        isAssistLine = false;
+    explicit MeasureLine( tick_t tick, int barCount, int numerator, int denominator, bool isBorder, bool isAssistLine ){
+        this->tick = tick;
+        this->barCount = barCount;
+        this->numerator = numerator;
+        this->denominator = denominator;
+        this->isBorder = isBorder;
+        this->isAssistLine = isAssistLine;
     }
 };
 
