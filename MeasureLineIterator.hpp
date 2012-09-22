@@ -36,12 +36,12 @@ private:
     tick_t tick;
     int currentDenominator;
     int currentNumerator;
-    tick_t stepLength;
+    tick_t actualStepLength;
     tick_t temporaryEndTick;
     tick_t currentTick;
-    int barCounter;
+    int barCount;
     tick_t assistLineStep;
-    tick_t originalStepLength;
+    tick_t stepLength;
 
 public:
     class InvalidAssistLineStep : public std::exception{
@@ -82,7 +82,7 @@ public:
      * @return 次の小節線の情報
      */
     MeasureLine next(){
-        int mod = stepLength * currentNumerator;
+        int mod = actualStepLength * currentNumerator;
         if( tick < temporaryEndTick ){
             if( (tick - currentTick) % mod == 0 ){
                 return returnBorder();
@@ -100,14 +100,14 @@ public:
             if( denom <= 0 ){
                 denom = 4;
             }
-            originalStepLength = 480 * 4 / denom;
-            if( 0 < assistLineStep && assistLineStep < originalStepLength ){
-                stepLength = assistLineStep;
+            stepLength = 480 * 4 / denom;
+            if( 0 < assistLineStep && assistLineStep < stepLength ){
+                actualStepLength = assistLineStep;
             }else{
-                stepLength = originalStepLength;
+                actualStepLength = stepLength;
             }
-            mod = stepLength * currentNumerator;
-            barCounter = local_bar_count - 1;
+            mod = actualStepLength * currentNumerator;
+            barCount = local_bar_count - 1;
             temporaryEndTick = endTick;
             if( i + 1 < list->size() ){
                 temporaryEndTick = list->get( i + 1 ).getClock();
@@ -143,10 +143,10 @@ public:
         this->tick = 0;
         this->currentDenominator = 0;
         this->currentNumerator = 0;
-        this->stepLength = 0;
+        this->actualStepLength = 0;
         this->currentTick = 0;
-        this->barCounter = 0;
-        this->originalStepLength = 0;
+        this->barCount = 0;
+        this->stepLength = 0;
     }
 
 private:
@@ -154,9 +154,9 @@ private:
      * @brief 小節の境界を表す MeasureLine のインスタンスを返す
      */
     MeasureLine returnBorder(){
-        barCounter++;
-        MeasureLine ret( tick, barCounter, currentNumerator, currentDenominator, true, false );
-        tick += stepLength;
+        barCount++;
+        MeasureLine ret( tick, barCount, currentNumerator, currentDenominator, true, false );
+        tick += actualStepLength;
         return ret;
     }
 
@@ -164,8 +164,8 @@ private:
      * @brief 小節の境界でない MeasureLine のインスタンスを返す
      */
     MeasureLine returnOther(){
-        MeasureLine ret( tick, barCounter, currentNumerator, currentDenominator, false, (tick - currentTick) % originalStepLength != 0 );
-        tick += stepLength;
+        MeasureLine ret( tick, barCount, currentNumerator, currentDenominator, false, (tick - currentTick) % stepLength != 0 );
+        tick += actualStepLength;
         return ret;
     }
 };
