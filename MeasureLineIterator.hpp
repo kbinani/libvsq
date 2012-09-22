@@ -82,7 +82,7 @@ public:
      * @return 次の小節線の情報
      */
     MeasureLine next(){
-        int mod = actualStepLength * currentNumerator;
+        int mod = stepLength * currentNumerator;
         if( tick < temporaryEndTick ){
             if( (tick - currentTick) % mod == 0 ){
                 return returnBorder();
@@ -106,7 +106,7 @@ public:
             }else{
                 actualStepLength = stepLength;
             }
-            mod = actualStepLength * currentNumerator;
+            mod = stepLength * currentNumerator;
             barCount = local_bar_count - 1;
             temporaryEndTick = endTick;
             if( i + 1 < list->size() ){
