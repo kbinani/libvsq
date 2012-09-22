@@ -26,6 +26,10 @@ VSQ_BEGIN_NAMESPACE
 class MeasureLineIterator
 {
 private:
+    /**
+     * @brief 補助線の間隔として利用可能な最小時間(tick単位)
+     */
+    const static tick_t MIN_ASSIST_LINE_STEP = 15;
     TimesigList *m_list;
     int m_end_clock;
     int i;
@@ -36,18 +40,27 @@ private:
     int t_end;
     tick_t local_clock;
     int bar_counter;
+    tick_t assistLineStep;
+
+public:
+    class InvalidAssistLineStep : public std::exception{
+    };
 
 public:
     /**
      * @brief 小節線の情報を取得する区間を指定し、初期化する
      * @param list テンポ変更リスト
      */
-    explicit MeasureLineIterator( TimesigList *list ){
+    explicit MeasureLineIterator( TimesigList *list, tick_t assistLineStep = 0 ){
         m_list = list;
         m_end_clock = 0;
         i = 0;
         t_end = -1;
         clock = 0;
+        if( assistLineStep < 0 || assistLineStep % 15 != 0 ){
+            throw InvalidAssistLineStep();
+        }
+        this->assistLineStep = assistLineStep;
         this->reset( m_end_clock );
     }
 
@@ -102,6 +115,9 @@ public:
                 denom = 4;
             }
             clock_step = 480 * 4 / denom;
+            if( 0 < assistLineStep && assistLineStep < clock_step ){
+                clock_step = assistLineStep;
+            }
             mod = clock_step * local_numerator;
             bar_counter = local_bar_count - 1;
             t_end = m_end_clock;

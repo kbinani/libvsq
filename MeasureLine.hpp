@@ -35,6 +35,11 @@ public:
     bool isBorder;
 
     /**
+     * @brief 補助線かどうか
+     */
+    bool isAssistLine;
+
+    /**
      * @brief 小節数
      */
     int barCount;
@@ -50,12 +55,16 @@ public:
     int denominator;
 
 public:
+    /**
+     * @todo コンストラクタで値を指定するようにすべき
+     */
     explicit MeasureLine(){
         isBorder = true;
         tick = 0;
         barCount = 0;
         numerator = 4;
         denominator = 4;
+        isAssistLine = false;
     }
 };
 
