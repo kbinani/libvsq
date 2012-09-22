@@ -1,5 +1,5 @@
 /**
- * MeasureLineIterator.h
+ * MeasureLineIterator.hpp
  * Copyright © 2012 kbinani
  *
  * This file is part of libvsq.
@@ -11,8 +11,8 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-#ifndef __MeasureLineIterator_h__
-#define __MeasureLineIterator_h__
+#ifndef __MeasureLineIterator_hpp__
+#define __MeasureLineIterator_hpp__
 
 #include "vsqglobal.hpp"
 #include "TimesigList.hpp"
@@ -26,29 +26,43 @@ VSQ_BEGIN_NAMESPACE
 class MeasureLineIterator
 {
 private:
-    TimesigList *m_list;
-    int m_end_clock;
+    /**
+     * @brief 補助線の間隔として利用可能な最小時間(tick単位)
+     */
+    const static tick_t MIN_ASSIST_LINE_STEP = 15;
+    TimesigList *list;
+    tick_t endTick;
     int i;
-    tick_t clock;
-    int local_denominator;
-    int local_numerator;
-    tick_t clock_step;
-    int t_end;
-    tick_t local_clock;
-    int bar_counter;
+    tick_t tick;
+    int currentDenominator;
+    int currentNumerator;
+    tick_t actualStepLength;
+    tick_t temporaryEndTick;
+    tick_t currentTick;
+    int barCount;
+    tick_t assistLineStep;
+    tick_t stepLength;
+
+public:
+    class InvalidAssistLineStep : public std::exception{
+    };
 
 public:
     /**
      * @brief 小節線の情報を取得する区間を指定し、初期化する
      * @param list テンポ変更リスト
      */
-    explicit MeasureLineIterator( TimesigList *list ){
-        m_list = list;
-        m_end_clock = 0;
+    explicit MeasureLineIterator( TimesigList *list, tick_t assistLineStep = 0 ){
+        this->list = list;
+        endTick = 0;
         i = 0;
-        t_end = -1;
-        clock = 0;
-        this->reset( m_end_clock );
+        temporaryEndTick = -1;
+        tick = 0;
+        if( assistLineStep < 0 || assistLineStep % MIN_ASSIST_LINE_STEP != 0 ){
+            throw InvalidAssistLineStep();
+        }
+        this->assistLineStep = assistLineStep;
+        this->reset( endTick );
     }
 
     /**
@@ -56,7 +70,7 @@ public:
      * @return 取得可能であれば true を返す
      */
     bool hasNext(){
-        if( clock <= m_end_clock ){
+        if( tick <= endTick ){
             return true;
         }else{
             return false;
@@ -68,109 +82,91 @@ public:
      * @return 次の小節線の情報
      */
     MeasureLine next(){
-        int mod = clock_step * local_numerator;
-        if( clock < t_end ){
-            if( (clock - local_clock) % mod == 0 ){
-                bar_counter++;
-                MeasureLine ret;
-                ret.tick = clock;
-                ret.isBorder = true;
-                ret.barCount = bar_counter;
-                ret.numerator = local_numerator;
-                ret.denominator = local_denominator;
-                clock += clock_step;
-                return ret;
+        int mod = actualStepLength * currentNumerator;
+        if( tick < temporaryEndTick ){
+            if( (tick - currentTick) % mod == 0 ){
+                return returnBorder();
             }else{
-                MeasureLine ret;
-                ret.tick = clock;
-                ret.isBorder = false;
-                ret.barCount = bar_counter;
-                ret.numerator = local_numerator;
-                ret.denominator = local_denominator;
-                clock += clock_step;
-                return ret;
+                return returnOther();
             }
         }
 
-        if( i < m_list->size() ){
-            local_denominator = m_list->get( i ).denominator;
-            local_numerator = m_list->get( i ).numerator;
-            local_clock = m_list->get( i ).getClock();
-            int local_bar_count = m_list->get( i ).barCount;
-            int denom = local_denominator;
+        if( i < list->size() ){
+            currentDenominator = list->get( i ).denominator;
+            currentNumerator = list->get( i ).numerator;
+            currentTick = list->get( i ).getClock();
+            int local_bar_count = list->get( i ).barCount;
+            int denom = currentDenominator;
             if( denom <= 0 ){
                 denom = 4;
             }
-            clock_step = 480 * 4 / denom;
-            mod = clock_step * local_numerator;
-            bar_counter = local_bar_count - 1;
-            t_end = m_end_clock;
-            if( i + 1 < m_list->size() ){
-                t_end = m_list->get( i + 1 ).getClock();
+            stepLength = 480 * 4 / denom;
+            if( 0 < assistLineStep && assistLineStep < stepLength ){
+                actualStepLength = assistLineStep;
+            }else{
+                actualStepLength = stepLength;
+            }
+            mod = actualStepLength * currentNumerator;
+            barCount = local_bar_count - 1;
+            temporaryEndTick = endTick;
+            if( i + 1 < list->size() ){
+                temporaryEndTick = list->get( i + 1 ).getClock();
             }
             i++;
-            clock = local_clock;
-            if( clock < t_end ){
-                if( (clock - local_clock) % mod == 0 ){
-                    bar_counter++;
-                    MeasureLine ret;
-                    ret.tick = clock;
-                    ret.isBorder = true;
-                    ret.barCount = bar_counter;
-                    ret.numerator = local_numerator;
-                    ret.denominator = local_denominator;
-                    clock += clock_step;
-                    return ret;
+            tick = currentTick;
+            if( tick < temporaryEndTick ){
+                if( (tick - currentTick) % mod == 0 ){
+                    return returnBorder();
                 }else{
-                    MeasureLine ret;
-                    ret.tick = clock;
-                    ret.isBorder = false;
-                    ret.barCount = bar_counter;
-                    ret.numerator = local_numerator;
-                    ret.denominator = local_denominator;
-                    clock += clock_step;
-                    return ret;
+                    return returnOther();
                 }
             }
         }else{
-            if( (clock - local_clock) % mod == 0 ){
-                bar_counter++;
-                MeasureLine ret;
-                ret.tick = clock;
-                ret.isBorder = true;
-                ret.barCount = bar_counter;
-                ret.numerator = local_numerator;
-                ret.denominator = local_denominator;
-                clock += clock_step;
-                return ret;
+            if( (tick - currentTick) % mod == 0 ){
+                return returnBorder();
             }else{
-                MeasureLine ret;
-                ret.tick = clock;
-                ret.isBorder = false;
-                ret.barCount = bar_counter;
-                ret.numerator = local_numerator;
-                ret.denominator = local_denominator;
-                clock += clock_step;
-                return ret;
+                return returnOther();
             }
         }
-        return MeasureLine();
+        return MeasureLine( 0, 0, 4, 4, true, false );
     }
 
     /**
      * @brief 反復子をリセットする
+     * @param endTick 反復を行う最大の時刻(tick単位)を指定する
      * @todo startTick を指定できるようにする
      */
-    void reset( tick_t end_clock ){
-        this->m_end_clock = end_clock;
+    void reset( tick_t endTick ){
+        this->endTick = endTick;
         this->i = 0;
-        this->t_end = -1;
-        this->clock = 0;
-        this->local_denominator = 0;
-        this->local_numerator = 0;
-        this->clock_step = 0;
-        this->local_clock = 0;
-        this->bar_counter = 0;
+        this->temporaryEndTick = -1;
+        this->tick = 0;
+        this->currentDenominator = 0;
+        this->currentNumerator = 0;
+        this->actualStepLength = 0;
+        this->currentTick = 0;
+        this->barCount = 0;
+        this->stepLength = 0;
+    }
+
+private:
+    /**
+     * @brief 小節の境界を表す MeasureLine のインスタンスを返す
+     */
+    MeasureLine returnBorder(){
+        barCount++;
+        MeasureLine ret( tick, barCount, currentNumerator, currentDenominator, true, false );
+        tick += actualStepLength;
+        return ret;
+    }
+
+    /**
+     * @brief 小節の境界でない MeasureLine のインスタンスを返す
+     */
+    MeasureLine returnOther(){
+        MeasureLine ret( tick, barCount, currentNumerator, currentDenominator, false, (tick - currentTick) % stepLength != 0 );
+        tick += actualStepLength;
+        return ret;
     }
 };
 

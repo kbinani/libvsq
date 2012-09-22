@@ -35,6 +35,11 @@ public:
     bool isBorder;
 
     /**
+     * @brief 補助線かどうか
+     */
+    bool isAssistLine;
+
+    /**
      * @brief 小節数
      */
     int barCount;
@@ -50,12 +55,13 @@ public:
     int denominator;
 
 public:
-    explicit MeasureLine(){
-        isBorder = true;
-        tick = 0;
-        barCount = 0;
-        numerator = 4;
-        denominator = 4;
+    explicit MeasureLine( tick_t tick, int barCount, int numerator, int denominator, bool isBorder, bool isAssistLine ){
+        this->tick = tick;
+        this->barCount = barCount;
+        this->numerator = numerator;
+        this->denominator = denominator;
+        this->isBorder = isBorder;
+        this->isAssistLine = isAssistLine;
     }
 };
 
