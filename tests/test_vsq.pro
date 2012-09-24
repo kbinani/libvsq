@@ -64,7 +64,8 @@ SOURCES += \
     SMFReaderTest.cpp \
     VSQFileReaderTest.cpp \
     NoteNumberUtilTest.cpp \
-    MusicXmlWriterTest.cpp
+    MusicXmlWriterTest.cpp \
+    StreamWriterTest.cpp
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
