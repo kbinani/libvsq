@@ -15,6 +15,7 @@
 #define __TextStream_h__
 
 #include "vsqglobal.hpp"
+#include "TextOutputStream.hpp"
 #include <string>
 #include <cmath>
 #include <sstream>
@@ -28,8 +29,7 @@ using namespace std;
  * @class table
  * @name TextStream
  */
-class TextStream
-{
+class TextStream : public TextOutputStream{
 private:
     /**
      * 書き込まれたデータを保持するバッファー
