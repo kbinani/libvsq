@@ -12,6 +12,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
 #ifndef __StreamWriter_hpp__
+#define __StreamWriter_hpp__
 
 #include "vsqglobal.hpp"
 #include "TextOutputStream.hpp"
