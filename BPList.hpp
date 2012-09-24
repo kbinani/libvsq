@@ -505,21 +505,29 @@ public:
         for( int i = 0; i < _length; i++ ){
             tick_t key = _clocks[i];
             if( startClock == key ){
-                stream.write( (boost::format( "%d" ) % key).str() ).write( "=" ).writeLine( (boost::format( "%d" ) % _items[i].value).str() );
+                stream.write( (boost::format( "%d" ) % key).str() );
+                stream.write( "=" );
+                stream.writeLine( (boost::format( "%d" ) % _items[i].value).str() );
                 value_at_start_written = true;
             }else if( startClock < key ){
                 if( (!value_at_start_written) && (lastvalue != _defaultValue) ){
-                    stream.write( (boost::format( "%ld" ) % startClock).str() ).write( "=" ).writeLine( (boost::format( "%d" ) % lastvalue).str() );
+                    stream.write( (boost::format( "%ld" ) % startClock).str() );
+                    stream.write( "=" );
+                    stream.writeLine( (boost::format( "%d" ) % lastvalue).str() );
                     value_at_start_written = true;
                 }
                 int val = _items[i].value;
-                stream.write( (boost::format( "%d" ) % key).str() ).write( "=" ).writeLine( (boost::format( "%d" ) % val).str() );
+                stream.write( (boost::format( "%d" ) % key).str() );
+                stream.write( "=" );
+                stream.writeLine( (boost::format( "%d" ) % val).str() );
             }else{
                 lastvalue = _items[i].value;
             }
         }
         if( (!value_at_start_written) && (lastvalue != _defaultValue) ){
-            stream.write( (boost::format( "%ld" ) % startClock).str() ).write( "=" ).writeLine( (boost::format( "%d" ) % lastvalue).str() );
+            stream.write( (boost::format( "%ld" ) % startClock).str() );
+            stream.write( "=" );
+            stream.writeLine( (boost::format( "%d" ) % lastvalue).str() );
         }
     }
 

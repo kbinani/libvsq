@@ -225,32 +225,43 @@ protected:
      * @todo boost使ってる箇所をStringUtil使うよう変更
      */
     void writeEvent( const TempEvent &item, VSQ_NS::TextStream &stream, VSQ_NS::EventWriteOption printTargets = EventWriteOption() ) const{
-        stream.write( "[ID#" ).write( (boost::format( "%04d" ) % item.index).str() ).writeLine( "]" );
-        stream.write( "Type=" ).writeLine( EventType::toString( item.type ) );
+        stream.write( "[ID#" );
+        stream.write( (boost::format( "%04d" ) % item.index).str() );
+        stream.writeLine( "]" );
+        stream.write( "Type=" );
+        stream.writeLine( EventType::toString( item.type ) );
         if( item.type == EventType::NOTE ){
             if( printTargets.length ){
-                stream.write( "Length=" ).writeLine( (boost::format( "%ld" ) % item.getLength()).str() );
+                stream.write( "Length=" );
+                stream.writeLine( (boost::format( "%ld" ) % item.getLength()).str() );
             }
             if( printTargets.note ){
-                stream.write( "Note#=" ).writeLine( (boost::format( "%d" ) % item.note).str() );
+                stream.write( "Note#=" );
+                stream.writeLine( (boost::format( "%d" ) % item.note).str() );
             }
             if( printTargets.dynamics ){
-                stream.write( "Dynamics=" ).writeLine( (boost::format( "%d" ) % item.dynamics).str() );
+                stream.write( "Dynamics=" );
+                stream.writeLine( (boost::format( "%d" ) % item.dynamics).str() );
             }
             if( printTargets.pmBendDepth ){
-                stream.write( "PMBendDepth=" ).writeLine( (boost::format( "%d" ) % item.pmBendDepth).str() );
+                stream.write( "PMBendDepth=" );
+                stream.writeLine( (boost::format( "%d" ) % item.pmBendDepth).str() );
             }
             if( printTargets.pmBendLength ){
-                stream.write( "PMBendLength=" ).writeLine( (boost::format( "%d" ) % item.pmBendLength).str() );
+                stream.write( "PMBendLength=" );
+                stream.writeLine( (boost::format( "%d" ) % item.pmBendLength).str() );
             }
             if( printTargets.pmbPortamentoUse ){
-                stream.write( "PMbPortamentoUse=" ).writeLine( (boost::format( "%d" ) % item.pmbPortamentoUse).str() );
+                stream.write( "PMbPortamentoUse=" );
+                stream.writeLine( (boost::format( "%d" ) % item.pmbPortamentoUse).str() );
             }
             if( printTargets.demDecGainRate ){
-                stream.write( "DEMdecGainRate=" ).writeLine( (boost::format( "%d" ) % item.demDecGainRate).str() );
+                stream.write( "DEMdecGainRate=" );
+                stream.writeLine( (boost::format( "%d" ) % item.demDecGainRate).str() );
             }
             if( printTargets.demAccent ){
-                stream.write( "DEMaccent=" ).writeLine( (boost::format( "%d" ) % item.demAccent).str() );
+                stream.write( "DEMaccent=" );
+                stream.writeLine( (boost::format( "%d" ) % item.demAccent).str() );
             }
             if( printTargets.preUtterance ){
                 //TODO:
@@ -261,20 +272,27 @@ protected:
     //            stream.writeLine( "VoiceOverlap=" + ustEvent.voiceOverlap );
             }
             if( item.lyricHandle.getHandleType() == HandleType::LYRIC ){
-                stream.write( "LyricHandle=h#" ).writeLine( (boost::format( "%04d" ) % item.lyricHandle.index).str() );
+                stream.write( "LyricHandle=h#" );
+                stream.writeLine( (boost::format( "%04d" ) % item.lyricHandle.index).str() );
             }
             if( item.vibratoHandle.getHandleType() == HandleType::VIBRATO ){
-                stream.write( "VibratoHandle=h#" ).writeLine( (boost::format( "%04d" ) % item.vibratoHandle.index).str() );
-                stream.write( "VibratoDelay=" ).writeLine( (boost::format( "%d" ) % item.vibratoDelay).str() );
+                stream.write( "VibratoHandle=h#" );
+                stream.writeLine( (boost::format( "%04d" ) % item.vibratoHandle.index).str() );
+                stream.write( "VibratoDelay=" );
+                stream.writeLine( (boost::format( "%d" ) % item.vibratoDelay).str() );
             }
             if( item.noteHeadHandle.getHandleType() == HandleType::NOTE_HEAD ){
-                stream.write( "NoteHeadHandle=h#" ).writeLine( (boost::format( "%04d" ) % item.noteHeadHandle.index).str() );
+                stream.write( "NoteHeadHandle=h#" );
+                stream.writeLine( (boost::format( "%04d" ) % item.noteHeadHandle.index).str() );
             }
         }else if( item.type == EventType::SINGER ){
-            stream.write( "IconHandle=h#" ).writeLine( (boost::format( "%04d" ) % item.singerHandle.index).str() );
+            stream.write( "IconHandle=h#" );
+            stream.writeLine( (boost::format( "%04d" ) % item.singerHandle.index).str() );
         }else if( item.type == EventType::ICON ){
-            stream.write( "IconHandle=h#" ).writeLine( (boost::format( "%04d" ) % item.iconDynamicsHandle.index).str() );
-            stream.write( "Note#=" ).writeLine( (boost::format( "%d" ) % item.note).str() );
+            stream.write( "IconHandle=h#" );
+            stream.writeLine( (boost::format( "%04d" ) % item.iconDynamicsHandle.index).str() );
+            stream.write( "Note#=" );
+            stream.writeLine( (boost::format( "%d" ) % item.note).str() );
         }
     }
 
@@ -648,7 +666,8 @@ private:
             }
             i++;
         }
-        stream.write( (boost::format( "%d" ) % eos).str() ).writeLine( "=EOS" );
+        stream.write( (boost::format( "%d" ) % eos).str() );
+        stream.writeLine( "=EOS" );
         return handles;
     }
 

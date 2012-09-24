@@ -15,6 +15,7 @@
 #define __TextStream_h__
 
 #include "vsqglobal.hpp"
+#include "TextOutputStream.hpp"
 #include <string>
 #include <cmath>
 #include <sstream>
@@ -28,8 +29,7 @@ using namespace std;
  * @class table
  * @name TextStream
  */
-class TextStream
-{
+class TextStream : public TextOutputStream{
 private:
     /**
      * 書き込まれたデータを保持するバッファー
@@ -130,7 +130,7 @@ public:
      * @brief 文字列をストリームに書きこむ
      * @param str (string) 書きこむ文字列
      */
-    TextStream &write( const std::string &str ){
+    void write( const std::string &str ){
         int len = str.size();
         int newSize = _position + 1 + len;
         int offset = _position + 1;
@@ -141,14 +141,13 @@ public:
         }
         _position += len;
         _length = std::max( _length, newSize );
-        return *this;
     }
 
     /**
      * @brief 文字列をストリームに書きこむ。末尾に改行文字を追加する
      * @param str (string) 書きこむ文字列
      */
-    TextStream &writeLine( const std::string &str ){
+    void writeLine( const std::string &str ){
         int len = str.size();
         int offset = _position + 1;
         int newSize = offset + len + 1;
@@ -159,7 +158,6 @@ public:
         _array[offset + len] = (char)0x0A;
         _position += len + 1;
         _length = std::max( _length, newSize );
-        return *this;
     }
 
     /**
