@@ -225,13 +225,14 @@ public:
      */
     static tick_t readDeltaClock( InputStream *stream ){
         tick_t ret = 0;
+        const tick_t mask = ~(tick_t)0 - (tick_t)0xFF + (tick_t)0x80;
         while( 1 ){
             int i = stream->read();
             if( i < 0 ){
                 break;
             }
             int d = i;
-            ret = (0xFFFFFFFFFFFFFF80 & (ret << 7)) | (d & 0x7f);
+            ret = (mask & (ret << 7)) | (d & 0x7f);
             if( (d & 0x80) == 0x00 ){
                 break;
             }
