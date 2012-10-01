@@ -65,6 +65,16 @@ public:
     }
 
     /**
+     * @brief 2 バイトのデータを little endian とみなし、int16 の整数値を取得する
+     * @param bytes 変換元のデータ
+     * @return 変換後の整数値
+     */
+    static int16_t makeInt16LE( char bytes[2] ){
+        return (0xff00 & (bytes[1] << 8)) |
+               (0x00ff & bytes[0]);
+    }
+
+    /**
      * @brief 2 バイトのデータを big endian とみなし、uint16 の整数値を取得する
      * @param bytes 変換元のデータ
      * @return 変換後の整数値
