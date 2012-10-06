@@ -199,8 +199,8 @@ public:
             Track *track = &(this->track[i]);
             int numEvents = track->getEvents()->size();
             if( 0 < numEvents ){
-                Event lastItem = track->getEvents()->get( numEvents - 1 );
-                max = ::max( max, lastItem.clock + lastItem.getLength() );
+                const Event *lastItem = track->getEvents()->get( numEvents - 1 );
+                max = ::max( max, lastItem->clock + lastItem->getLength() );
             }
             for( int j = 0; j < curveNameList.size(); j++ ){
                 string vct = curveNameList[j];

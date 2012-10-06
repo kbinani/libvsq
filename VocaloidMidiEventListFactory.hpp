@@ -128,14 +128,14 @@ protected:
         int note_start = 0;
         int note_end = count - 1;
         for( int i = 0; i < count; i++ ){
-            if( 0 <= events->get( i ).clock ){
+            if( 0 <= events->get( i )->clock ){
                 note_start = i;
                 break;
             }
             note_start = i;
         }
         for( int i = count - 1; i >= 0; i-- ){
-            if( events->get( i ).clock <= totalClocks ){
+            if( events->get( i )->clock <= totalClocks ){
                 note_end = i;
                 break;
             }
@@ -144,7 +144,7 @@ protected:
         // 最初の歌手を決める
         int singer_event = -1;
         for( int i = note_start; i >= 0; i-- ){
-            if( events->get( i ).type == EventType::SINGER ){
+            if( events->get( i )->type == EventType::SINGER ){
                 singer_event = i;
                 break;
             }
@@ -189,37 +189,37 @@ protected:
         int lastDelay = 0;
         int last_note_end = 0;
         for( int i = note_start; i <= note_end; i++ ){
-            Event item = events->get( i );
-            if( item.type == EventType::NOTE ){
+            const Event *item = events->get( i );
+            if( item->type == EventType::NOTE ){
                 int note_loc = 0x03;
-                if( item.clock == last_note_end ){
+                if( item->clock == last_note_end ){
                     note_loc = note_loc - 0x02;
                 }
 
                 // 次に現れる音符イベントを探す
-                tick_t nextclock = item.clock + item.getLength() + 1;
+                tick_t nextclock = item->clock + item->getLength() + 1;
                 int event_count = events->size();
                 for( int j = i + 1; j < event_count; j++ ){
-                    Event itemj = events->get( j );
-                    if( itemj.type == EventType::NOTE ){
-                        nextclock = itemj.clock;
+                    const Event *itemj = events->get( j );
+                    if( itemj->type == EventType::NOTE ){
+                        nextclock = itemj->clock;
                         break;
                     }
                 }
-                if( item.clock + item.getLength() == nextclock ){
+                if( item->clock + item->getLength() == nextclock ){
                     note_loc = note_loc - 0x01;
                 }
 
                 int delay;
                 NrpnEvent noteNrpn =
-                    generateNoteNRPN( target, tempoList, &item, msPreSend, note_loc, &lastDelay, &delay );
+                    generateNoteNRPN( target, tempoList, item, msPreSend, note_loc, &lastDelay, &delay );
                 lastDelay = delay;
 
                 list.push_back( noteNrpn );
-                vector<NrpnEvent> vibratoNrpn = generateVibratoNRPN( tempoList, &item, msPreSend );
+                vector<NrpnEvent> vibratoNrpn = generateVibratoNRPN( tempoList, item, msPreSend );
                 list.insert( list.end(), vibratoNrpn.begin(), vibratoNrpn.end() );
-                last_note_end = item.clock + item.getLength();
-            }else if( item.type == EventType::SINGER ){
+                last_note_end = item->clock + item->getLength();
+            }else if( item->type == EventType::SINGER ){
                 if( i > note_start && i != singer_event ){
                     vector<NrpnEvent> singerNrpn = generateSingerNRPN( tempoList, item, msPreSend );
                     list.insert( list.end(), singerNrpn.begin(), singerNrpn.end() );
@@ -272,13 +272,13 @@ protected:
      * @param msPreSend (int) ミリ秒単位のプリセンド時間
      * @return (table<NrpnEvent>) NrpnEvent の配列
      */
-    static vector<NrpnEvent> generateSingerNRPN( TempoList *tempoList, const Event &singerEvent, int preSendMilliseconds ){
-        tick_t clock = singerEvent.clock;
+    static vector<NrpnEvent> generateSingerNRPN( TempoList *tempoList, const Event *singerEvent, int preSendMilliseconds ){
+        tick_t clock = singerEvent->clock;
         Handle singer_handle;
 
         double clock_msec = tempoList->getSecFromClock( clock ) * 1000.0;
 
-        double msEnd = tempoList->getSecFromClock( singerEvent.clock + singerEvent.getLength() ) * 1000.0;
+        double msEnd = tempoList->getSecFromClock( singerEvent->clock + singerEvent->getLength() ) * 1000.0;
         int duration = (int)::floor( ::ceil( msEnd - clock_msec ) );
 
         int duration0, duration1;
@@ -316,7 +316,7 @@ protected:
      * @return (NrpnEvent) NrpnEvent
      * @return (int) この音符に対して設定された、ミリ秒単位のディレイ値
      */
-    static NrpnEvent generateNoteNRPN( Track *track, TempoList *tempoList, Event *noteEvent, int msPreSend, int noteLocation, int *lastDelay, int *delay ){
+    static NrpnEvent generateNoteNRPN( Track *track, TempoList *tempoList, const Event *noteEvent, int msPreSend, int noteLocation, int *lastDelay, int *delay ){
         tick_t clock = noteEvent->clock;
         NrpnEvent add( 0, MidiParameterType::CC_BS_DELAY, 0, 0 );
 
@@ -483,7 +483,7 @@ protected:
      * @param msPreSend (int) ミリ秒単位のプリセンド時間
      * @return (table<NrpnEvent>) NrpnEvent の配列
      */
-    static vector<NrpnEvent> generateVibratoNRPN( TempoList *tempoList, Event *noteEvent, int msPreSend ){
+    static vector<NrpnEvent> generateVibratoNRPN( TempoList *tempoList, const Event *noteEvent, int msPreSend ){
         vector<NrpnEvent> ret;
         if( noteEvent->vibratoHandle.getHandleType() != HandleType::UNKNOWN ){
             tick_t vclock = noteEvent->clock + noteEvent->vibratoDelay;

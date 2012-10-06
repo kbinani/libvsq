@@ -123,59 +123,59 @@ public:
             CPPUNIT_ASSERT_EQUAL( 2, track1->getEvents()->size() );
             {
                 // イベント/歌手変更
-                Event item = track1->getEvents()->get( 0 );
-                CPPUNIT_ASSERT_EQUAL( (tick_t)0, item.clock );
-                CPPUNIT_ASSERT_EQUAL( EventType::SINGER, item.type );
-                CPPUNIT_ASSERT( false == item.isEOS() );
+                const Event *item = track1->getEvents()->get( 0 );
+                CPPUNIT_ASSERT_EQUAL( (tick_t)0, item->clock );
+                CPPUNIT_ASSERT_EQUAL( EventType::SINGER, item->type );
+                CPPUNIT_ASSERT( false == item->isEOS() );
                 {
                     //歌手ハンドルの内容物をテスト
-                    CPPUNIT_ASSERT_EQUAL( HandleType::SINGER, item.singerHandle.getHandleType() );
-                    CPPUNIT_ASSERT_EQUAL( string( "$07010000" ), item.singerHandle.iconId );
-                    CPPUNIT_ASSERT_EQUAL( string( "Foo" ), item.singerHandle.ids );
-                    CPPUNIT_ASSERT_EQUAL( 0, item.singerHandle.original );
-                    CPPUNIT_ASSERT_EQUAL( string( "" ), item.singerHandle.caption );
-                    CPPUNIT_ASSERT_EQUAL( (tick_t)1, item.singerHandle.getLength() );
-                    CPPUNIT_ASSERT_EQUAL( 0, item.singerHandle.language );
-                    CPPUNIT_ASSERT_EQUAL( 0, item.singerHandle.program );
+                    CPPUNIT_ASSERT_EQUAL( HandleType::SINGER, item->singerHandle.getHandleType() );
+                    CPPUNIT_ASSERT_EQUAL( string( "$07010000" ), item->singerHandle.iconId );
+                    CPPUNIT_ASSERT_EQUAL( string( "Foo" ), item->singerHandle.ids );
+                    CPPUNIT_ASSERT_EQUAL( 0, item->singerHandle.original );
+                    CPPUNIT_ASSERT_EQUAL( string( "" ), item->singerHandle.caption );
+                    CPPUNIT_ASSERT_EQUAL( (tick_t)1, item->singerHandle.getLength() );
+                    CPPUNIT_ASSERT_EQUAL( 0, item->singerHandle.language );
+                    CPPUNIT_ASSERT_EQUAL( 0, item->singerHandle.program );
                 }
                 {
                     //歌手ハンドル以外のハンドルがemptyとなっていること
-                    CPPUNIT_ASSERT_EQUAL( HandleType::UNKNOWN, item.iconDynamicsHandle.getHandleType() );
-                    CPPUNIT_ASSERT_EQUAL( HandleType::UNKNOWN, item.lyricHandle.getHandleType() );
-                    CPPUNIT_ASSERT_EQUAL( HandleType::UNKNOWN, item.noteHeadHandle.getHandleType() );
-                    CPPUNIT_ASSERT_EQUAL( HandleType::UNKNOWN, item.vibratoHandle.getHandleType() );
+                    CPPUNIT_ASSERT_EQUAL( HandleType::UNKNOWN, item->iconDynamicsHandle.getHandleType() );
+                    CPPUNIT_ASSERT_EQUAL( HandleType::UNKNOWN, item->lyricHandle.getHandleType() );
+                    CPPUNIT_ASSERT_EQUAL( HandleType::UNKNOWN, item->noteHeadHandle.getHandleType() );
+                    CPPUNIT_ASSERT_EQUAL( HandleType::UNKNOWN, item->vibratoHandle.getHandleType() );
                 }
             }
             {
                 // イベント/音符
-                Event item = track1->getEvents()->get( 1 );
-                CPPUNIT_ASSERT_EQUAL( (tick_t)1920, item.clock );
-                CPPUNIT_ASSERT_EQUAL( EventType::NOTE, item.type );
-                CPPUNIT_ASSERT_EQUAL( (tick_t)480, item.getLength() );
-                CPPUNIT_ASSERT_EQUAL( 60, item.note );
-                CPPUNIT_ASSERT_EQUAL( 0, item.dynamics );
-                CPPUNIT_ASSERT_EQUAL( 0, item.pmBendDepth );
-                CPPUNIT_ASSERT_EQUAL( 0, item.pmBendLength );
-                CPPUNIT_ASSERT_EQUAL( 0, item.pmbPortamentoUse );
-                CPPUNIT_ASSERT_EQUAL( 0, item.demDecGainRate );
-                CPPUNIT_ASSERT_EQUAL( 0, item.demAccent );
-                CPPUNIT_ASSERT( false == item.isEOS() );
+                const Event *item = track1->getEvents()->get( 1 );
+                CPPUNIT_ASSERT_EQUAL( (tick_t)1920, item->clock );
+                CPPUNIT_ASSERT_EQUAL( EventType::NOTE, item->type );
+                CPPUNIT_ASSERT_EQUAL( (tick_t)480, item->getLength() );
+                CPPUNIT_ASSERT_EQUAL( 60, item->note );
+                CPPUNIT_ASSERT_EQUAL( 0, item->dynamics );
+                CPPUNIT_ASSERT_EQUAL( 0, item->pmBendDepth );
+                CPPUNIT_ASSERT_EQUAL( 0, item->pmBendLength );
+                CPPUNIT_ASSERT_EQUAL( 0, item->pmbPortamentoUse );
+                CPPUNIT_ASSERT_EQUAL( 0, item->demDecGainRate );
+                CPPUNIT_ASSERT_EQUAL( 0, item->demAccent );
+                CPPUNIT_ASSERT( false == item->isEOS() );
                 {
                     // 歌詞ハンドルの内容物が正しいこと
-                    CPPUNIT_ASSERT_EQUAL( HandleType::LYRIC, item.lyricHandle.getHandleType() );
-                    CPPUNIT_ASSERT_EQUAL( 1, item.lyricHandle.getLyricCount() );
-                    CPPUNIT_ASSERT_EQUAL( string( "a" ), item.lyricHandle.getLyricAt( 0 ).phrase );
-                    CPPUNIT_ASSERT_EQUAL( string( "a" ), item.lyricHandle.getLyricAt( 0 ).getPhoneticSymbol() );
-                    CPPUNIT_ASSERT_EQUAL( 1.0, item.lyricHandle.getLyricAt( 0 ).lengthRatio );
-                    CPPUNIT_ASSERT_EQUAL( string( "0" ), item.lyricHandle.getLyricAt( 0 ).getConsonantAdjustment() );
-                    CPPUNIT_ASSERT( false == item.lyricHandle.getLyricAt( 0 ).isProtected );
+                    CPPUNIT_ASSERT_EQUAL( HandleType::LYRIC, item->lyricHandle.getHandleType() );
+                    CPPUNIT_ASSERT_EQUAL( 1, item->lyricHandle.getLyricCount() );
+                    CPPUNIT_ASSERT_EQUAL( string( "a" ), item->lyricHandle.getLyricAt( 0 ).phrase );
+                    CPPUNIT_ASSERT_EQUAL( string( "a" ), item->lyricHandle.getLyricAt( 0 ).getPhoneticSymbol() );
+                    CPPUNIT_ASSERT_EQUAL( 1.0, item->lyricHandle.getLyricAt( 0 ).lengthRatio );
+                    CPPUNIT_ASSERT_EQUAL( string( "0" ), item->lyricHandle.getLyricAt( 0 ).getConsonantAdjustment() );
+                    CPPUNIT_ASSERT( false == item->lyricHandle.getLyricAt( 0 ).isProtected );
                 }
                 {
                     // 歌詞ハンドル以外のハンドルがemptyとなっていること
-                    CPPUNIT_ASSERT_EQUAL( HandleType::UNKNOWN, item.iconDynamicsHandle.getHandleType() );
-                    CPPUNIT_ASSERT_EQUAL( HandleType::UNKNOWN, item.singerHandle.getHandleType() );
-                    CPPUNIT_ASSERT_EQUAL( HandleType::UNKNOWN, item.noteHeadHandle.getHandleType() );
-                    CPPUNIT_ASSERT_EQUAL( HandleType::UNKNOWN, item.vibratoHandle.getHandleType() );
+                    CPPUNIT_ASSERT_EQUAL( HandleType::UNKNOWN, item->iconDynamicsHandle.getHandleType() );
+                    CPPUNIT_ASSERT_EQUAL( HandleType::UNKNOWN, item->singerHandle.getHandleType() );
+                    CPPUNIT_ASSERT_EQUAL( HandleType::UNKNOWN, item->noteHeadHandle.getHandleType() );
+                    CPPUNIT_ASSERT_EQUAL( HandleType::UNKNOWN, item->vibratoHandle.getHandleType() );
                 }
             }
         }

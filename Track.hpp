@@ -397,16 +397,16 @@ public:
     /**
      * @brief 指定したゲートタイムにおいて、歌唱を担当している歌手の歌手変更イベントを取得する
      * @param clock ゲートタイム
-     * @return 歌手イベント。存在しなければ EOS イベント (isEOS メソッドが true を返すイベント) を返す
+     * @return 歌手イベント。存在しなければ null を返す
      */
-    VSQ_NS::Event getSingerEventAt( VSQ_NS::tick_t clock ){
-        VSQ_NS::Event last = VSQ_NS::Event::getEOS();
+    const VSQ_NS::Event *getSingerEventAt( VSQ_NS::tick_t clock ){
+        const VSQ_NS::Event *last = 0;
         VSQ_NS::Event::List *events = getEvents();
         VSQ_NS::EventListIndexIterator itr = getIndexIterator( VSQ_NS::EventListIndexIteratorKind::SINGER );
         while( itr.hasNext() ){
             int index = itr.next();
-            VSQ_NS::Event item = events->get( index );
-            if( clock < item.clock ){
+            const VSQ_NS::Event *item = events->get( index );
+            if( clock < item->clock ){
                 return last;
             }
             last = item;
@@ -600,8 +600,8 @@ public:
         res.common = common.clone();
         res.events.clear();
         for( int i = 0; i < events.size(); i++ ){
-            Event item = events.get( i );
-            res.events.add( item.clone(), item.id );
+            const Event *item = events.get( i );
+            res.events.add( item->clone(), item->id );
         }
         res._pit = _pit.clone();
         res._pbs = _pbs.clone();

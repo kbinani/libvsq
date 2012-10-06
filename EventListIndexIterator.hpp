@@ -118,33 +118,33 @@ private:
     int _nextPosition() const{
         int count = _list->size();
         for( int i = _pos + 1; i < count; ++i ){
-            Event item = _list->get( i );
+            const Event *item = _list->get( i );
             if( _kindSinger ){
-                if( item.type == EventType::SINGER ){
+                if( item->type == EventType::SINGER ){
                     return i;
                 }
             }
             if( _kindNote ){
-                if( item.type == EventType::NOTE ){
+                if( item->type == EventType::NOTE ){
                     return i;
                 }
             }
             if( _kindDynaff || _kindCrescend || _kindDecrescend ){
-                if( item.type == EventType::ICON
-                        && item.iconDynamicsHandle.getHandleType() != HandleType::UNKNOWN )
+                if( item->type == EventType::ICON
+                        && item->iconDynamicsHandle.getHandleType() != HandleType::UNKNOWN )
                 {
                     if( _kindDynaff ){
-                        if( item.iconDynamicsHandle.isDynaffType() ){
+                        if( item->iconDynamicsHandle.isDynaffType() ){
                             return i;
                         }
                     }
                     if( _kindCrescend ){
-                        if( item.iconDynamicsHandle.isCrescendType() ){
+                        if( item->iconDynamicsHandle.isCrescendType() ){
                             return i;
                         }
                     }
                     if( _kindDecrescend ){
-                        if( item.iconDynamicsHandle.isDecrescendType() ){
+                        if( item->iconDynamicsHandle.isDecrescendType() ){
                             return i;
                         }
                     }

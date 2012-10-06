@@ -472,8 +472,8 @@ protected:
 
         // トラックエンド
         lastClock = maxClock;
-        Event last_event = sequence->track[track].getEvents()->get( sequence->track[track].getEvents()->size() - 1 );
-        maxClock = ::max( maxClock, last_event.clock + last_event.getLength() );
+        const Event *last_event = sequence->track[track].getEvents()->get( sequence->track[track].getEvents()->size() - 1 );
+        maxClock = ::max( maxClock, last_event->clock + last_event->getLength() );
         tick_t lastDeltaClock = maxClock - lastClock;
         if( lastDeltaClock < 0 ){
             lastDeltaClock = 0;

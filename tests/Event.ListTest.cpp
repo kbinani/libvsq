@@ -62,14 +62,14 @@ public:
         listA.add( event, 10 );
         listA.setForId( 10, replace );
     
-        CPPUNIT_ASSERT_EQUAL( 10, listA.get( 0 ).id );
-        CPPUNIT_ASSERT_EQUAL( 90, listA.get( 0 ).note );
+        CPPUNIT_ASSERT_EQUAL( 10, listA.get( 0 )->id );
+        CPPUNIT_ASSERT_EQUAL( 90, listA.get( 0 )->note );
     
         // 無効なinternalIdを渡すので、setが行われない場合
         Event::List listB;
         listB.add( event, 10 );
         listB.setForId( 9999, replace );
-        CPPUNIT_ASSERT_EQUAL( 60, listB.get( 0 ).note );
+        CPPUNIT_ASSERT_EQUAL( 60, listB.get( 0 )->note );
     }
     
     void testSort()
@@ -84,8 +84,8 @@ public:
     
         list.sort();
     
-        CPPUNIT_ASSERT_EQUAL( (tick_t)0, list.get( 0 ).clock );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)480, list.get( 1 ).clock );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)0, list.get( 0 )->clock );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)480, list.get( 1 )->clock );
         CPPUNIT_ASSERT_EQUAL( 0, list.findIndexFromId( 20 ) );
         CPPUNIT_ASSERT_EQUAL( 1, list.findIndexFromId( 14 ) );
     }
@@ -99,7 +99,7 @@ public:
         list.add( a, 20 );
     
         CPPUNIT_ASSERT_EQUAL( 2, list.size() );
-        CPPUNIT_ASSERT_EQUAL( 20, list.get( 0 ).id );
+        CPPUNIT_ASSERT_EQUAL( 20, list.get( 0 )->id );
     
         list.clear();
     
@@ -115,8 +115,8 @@ public:
         int idOfB = list.add( b );
     
         // bよりaのほうがclockが大きいので、並べ替えが起きるはず
-        CPPUNIT_ASSERT_EQUAL( idOfB, list.get( 0 ).id );
-        CPPUNIT_ASSERT_EQUAL( idOfA, list.get( 1 ).id );
+        CPPUNIT_ASSERT_EQUAL( idOfB, list.get( 0 )->id );
+        CPPUNIT_ASSERT_EQUAL( idOfA, list.get( 1 )->id );
         CPPUNIT_ASSERT( idOfA != idOfB );
     }
     
@@ -129,8 +129,8 @@ public:
         int idOfB = list.add( b, 2 );
         CPPUNIT_ASSERT_EQUAL( 100, idOfA );
         CPPUNIT_ASSERT_EQUAL( 2, idOfB );
-        CPPUNIT_ASSERT_EQUAL( 100, list.get( 0 ).id );
-        CPPUNIT_ASSERT_EQUAL( 2, list.get( 1 ).id );
+        CPPUNIT_ASSERT_EQUAL( 100, list.get( 0 )->id );
+        CPPUNIT_ASSERT_EQUAL( 2, list.get( 1 )->id );
     }
     
     void testRemoveAt()
@@ -140,14 +140,14 @@ public:
         Event b( 0, EventType::NOTE );
         list.add( a, 100 );
         list.add( b, 2 );
-        CPPUNIT_ASSERT_EQUAL( 100, list.get( 0 ).id );
-        CPPUNIT_ASSERT_EQUAL( 2, list.get( 1 ).id );
+        CPPUNIT_ASSERT_EQUAL( 100, list.get( 0 )->id );
+        CPPUNIT_ASSERT_EQUAL( 2, list.get( 1 )->id );
         CPPUNIT_ASSERT_EQUAL( 2, list.size() );
     
         list.removeAt( 0 );
     
         CPPUNIT_ASSERT_EQUAL( 1, list.size() );
-        CPPUNIT_ASSERT_EQUAL( 2, list.get( 0 ).id );
+        CPPUNIT_ASSERT_EQUAL( 2, list.get( 0 )->id );
     }
     
     void testSize()
@@ -166,16 +166,16 @@ public:
         Event b( 0, EventType::NOTE );
         list.add( a, 100 );
         list.add( b, 2 );
-        CPPUNIT_ASSERT_EQUAL( 100, list.get( 0 ).id );
-        CPPUNIT_ASSERT_EQUAL( 2, list.get( 1 ).id );
+        CPPUNIT_ASSERT_EQUAL( 100, list.get( 0 )->id );
+        CPPUNIT_ASSERT_EQUAL( 2, list.get( 1 )->id );
     
         Event c( 480, EventType::NOTE );
         c.id = 99;
         list.set( 1, c );
     
-        CPPUNIT_ASSERT_EQUAL( 100, list.get( 0 ).id );
-        CPPUNIT_ASSERT_EQUAL( 2, list.get( 1 ).id );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)480, list.get( 1 ).clock );
+        CPPUNIT_ASSERT_EQUAL( 100, list.get( 0 )->id );
+        CPPUNIT_ASSERT_EQUAL( 2, list.get( 1 )->id );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)480, list.get( 1 )->clock );
     }
     
     void testIterator()

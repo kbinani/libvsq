@@ -33,8 +33,8 @@ public:
         CPPUNIT_ASSERT( false == iterator.hasNext() );
     
         CPPUNIT_ASSERT_EQUAL( 1, list.size() );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1920, list.get( 0 ).clock );
-        CPPUNIT_ASSERT_EQUAL( 1, list.get( 0 ).id );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)1920, list.get( 0 )->clock );
+        CPPUNIT_ASSERT_EQUAL( 1, list.get( 0 )->id );
     }
 
     CPPUNIT_TEST_SUITE( EventListIteratorTest );

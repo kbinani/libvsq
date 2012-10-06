@@ -152,9 +152,9 @@ public:
 
                     int clockLast = clockStart; // 出力済みのクロック
                     for( int k = startIndex; k < numEvents; k++ ){
-                        Event itemk = vsq_track->getEvents()->get( k );
-                        if( itemk.type != EventType::NOTE ){
-                            if( clockEnd <= itemk.clock ){
+                        const Event *itemk = vsq_track->getEvents()->get( k );
+                        if( itemk->type != EventType::NOTE ){
+                            if( clockEnd <= itemk->clock ){
                                 startIndex = k;
                                 break;
                             }
@@ -163,34 +163,34 @@ public:
 
                         // 第 k 番目の音符が、第 j 小節の範囲に入っているかどうか。
                         // 入っていれば、出力する。
-                        if( (clockStart <= itemk.clock && itemk.clock < clockEnd) ||
-                            (clockStart <= itemk.clock + itemk.getLength() && itemk.clock + itemk.getLength() < clockEnd) ||
-                            (itemk.clock <= clockStart && clockEnd <= itemk.clock + itemk.getLength()) )
+                        if( (clockStart <= itemk->clock && itemk->clock < clockEnd) ||
+                            (clockStart <= itemk->clock + itemk->getLength() && itemk->clock + itemk->getLength() < clockEnd) ||
+                            (itemk->clock <= clockStart && clockEnd <= itemk->clock + itemk->getLength()) )
                         {
-                            if( clockLast < itemk.clock ){
+                            if( clockLast < itemk->clock ){
                                 // 第 j 小節の開始位置から、第 k 番目の音符の間に、休符があるので、出力する
                                 // [clockLast, itemk.Clock) の間でテンポ変更イベントがあれば、これも出力する
                                 std::vector<Tempo> insert;
                                 if( !change_tempo ){
                                     for( int m = 0; m < tempoInsert.size(); m++ ){
                                         Tempo itemm = tempoInsert[m];
-                                        if( clockLast <= itemm.clock && itemm.clock < itemk.clock ){
+                                        if( clockLast <= itemm.clock && itemm.clock < itemk->clock ){
                                             insert.push_back( itemm );
                                         }
                                     }
                                 }
-                                printStyledNote( sw, clockLast, itemk.clock - clockLast, -1, insert, "", altered, false, false );
-                                clockLast = itemk.clock;
+                                printStyledNote( sw, clockLast, itemk->clock - clockLast, -1, insert, "", altered, false, false );
+                                clockLast = itemk->clock;
                             }
 
                             bool tieStopRequired = false;
-                            int start = itemk.clock;
+                            int start = itemk->clock;
                             if( start < clockStart ){
                                 // 前の小節からタイで接続されている場合
                                 start = clockStart;
                                 tieStopRequired = true;
                             }
-                            int end = itemk.clock + itemk.getLength();
+                            int end = itemk->clock + itemk->getLength();
                             bool tieStartRequired = false;
                             if( clockEnd < end ){
                                 // 次の小節にタイで接続しなければならない場合
@@ -207,7 +207,7 @@ public:
                                     }
                                 }
                             }
-                            printStyledNote( sw, start, actualLength, itemk.note, insert2, itemk.lyricHandle.getLyricAt( 0 ).phrase, altered, tieStartRequired, tieStopRequired );
+                            printStyledNote( sw, start, actualLength, itemk->note, insert2, itemk->lyricHandle.getLyricAt( 0 ).phrase, altered, tieStartRequired, tieStopRequired );
                             clockLast = end;
                             if( tieStartRequired ){
                                 startIndex = k;

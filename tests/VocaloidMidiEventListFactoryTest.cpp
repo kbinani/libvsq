@@ -21,11 +21,11 @@ public:
         return VocaloidMidiEventListFactory::generateHeaderNRPN();
     }
 
-    static vector<NrpnEvent> generateSingerNRPN( TempoList *tempoList, const Event &singerEvent, int preSendMilliseconds ){
+    static vector<NrpnEvent> generateSingerNRPN( TempoList *tempoList, const Event *singerEvent, int preSendMilliseconds ){
         return VocaloidMidiEventListFactory::generateSingerNRPN( tempoList, singerEvent, preSendMilliseconds );
     }
 
-    static NrpnEvent generateNoteNRPN( Track *track, TempoList *tempoList, Event *noteEvent, int msPreSend, int noteLocation, int *lastDelay, int *delay ){
+    static NrpnEvent generateNoteNRPN( Track *track, TempoList *tempoList, const Event *noteEvent, int msPreSend, int noteLocation, int *lastDelay, int *delay ){
         return VocaloidMidiEventListFactory::generateNoteNRPN( track, tempoList, noteEvent, msPreSend, noteLocation, lastDelay, delay );
     }
 
@@ -125,7 +125,7 @@ public:
         Event singerEvent( 1920, EventType::SINGER );
         singerEvent.singerHandle = Handle( HandleType::SINGER );
         sequence.track[0].getEvents()->add( singerEvent );
-        vector<NrpnEvent> actual = VocaloidMidiEventListFactoryStub::generateSingerNRPN( &sequence.tempoList, singerEvent, 500 );
+        vector<NrpnEvent> actual = VocaloidMidiEventListFactoryStub::generateSingerNRPN( &sequence.tempoList, &singerEvent, 500 );
 
         CPPUNIT_ASSERT_EQUAL( (size_t)1, actual.size() );
         vector<NrpnEvent> actualExpanded = actual[0].expand();

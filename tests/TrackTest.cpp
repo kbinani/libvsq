@@ -19,12 +19,12 @@ public:
         CPPUNIT_ASSERT_EQUAL( string( "DummyTrackName" ), track.getName() );
         Event::List *events = track.getEvents();
         CPPUNIT_ASSERT_EQUAL( 1, events->size() );
-        CPPUNIT_ASSERT_EQUAL( EventType::SINGER, events->get( 0 ).type );
-        CPPUNIT_ASSERT_EQUAL( string( "DummySingerName" ), events->get( 0 ).singerHandle.ids );
+        CPPUNIT_ASSERT_EQUAL( EventType::SINGER, events->get( 0 )->type );
+        CPPUNIT_ASSERT_EQUAL( string( "DummySingerName" ), events->get( 0 )->singerHandle.ids );
 
         //TODO:
 /*
-        assert_not_nil( track.getCurve( "pit" ) );
+        assert_not_nil( trackgCurve( "pit" ) );
         assert_not_nil( track.getCurve( "pbs" ) );
         assert_not_nil( track.getCurve( "dyn" ) );
         assert_not_nil( track.getCurve( "bre" ) );
@@ -199,8 +199,8 @@ public:
         Track track( "", "" );
         track.getEvents()->clear();
         {
-            Event actual = track.getSingerEventAt( 0 );
-            CPPUNIT_ASSERT( actual.isEOS() );
+            const Event *actual = track.getSingerEventAt( 0 );
+            CPPUNIT_ASSERT( 0 == actual );
         }
 
         Event singer1( 0, EventType::SINGER );
@@ -213,24 +213,24 @@ public:
         track.getEvents()->add( singer2, 3 );
 
         {
-            Event actual = track.getSingerEventAt( 0 );
-            CPPUNIT_ASSERT_EQUAL( 1, actual.id );
+            const Event *actual = track.getSingerEventAt( 0 );
+            CPPUNIT_ASSERT_EQUAL( 1, actual->id );
         }
         {
-            Event actual = track.getSingerEventAt( 479 );
-            CPPUNIT_ASSERT_EQUAL( 1, actual.id );
+            const Event *actual = track.getSingerEventAt( 479 );
+            CPPUNIT_ASSERT_EQUAL( 1, actual->id );
         }
         {
-            Event actual = track.getSingerEventAt( 480 );
-            CPPUNIT_ASSERT_EQUAL( 3, actual.id );
+            const Event *actual = track.getSingerEventAt( 480 );
+            CPPUNIT_ASSERT_EQUAL( 3, actual->id );
         }
         {
-            Event actual = track.getSingerEventAt( 10000 );
-            CPPUNIT_ASSERT_EQUAL( 3, actual.id );
+            const Event *actual = track.getSingerEventAt( 10000 );
+            CPPUNIT_ASSERT_EQUAL( 3, actual->id );
         }
         {
-            Event actual = track.getSingerEventAt( -100 );
-            CPPUNIT_ASSERT( actual.isEOS() );
+            const Event *actual = track.getSingerEventAt( -100 );
+            CPPUNIT_ASSERT( 0 == actual );
         }
     }
 
@@ -245,8 +245,8 @@ public:
         Track track( "DummyTrackName", "DummySingerName" );
         EventListIndexIterator iterator = track.getIndexIterator( EventListIndexIteratorKind::SINGER );
         CPPUNIT_ASSERT( iterator.hasNext() );
-        Event event = track.getEvents()->get( iterator.next() );
-        CPPUNIT_ASSERT_EQUAL( string( "DummySingerName" ), event.singerHandle.ids );
+        const Event *event = track.getEvents()->get( iterator.next() );
+        CPPUNIT_ASSERT_EQUAL( string( "DummySingerName" ), event->singerHandle.ids );
         CPPUNIT_ASSERT( false == iterator.hasNext() );
     }
     
@@ -259,10 +259,10 @@ public:
         track.getEvents()->add( event, 10 );
         iterator = track.getIndexIterator( EventListIndexIteratorKind::NOTE );
         CPPUNIT_ASSERT( iterator.hasNext() );
-        Event obtained = track.getEvents()->get( iterator.next() );
+        const Event *obtained = track.getEvents()->get( iterator.next() );
         //TODO: Event::equalが実装されたらコメントアウトを元に戻す
         //CPPUNIT_ASSERT_EQUAL( event, obtained );
-        CPPUNIT_ASSERT_EQUAL( 10, obtained.id );
+        CPPUNIT_ASSERT_EQUAL( 10, obtained->id );
         CPPUNIT_ASSERT( false == iterator.hasNext() );
     }
     
@@ -277,11 +277,11 @@ public:
         track.getEvents()->add( event, 10 );
         iterator = track.getIndexIterator( EventListIndexIteratorKind::DYNAFF );
         CPPUNIT_ASSERT( iterator.hasNext() );
-        Event obtained = track.getEvents()->get( iterator.next() );
+        const Event *obtained = track.getEvents()->get( iterator.next() );
         //TODO: Event::equalが実装されたらコメントアウトを元に戻す
         //CPPUNIT_ASSERT_EQUAL( event, obtained );
-        CPPUNIT_ASSERT_EQUAL( 10, obtained.id );
-        CPPUNIT_ASSERT_EQUAL( string( "$05019999" ), obtained.iconDynamicsHandle.iconId );
+        CPPUNIT_ASSERT_EQUAL( 10, obtained->id );
+        CPPUNIT_ASSERT_EQUAL( string( "$05019999" ), obtained->iconDynamicsHandle.iconId );
         CPPUNIT_ASSERT( false == iterator.hasNext() );
     }
     
@@ -367,11 +367,11 @@ public:
     
         Track copy = track.clone();
         CPPUNIT_ASSERT_EQUAL( 2, copy.getEvents()->size() );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)0, copy.getEvents()->get( 0 ).clock );
-        CPPUNIT_ASSERT_EQUAL( EventType::SINGER, copy.getEvents()->get( 0 ).type );
-        CPPUNIT_ASSERT_EQUAL( string( "DummySingerName" ), copy.getEvents()->get( 0 ).singerHandle.ids );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)480, copy.getEvents()->get( 1 ).clock );
-        CPPUNIT_ASSERT_EQUAL( EventType::NOTE, copy.getEvents()->get( 1 ).type );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)0, copy.getEvents()->get( 0 )->clock );
+        CPPUNIT_ASSERT_EQUAL( EventType::SINGER, copy.getEvents()->get( 0 )->type );
+        CPPUNIT_ASSERT_EQUAL( string( "DummySingerName" ), copy.getEvents()->get( 0 )->singerHandle.ids );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)480, copy.getEvents()->get( 1 )->clock );
+        CPPUNIT_ASSERT_EQUAL( EventType::NOTE, copy.getEvents()->get( 1 )->type );
         CPPUNIT_ASSERT_EQUAL( 1, copy.getCurve( "pit" )->size() );
         CPPUNIT_ASSERT_EQUAL( (tick_t)480, copy.getCurve( "pit" )->getKeyClock( 0 ) );
         CPPUNIT_ASSERT_EQUAL( 100, copy.getCurve( "pit" )->get( 0 ).value );

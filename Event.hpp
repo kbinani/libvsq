@@ -176,8 +176,8 @@ public:
          * @param index インデックス(最初のインデックスは0)
          * @return イベント
          */
-        const VSQ_NS::Event get( int index ) const{
-            return _events[index];
+        const VSQ_NS::Event *get( int index ) const{
+            return &_events[index];
         }
 
         /**
