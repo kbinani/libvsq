@@ -30,7 +30,7 @@ private:
      * @brief 補助線の間隔として利用可能な最小時間(tick単位)
      */
     const static tick_t MIN_ASSIST_LINE_STEP = 15;
-    TimesigList *list;
+    const TimesigList *list;
     tick_t endTick;
     int i;
     tick_t tick;
@@ -52,7 +52,7 @@ public:
      * @brief 小節線の情報を取得する区間を指定し、初期化する
      * @param list テンポ変更リスト
      */
-    explicit MeasureLineIterator( TimesigList *list, tick_t assistLineStep = 0 ){
+    explicit MeasureLineIterator( const TimesigList *list, tick_t assistLineStep = 0 ){
         this->list = list;
         endTick = 0;
         i = 0;
