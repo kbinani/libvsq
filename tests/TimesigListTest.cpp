@@ -94,6 +94,19 @@ public:
         CPPUNIT_ASSERT_EQUAL( 1, b.size() );
     }
 
+    void testGetBarCountFromClock(){
+        TimesigList a;
+        a.push( Timesig( 4, 6, 2 ) ); // 3360 clock開始
+        a.push( Timesig( 4, 4, 0 ) ); //    0 clock開始
+        a.push( Timesig( 3, 4, 1 ) ); // 1920 clock開始
+
+        CPPUNIT_ASSERT_EQUAL( 0, a.getBarCountFromClock( 0 ) );
+        CPPUNIT_ASSERT_EQUAL( 0, a.getBarCountFromClock( 1919 ) );
+        CPPUNIT_ASSERT_EQUAL( 1, a.getBarCountFromClock( 1920 ) );
+        CPPUNIT_ASSERT_EQUAL( 2, a.getBarCountFromClock( 3360 ) );
+        CPPUNIT_ASSERT_EQUAL( 7, a.getBarCountFromClock( 9760 ) );
+    }
+
     CPPUNIT_TEST_SUITE( TimesigListTest );
     CPPUNIT_TEST( testUpdateTimesigInfo );
     CPPUNIT_TEST( testGetTimesigAt );
@@ -101,6 +114,7 @@ public:
     CPPUNIT_TEST( testGetClockFromBarCount );
     CPPUNIT_TEST( testClear );
     CPPUNIT_TEST( testCopy );
+    CPPUNIT_TEST( testGetBarCountFromClock );
     CPPUNIT_TEST_SUITE_END();
 };
 

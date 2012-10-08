@@ -132,6 +132,34 @@ public:
         list.clear();
     }
 
+    /**
+     * @brief 指定したクロックが、曲頭から何小節目に属しているかを調べる
+     * ここで使用する小節数は、プリメジャーを考慮しない。即ち、曲頭の小節が 0 となる
+     * @param clock Tick 単位の時刻
+     * @return 小節数
+     */
+    int getBarCountFromClock( VSQ_NS::tick_t clock ){
+        int index = 0;
+        int c = list.size();
+        for( int i = c - 1; i >= 0; i-- ){
+            index = i;
+            if( list[i].getClock() <= clock ){
+                break;
+            }
+        }
+        int bar_count = 0;
+        if( index >= 0 ){
+            Timesig item = list[index];
+            VSQ_NS::tick_t last_clock = item.getClock();
+            int t_bar_count = item.barCount;
+            int numerator = item.numerator;
+            int denominator = item.denominator;
+            VSQ_NS::tick_t clock_per_bar = numerator * 480 * 4 / denominator;
+            bar_count = t_bar_count + (clock - last_clock) / clock_per_bar;
+        }
+        return bar_count;
+    }
+
 protected:
     /**
      * @brief データ点を追加する。追加後のソートは行わない
