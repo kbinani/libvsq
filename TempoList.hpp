@@ -31,14 +31,14 @@ public:
 
     class Iterator{
     private:
-        std::vector<Tempo> *list;
-        std::vector<Tempo>::iterator iterator;
+        const std::vector<Tempo> *list;
+        std::vector<Tempo>::const_iterator iterator;
 
     public:
         /**
          * @todo このコンストラクタは隠蔽すべき
          */
-        Iterator( std::vector<Tempo> *list ){
+        Iterator( const std::vector<Tempo> *list ){
             this->list = list;
             this->iterator = list->begin();
         }
@@ -65,7 +65,7 @@ public:
      * @brief リスト内のテンポ変更イベントを順に返す反復子を取得する
      * @return (List.Iterator<Tempo>) 反復子
      */
-    TempoList::Iterator iterator(){
+    TempoList::Iterator iterator()const{
         return Iterator( &_array );
     }
 
