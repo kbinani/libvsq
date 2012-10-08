@@ -474,6 +474,60 @@ public:
         }
         */
 
+    const BPList *getConstCurve( const std::string &curve )const{
+        string search = StringUtil::toLower( curve );
+        if( search == "bre" ){
+            return &_bre;
+        }else if( search == "bri" ){
+            return &_bri;
+        }else if( search == "cle" ){
+            return &_cle;
+        }else if( search == "dyn" ){
+            return &_dyn;
+        }else if( search == "gen" ){
+            return &_gen;
+        }else if( search == "ope" ){
+            return &_ope;
+        }else if( search == "pbs" ){
+            return &_pbs;
+        }else if( search == "pit" ){
+            return &_pit;
+        }else if( search == "por" ){
+            return &_por;
+        }else if( search == "harmonics" ){
+            return &_harmonics;
+        }else if( search == "fx2depth" ){
+            return &_fx2depth;
+        }else if( search == "reso1amp" ){
+            return &_reso1AmpBPList;
+        }else if( search == "reso1bw" ){
+            return &_reso1BWBPList;
+        }else if( search == "reso1freq" ){
+            return &_reso1FreqBPList;
+        }else if( search == "reso2amp" ){
+            return &_reso2AmpBPList;
+        }else if( search == "reso2bw" ){
+            return &_reso2BWBPList;
+        }else if( search == "reso2freq" ){
+            return &_reso2FreqBPList;
+        }else if( search == "reso3amp" ){
+            return &_reso3AmpBPList;
+        }else if( search == "reso3bw" ){
+            return &_reso3BWBPList;
+        }else if( search == "reso3freq" ){
+            return &_reso3FreqBPList;
+        }else if( search == "reso4amp" ){
+            return &_reso4AmpBPList;
+        }else if( search == "reso4bw" ){
+            return &_reso4BWBPList;
+        }else if( search == "reso4freq" ){
+            return &_reso4FreqBPList;
+        }else{
+            //TODO: 戻り値なんとかする
+            return 0;
+        }
+    }
+
     /**
      * @brief 指定された名前のカーブを取得します
      * @param curve (string) カーブ名
@@ -649,6 +703,10 @@ public:
      * @return イベントリストのポインタ
      */
     Event::List *getEvents(){
+        return &events;
+    }
+
+    const Event::List *getConstEvents()const{
         return &events;
     }
 

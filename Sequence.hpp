@@ -204,7 +204,7 @@ public:
             }
             for( int j = 0; j < curveNameList.size(); j++ ){
                 string vct = curveNameList[j];
-                BPList *list = track->getCurve( vct );
+                const BPList *list = track->getCurve( vct );
                 if( list ){
                     int size = list->size();
                     if( size > 0 ){
