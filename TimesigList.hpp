@@ -138,7 +138,7 @@ public:
      * @param clock Tick 単位の時刻
      * @return 小節数
      */
-    int getBarCountFromClock( VSQ_NS::tick_t clock ){
+    int getBarCountFromClock( VSQ_NS::tick_t clock )const{
         int index = 0;
         int c = list.size();
         for( int i = c - 1; i >= 0; i-- ){
