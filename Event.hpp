@@ -75,7 +75,7 @@ public:
          * @param internalId 検索するイベント ID
          * @return 検索結果のイベント。イベントが見つからなければ <code>nil</code> を返す
          */
-        const VSQ_NS::Event *findFromId( int internalId ){
+        const VSQ_NS::Event *findFromId( int internalId )const{
             int index = findIndexFromId( internalId );
             if( 0 <= index && index < _events.size() ){
                 return &_events[index];
