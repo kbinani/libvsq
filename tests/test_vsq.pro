@@ -65,7 +65,8 @@ SOURCES += \
     VSQFileReaderTest.cpp \
     NoteNumberUtilTest.cpp \
     MusicXmlWriterTest.cpp \
-    StreamWriterTest.cpp
+    StreamWriterTest.cpp \
+    FileOutputStreamTest.cpp
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
@@ -74,4 +75,5 @@ LIBS += -lcppunit
 
 HEADERS += \
     Util.hpp \
-    ../*.hpp
+    ../*.hpp \
+    ../FileOutputStream.hpp
