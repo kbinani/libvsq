@@ -17,6 +17,7 @@
 #include "vsqglobal.hpp"
 #include "Sequence.hpp"
 #include "VocaloidMidiEventListFactory.hpp"
+#include <stdio.h>
 
 VSQ_BEGIN_NAMESPACE
 
