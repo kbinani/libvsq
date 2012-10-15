@@ -15,6 +15,7 @@
 #define __OutputStream_hpp__
 
 #include "vsqglobal.hpp"
+#include <exception>
 #include <stdint.h>
 
 VSQ_BEGIN_NAMESPACE
@@ -23,6 +24,13 @@ VSQ_BEGIN_NAMESPACE
  * @brief 書き込みストリーム
  */
 class OutputStream{
+public:
+    /**
+     * @brief IO 例外
+     */
+    class IOException : public std::exception{
+    };
+
 public:
     /**
      * @brief 1 バイト書き込む

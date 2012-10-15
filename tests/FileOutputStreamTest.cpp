@@ -33,8 +33,13 @@ public:
         fclose( file );
     }
 
+    void testWithException(){
+        CPPUNIT_ASSERT_THROW( FileOutputStream stream( "" ), FileOutputStream::IOException );
+    }
+
     CPPUNIT_TEST_SUITE( FileOutputStreamTest );
     CPPUNIT_TEST( test );
+    CPPUNIT_TEST( testWithException );
     CPPUNIT_TEST_SUITE_END();
 };
 

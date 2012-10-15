@@ -35,6 +35,7 @@ public:
      */
     explicit FileOutputStream( const std::string &filePath ){
         stream.open( filePath.c_str(), std::ios::binary );
+        if( !stream.is_open() ) throw OutputStream::IOException();
     }
 
     ~FileOutputStream(){
