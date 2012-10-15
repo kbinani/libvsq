@@ -48,13 +48,16 @@ protected:
 public:
     /**
      * @brief ストリームに出力する
-     * @param stream (? extends OutputStream) 出力先のストリーム
-     * @param msPreSend (int) ミリ秒単位のプリセンドタイム
-     * @param encoding (string) マルチバイト文字のテキストエンコーディング(現在は Shift_JIS 固定で、引数は無視される)
-     * @param printPitch (boolean) pitch を含めて出力するかどうか(現在は <code>false</code> 固定で、引数は無視される)
+     * @param 出力するシーケンス
+     * @param stream 出力先のストリーム
+     * @param msPreSend ミリ秒単位のプリセンドタイム
+     * @param encoding マルチバイト文字のテキストエンコーディング(現在は Shift_JIS 固定で、引数は無視される)
+     * @param printPitch pitch を含めて出力するかどうか(現在は <code>false</code> 固定で、引数は無視される)
      */
-    void write( Sequence *sequence, OutputStream *stream, int msPreSend, const string &encoding, bool printPitch = false ){
-        sequence->updateTotalClocks();
+    void write( const Sequence *sequence, OutputStream *stream, int msPreSend, const string &encoding, bool printPitch = false ){
+        Sequence copyOfSequence = *sequence;
+        Sequence *targetSequence = &copyOfSequence;
+        targetSequence->updateTotalClocks();
         int64_t first_position; //チャンクの先頭のファイル位置
 
         // ヘッダ
@@ -70,7 +73,7 @@ public:
         stream->write( 0x00 );
         stream->write( 0x01 );
         // トラック数
-        writeUnsignedShort( stream, sequence->track.size() + 1 );
+        writeUnsignedShort( stream, targetSequence->track.size() + 1 );
         // 時間単位
         stream->write( 0x01 );
         stream->write( 0xe0 );
@@ -93,11 +96,11 @@ public:
         stream->write( masterTrackName, 0, masterTrackNameLength );
 
         vector<MidiEvent> events;
-        for( int i = 0; i < sequence->timesigList.size(); i++ ){
-            Timesig entry = sequence->timesigList.get( i );
+        for( int i = 0; i < targetSequence->timesigList.size(); i++ ){
+            Timesig entry = targetSequence->timesigList.get( i );
             events.push_back( MidiEvent::generateTimeSigEvent( entry.getClock(), entry.numerator, entry.denominator ) );
         }
-        TempoList::Iterator itr = sequence->tempoList.iterator();
+        TempoList::Iterator itr = targetSequence->tempoList.iterator();
         while( itr.hasNext() ){
             Tempo entry = itr.next();
             events.push_back( MidiEvent::generateTempoChangeEvent( entry.clock, entry.tempo ) );
@@ -121,11 +124,11 @@ public:
         stream->seek( pos );
 
         // トラック
-        Sequence temp = sequence->clone();
-        _printTrack( &temp, 0, stream, msPreSend, encoding, printPitch, &sequence->master, &sequence->mixer );
-        int count = sequence->track.size();
+        Sequence temp = targetSequence->clone();
+        _printTrack( &temp, 0, stream, msPreSend, encoding, printPitch, &targetSequence->master, &targetSequence->mixer );
+        int count = targetSequence->track.size();
         for( int track = 1; track < count; track++ ){
-            _printTrack( sequence, track, stream, msPreSend, encoding, printPitch, 0, 0 );
+            _printTrack( targetSequence, track, stream, msPreSend, encoding, printPitch, 0, 0 );
         }
     }
 
