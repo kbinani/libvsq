@@ -26,8 +26,13 @@ public:
         CPPUNIT_ASSERT_EQUAL( expected.str(), actual.str() );
     }
 
+    void testWithException(){
+        CPPUNIT_ASSERT_THROW( StreamWriter( "" ), TextOutputStream::IOException );
+    }
+
     CPPUNIT_TEST_SUITE( StreamWriterTest );
     CPPUNIT_TEST( test );
+    CPPUNIT_TEST( testWithException );
     CPPUNIT_TEST_SUITE_END();
 };
 

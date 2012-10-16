@@ -20,17 +20,29 @@
 
 VSQ_BEGIN_NAMESPACE
 
+/**
+ * @brief ファイルへの出力を行う TextOutputStream の実装
+ */
 class StreamWriter : public TextOutputStream{
 private:
     std::ofstream stream;
 
 public:
+    /**
+     * @brief 出力先のファイルパスを指定して初期化する
+     * @param filePath 出力先のファイルパス
+     */
     explicit StreamWriter( const std::string &filePath ){
         stream.open( filePath.c_str(), std::ios::binary );
+        if( !stream.is_open() ) throw IOException();
+    }
+
+    ~StreamWriter(){
+        close();
     }
 
     void close(){
-        stream.close();
+        if( stream.is_open() ) stream.close();
     }
 
     void write( const std::string &text ){

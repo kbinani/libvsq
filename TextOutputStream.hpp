@@ -25,6 +25,13 @@ VSQ_BEGIN_NAMESPACE
 class TextOutputStream{
 public:
     /**
+     * @brief IO 例外
+     */
+    class IOException : std::exception{
+    };
+
+public:
+    /**
      * @brief ストリームを閉じる
      */
     virtual void close() = 0;
