@@ -297,7 +297,7 @@ protected:
             lastLine = stream.readLine();
         }
 
-        // RateBPX, RateBPYの設定
+        // parse RateBPX and RateBPY
         if( result.getHandleType() == HandleType::VIBRATO ){
             if( tmpRateBPNum != "" ){
                 result.rateBP = VibratoBPList( tmpRateBPNum, tmpRateBPX, tmpRateBPY );
@@ -305,7 +305,7 @@ protected:
                 result.rateBP = VibratoBPList();
             }
 
-            // DepthBPX, DepthBPYの設定
+            // parse DepthBPX, DepthBPY
             if( tmpDepthBPNum != "" ){
                 result.depthBP = VibratoBPList( tmpDepthBPNum, tmpDepthBPX, tmpDepthBPY );
             }else{
