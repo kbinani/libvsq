@@ -7,9 +7,10 @@ using namespace VSQ_NS;
 class EventListStub : public Event::List
 {
 public:
-    void pushBackWithoutSort( const Event &item, int id )
-    {
-        _events.push_back( item );
+    void pushBackWithoutSort( const Event &item, int id ){
+        Event *add = new Event();
+        *add = item;
+        _events.push_back( add );
         _ids.push_back( id );
     }
 };

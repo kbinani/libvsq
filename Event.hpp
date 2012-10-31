@@ -38,15 +38,14 @@ public:
     /**
      * @brief 固有 ID 付きの {@link Event} のリストを取り扱うクラス
      */
-    class List
-    {
+    class List{
         friend class ListIterator;
 
     protected:
         /**
          * @brief イベントのリスト
          */
-        std::vector<VSQ_NS::Event> _events;
+        std::vector<VSQ_NS::Event *> _events;
 
         /**
          * @brief イベントの ID のリスト
@@ -54,6 +53,21 @@ public:
         std::vector<int> _ids;
 
     public:
+        List(){}
+
+        List( const List &list ){
+            copy( list );
+        }
+
+        List &operator = ( const List &list ){
+            copy( list );
+            return *this;
+        }
+
+        ~List(){
+            clear();
+        }
+
         /**
          * @brief イベント ID を基にイベントを検索し、そのインデックスを返す
          * @param internalId 検索するイベント ID
@@ -62,8 +76,8 @@ public:
         int findIndexFromId( int internalId ) const{
             int c = _events.size();
             for( int i = 0; i < c; i++ ){
-                Event item = _events[i];
-                if( item.id == internalId ){
+                const Event *item = _events[i];
+                if( item->id == internalId ){
                     return i;
                 }
             }
@@ -78,9 +92,9 @@ public:
         const VSQ_NS::Event *findFromId( int internalId )const{
             int index = findIndexFromId( internalId );
             if( 0 <= index && index < _events.size() ){
-                return &_events[index];
+                return _events[index];
             }else{
-                return NULL;
+                return 0;
             }
         }
 
@@ -92,9 +106,10 @@ public:
         void setForId( int internalId, const VSQ_NS::Event &value ){
             int c = _events.size();
             for( int i = 0; i < c; i++ ){
-                if( _events[i].id == internalId ){
-                    _events[i] = value;
-                    _events[i].id = internalId;
+                VSQ_NS::Event *item = _events[i];
+                if( item->id == internalId ){
+                    *item = value;
+                    item->id = internalId;
                     break;
                 }
             }
@@ -104,7 +119,7 @@ public:
          * @brief イベントを並べ替える
          */
         void sort(){
-            std::sort( _events.begin(), _events.end(), Event::compare );
+            qsort( _events.data(), _events.size(), sizeof( VSQ_NS::Event * ), Event::comp );
             updateIdList();
         }
 
@@ -112,6 +127,11 @@ public:
          * @brief 全てのイベントを削除する
          */
         void clear(){
+            std::vector<VSQ_NS::Event *>::iterator i = _events.begin();
+            for( ; i != _events.end(); ++i ){
+                Event *item = *i;
+                delete item;
+            }
             _events.clear();
             _ids.clear();
         }
@@ -133,10 +153,10 @@ public:
         int add( const VSQ_NS::Event &item ){
             int id = _getNextId( 0 );
             _addCor( item, id );
-            std::sort( _events.begin(), _events.end(), Event::compare );
+            qsort( _events.data(), _events.size(), sizeof( VSQ_NS::Event * ), Event::comp );
             int count = _events.size();
             for( int i = 0; i < count; i++ ){
-                _ids[i] = _events[i].id;
+                _ids[i] = _events[i]->id;
             }
             return id;
         }
@@ -149,7 +169,7 @@ public:
          */
         int add( const VSQ_NS::Event &item, int internalId ){
             _addCor( item, internalId );
-            std::sort( _events.begin(), _events.end(), Event::compare );
+            qsort( _events.data(), _events.size(), sizeof( VSQ_NS::Event * ), Event::comp );
             return internalId;
         }
 
@@ -159,8 +179,20 @@ public:
          */
         void removeAt( int index ){
             updateIdList();
-            _events.erase( _events.begin() + index );
-            _ids.erase( _ids.begin() + index );
+
+            {
+                std::vector<VSQ_NS::Event *>::iterator i = _events.begin();
+                std::advance( i, index );
+                Event *item = *i;
+                delete item;
+                _events.erase( i );
+            }
+
+            {
+                std::vector<int>::iterator i = _ids.begin();
+                std::advance( i, index );
+                _ids.erase( i );
+            }
         }
 
         /**
@@ -177,7 +209,7 @@ public:
          * @return イベント
          */
         const VSQ_NS::Event *get( int index ) const{
-            return &_events[index];
+            return _events[index];
         }
 
         /**
@@ -186,9 +218,9 @@ public:
          * @param value 設定するイベント
          */
         void set( int index, const VSQ_NS::Event &value ){
-            int id = _events[index].id;
-            _events[index] = value;
-            _events[index].id = id;
+            int id = _events[index]->id;
+            *_events[index] = value;
+            _events[index]->id = id;
         }
 
         /**
@@ -200,7 +232,7 @@ public:
             }
             int count = _events.size();
             for( int i = 0; i < count; i++ ){
-                _ids.push_back( _events[i].id );
+                _ids.push_back( _events[i]->id );
             }
         }
 
@@ -212,8 +244,10 @@ public:
          */
         void _addCor( const VSQ_NS::Event &item, int internalId ){
             updateIdList();
-            Event add = item;
-            add.id = internalId;
+            Event *add = new Event();
+            *add = item;
+            add->id = internalId;
+
             _events.push_back( add );
             _ids.push_back( internalId );
         }
@@ -230,6 +264,19 @@ public:
                 max = ::max( max, _ids[i] );
             }
             return max + 1 + next;
+        }
+
+        /**
+         * @brief Deep copy member fields.
+         * @param list Copy source.
+         */
+        void copy( const List &list ){
+            _events.clear();
+            _ids.clear();
+            std::vector<VSQ_NS::Event *>::const_iterator i = list._events.begin();
+            for( ; i != list._events.end(); ++i ){
+                _addCor( **i, (*i)->id );
+            }
         }
     };
 
@@ -276,10 +323,9 @@ public:
          * @brief 反復子の次の要素を返す
          * @return 次の要素
          */
-        VSQ_NS::Event *next()
-        {
+        VSQ_NS::Event *next(){
             _pos++;
-            return &_list->_events[_pos];
+            return _list->_events[_pos];
         }
 
         /**
@@ -560,6 +606,17 @@ public:
      */
     static bool compare( const VSQ_NS::Event &a, const VSQ_NS::Event &b ){
         return (a.compareTo( b ) < 0);
+    }
+
+    /**
+     * @brief Compare 2 Event objects.
+     * @param a Compare target.
+     * @param b Compare target.
+     */
+    static int comp( const void *a, const void *b ){
+        const VSQ_NS::Event *castedA = *(VSQ_NS::Event **)a;
+        const VSQ_NS::Event *castedB = *(VSQ_NS::Event **)b;
+        return castedA->compareTo( *castedB );
     }
 
     /**
