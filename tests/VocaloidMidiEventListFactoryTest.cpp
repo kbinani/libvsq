@@ -124,7 +124,7 @@ public:
         Sequence sequence( "Miku", 1, 4, 4, 500000 );
         Event singerEvent( 1920, EventType::SINGER );
         singerEvent.singerHandle = Handle( HandleType::SINGER );
-        sequence.track[0].getEvents()->add( singerEvent );
+        sequence.track[0].events()->add( singerEvent );
         vector<NrpnEvent> actual = VocaloidMidiEventListFactoryStub::generateSingerNRPN( &sequence.tempoList, &singerEvent, 500 );
 
         CPPUNIT_ASSERT_EQUAL( (size_t)1, actual.size() );
@@ -739,7 +739,7 @@ public:
         // singerEvent
         Event singerEvent( 1920, EventType::SINGER );
         singerEvent.singerHandle = Handle( HandleType::SINGER );
-        track->getEvents()->add( singerEvent );
+        track->events()->add( singerEvent );
 
         // voiceChangeParameter
         vector<string> curveNames;
@@ -789,7 +789,7 @@ public:
         noteEvent.vibratoHandle = Handle( HandleType::UNKNOWN );
         noteEvent.lyricHandle = Handle( HandleType::LYRIC );
         noteEvent.lyricHandle.setLyricAt( 0, Lyric( "あ", "a" ) );
-        track->getEvents()->add( noteEvent );
+        track->events()->add( noteEvent );
 
         int preSendMilliseconds = 500;
         vector<NrpnEvent> actual = VocaloidMidiEventListFactoryStub::generateNRPN(

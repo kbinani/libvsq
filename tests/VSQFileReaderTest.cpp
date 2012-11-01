@@ -120,10 +120,10 @@ public:
         CPPUNIT_ASSERT_EQUAL( PlayMode::PLAY_WITH_SYNTH, track1->getCommon()->playMode );
         {
             // イベントリスト
-            CPPUNIT_ASSERT_EQUAL( 2, track1->getEvents()->size() );
+            CPPUNIT_ASSERT_EQUAL( 2, track1->events()->size() );
             {
                 // イベント/歌手変更
-                const Event *item = track1->getEvents()->get( 0 );
+                const Event *item = track1->events()->get( 0 );
                 CPPUNIT_ASSERT_EQUAL( (tick_t)0, item->clock );
                 CPPUNIT_ASSERT_EQUAL( EventType::SINGER, item->type );
                 CPPUNIT_ASSERT( false == item->isEOS() );
@@ -148,7 +148,7 @@ public:
             }
             {
                 // イベント/音符
-                const Event *item = track1->getEvents()->get( 1 );
+                const Event *item = track1->events()->get( 1 );
                 CPPUNIT_ASSERT_EQUAL( (tick_t)1920, item->clock );
                 CPPUNIT_ASSERT_EQUAL( EventType::NOTE, item->type );
                 CPPUNIT_ASSERT_EQUAL( (tick_t)480, item->getLength() );

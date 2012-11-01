@@ -164,7 +164,7 @@ class VSQFileWriterTest : public CppUnit::TestCase{
         Event noteEvent( 1920, EventType::NOTE );
         noteEvent.note = 60;
         noteEvent.setLength( 480 );
-        sequence.track[0].getEvents()->add( noteEvent );
+        sequence.track[0].events()->add( noteEvent );
 
         ByteArrayOutputStream stream;
         VSQFileWriter writer;
@@ -344,7 +344,7 @@ class VSQFileWriterTest : public CppUnit::TestCase{
         singerEvent.singerHandle.caption = "caption for miku";
         singerEvent.singerHandle.language = 1;
         singerEvent.singerHandle.program = 2;
-        track.getEvents()->set( 0, singerEvent );
+        track.events()->set( 0, singerEvent );
 
         Event crescendoEvent( 240, EventType::ICON );
         crescendoEvent.note = 64;
@@ -356,7 +356,7 @@ class VSQFileWriterTest : public CppUnit::TestCase{
         crescendoEvent.iconDynamicsHandle.startDyn = 4;
         crescendoEvent.iconDynamicsHandle.endDyn = 7;
         crescendoEvent.setLength( 10 );
-        track.getEvents()->add( crescendoEvent, 2 );
+        track.events()->add( crescendoEvent, 2 );
 
         Event dynaffEvent( 480, EventType::ICON );
         dynaffEvent.note = 65;
@@ -368,7 +368,7 @@ class VSQFileWriterTest : public CppUnit::TestCase{
         dynaffEvent.iconDynamicsHandle.startDyn = 5;
         dynaffEvent.iconDynamicsHandle.endDyn = 8;
         dynaffEvent.setLength( 11 );
-        track.getEvents()->add( dynaffEvent, 3 );
+        track.events()->add( dynaffEvent, 3 );
 
         Event decrescendoEvent( 720, EventType::ICON );
         decrescendoEvent.note = 66;
@@ -380,7 +380,7 @@ class VSQFileWriterTest : public CppUnit::TestCase{
         decrescendoEvent.iconDynamicsHandle.startDyn = 6;
         decrescendoEvent.iconDynamicsHandle.endDyn = 9;
         decrescendoEvent.setLength( 12 );
-        track.getEvents()->add( decrescendoEvent, 4 );
+        track.events()->add( decrescendoEvent, 4 );
 
         Event singerEvent2( 1920, EventType::SINGER );
         singerEvent2.singerHandle = Handle( HandleType::SINGER );//h#0004
@@ -390,7 +390,7 @@ class VSQFileWriterTest : public CppUnit::TestCase{
         singerEvent2.singerHandle.caption = "caption for luka";
         singerEvent2.singerHandle.language = 2;
         singerEvent2.singerHandle.program = 3;
-        track.getEvents()->add( singerEvent2, 5 );
+        track.events()->add( singerEvent2, 5 );
 
         Event noteEvent( 1920, EventType::NOTE );
         noteEvent.note = 67;
@@ -420,7 +420,7 @@ class VSQFileWriterTest : public CppUnit::TestCase{
         noteEvent.noteHeadHandle.setLength( 120 );
         noteEvent.noteHeadHandle.duration = 62;
         noteEvent.noteHeadHandle.depth = 65;
-        track.getEvents()->add( noteEvent, 6 );
+        track.events()->add( noteEvent, 6 );
 
         Master master;
         master.preMeasure = 1;

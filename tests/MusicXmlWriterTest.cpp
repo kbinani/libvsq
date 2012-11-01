@@ -23,7 +23,7 @@ public:
         note.setLength( 2865 );
         Lyric lyric( "あ", "a" );
         note.lyricHandle.setLyricAt( 0, lyric );
-        track->getEvents()->add( note );
+        track->events()->add( note );
 
         writer.write( &sequence, &stream, "foo" );
 

@@ -77,7 +77,7 @@ public:
 
         for( int i = 0; i < track_count; i++ ){
             Track *vsq_track = &vsq.track[i];
-            int numEvents = vsq_track->getEvents()->size();
+            int numEvents = vsq_track->events()->size();
             sw->writeLine( "  <part id=\"P" + StringUtil::toString( i + 1 ) + "\">" );
 
             // 拍子変更毎に出力していく
@@ -152,7 +152,7 @@ public:
 
                     int clockLast = clockStart; // 出力済みのクロック
                     for( int k = startIndex; k < numEvents; k++ ){
-                        const Event *itemk = vsq_track->getEvents()->get( k );
+                        const Event *itemk = vsq_track->events()->get( k );
                         if( itemk->type != EventType::NOTE ){
                             if( clockEnd <= itemk->clock ){
                                 startIndex = k;

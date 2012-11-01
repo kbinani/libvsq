@@ -325,7 +325,7 @@ protected:
         vector<Handle> handle;
         {
             vector<TempEvent *> eventList;
-            Event::ListIterator itr = track.getEvents()->iterator();
+            Event::ListIterator itr = track.events()->iterator();
             while( itr.hasNext() ){
                 Event *item = itr.next();
                 eventList.push_back( new TempEvent( *item ) );
@@ -476,7 +476,7 @@ protected:
 
         // トラックエンド
         lastClock = maxClock;
-        const Event *last_event = sequence->track[track].getEvents()->get( sequence->track[track].getEvents()->size() - 1 );
+        const Event *last_event = sequence->track[track].events()->get( sequence->track[track].events()->size() - 1 );
         maxClock = ::max( maxClock, last_event->clock + last_event->getLength() );
         tick_t lastDeltaClock = maxClock - lastClock;
         if( lastDeltaClock < 0 ){

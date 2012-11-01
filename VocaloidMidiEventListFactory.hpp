@@ -123,7 +123,7 @@ protected:
         vector<NrpnEvent> list;
 
         string version = target->getCommon()->version;
-        Event::List *events = target->getEvents();
+        Event::List *events = target->events();
 
         int count = events->size();
         int note_start = 0;

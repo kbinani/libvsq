@@ -197,9 +197,9 @@ public:
         vector<string> curveNameList = getCurveNameList();
         for( int i = 0; i < track.size(); i++ ){
             Track *track = &(this->track[i]);
-            int numEvents = track->getEvents()->size();
+            int numEvents = track->events()->size();
             if( 0 < numEvents ){
-                const Event *lastItem = track->getEvents()->get( numEvents - 1 );
+                const Event *lastItem = track->events()->get( numEvents - 1 );
                 max = ::max( max, lastItem->clock + lastItem->getLength() );
             }
             for( int j = 0; j < curveNameList.size(); j++ ){

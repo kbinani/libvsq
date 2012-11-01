@@ -43,9 +43,9 @@ public:
         assert_not_nil( track1:getCurve( "ope" ) );
         assert_not_nil( track1:getCurve( "pitch" ) );
         assert_not_nil( track1.events );*/
-        CPPUNIT_ASSERT_EQUAL( 1, track1.getEvents()->size() );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)0, track1.getEvents()->get( 0 )->clock );
-        CPPUNIT_ASSERT_EQUAL( EventType::SINGER, track1.getEvents()->get( 0 )->type );
+        CPPUNIT_ASSERT_EQUAL( 1, track1.events()->size() );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)0, track1.events()->get( 0 )->clock );
+        CPPUNIT_ASSERT_EQUAL( EventType::SINGER, track1.events()->get( 0 )->type );
 
         // master
         CPPUNIT_ASSERT_EQUAL( 1, sequence.master.preMeasure );
@@ -114,7 +114,7 @@ public:
         Event note( 1920, EventType::NOTE );
         note.setLength( 480 );
         note.note = 60;
-        sequence.track[0].getEvents()->add( note );
+        sequence.track[0].events()->add( note );
         sequence.updateTotalClocks();
         CPPUNIT_ASSERT_EQUAL( (tick_t)2400, sequence.getTotalClocks() );
     }

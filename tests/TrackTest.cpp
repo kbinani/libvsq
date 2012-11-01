@@ -17,7 +17,7 @@ public:
     void testConstructNormalTrack(){
         Track track( "DummyTrackName", "DummySingerName" );
         CPPUNIT_ASSERT_EQUAL( string( "DummyTrackName" ), track.getName() );
-        Event::List *events = track.getEvents();
+        Event::List *events = track.events();
         CPPUNIT_ASSERT_EQUAL( 1, events->size() );
         CPPUNIT_ASSERT_EQUAL( EventType::SINGER, events->get( 0 )->type );
         CPPUNIT_ASSERT_EQUAL( string( "DummySingerName" ), events->get( 0 )->singerHandle.ids );
@@ -197,20 +197,20 @@ public:
     
     void testGetSingerEventAt(){
         Track track( "", "" );
-        track.getEvents()->clear();
+        track.events()->clear();
         {
             const Event *actual = track.getSingerEventAt( 0 );
             CPPUNIT_ASSERT( 0 == actual );
         }
 
         Event singer1( 0, EventType::SINGER );
-        track.getEvents()->add( singer1, 1 );
+        track.events()->add( singer1, 1 );
 
         Event note1( 480, EventType::NOTE );
-        track.getEvents()->add( note1, 2 );
+        track.events()->add( note1, 2 );
 
         Event singer2( 480, EventType::SINGER );
-        track.getEvents()->add( singer2, 3 );
+        track.events()->add( singer2, 3 );
 
         {
             const Event *actual = track.getSingerEventAt( 0 );
@@ -245,7 +245,7 @@ public:
         Track track( "DummyTrackName", "DummySingerName" );
         EventListIndexIterator iterator = track.getIndexIterator( EventListIndexIteratorKind::SINGER );
         CPPUNIT_ASSERT( iterator.hasNext() );
-        const Event *event = track.getEvents()->get( iterator.next() );
+        const Event *event = track.events()->get( iterator.next() );
         CPPUNIT_ASSERT_EQUAL( string( "DummySingerName" ), event->singerHandle.ids );
         CPPUNIT_ASSERT( false == iterator.hasNext() );
     }
@@ -256,10 +256,10 @@ public:
         CPPUNIT_ASSERT( false == iterator.hasNext() );
     
         Event event( 480, EventType::NOTE );
-        track.getEvents()->add( event, 10 );
+        track.events()->add( event, 10 );
         iterator = track.getIndexIterator( EventListIndexIteratorKind::NOTE );
         CPPUNIT_ASSERT( iterator.hasNext() );
-        const Event *obtained = track.getEvents()->get( iterator.next() );
+        const Event *obtained = track.events()->get( iterator.next() );
         //TODO: Event::equalが実装されたらコメントアウトを元に戻す
         //CPPUNIT_ASSERT_EQUAL( event, obtained );
         CPPUNIT_ASSERT_EQUAL( 10, obtained->id );
@@ -274,10 +274,10 @@ public:
         Event event( 480, EventType::ICON );
         event.iconDynamicsHandle = Handle( HandleType::DYNAMICS );
         event.iconDynamicsHandle.iconId = "$05019999";
-        track.getEvents()->add( event, 10 );
+        track.events()->add( event, 10 );
         iterator = track.getIndexIterator( EventListIndexIteratorKind::DYNAFF );
         CPPUNIT_ASSERT( iterator.hasNext() );
-        const Event *obtained = track.getEvents()->get( iterator.next() );
+        const Event *obtained = track.events()->get( iterator.next() );
         //TODO: Event::equalが実装されたらコメントアウトを元に戻す
         //CPPUNIT_ASSERT_EQUAL( event, obtained );
         CPPUNIT_ASSERT_EQUAL( 10, obtained->id );
@@ -362,16 +362,16 @@ public:
     void testClone(){
         Track track( "DummyTrackName", "DummySingerName" );
         Event event( 480, EventType::NOTE );
-        track.getEvents()->add( event );
+        track.events()->add( event );
         track.getCurve( "pit" )->add( 480, 100 );
     
         Track copy = track.clone();
-        CPPUNIT_ASSERT_EQUAL( 2, copy.getEvents()->size() );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)0, copy.getEvents()->get( 0 )->clock );
-        CPPUNIT_ASSERT_EQUAL( EventType::SINGER, copy.getEvents()->get( 0 )->type );
-        CPPUNIT_ASSERT_EQUAL( string( "DummySingerName" ), copy.getEvents()->get( 0 )->singerHandle.ids );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)480, copy.getEvents()->get( 1 )->clock );
-        CPPUNIT_ASSERT_EQUAL( EventType::NOTE, copy.getEvents()->get( 1 )->type );
+        CPPUNIT_ASSERT_EQUAL( 2, copy.events()->size() );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)0, copy.events()->get( 0 )->clock );
+        CPPUNIT_ASSERT_EQUAL( EventType::SINGER, copy.events()->get( 0 )->type );
+        CPPUNIT_ASSERT_EQUAL( string( "DummySingerName" ), copy.events()->get( 0 )->singerHandle.ids );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)480, copy.events()->get( 1 )->clock );
+        CPPUNIT_ASSERT_EQUAL( EventType::NOTE, copy.events()->get( 1 )->type );
         CPPUNIT_ASSERT_EQUAL( 1, copy.getCurve( "pit" )->size() );
         CPPUNIT_ASSERT_EQUAL( (tick_t)480, copy.getCurve( "pit" )->getKeyClock( 0 ) );
         CPPUNIT_ASSERT_EQUAL( 100, copy.getCurve( "pit" )->get( 0 ).value );

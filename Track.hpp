@@ -40,7 +40,7 @@ protected:
     /**
      * @brief イベントの一覧
      */
-    Event::List events;// = nil;
+    Event::List _events;// = nil;
 
 private:
     /**
@@ -189,7 +189,7 @@ public:
      * @return 反復子
      */
     EventListIndexIterator getIndexIterator( EventListIndexIteratorKind::EventListIndexIteratorKindEnum iteratorKind ){
-        return EventListIndexIterator( &this->events, (int)iteratorKind );
+        return EventListIndexIterator( &this->_events, (int)iteratorKind );
     }
 
     /**
@@ -401,7 +401,7 @@ public:
      */
     const VSQ_NS::Event *getSingerEventAt( VSQ_NS::tick_t clock ){
         const VSQ_NS::Event *last = 0;
-        VSQ_NS::Event::List *events = getEvents();
+        VSQ_NS::Event::List *events = this->events();
         VSQ_NS::EventListIndexIterator itr = getIndexIterator( VSQ_NS::EventListIndexIteratorKind::SINGER );
         while( itr.hasNext() ){
             int index = itr.next();
@@ -652,10 +652,10 @@ public:
         res.setName( getName() );
 
         res.common = common.clone();
-        res.events.clear();
-        for( int i = 0; i < events.size(); i++ ){
-            const Event *item = events.get( i );
-            res.events.add( item->clone(), item->id );
+        res._events.clear();
+        for( int i = 0; i < _events.size(); i++ ){
+            const Event *item = _events.get( i );
+            res._events.add( item->clone(), item->id );
         }
         res._pit = _pit.clone();
         res._pbs = _pbs.clone();
@@ -702,12 +702,12 @@ public:
      * @brief イベントリストを取得する
      * @return イベントリストのポインタ
      */
-    Event::List *getEvents(){
-        return &events;
+    Event::List *events(){
+        return &_events;
     }
 
-    const Event::List *getConstEvents()const{
-        return &events;
+    const Event::List *events()const{
+        return &_events;
     }
 
     /**
@@ -759,7 +759,7 @@ private:
         ish.language = 0;
         ish.program = 0;
         event.singerHandle = ish;
-        this->events.add( event );
+        this->_events.add( event );
     }
 };
 

@@ -599,7 +599,7 @@ private:
         }
 
         // idをeventListに埋め込み
-        Event::List *events = result.getEvents();
+        Event::List *events = result.events();
         events->clear();
         int count = 0;
         for( map<int, tick_t>::iterator i = eventClockMap.begin(); i != eventClockMap.end(); ++i ){
