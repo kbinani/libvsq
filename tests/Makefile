@@ -4,7 +4,7 @@ TARGETS=$(TEST_FILES:.cpp=.exe)
 all: $(TARGETS)
 
 $(TARGETS): %.exe: %.cpp
-	g++ main.cpp $< -w -ldl -lcppunit -o $@
+	g++ main.cpp $< -w -g -ldl -lcppunit -o $@
 	./$@
 
 run: $(TARGETS)
@@ -14,4 +14,5 @@ run: $(TARGETS)
 
 clean:
 	rm -f *.exe
+	rm -rf *.exe.dSYM
 
