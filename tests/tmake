@@ -1,0 +1,31 @@
+#!/bin/bash
+
+if [ -z $1 ]; then
+  exit 1
+fi
+
+fileName=$1
+
+if [ -e $fileName ]; then
+  isMatch=$(echo "${fileName}" | sed 's:^\(.*Test\.cpp\)$::g')
+  if [ -z $isMatch ]; then
+    fileName=$(echo "${fileName}" | sed 's:^\(.*\)Test\.cpp$:\1:g')Test.exe
+  else
+    fileName=""
+  fi
+else
+  isMatch=$(echo "${fileName}" | sed 's:^\(.*Test\.\)$::g')
+  if [ -z $isMatch ]; then
+    fileName=$(echo "${fileName}" | sed 's:^\(.*\)Test\.$:\1:g')Test.exe
+  else
+    fileName=""
+  fi
+fi
+
+if [ ! -z $fileName ]; then
+  rm -f ${fileName}; make ${fileName}
+else
+  exit 1
+fi
+
+
