@@ -163,6 +163,16 @@ public:
         this->_initCor( name, singer );
     }
 
+    Track( const Track &value ){
+        this->_events.clear();
+        this->_events = value._events;
+    }
+
+    Track &operator = ( const Track &value ){
+        this->_events.clear();
+        this->_events = value._events;
+    }
+
     /**
      * @brief トラックの名前を取得する
      * @return (string) トラック名
