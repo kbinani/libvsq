@@ -164,13 +164,12 @@ public:
     }
 
     Track( const Track &value ){
-        this->_events.clear();
-        this->_events = value._events;
+        value.deepCopy( this );
     }
 
     Track &operator = ( const Track &value ){
-        this->_events.clear();
-        this->_events = value._events;
+        value.deepCopy( this );
+        return *this;
     }
 
     /**
@@ -657,39 +656,9 @@ public:
      * @brief コピーを作成する
      * @return (Track) このオブジェクトのコピー
      */
-    Track clone() const{
+    Track clone()const{
         Track res;
-        res.setName( getName() );
-
-        res.common = common.clone();
-        res._events.clear();
-        for( int i = 0; i < _events.size(); i++ ){
-            const Event *item = _events.get( i );
-            res._events.add( item->clone(), item->id );
-        }
-        res._pit = _pit.clone();
-        res._pbs = _pbs.clone();
-        res._dyn = _dyn.clone();
-        res._bre = _bre.clone();
-        res._bri = _bri.clone();
-        res._cle = _cle.clone();
-        res._reso1FreqBPList = _reso1FreqBPList.clone();
-        res._reso2FreqBPList = _reso2FreqBPList.clone();
-        res._reso3FreqBPList = _reso3FreqBPList.clone();
-        res._reso4FreqBPList = _reso4FreqBPList.clone();
-        res._reso1BWBPList = _reso1BWBPList.clone();
-        res._reso2BWBPList = _reso2BWBPList.clone();
-        res._reso3BWBPList = _reso3BWBPList.clone();
-        res._reso4BWBPList = _reso4BWBPList.clone();
-        res._reso1AmpBPList = _reso1AmpBPList.clone();
-        res._reso2AmpBPList = _reso2AmpBPList.clone();
-        res._reso3AmpBPList = _reso3AmpBPList.clone();
-        res._reso4AmpBPList = _reso4AmpBPList.clone();
-        res._harmonics = _harmonics.clone();
-        res._fx2depth = _fx2depth.clone();
-        res._gen = _gen.clone();
-        res._por = _por.clone();
-        res._ope = _ope.clone();
+        deepCopy( &res );
         return res;
     }
 
@@ -770,6 +739,44 @@ private:
         ish.program = 0;
         event.singerHandle = ish;
         this->_events.add( event );
+    }
+
+    /**
+     * @brief Deep copy instance.
+     * @param destination Copy destination
+     */
+    void deepCopy( Track *destination )const{
+        destination->setName( getName() );
+
+        destination->common = common.clone();
+        destination->_events.clear();
+        for( int i = 0; i < _events.size(); i++ ){
+            const Event *item = _events.get( i );
+            destination->_events.add( item->clone(), item->id );
+        }
+        destination->_pit = _pit.clone();
+        destination->_pbs = _pbs.clone();
+        destination->_dyn = _dyn.clone();
+        destination->_bre = _bre.clone();
+        destination->_bri = _bri.clone();
+        destination->_cle = _cle.clone();
+        destination->_reso1FreqBPList = _reso1FreqBPList.clone();
+        destination->_reso2FreqBPList = _reso2FreqBPList.clone();
+        destination->_reso3FreqBPList = _reso3FreqBPList.clone();
+        destination->_reso4FreqBPList = _reso4FreqBPList.clone();
+        destination->_reso1BWBPList = _reso1BWBPList.clone();
+        destination->_reso2BWBPList = _reso2BWBPList.clone();
+        destination->_reso3BWBPList = _reso3BWBPList.clone();
+        destination->_reso4BWBPList = _reso4BWBPList.clone();
+        destination->_reso1AmpBPList = _reso1AmpBPList.clone();
+        destination->_reso2AmpBPList = _reso2AmpBPList.clone();
+        destination->_reso3AmpBPList = _reso3AmpBPList.clone();
+        destination->_reso4AmpBPList = _reso4AmpBPList.clone();
+        destination->_harmonics = _harmonics.clone();
+        destination->_fx2depth = _fx2depth.clone();
+        destination->_gen = _gen.clone();
+        destination->_por = _por.clone();
+        destination->_ope = _ope.clone();
     }
 };
 

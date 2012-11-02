@@ -60,6 +60,9 @@ protected:
 
     class TentativeTrack : public Track{
     public:
+        TentativeTrack() : Track(){
+        }
+
         void setCommon( const Common &value ){
             common = value;
         }
@@ -157,7 +160,7 @@ protected:
                 result.pmBendLength = StringUtil::parseInt<int>( parameters[1] );
             }else if( search == "DEMdecGainRate" ){
                 result.demDecGainRate = StringUtil::parseInt<int>( parameters[1] );
-            }else if( search ==  "DEMaccent" ){
+            }else if( search == "DEMaccent" ){
                 result.demAccent = StringUtil::parseInt<int>( parameters[1] );
             }else if( search == "LyricHandle" ){
                 result.lyricHandleIndex = Handle::getHandleIndexFromString( parameters[1] );
