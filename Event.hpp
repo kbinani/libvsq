@@ -341,10 +341,19 @@ public:
     };
 
     /**
-     * ミリ秒で表した、音符の最大長さ
-     * @access static
+     * @brief Maximum length of note event in milli second.
      */
     static const int MAX_NOTE_MILLISEC_LENGTH = 16383;
+
+    /**
+     * @brief Maximum note number.
+     */
+    static const int MAX_NOTE_NUMBER = 127;
+
+    /**
+     * @brief Minimum note number.
+     */
+    static const int MIN_NOTE_NUMBER = 0;
 
     /**
      * イベントに付けるタグ文字列
