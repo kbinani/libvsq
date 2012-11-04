@@ -66,7 +66,8 @@ SOURCES += \
     NoteNumberUtilTest.cpp \
     MusicXmlWriterTest.cpp \
     StreamWriterTest.cpp \
-    FileOutputStreamTest.cpp
+    FileOutputStreamTest.cpp \
+    PhoneticSymbolElementTest.cpp
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
@@ -76,4 +77,3 @@ LIBS += -lcppunit
 HEADERS += \
     Util.hpp \
     ../*.hpp \
-    ../FileOutputStream.hpp
