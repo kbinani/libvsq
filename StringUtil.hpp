@@ -22,6 +22,8 @@
 #include <iomanip>
 #include <boost/format.hpp>
 #include <boost/lexical_cast.hpp>
+#include <functional>
+#include <cctype>
 
 using namespace std;
 
@@ -176,6 +178,18 @@ public:
             result << value;
         }
         return result.str();
+    }
+
+    /**
+     * @brief Trim leading and trailing blank characters.
+     * @param value Source string.
+     */
+    static std::string trim(const std::string &s){
+        std::string::const_iterator left
+                = std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun(::isspace)));
+        std::string::const_reverse_iterator right
+                = std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun(::isspace)));
+        return (left < right.base()) ? std::string(left, right.base()) : std::string();
     }
 
 private:

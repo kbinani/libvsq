@@ -67,7 +67,8 @@ SOURCES += \
     MusicXmlWriterTest.cpp \
     StreamWriterTest.cpp \
     FileOutputStreamTest.cpp \
-    PhoneticSymbolElementTest.cpp
+    PhoneticSymbolConverterTest.cpp \
+    PhoneticSymbolDictionaryTest.cpp
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 

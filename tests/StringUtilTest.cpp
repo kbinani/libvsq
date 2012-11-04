@@ -99,6 +99,11 @@ public:
         CPPUNIT_ASSERT_EQUAL( string( "abababab" ), actual );
     }
 
+    void trim(){
+        CPPUNIT_ASSERT_EQUAL(string("hoge"), StringUtil::trim("hoge "));
+        CPPUNIT_ASSERT_EQUAL(string("hoge"), StringUtil::trim("\nhoge\r"));
+    }
+
     CPPUNIT_TEST_SUITE( StringUtilTest );
     CPPUNIT_TEST( explode );
     CPPUNIT_TEST( explodeNonLimit );
@@ -111,6 +116,7 @@ public:
     CPPUNIT_TEST( testRepeat );
     CPPUNIT_TEST( testToLower );
     CPPUNIT_TEST( testToStringWithFormat );
+    CPPUNIT_TEST(trim);
     CPPUNIT_TEST_SUITE_END();
 };
 
