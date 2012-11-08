@@ -88,9 +88,16 @@ public:
      * @brief Read dictionary from file.
      * @param filePath File path of dictionary.
      */
-    explicit PhoneticSymbolDictionary(const std::string &filePath){
+    explicit PhoneticSymbolDictionary(const std::string &filePath) {
         _maxDivisions = 1;
         read(filePath);
+    }
+
+    /**
+     * @brief Default constructor.
+     */
+    explicit PhoneticSymbolDictionary() {
+        _maxDivisions = 1;
     }
 
     /**
@@ -115,6 +122,30 @@ public:
      */
     int maxDivisions()const{
         return _maxDivisions;
+    }
+
+    /**
+     * @brief Get an instance of dictionary used for VOCALOID Japanese voice bank.
+     * @return An instance of dictionary.
+     */
+    static const PhoneticSymbolDictionary *vocaloidJpDictionary() {
+        static PhoneticSymbolDictionary result;
+        if (result.table.empty()) {
+            #include "PhoneticSymbolDictionaryVocaloidJp.hpp"
+        }
+        return &result;
+    }
+
+    /**
+     * @brief Get an instance of dictionary used for VOCALOID English voice bank.
+     * @return An instance of dictionary.
+     */
+    static const PhoneticSymbolDictionary *vocaloidEnDictionary() {
+        static PhoneticSymbolDictionary result;
+        if (result.table.empty()) {
+            #include "PhoneticSymbolDictionaryVocaloidEn.hpp"
+        }
+        return &result;
     }
 
 private:
