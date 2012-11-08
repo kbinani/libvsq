@@ -131,7 +131,7 @@ public:
     static const PhoneticSymbolDictionary *vocaloidJpDictionary() {
         static PhoneticSymbolDictionary result;
         if (result.table.empty()) {
-            #include "PhoneticSymbolDictionaryVocaloidJp.hpp"
+            #include "PhoneticSymbolDictionaryVocaloidJp.include"
         }
         return &result;
     }
@@ -143,7 +143,7 @@ public:
     static const PhoneticSymbolDictionary *vocaloidEnDictionary() {
         static PhoneticSymbolDictionary result;
         if (result.table.empty()) {
-            #include "PhoneticSymbolDictionaryVocaloidEn.hpp"
+            #include "PhoneticSymbolDictionaryVocaloidEn.include"
         }
         return &result;
     }
