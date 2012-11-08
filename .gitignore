@@ -5,6 +5,7 @@ build*
 *.o
 *.a
 *.exe
+*.exe.dSYM
 .DS_Store
 *.sh
 doc/*
