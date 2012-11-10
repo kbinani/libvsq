@@ -697,6 +697,45 @@ public:
         return &common;
     }
 
+    /**
+     * @brief Get a list of curve name for this track.
+     * @return A list of curve name.
+     */
+    virtual const std::vector<std::string> &curveNameList()const {
+        static std::vector<std::string> vocaloidCurveNameList;
+        if (vocaloidCurveNameList.empty()) {
+            vocaloidCurveNameList.push_back("Accent");
+            vocaloidCurveNameList.push_back("Decay");
+            vocaloidCurveNameList.push_back("Env");
+            vocaloidCurveNameList.push_back("DYN");
+            vocaloidCurveNameList.push_back("BRE");
+            vocaloidCurveNameList.push_back("BRI");
+            vocaloidCurveNameList.push_back("CLE");
+            vocaloidCurveNameList.push_back("OPE");
+            vocaloidCurveNameList.push_back("GEN");
+            vocaloidCurveNameList.push_back("POR");
+            vocaloidCurveNameList.push_back("PIT");
+            vocaloidCurveNameList.push_back("PBS");
+            vocaloidCurveNameList.push_back("VibratoRate");
+            vocaloidCurveNameList.push_back("VibratoDepth");
+            vocaloidCurveNameList.push_back("harmonics");
+            vocaloidCurveNameList.push_back("fx2depth");
+            vocaloidCurveNameList.push_back("reso1freq");
+            vocaloidCurveNameList.push_back("reso1bw");
+            vocaloidCurveNameList.push_back("reso1amp");
+            vocaloidCurveNameList.push_back("reso2freq");
+            vocaloidCurveNameList.push_back("reso2bw");
+            vocaloidCurveNameList.push_back("reso2amp");
+            vocaloidCurveNameList.push_back("reso3freq");
+            vocaloidCurveNameList.push_back("reso3bw");
+            vocaloidCurveNameList.push_back("reso3amp");
+            vocaloidCurveNameList.push_back("reso4freq");
+            vocaloidCurveNameList.push_back("reso4bw");
+            vocaloidCurveNameList.push_back("reso4amp");
+        }
+        return &vocaloidCurveNameList;
+    }
+
 private:
     /**
      * @brief 初期化を行う
