@@ -701,7 +701,7 @@ public:
      * @brief Get a list of curve name for this track.
      * @return A list of curve name.
      */
-    virtual const std::vector<std::string> &curveNameList()const {
+    virtual const std::vector<std::string> *curveNameList()const {
         static std::vector<std::string> vocaloidCurveNameList;
         if (vocaloidCurveNameList.empty()) {
             vocaloidCurveNameList.push_back("Accent");
