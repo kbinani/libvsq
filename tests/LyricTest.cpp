@@ -40,7 +40,7 @@ public:
         Lyric lyric = Lyric( "は", "h a" );
         CPPUNIT_ASSERT_EQUAL( string( "は" ), lyric.phrase );
         CPPUNIT_ASSERT_EQUAL( string( "h a" ), lyric.getPhoneticSymbol() );
-        CPPUNIT_ASSERT_EQUAL( string( "64 0" ), lyric.getConsonantAdjustment() );
+        CPPUNIT_ASSERT_EQUAL(string("64,0" ), lyric.getConsonantAdjustment());
         CPPUNIT_ASSERT( false == lyric.isProtected );
     }
 
@@ -98,7 +98,13 @@ public:
     {
         Lyric lyric = Lyric( "は,h a,1,64,0,0" );
         string actual = lyric.getConsonantAdjustment();
-        CPPUNIT_ASSERT_EQUAL( string( "64 0" ), actual );
+        CPPUNIT_ASSERT_EQUAL(string("64,0"), actual);
+    }
+
+    void testSetConsonantAdjustment() {
+        Lyric lyric = Lyric("は,h a,1,64,0,0");
+        lyric.setConsonantAdjustment("61,0");
+        CPPUNIT_ASSERT_EQUAL(string("61,0"), lyric.getConsonantAdjustment());
     }
 
     void testToString()
@@ -147,6 +153,7 @@ public:
     CPPUNIT_TEST( testGetConsonantAdjustmentList );
     CPPUNIT_TEST( testGetConsonantAdjustmentListWithNil );
     CPPUNIT_TEST( testGetConsonantAdjustment );
+    CPPUNIT_TEST(testSetConsonantAdjustment);
     CPPUNIT_TEST( testToString );
     CPPUNIT_TEST( testEquals );
     CPPUNIT_TEST( testEqualsForSynth );

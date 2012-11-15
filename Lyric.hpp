@@ -208,8 +208,8 @@ public:
     }
 
     /**
-     * @brief Consonant Adjustmentの文字列形式を取得する
-     * @return Consonant Adjustment を空白区切りで連結した文字列
+     * @brief Get a string value of consonant adjustment, separated by ",".
+     * @return A string value of consonant adjustment.
      */
     const std::string getConsonantAdjustment() const{
         const vector<int> arr = getConsonantAdjustmentList();
@@ -219,14 +219,14 @@ public:
         vector<int>::const_iterator i;
         ostringstream ret;
         for( i = arr.begin(); i != arr.end(); ++i ){
-            ret << (i == arr.begin() ? "" : " ") << (*i);
+            ret << (i == arr.begin() ? "" : ",") << (*i);
         }
         return ret.str();
     }
 
     /**
-     * @brief Consonant Adjustmentを文字列形式で設定する
-     * @param value Consonant Adjustment を空白区切りで連結した文字列
+     * @brief Set consonant adjustment with a string, adjustment value concatenated with ",".
+     * @param value [in] A string of consonant adjustment. (ex. "64,0")
      */
     void setConsonantAdjustment( const std::string &value ){
         vector<string> spl = StringUtil::explode( ",", value );

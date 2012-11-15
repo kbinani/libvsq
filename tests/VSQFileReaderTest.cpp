@@ -304,7 +304,7 @@ public:
         CPPUNIT_ASSERT_EQUAL( string( "は" ), lyric2.phrase );
         CPPUNIT_ASSERT_EQUAL( string( "h a" ), lyric2.getPhoneticSymbol() );
         CPPUNIT_ASSERT_EQUAL( 0.6, lyric2.lengthRatio );
-        CPPUNIT_ASSERT_EQUAL( string( "64 0" ), lyric2.getConsonantAdjustment() );
+        CPPUNIT_ASSERT_EQUAL(string("64,0"), lyric2.getConsonantAdjustment());
         CPPUNIT_ASSERT( false == lyric2.isProtected );
     }
 
