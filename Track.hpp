@@ -668,29 +668,29 @@ protected:
     virtual std::map<std::string, std::string> getSectionNameMap()const {
         static std::map<std::string, std::string> result;
         if (result.empty()) {
-            result.insert(std::make_pair("pit", "[PitchBendBPList]"));
-            result.insert(std::make_pair("pbs", "[PitchBendSensBPList]"));
-            result.insert(std::make_pair("dyn", "[DynamicsBPList]"));
-            result.insert(std::make_pair("bre", "[EpRResidualBPList]"));
-            result.insert(std::make_pair("bri", "[EpRESlopeBPList]"));
-            result.insert(std::make_pair("cle", "[EpRESlopeDepthBPList]"));
-            result.insert(std::make_pair("harmonics", "[EpRSineBPList]"));
-            result.insert(std::make_pair("fx2depth", "[VibTremDepthBPList]"));
-            result.insert(std::make_pair("reso1Freq", "[Reso1FreqBPList]"));
-            result.insert(std::make_pair("reso2Freq", "[Reso2FreqBPList]"));
-            result.insert(std::make_pair("reso3Freq", "[Reso3FreqBPList]"));
-            result.insert(std::make_pair("reso4Freq", "[Reso4FreqBPList]"));
-            result.insert(std::make_pair("reso1BW", "[Reso1BWBPList]"));
-            result.insert(std::make_pair("reso2BW", "[Reso2BWBPList]"));
-            result.insert(std::make_pair("reso3BW", "[Reso3BWBPList]"));
-            result.insert(std::make_pair("reso4BW", "[Reso4BWBPList]"));
-            result.insert(std::make_pair("reso1Amp", "[Reso1AmpBPList]"));
-            result.insert(std::make_pair("reso2Amp", "[Reso2AmpBPList]"));
-            result.insert(std::make_pair("reso3Amp", "[Reso3AmpBPList]"));
-            result.insert(std::make_pair("reso4Amp", "[Reso4AmpBPList]"));
-            result.insert(std::make_pair("gen", "[GenderFactorBPList]"));
-            result.insert(std::make_pair("por", "[PortamentoTimingBPList]"));
-            result.insert(std::make_pair("ope", "[OpeningBPList]"));
+            result.insert(std::make_pair("[PitchBendBPList]", "pit"));
+            result.insert(std::make_pair("[PitchBendSensBPList]", "pbs"));
+            result.insert(std::make_pair("[DynamicsBPList]", "dyn"));
+            result.insert(std::make_pair("[EpRResidualBPList]", "bre"));
+            result.insert(std::make_pair("[EpRESlopeBPList]", "bri"));
+            result.insert(std::make_pair("[EpRESlopeDepthBPList]", "cle"));
+            result.insert(std::make_pair("[EpRSineBPList]", "harmonics"));
+            result.insert(std::make_pair("[VibTremDepthBPList]", "fx2depth"));
+            result.insert(std::make_pair("[Reso1FreqBPList]", "reso1Freq"));
+            result.insert(std::make_pair("[Reso2FreqBPList]", "reso2Freq"));
+            result.insert(std::make_pair("[Reso3FreqBPList]", "reso3Freq"));
+            result.insert(std::make_pair("[Reso4FreqBPList]", "reso4Freq"));
+            result.insert(std::make_pair("[Reso1BWBPList]", "reso1BW"));
+            result.insert(std::make_pair("[Reso2BWBPList]", "reso2BW"));
+            result.insert(std::make_pair("[Reso3BWBPList]", "reso3BW"));
+            result.insert(std::make_pair("[Reso4BWBPList]", "reso4BW"));
+            result.insert(std::make_pair("[Reso1AmpBPList]", "reso1Amp"));
+            result.insert(std::make_pair("[Reso2AmpBPList]", "reso2Amp"));
+            result.insert(std::make_pair("[Reso3AmpBPList]", "reso3Amp"));
+            result.insert(std::make_pair("[Reso4AmpBPList]", "reso4Amp"));
+            result.insert(std::make_pair("[GenderFactorBPList]", "gen"));
+            result.insert(std::make_pair("[PortamentoTimingBPList]", "por"));
+            result.insert(std::make_pair("[OpeningBPList]", "ope"));
         }
         return result;
     }
