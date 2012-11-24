@@ -63,11 +63,11 @@ public:
         sw->writeLine( "  </identification>" );
         sw->writeLine( "  <part-list>" );
 
-        int track_count = vsq.track.size();
+        int track_count = vsq.tracks()->size();
         Timesig timesigStart = vsq.timesigList.getTimesigAt( 0 );
         int clockPerMeasure = timesigStart.numerator * 480 * 4 / timesigStart.denominator;
         for( int i = 0; i < track_count; i++ ){
-            Track *vsq_track = &vsq.track[i];
+            const Track *vsq_track = vsq.track(i);
             sw->writeLine( "    <score-part id=\"P" + StringUtil::toString( i + 1 ) + "\">" );
             sw->writeLine( "      <part-name>" + vsq_track->getName() + "</part-name>" );
             sw->writeLine( "    </score-part>" );
@@ -76,7 +76,7 @@ public:
         int measureStart = 0; // 出力開始する小節
 
         for( int i = 0; i < track_count; i++ ){
-            Track *vsq_track = &vsq.track[i];
+            const Track *vsq_track = vsq.track(i);
             int numEvents = vsq_track->events()->size();
             sw->writeLine( "  <part id=\"P" + StringUtil::toString( i + 1 ) + "\">" );
 

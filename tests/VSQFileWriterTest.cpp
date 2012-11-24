@@ -36,7 +36,7 @@ public:
         return VSQFileWriter::getHowManyDigits( number );
     }
 
-    void printMetaText(const Track &t, TextStream &stream, int eos, tick_t start, bool printPitch, Master *master, Mixer *mixer){
+    void printMetaText(const Track *t, TextStream &stream, int eos, tick_t start, bool printPitch, Master *master, Mixer *mixer) {
         VSQFileWriter::printMetaText( t, stream, eos, start, printPitch, master, mixer );
     }
 
@@ -158,13 +158,13 @@ class VSQFileWriterTest : public CppUnit::TestCase{
                        "reso3amp", "reso3bw", "reso3freq",
                        "reso4amp", "reso4bw", "reso4freq" };
         for( int i = 0; i < CURVE_COUNT; i++ ){
-            BPList *list = sequence.track[0].getCurve( curveNames[i] );
+            BPList *list = sequence.track(0)->curve(curveNames[i]);
             list->add( 1920, 1 + i );
         }
         Event noteEvent( 1920, EventType::NOTE );
         noteEvent.note = 60;
         noteEvent.setLength( 480 );
-        sequence.track[0].events()->add( noteEvent );
+        sequence.track(0)->events()->add(noteEvent);
 
         ByteArrayOutputStream stream;
         VSQFileWriter writer;
@@ -432,11 +432,11 @@ class VSQFileWriterTest : public CppUnit::TestCase{
         mixer.outputMode = 4;
         mixer.slave.push_back( MixerItem( 5, 6, 7, 8 ) );
 
-        track.getCommon()->version = "DSB301";
-        track.getCommon()->name = "foo";
-        track.getCommon()->color = "1,2,3";
-        track.getCommon()->dynamicsMode = DynamicsMode::STANDARD;
-        track.getCommon()->playMode = PlayMode::PLAY_WITH_SYNTH;
+        track.common()->version = "DSB301";
+        track.common()->name = "foo";
+        track.common()->color = "1,2,3";
+        track.common()->dynamicsMode = DynamicsMode::STANDARD;
+        track.common()->playMode = PlayMode::PLAY_WITH_SYNTH;
 
         vector<string> curves;
         curves.push_back( "pit" );
@@ -464,12 +464,12 @@ class VSQFileWriterTest : public CppUnit::TestCase{
         curves.push_back( "OPE" );
         for( int i = 0; i < curves.size(); i++ ){
             string curveName = curves[i];
-            track.getCurve( curveName )->add( 480 + i, i );
+            track.curve(curveName)->add(480 + i, i);
         }
 
         TextStream stream;
         VSQFileWriterStub writer;
-        writer.printMetaText( track, stream, 2400, 0, false, &master, &mixer );
+        writer.printMetaText(&track, stream, 2400, 0, false, &master, &mixer);
         string expected =
             "[Common]\n"
             "Version=DSB301\n"

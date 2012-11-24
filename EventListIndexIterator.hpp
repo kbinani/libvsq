@@ -28,7 +28,7 @@ private:
     /**
      * @brief 反復子の元になるリスト
      */
-    Event::List *_list;
+    const Event::List *_list;
 
     /**
      * @brief next メソッドで最後に返したインデックス
@@ -68,7 +68,7 @@ public:
      *
      * @todo iteratorKind の型を EventListIndexIteratorKind にできないか？
      */
-    explicit EventListIndexIterator( Event::List *list, int iteratorKind ){
+    explicit EventListIndexIterator(const Event::List *list, int iteratorKind) {
         this->_list = list;
         this->_pos = -1;
         this->_kindSinger = (iteratorKind & EventListIndexIteratorKind::SINGER) == EventListIndexIteratorKind::SINGER;
@@ -98,16 +98,6 @@ public:
      */
     bool hasNext() const{
         return (0 <= this->_nextPosition());
-    }
-
-    /**
-     * @brief 反復子によって最後に返された要素を削除する
-     */
-    void remove(){
-        if( 0 <= _pos && _pos < _list->size() ){
-            _list->removeAt( _pos );
-            _pos--;
-        }
     }
 
 private:

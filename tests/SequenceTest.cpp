@@ -14,9 +14,9 @@ public:
         CPPUNIT_ASSERT_EQUAL( (tick_t)(1 * 480 * 4 / 4 * 4), sequence.getTotalClocks() );
 
         // track
-        CPPUNIT_ASSERT_EQUAL( (size_t)1, sequence.track.size() );
+        CPPUNIT_ASSERT_EQUAL((size_t)1, sequence.tracks()->size());
         // 第1トラック
-        Track track1 = sequence.track[0];
+        const Track *track1 = sequence.track(0);
         /*assert_not_nil( track1.common );
         assert_not_nil( track1:getCurve( "pit" ) );
         assert_not_nil( track1:getCurve( "pbs" ) );
@@ -43,9 +43,9 @@ public:
         assert_not_nil( track1:getCurve( "ope" ) );
         assert_not_nil( track1:getCurve( "pitch" ) );
         assert_not_nil( track1.events );*/
-        CPPUNIT_ASSERT_EQUAL( 1, track1.events()->size() );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)0, track1.events()->get( 0 )->clock );
-        CPPUNIT_ASSERT_EQUAL( EventType::SINGER, track1.events()->get( 0 )->type );
+        CPPUNIT_ASSERT_EQUAL(1, track1->events()->size());
+        CPPUNIT_ASSERT_EQUAL((tick_t)0, track1->events()->get(0)->clock);
+        CPPUNIT_ASSERT_EQUAL(EventType::SINGER, track1->events()->get(0)->type);
 
         // master
         CPPUNIT_ASSERT_EQUAL( 1, sequence.master.preMeasure );
@@ -114,7 +114,7 @@ public:
         Event note( 1920, EventType::NOTE );
         note.setLength( 480 );
         note.note = 60;
-        sequence.track[0].events()->add( note );
+        sequence.track(0)->events()->add(note);
         sequence.updateTotalClocks();
         CPPUNIT_ASSERT_EQUAL( (tick_t)2400, sequence.getTotalClocks() );
     }

@@ -96,7 +96,7 @@ public:
         stream.close();
 
         // シーケンス全体
-        CPPUNIT_ASSERT_EQUAL( (size_t)1, sequence.track.size() );
+        CPPUNIT_ASSERT_EQUAL((size_t)1, sequence.tracks()->size());
         // [Master]
         CPPUNIT_ASSERT_EQUAL( 1, sequence.master.preMeasure );
         // [Mixer]
@@ -111,13 +111,13 @@ public:
         CPPUNIT_ASSERT_EQUAL( 0, sequence.mixer.slave[0].solo );
 
         // トラック1
-        Track *track1 = &sequence.track[0];
+        const Track *track1 = sequence.track(0);
         // [Common]
-        CPPUNIT_ASSERT_EQUAL( string( "DSB301" ), track1->getCommon()->version );
-        CPPUNIT_ASSERT_EQUAL( string( "Voice1" ), track1->getCommon()->name );
-        CPPUNIT_ASSERT_EQUAL( string( "179,181,123" ), track1->getCommon()->color );
-        CPPUNIT_ASSERT_EQUAL( DynamicsMode::EXPERT, track1->getCommon()->dynamicsMode );
-        CPPUNIT_ASSERT_EQUAL( PlayMode::PLAY_WITH_SYNTH, track1->getCommon()->playMode );
+        CPPUNIT_ASSERT_EQUAL(string("DSB301"), track1->common()->version);
+        CPPUNIT_ASSERT_EQUAL(string("Voice1"), track1->common()->name);
+        CPPUNIT_ASSERT_EQUAL(string("179,181,123"), track1->common()->color);
+        CPPUNIT_ASSERT_EQUAL(DynamicsMode::EXPERT, track1->common()->dynamicsMode);
+        CPPUNIT_ASSERT_EQUAL(PlayMode::PLAY_WITH_SYNTH, track1->common()->playMode);
         {
             // イベントリスト
             CPPUNIT_ASSERT_EQUAL( 2, track1->events()->size() );
@@ -181,63 +181,63 @@ public:
         }
         {
             // 各種コントロールカーブ
-            BPList *list = NULL;
+            const BPList *list = NULL;
             // BRE
-            list = track1->getCurve( "BRE" );
+            list = track1->curve("BRE");
             CPPUNIT_ASSERT_EQUAL( 1, list->size() );
             CPPUNIT_ASSERT_EQUAL( (tick_t)1920, list->getKeyClock( 0 ) );
             CPPUNIT_ASSERT_EQUAL( 1, list->get( 0 ).value );
             // BRI
-            list = track1->getCurve( "BRI" );
+            list = track1->curve("BRI");
             CPPUNIT_ASSERT_EQUAL( 1, list->size() );
             CPPUNIT_ASSERT_EQUAL( (tick_t)1920, list->getKeyClock( 0 ) );
             CPPUNIT_ASSERT_EQUAL( 2, list->get( 0 ).value );
             // CLE
-            list = track1->getCurve( "CLE" );
+            list = track1->curve("CLE");
             CPPUNIT_ASSERT_EQUAL( 1, list->size() );
             CPPUNIT_ASSERT_EQUAL( (tick_t)1920, list->getKeyClock( 0 ) );
             CPPUNIT_ASSERT_EQUAL( 3, list->get( 0 ).value );
             // POR
-            list = track1->getCurve( "POR" );
+            list = track1->curve("POR");
             CPPUNIT_ASSERT_EQUAL( 1, list->size() );
             CPPUNIT_ASSERT_EQUAL( (tick_t)1920, list->getKeyClock( 0 ) );
             CPPUNIT_ASSERT_EQUAL( 4, list->get( 0 ).value );
             // GEN
-            list = track1->getCurve( "GEN" );
+            list = track1->curve("GEN");
             CPPUNIT_ASSERT_EQUAL( 1, list->size() );
             CPPUNIT_ASSERT_EQUAL( (tick_t)1920, list->getKeyClock( 0 ) );
             CPPUNIT_ASSERT_EQUAL( 5, list->get( 0 ).value );
             // harmonics
-            CPPUNIT_ASSERT_EQUAL( 0, track1->getCurve( "harmonics" )->size() );
+            CPPUNIT_ASSERT_EQUAL(0, track1->curve("harmonics")->size());
             // OPE
-            list = track1->getCurve( "OPE" );
+            list = track1->curve("OPE");
             CPPUNIT_ASSERT_EQUAL( 1, list->size() );
             CPPUNIT_ASSERT_EQUAL( (tick_t)1920, list->getKeyClock( 0 ) );
             CPPUNIT_ASSERT_EQUAL( 7, list->get( 0 ).value );
             // reso1amp
-            CPPUNIT_ASSERT_EQUAL( 0, track1->getCurve( "reso1amp" )->size() );
+            CPPUNIT_ASSERT_EQUAL(0, track1->curve("reso1amp")->size());
             // reso1bw
-            CPPUNIT_ASSERT_EQUAL( 0, track1->getCurve( "reso1bw" )->size() );
+            CPPUNIT_ASSERT_EQUAL(0, track1->curve("reso1bw")->size());
             // reso1freq
-            CPPUNIT_ASSERT_EQUAL( 0, track1->getCurve( "reso1freq" )->size() );
+            CPPUNIT_ASSERT_EQUAL(0, track1->curve("reso1freq")->size());
             // reso2amp
-            CPPUNIT_ASSERT_EQUAL( 0, track1->getCurve( "reso2amp" )->size() );
+            CPPUNIT_ASSERT_EQUAL(0, track1->curve("reso2amp")->size());
             // reso2bw
-            CPPUNIT_ASSERT_EQUAL( 0, track1->getCurve( "reso2bw" )->size() );
+            CPPUNIT_ASSERT_EQUAL(0, track1->curve("reso2bw")->size());
             // reso2freq
-            CPPUNIT_ASSERT_EQUAL( 0, track1->getCurve( "reso2freq" )->size() );
+            CPPUNIT_ASSERT_EQUAL(0, track1->curve("reso2freq")->size());
             // reso3amp
-            CPPUNIT_ASSERT_EQUAL( 0, track1->getCurve( "reso3amp" )->size() );
+            CPPUNIT_ASSERT_EQUAL(0, track1->curve("reso3amp")->size());
             // reso3bw
-            CPPUNIT_ASSERT_EQUAL( 0, track1->getCurve( "reso3bw" )->size() );
+            CPPUNIT_ASSERT_EQUAL(0, track1->curve("reso3bw")->size());
             // reso3freq
-            CPPUNIT_ASSERT_EQUAL( 0, track1->getCurve( "reso3freq" )->size() );
+            CPPUNIT_ASSERT_EQUAL(0, track1->curve("reso3freq")->size());
             // reso4amp
-            CPPUNIT_ASSERT_EQUAL( 0, track1->getCurve( "reso4amp" )->size() );
+            CPPUNIT_ASSERT_EQUAL(0, track1->curve("reso4amp")->size());
             // reso4bw
-            CPPUNIT_ASSERT_EQUAL( 0, track1->getCurve( "reso4bw" )->size() );
+            CPPUNIT_ASSERT_EQUAL(0, track1->curve("reso4bw")->size());
             // reso4freq
-            CPPUNIT_ASSERT_EQUAL( 0, track1->getCurve( "reso4freq" )->size() );
+            CPPUNIT_ASSERT_EQUAL(0, track1->curve("reso4freq")->size());
         }
 
         {

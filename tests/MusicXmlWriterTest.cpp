@@ -17,7 +17,7 @@ public:
         sequence.timesigList.clear();
         sequence.timesigList.push( Timesig( 4, 4, 0 ) );
         sequence.timesigList.push( Timesig( 3, 4, 2 ) );
-        Track *track = &sequence.track[0];
+        Track *track = sequence.track(0);
         Event note( 1920, EventType::NOTE );
         note.note = 60;
         note.setLength( 2865 );

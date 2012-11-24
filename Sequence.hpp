@@ -37,11 +37,6 @@ using namespace std;
 class Sequence{
 public:
     /**
-     * @brief トラックのリスト
-     */
-    vector<Track> track;
-
-    /**
      * @brief テンポ情報を保持したテーブル
      */
     TempoList tempoList;
@@ -65,6 +60,12 @@ public:
      * @brief シーケンスに付属するタグ情報
      */
     string tag;
+
+protected:
+    /**
+     * @brief トラックのリスト
+     */
+    vector<Track> _track;
 
 private:
     /**
@@ -108,9 +109,9 @@ public:
      */
     Sequence clone() const{
         Sequence ret( "Miku", 1, 4, 4, baseTempo );
-        ret.track.clear();
-        for( int i = 0; i < track.size(); i++ ){
-            ret.track.push_back( track[i].clone() );
+        ret._track.clear();
+        for (int i = 0; i < _track.size(); i++) {
+            ret._track.push_back(_track[i].clone());
         }
 
         ret.tempoList = TempoList();
@@ -127,6 +128,28 @@ public:
         ret.master = master.clone();
         ret.mixer = mixer.clone();
         return ret;
+    }
+
+    /**
+     * @brief Get an instance of Track.
+     */
+    const VSQ_NS::Track *track(int trackIndex) const{
+        return &_track[trackIndex];
+    }
+
+    /**
+     * @brief Get an instance of Track.
+     */
+    VSQ_NS::Track *track(int trackIndex) {
+        return &_track[trackIndex];
+    }
+
+    const std::vector<VSQ_NS::Track> *tracks()const {
+        return &_track;
+    }
+
+    std::vector<VSQ_NS::Track> *tracks() {
+        return &_track;
     }
 
     /**
@@ -195,8 +218,8 @@ public:
     void updateTotalClocks(){
         tick_t max = getPreMeasureClocks();
         vector<string> curveNameList = getCurveNameList();
-        for( int i = 0; i < track.size(); i++ ){
-            Track *track = &(this->track[i]);
+        for (int i = 0; i < _track.size(); i++) {
+            Track *track = &(this->_track[i]);
             int numEvents = track->events()->size();
             if( 0 < numEvents ){
                 const Event *lastItem = track->events()->get( numEvents - 1 );
@@ -204,7 +227,7 @@ public:
             }
             for( int j = 0; j < curveNameList.size(); j++ ){
                 string vct = curveNameList[j];
-                const BPList *list = track->getCurve( vct );
+                const BPList *list = track->curve(vct);
                 if( list ){
                     int size = list->size();
                     if( size > 0 ){
@@ -297,7 +320,7 @@ private:
      */
     void init( const string &singer, int preMeasure, int numerator, int denominator, int tempo ){
         _totalClocks = preMeasure * 480 * 4 / denominator * numerator;
-        track.push_back( Track( "Voice1", singer ) );
+        _track.push_back(Track("Voice1", singer));
         master = Master( preMeasure );
         mixer = Mixer( 0, 0, 0, 0 );
         mixer.slave.push_back( MixerItem( 0, 0, 0, 0 ) );
