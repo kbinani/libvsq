@@ -200,7 +200,7 @@ public:
      * @param iteratorKind 反復子の種類
      * @return 反復子
      */
-    EventListIndexIterator getIndexIterator( EventListIndexIteratorKind::EventListIndexIteratorKindEnum iteratorKind ){
+    EventListIndexIterator getIndexIterator(EventListIndexIteratorKind::EventListIndexIteratorKindEnum iteratorKind)const {
         return EventListIndexIterator( &this->_events, (int)iteratorKind );
     }
 
@@ -410,10 +410,11 @@ public:
      * @brief 指定したゲートタイムにおいて、歌唱を担当している歌手の歌手変更イベントを取得する
      * @param clock ゲートタイム
      * @return 歌手イベント。存在しなければ null を返す
+     * @todo Change to const method.
      */
-    const VSQ_NS::Event *getSingerEventAt( VSQ_NS::tick_t clock ){
+    const VSQ_NS::Event *getSingerEventAt(VSQ_NS::tick_t clock)const {
         const VSQ_NS::Event *last = 0;
-        VSQ_NS::Event::List *events = this->events();
+        const VSQ_NS::Event::List *events = this->events();
         VSQ_NS::EventListIndexIterator itr = getIndexIterator( VSQ_NS::EventListIndexIteratorKind::SINGER );
         while( itr.hasNext() ){
             int index = itr.next();
