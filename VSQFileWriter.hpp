@@ -312,7 +312,7 @@ protected:
      */
     void printMetaText(const Track *track, TextStream &stream, int eos, tick_t start, bool printPitch = false, Master *master = 0, Mixer *mixer = 0) {
         //if( common ~= nil ){
-            track->getCommon()->write(stream);
+            track->common()->write(stream);
         //}
         if( master ){
             master->write( stream );
@@ -340,7 +340,7 @@ protected:
         for( int i = 0; i < handle.size(); ++i ){
             writeHandle( handle[i], stream );
         }
-        string version = track->getCommon()->version;
+        string version = track->common()->version;
         if (track->getCurve("pit")->size() > 0) {
             track->getCurve("pit")->print(stream, start, "[PitchBendBPList]");
         }

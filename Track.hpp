@@ -36,12 +36,12 @@ protected:
      * @brief トラック名などの情報
      * @todo Rename to _common.
      */
-    Common common;// = nil;
+    Common _common;
 
     /**
      * @brief イベントの一覧
      */
-    Event::List _events;// = nil;
+    Event::List _events;
 
 private:
     /**
@@ -181,7 +181,7 @@ public:
         //if( common == nil ){
         //    return "Master Track";
         //}else{
-            return common.name;
+            return _common.name;
         //}
     }
 
@@ -190,7 +190,7 @@ public:
      * @param value (string) トラック名
      */
     void setName( const std::string &value ){
-        common.name = value;
+        _common.name = value;
     }
 
     /**
@@ -694,16 +694,16 @@ public:
      * @brief Get an instance of Common.
      * @todo Rename to common.
      */
-    Common *getCommon(){
-        return &common;
+    Common *common() {
+        return &_common;
     }
 
     /**
      * @brief Get an instance of Common.
      * @todo Rename to common.
      */
-    const Common *getCommon()const {
-        return &common;
+    const Common *common()const {
+        return &_common;
     }
 
     /**
@@ -752,7 +752,7 @@ private:
      * @param singer (string)
      */
     void _initCor( std::string name, std::string singer ){
-        this->common = Common( name, 179, 181, 123, DynamicsMode::EXPERT, PlayMode::PLAY_WITH_SYNTH );
+        this->_common = Common(name, 179, 181, 123, DynamicsMode::EXPERT, PlayMode::PLAY_WITH_SYNTH);
         this->_pit = BPList( "pit", 0, -8192, 8191 );
         this->_pbs = BPList( "pbs", 2, 0, 24 );
         this->_dyn = BPList( "dyn", 64, 0, 127 );
@@ -796,7 +796,7 @@ private:
     void deepCopy( Track *destination )const{
         destination->setName( getName() );
 
-        destination->common = common.clone();
+        destination->_common = _common.clone();
         destination->_events.clear();
         for( int i = 0; i < _events.size(); i++ ){
             const Event *item = _events.get( i );

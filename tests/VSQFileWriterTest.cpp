@@ -432,11 +432,11 @@ class VSQFileWriterTest : public CppUnit::TestCase{
         mixer.outputMode = 4;
         mixer.slave.push_back( MixerItem( 5, 6, 7, 8 ) );
 
-        track.getCommon()->version = "DSB301";
-        track.getCommon()->name = "foo";
-        track.getCommon()->color = "1,2,3";
-        track.getCommon()->dynamicsMode = DynamicsMode::STANDARD;
-        track.getCommon()->playMode = PlayMode::PLAY_WITH_SYNTH;
+        track.common()->version = "DSB301";
+        track.common()->name = "foo";
+        track.common()->color = "1,2,3";
+        track.common()->dynamicsMode = DynamicsMode::STANDARD;
+        track.common()->playMode = PlayMode::PLAY_WITH_SYNTH;
 
         vector<string> curves;
         curves.push_back( "pit" );

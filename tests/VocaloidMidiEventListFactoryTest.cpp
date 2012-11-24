@@ -183,7 +183,7 @@ public:
         noteEvent.vibratoHandle.iconId = "$04040005";
         noteEvent.lyricHandle = Handle( HandleType::LYRIC );
         noteEvent.lyricHandle.setLyricAt( 0, Lyric( "あ", "a" ) );
-        sequence.track(0)->getCommon()->version = "DSB3";
+        sequence.track(0)->common()->version = "DSB3";
 
         // lastDelay が nil であるために、CVM_NM_VERSION_AND_DEVICE が出力されるケース
         int lastDelay;// = nil;
@@ -369,7 +369,7 @@ public:
         CPPUNIT_ASSERT_EQUAL( (size_t)19, actualExpanded.size() );
         CPPUNIT_ASSERT_EQUAL( 500, delay );
 
-        sequence.track(0)->getCommon()->version = "DSB2";
+        sequence.track(0)->common()->version = "DSB2";
         // VOCALOID1 であるために、0x5011が出力され、CVM_NM_PHONETIC_SYMBOL_CONTINUATIONとVOCALOID2用のNRPNが出力されない
         lastDelay = 500;
         noteEvent.vibratoHandle = Handle();
@@ -599,7 +599,7 @@ public:
         }
 
         // VOCALOID1 の場合
-        track->getCommon()->version = "DSB2";
+        track->common()->version = "DSB2";
         vector<NrpnEvent> events = VocaloidMidiEventListFactoryStub::generateVoiceChangeParameterNRPN( track, &sequence.tempoList, 500, sequence.getPreMeasureClocks() );
         // 中身は見ない。各カーブに MIDI イベントが1つずつできることだけをチェック
         // 各イベントの子にあたるイベントのテストは、test_addVoiceChangeParameters で行う
@@ -608,13 +608,13 @@ public:
 
         // VOCALOID2 の場合
         // 6 種類
-        track->getCommon()->version = "DSB3";
+        track->common()->version = "DSB3";
         events = VocaloidMidiEventListFactoryStub::generateVoiceChangeParameterNRPN( track, &sequence.tempoList, 500, sequence.getPreMeasureClocks() );
         CPPUNIT_ASSERT_EQUAL( (size_t)6, events.size() );
 
         // UNKNOWN の場合
         // 5 種類
-        track->getCommon()->version = "";
+        track->common()->version = "";
         events = VocaloidMidiEventListFactoryStub::generateVoiceChangeParameterNRPN( track, &sequence.tempoList, 500, sequence.getPreMeasureClocks() );
         CPPUNIT_ASSERT_EQUAL( (size_t)5, events.size() );
     }

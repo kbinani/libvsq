@@ -64,7 +64,7 @@ protected:
         }
 
         void setCommon( const Common &value ){
-            common = value;
+            _common = value;
         }
     };
 

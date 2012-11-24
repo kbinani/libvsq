@@ -122,7 +122,7 @@ protected:
     {
         vector<NrpnEvent> list;
 
-        string version = target->getCommon()->version;
+        string version = target->common()->version;
         Event::List *events = target->events();
 
         int count = events->size();
@@ -394,7 +394,7 @@ protected:
             symbols.push_back( s.substr( i, 1 ) );
         }
 
-        string renderer = track->getCommon()->version;
+        string renderer = track->common()->version;
         if( renderer.substr( 0, 4 ) == string( "DSB2" ) ){
             add.append( (MidiParameterType::MidiParameterTypeEnum)0x5011, 0x01, true );//TODO: Meaning of (byte)0x5011 is unknown.
         }
@@ -558,7 +558,7 @@ protected:
      * @return (table<NrpnEvent>) NrpnEvent の配列
      */
     static vector<NrpnEvent> generateVoiceChangeParameterNRPN( Track *track, TempoList *tempoList, int msPreSend, tick_t premeasure_clock ){
-        string renderer = track->getCommon()->version;
+        string renderer = track->common()->version;
         vector<NrpnEvent> res;
 
         vector<string> curves;

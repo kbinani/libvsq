@@ -113,11 +113,11 @@ public:
         // トラック1
         const Track *track1 = sequence.track(0);
         // [Common]
-        CPPUNIT_ASSERT_EQUAL( string( "DSB301" ), track1->getCommon()->version );
-        CPPUNIT_ASSERT_EQUAL( string( "Voice1" ), track1->getCommon()->name );
-        CPPUNIT_ASSERT_EQUAL( string( "179,181,123" ), track1->getCommon()->color );
-        CPPUNIT_ASSERT_EQUAL( DynamicsMode::EXPERT, track1->getCommon()->dynamicsMode );
-        CPPUNIT_ASSERT_EQUAL( PlayMode::PLAY_WITH_SYNTH, track1->getCommon()->playMode );
+        CPPUNIT_ASSERT_EQUAL(string("DSB301"), track1->common()->version);
+        CPPUNIT_ASSERT_EQUAL(string("Voice1"), track1->common()->name);
+        CPPUNIT_ASSERT_EQUAL(string("179,181,123"), track1->common()->color);
+        CPPUNIT_ASSERT_EQUAL(DynamicsMode::EXPERT, track1->common()->dynamicsMode);
+        CPPUNIT_ASSERT_EQUAL(PlayMode::PLAY_WITH_SYNTH, track1->common()->playMode);
         {
             // イベントリスト
             CPPUNIT_ASSERT_EQUAL( 2, track1->events()->size() );
