@@ -46,6 +46,13 @@ protected:
         }
     };
 
+    class TempTrack : public Track {
+    public:
+        std::map<std::string, std::string> getSectionNameMap()const {
+            return Track::getSectionNameMap();
+        }
+    };
+
 public:
     /**
      * @brief ストリームに出力する
@@ -341,81 +348,54 @@ protected:
             writeHandle( handle[i], stream );
         }
         string version = track->common()->version;
-        if (track->curve("pit")->size() > 0) {
-            track->curve("pit")->print(stream, start, "[PitchBendBPList]");
-        }
-        if (track->curve("pbs")->size() > 0) {
-            track->curve("pbs")->print(stream, start, "[PitchBendSensBPList]");
-        }
-        if (track->curve("dyn")->size() > 0) {
-            track->curve("dyn")->print(stream, start, "[DynamicsBPList]");
-        }
-        if (track->curve("bre")->size() > 0) {
-            track->curve("bre")->print(stream, start, "[EpRResidualBPList]");
-        }
-        if (track->curve("bri")->size() > 0) {
-            track->curve("bri")->print(stream, start, "[EpRESlopeBPList]");
-        }
-        if (track->curve("cle")->size() > 0) {
-            track->curve("cle")->print(stream, start, "[EpRESlopeDepthBPList]");
-        }
-        if( version.substr( 0, 4 ) == "DSB2" ){
-            if (track->curve("harmonics")->size() > 0) {
-                track->curve("harmonics")->print(stream, start, "[EpRSineBPList]");
-            }
-            if (track->curve("fx2depth")->size() > 0) {
-                track->curve("fx2depth")->print(stream, start, "[VibTremDepthBPList]");
-            }
 
-            if (track->curve("reso1Freq")->size() > 0) {
-                track->curve("reso1Freq")->print(stream, start, "[Reso1FreqBPList]");
-            }
-            if (track->curve("reso2Freq")->size() > 0) {
-                track->curve("reso2Freq")->print(stream, start, "[Reso2FreqBPList]");
-            }
-            if (track->curve("reso3Freq")->size() > 0) {
-                track->curve("reso3Freq")->print(stream, start, "[Reso3FreqBPList]");
-            }
-            if (track->curve("reso4Freq")->size() > 0) {
-                track->curve("reso4Freq")->print(stream, start, "[Reso4FreqBPList]");
-            }
+        TempTrack tempTrack;
+        std::map<std::string, std::string> sectionNameMap
+                = tempTrack.getSectionNameMap();
 
-            if (track->curve("reso1BW")->size() > 0) {
-                track->curve("reso1BW")->print(stream, start, "[Reso1BWBPList]");
-            }
-            if (track->curve("reso2BW")->size() > 0) {
-                track->curve("reso2BW")->print(stream, start, "[Reso2BWBPList]");
-            }
-            if (track->curve("reso3BW")->size() > 0) {
-                track->curve("reso3BW")->print(stream, start, "[Reso3BWBPList]");
-            }
-            if (track->curve("reso4BW")->size() > 0) {
-                track->curve("reso4BW")->print(stream, start, "[Reso4BWBPList]");
-            }
-
-            if (track->curve("reso1Amp")->size() > 0) {
-                track->curve("reso1Amp")->print(stream, start, "[Reso1AmpBPList]");
-            }
-            if (track->curve("reso2Amp")->size() > 0) {
-                track->curve("reso2Amp")->print(stream, start, "[Reso2AmpBPList]");
-            }
-            if (track->curve("reso3Amp")->size() > 0) {
-                track->curve("reso3Amp")->print(stream, start, "[Reso3AmpBPList]");
-            }
-            if (track->curve("reso4Amp")->size() > 0) {
-                track->curve("reso4Amp")->print(stream, start, "[Reso4AmpBPList]");
-            }
+        // prepare list of curve name to be printed
+        std::vector<std::string> curveNameList;
+        curveNameList.push_back("pit");
+        curveNameList.push_back("pbs");
+        curveNameList.push_back("dyn");
+        curveNameList.push_back("bre");
+        curveNameList.push_back("bri");
+        curveNameList.push_back("cle");
+        if (version.substr(0, 4) == "DSB2") {
+            curveNameList.push_back("harmonics");
+            curveNameList.push_back("fx2depth");
+            curveNameList.push_back("reso1Freq");
+            curveNameList.push_back("reso2Freq");
+            curveNameList.push_back("reso3Freq");
+            curveNameList.push_back("reso4Freq");
+            curveNameList.push_back("reso1BW");
+            curveNameList.push_back("reso2BW");
+            curveNameList.push_back("reso3BW");
+            curveNameList.push_back("reso4BW");
+            curveNameList.push_back("reso1Amp");
+            curveNameList.push_back("reso2Amp");
+            curveNameList.push_back("reso3Amp");
+            curveNameList.push_back("reso4Amp");
+        }
+        curveNameList.push_back("gen");
+        curveNameList.push_back("por");
+        if (version.substr(0, 4) == "DSB3") {
+            curveNameList.push_back("ope");
         }
 
-        if (track->curve("gen")->size() > 0) {
-            track->curve("gen")->print(stream, start, "[GenderFactorBPList]");
-        }
-        if (track->curve("por")->size() > 0) {
-            track->curve("por")->print(stream, start, "[PortamentoTimingBPList]");
-        }
-        if( version.substr( 0, 4 ) == "DSB3" ){
-            if (track->curve("ope")->size() > 0) {
-                track->curve("ope")->print(stream, start, "[OpeningBPList]");
+        std::vector<std::string>::iterator i = curveNameList.begin();
+        for (; i != curveNameList.end(); ++i) {
+            std::string curveName = *i;
+            std::string sectionName;
+            std::map<std::string, std::string>::iterator index = sectionNameMap.begin();
+            for (; index != sectionNameMap.end(); ++index) {
+                if (index->second == curveName) {
+                    sectionName = index->first;
+                    break;
+                }
+            }
+            if (track->curve(curveName)->size() > 0) {
+                track->curve(curveName)->print(stream, start, sectionName);
             }
         }
     }
