@@ -34,12 +34,14 @@ class Event
     friend class VSQFileReader; //TODO:Track::Track(TextStream &, ...)の機能がVSQFIleREaderに移動したら、ここは不要になるので消す
 public:
     class ListIterator;
+    class ListConstIterator;
 
     /**
      * @brief 固有 ID 付きの {@link Event} のリストを取り扱うクラス
      */
     class List{
         friend class ListIterator;
+        friend class ListConstIterator;
 
     protected:
         /**
@@ -143,6 +145,10 @@ public:
         ListIterator iterator(){
             updateIdList();
             return ListIterator( this );
+        }
+
+        const ListConstIterator iterator()const {
+            return ListConstIterator(this);
         }
 
         /**
@@ -283,13 +289,12 @@ public:
     /**
      * @brief イベントリストのアイテムを順に返す反復子
      */
-    class ListIterator
-    {
-    private:
+    class ListConstIterator {
+    protected:
         /**
          * @brief 反復子の元になるリスト
          */
-        List *_list;
+        const List *_list;
 
         /**
          * @brief 反復子の現在の位置
@@ -301,10 +306,9 @@ public:
          * @brief 初期化を行う
          * @param list 反復子の元になるリスト
          */
-        ListIterator( List *list ) :
-            _list( list ),
-            _pos( -1 )
-        {
+        ListConstIterator(const List *list) :
+            _list(list),
+            _pos(-1) {
         }
 
         /**
@@ -323,18 +327,27 @@ public:
          * @brief 反復子の次の要素を返す
          * @return 次の要素
          */
-        VSQ_NS::Event *next(){
+        VSQ_NS::Event *next() {
             _pos++;
             return _list->_events[_pos];
+        }
+    };
+
+    class ListIterator : public ListConstIterator {
+    private:
+        List *_nonConstList;
+
+    public:
+        explicit ListIterator(List *list) : ListConstIterator(list) {
+            _nonConstList = list;
         }
 
         /**
          * @brief 反復子によって最後に返された要素を削除する
          */
-        void remove()
-        {
-            if( 0 <= _pos && _pos < _list->size() ){
-                _list->removeAt( _pos );
+        void remove() {
+            if (0 <= _pos && _pos < _nonConstList->size()) {
+                _nonConstList->removeAt(_pos);
                 _pos--;
             }
         }

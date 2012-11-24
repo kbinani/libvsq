@@ -64,7 +64,11 @@ protected:
         }
 
         void setCommon( const Common &value ){
-            common = value;
+            _common = value;
+        }
+
+        std::map<std::string, std::string> getSectionNameMap()const {
+            return Track::getSectionNameMap();
         }
     };
 
@@ -83,7 +87,7 @@ public:
         reader.read( stream, events, format, timeFormat );
 
         int num_track = events.size();
-        sequence.track.clear();
+        sequence.tracks()->clear();
         for( int i = 1; i < num_track; i++ ){
             TextStream textStream;
             string trackName;
@@ -99,7 +103,7 @@ public:
                 track = getTrackByTextStream( textStream );
             }
             track.setName( trackName );
-            sequence.track.push_back( track );
+            sequence.tracks()->push_back(track);
         }
 
         parseTempoList( events[0], sequence.tempoList );
@@ -479,6 +483,7 @@ private:
         vector<VSQ_NS::Event *> temporaryEventList;
 
         TentativeTrack result;
+        std::map<std::string, std::string> sectionNameMap = result.getSectionNameMap();
 
         std::string lastLine = stream.readLine();
         while( 1 ){
@@ -486,7 +491,13 @@ private:
             if( lastLine.length() == 0 ){
                 break;
             }
-            if( lastLine == "[Common]" ){
+
+            std::map<std::string, std::string>::const_iterator index =
+                    sectionNameMap.find(lastLine);
+            if (index != sectionNameMap.end()) {
+                std::string name = index->second;
+                lastLine = result.curve(name)->appendFromText(stream);
+            } else if (lastLine == "[Common]") {
                 result.setCommon( VSQ_NS::Common( stream, lastLine ) );
             }else if( lastLine == "[Master]" && master != 0 ){
                 *master = VSQ_NS::Master( stream, lastLine );
@@ -513,52 +524,6 @@ private:
                         lastLine = stream.readLine();
                     }
                 }
-            }else if( lastLine == "[PitchBendBPList]" ){
-                lastLine = result.getCurve( "pit" )->appendFromText( stream );
-            }else if( lastLine == "[PitchBendSensBPList]" ){
-                lastLine = result.getCurve( "pbs" )->appendFromText( stream );
-            }else if( lastLine == "[DynamicsBPList]" ){
-                lastLine = result.getCurve( "dyn" )->appendFromText( stream );
-            }else if( lastLine == "[EpRResidualBPList]" ){
-                lastLine = result.getCurve( "bre" )->appendFromText( stream );
-            }else if( lastLine == "[EpRESlopeBPList]" ){
-                lastLine = result.getCurve( "bri" )->appendFromText( stream );
-            }else if( lastLine == "[EpRESlopeDepthBPList]" ){
-                lastLine = result.getCurve( "cle" )->appendFromText( stream );
-            }else if( lastLine == "[EpRSineBPList]" ){
-                lastLine = result.getCurve( "harmonics" )->appendFromText( stream );
-            }else if( lastLine == "[VibTremDepthBPList]" ){
-                lastLine = result.getCurve( "fx2depth" )->appendFromText( stream );
-            }else if( lastLine == "[Reso1FreqBPList]" ){
-                lastLine = result.getCurve( "reso1Freq" )->appendFromText( stream );
-            }else if( lastLine == "[Reso2FreqBPList]" ){
-                lastLine = result.getCurve( "reso2Freq" )->appendFromText( stream );
-            }else if( lastLine == "[Reso3FreqBPList]" ){
-                lastLine = result.getCurve( "reso3Freq" )->appendFromText( stream );
-            }else if( lastLine == "[Reso4FreqBPList]" ){
-                lastLine = result.getCurve( "reso4Freq" )->appendFromText( stream );
-            }else if( lastLine == "[Reso1BWBPList]" ){
-                lastLine = result.getCurve( "reso1BW" )->appendFromText( stream );
-            }else if( lastLine == "[Reso2BWBPList]" ){
-                lastLine = result.getCurve( "reso2BW" )->appendFromText( stream );
-            }else if( lastLine == "[Reso3BWBPList]" ){
-                lastLine = result.getCurve( "reso3BW" )->appendFromText( stream );
-            }else if( lastLine == "[Reso4BWBPList]" ){
-                lastLine = result.getCurve( "reso4BW" )->appendFromText( stream );
-            }else if( lastLine == "[Reso1AmpBPList]" ){
-                lastLine = result.getCurve( "reso1Amp" )->appendFromText( stream );
-            }else if( lastLine == "[Reso2AmpBPList]" ){
-                lastLine = result.getCurve( "reso2Amp" )->appendFromText( stream );
-            }else if( lastLine == "[Reso3AmpBPList]" ){
-                lastLine = result.getCurve( "reso3Amp" )->appendFromText( stream );
-            }else if( lastLine == "[Reso4AmpBPList]" ){
-                lastLine = result.getCurve( "reso4Amp" )->appendFromText( stream );
-            }else if( lastLine == "[GenderFactorBPList]" ){
-                lastLine = result.getCurve( "gen" )->appendFromText( stream );
-            }else if( lastLine == "[PortamentoTimingBPList]" ){
-                lastLine = result.getCurve( "por" )->appendFromText( stream );
-            }else if( lastLine == "[OpeningBPList]" ){
-                lastLine = result.getCurve( "ope" )->appendFromText( stream );
             }else{
                 std::string buffer = lastLine;
                 buffer = StringUtil::replace( buffer, "[", "" );
