@@ -661,6 +661,40 @@ public:
         return &vocaloidCurveNameList;
     }
 
+protected:
+    /**
+     * @brief Get a map of section name in vsq and curve name.
+     */
+    virtual std::map<std::string, std::string> getSectionNameMap()const {
+        static std::map<std::string, std::string> result;
+        if (result.empty()) {
+            result.insert(std::make_pair("pit", "[PitchBendBPList]"));
+            result.insert(std::make_pair("pbs", "[PitchBendSensBPList]"));
+            result.insert(std::make_pair("dyn", "[DynamicsBPList]"));
+            result.insert(std::make_pair("bre", "[EpRResidualBPList]"));
+            result.insert(std::make_pair("bri", "[EpRESlopeBPList]"));
+            result.insert(std::make_pair("cle", "[EpRESlopeDepthBPList]"));
+            result.insert(std::make_pair("harmonics", "[EpRSineBPList]"));
+            result.insert(std::make_pair("fx2depth", "[VibTremDepthBPList]"));
+            result.insert(std::make_pair("reso1Freq", "[Reso1FreqBPList]"));
+            result.insert(std::make_pair("reso2Freq", "[Reso2FreqBPList]"));
+            result.insert(std::make_pair("reso3Freq", "[Reso3FreqBPList]"));
+            result.insert(std::make_pair("reso4Freq", "[Reso4FreqBPList]"));
+            result.insert(std::make_pair("reso1BW", "[Reso1BWBPList]"));
+            result.insert(std::make_pair("reso2BW", "[Reso2BWBPList]"));
+            result.insert(std::make_pair("reso3BW", "[Reso3BWBPList]"));
+            result.insert(std::make_pair("reso4BW", "[Reso4BWBPList]"));
+            result.insert(std::make_pair("reso1Amp", "[Reso1AmpBPList]"));
+            result.insert(std::make_pair("reso2Amp", "[Reso2AmpBPList]"));
+            result.insert(std::make_pair("reso3Amp", "[Reso3AmpBPList]"));
+            result.insert(std::make_pair("reso4Amp", "[Reso4AmpBPList]"));
+            result.insert(std::make_pair("gen", "[GenderFactorBPList]"));
+            result.insert(std::make_pair("por", "[PortamentoTimingBPList]"));
+            result.insert(std::make_pair("ope", "[OpeningBPList]"));
+        }
+        return result;
+    }
+
 private:
     /**
      * @brief 初期化を行う
