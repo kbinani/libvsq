@@ -147,6 +147,8 @@ private:
      */
     BPList _ope;
 
+    std::map<std::string, VSQ_NS::BPList *> curveNameMap;
+
 public:
     /**
      * @brief Master Trackを構築
@@ -484,57 +486,14 @@ public:
         }
         */
 
-    const BPList *getCurve(const std::string &curve)const {
-        string search = StringUtil::toLower( curve );
-        if( search == "bre" ){
-            return &_bre;
-        }else if( search == "bri" ){
-            return &_bri;
-        }else if( search == "cle" ){
-            return &_cle;
-        }else if( search == "dyn" ){
-            return &_dyn;
-        }else if( search == "gen" ){
-            return &_gen;
-        }else if( search == "ope" ){
-            return &_ope;
-        }else if( search == "pbs" ){
-            return &_pbs;
-        }else if( search == "pit" ){
-            return &_pit;
-        }else if( search == "por" ){
-            return &_por;
-        }else if( search == "harmonics" ){
-            return &_harmonics;
-        }else if( search == "fx2depth" ){
-            return &_fx2depth;
-        }else if( search == "reso1amp" ){
-            return &_reso1AmpBPList;
-        }else if( search == "reso1bw" ){
-            return &_reso1BWBPList;
-        }else if( search == "reso1freq" ){
-            return &_reso1FreqBPList;
-        }else if( search == "reso2amp" ){
-            return &_reso2AmpBPList;
-        }else if( search == "reso2bw" ){
-            return &_reso2BWBPList;
-        }else if( search == "reso2freq" ){
-            return &_reso2FreqBPList;
-        }else if( search == "reso3amp" ){
-            return &_reso3AmpBPList;
-        }else if( search == "reso3bw" ){
-            return &_reso3BWBPList;
-        }else if( search == "reso3freq" ){
-            return &_reso3FreqBPList;
-        }else if( search == "reso4amp" ){
-            return &_reso4AmpBPList;
-        }else if( search == "reso4bw" ){
-            return &_reso4BWBPList;
-        }else if( search == "reso4freq" ){
-            return &_reso4FreqBPList;
-        }else{
-            //TODO: 戻り値なんとかする
+    const BPList *getCurve(const std::string &curveName)const {
+        string search = StringUtil::toLower(curveName);
+        std::map<std::string, BPList *>::const_iterator index
+                = curveNameMap.find(search);
+        if (index == curveNameMap.end()) {
             return 0;
+        } else {
+            return index->second;
         }
     }
 
@@ -543,57 +502,14 @@ public:
      * @param curve (string) カーブ名
      * @return (BPList) カーブ
      */
-    BPList *getCurve( const std::string &curve ){
-        string search = StringUtil::toLower( curve );
-        if( search == "bre" ){
-            return &_bre;
-        }else if( search == "bri" ){
-            return &_bri;
-        }else if( search == "cle" ){
-            return &_cle;
-        }else if( search == "dyn" ){
-            return &_dyn;
-        }else if( search == "gen" ){
-            return &_gen;
-        }else if( search == "ope" ){
-            return &_ope;
-        }else if( search == "pbs" ){
-            return &_pbs;
-        }else if( search == "pit" ){
-            return &_pit;
-        }else if( search == "por" ){
-            return &_por;
-        }else if( search == "harmonics" ){
-            return &_harmonics;
-        }else if( search == "fx2depth" ){
-            return &_fx2depth;
-        }else if( search == "reso1amp" ){
-            return &_reso1AmpBPList;
-        }else if( search == "reso1bw" ){
-            return &_reso1BWBPList;
-        }else if( search == "reso1freq" ){
-            return &_reso1FreqBPList;
-        }else if( search == "reso2amp" ){
-            return &_reso2AmpBPList;
-        }else if( search == "reso2bw" ){
-            return &_reso2BWBPList;
-        }else if( search == "reso2freq" ){
-            return &_reso2FreqBPList;
-        }else if( search == "reso3amp" ){
-            return &_reso3AmpBPList;
-        }else if( search == "reso3bw" ){
-            return &_reso3BWBPList;
-        }else if( search == "reso3freq" ){
-            return &_reso3FreqBPList;
-        }else if( search == "reso4amp" ){
-            return &_reso4AmpBPList;
-        }else if( search == "reso4bw" ){
-            return &_reso4BWBPList;
-        }else if( search == "reso4freq" ){
-            return &_reso4FreqBPList;
-        }else{
-            //TODO: 戻り値なんとかする
+    BPList *getCurve(const std::string &curveName) {
+        string search = StringUtil::toLower(curveName);
+        std::map<std::string, BPList *>::const_iterator index
+                = curveNameMap.find(search);
+        if (index == curveNameMap.end()) {
             return 0;
+        } else {
+            return index->second;
         }
     }
 
@@ -777,6 +693,8 @@ private:
         this->_por = BPList( "por", 64, 0, 127 );
         this->_ope = BPList( "ope", 127, 0, 127 );
 
+        setupCurveNameMap();
+
         Event event( 0, EventType::SINGER );
         Handle ish( HandleType::SINGER );
         ish.iconId = "$07010000";
@@ -825,6 +743,35 @@ private:
         destination->_gen = _gen.clone();
         destination->_por = _por.clone();
         destination->_ope = _ope.clone();
+
+        destination->setupCurveNameMap();
+    }
+
+    void setupCurveNameMap() {
+        curveNameMap.clear();
+        curveNameMap.insert(std::make_pair("bre", &_bre));
+        curveNameMap.insert(std::make_pair("bri", &_bri));
+        curveNameMap.insert(std::make_pair("cle", &_cle));
+        curveNameMap.insert(std::make_pair("dyn", &_dyn));
+        curveNameMap.insert(std::make_pair("gen", &_gen));
+        curveNameMap.insert(std::make_pair("ope", &_ope));
+        curveNameMap.insert(std::make_pair("pbs", &_pbs));
+        curveNameMap.insert(std::make_pair("pit", &_pit));
+        curveNameMap.insert(std::make_pair("por", &_por));
+        curveNameMap.insert(std::make_pair("harmonics", &_harmonics));
+        curveNameMap.insert(std::make_pair("fx2depth", &_fx2depth));
+        curveNameMap.insert(std::make_pair("reso1amp", &_reso1AmpBPList));
+        curveNameMap.insert(std::make_pair("reso1bw", &_reso1BWBPList));
+        curveNameMap.insert(std::make_pair("reso1freq", &_reso1FreqBPList));
+        curveNameMap.insert(std::make_pair("reso2amp", &_reso2AmpBPList));
+        curveNameMap.insert(std::make_pair("reso2bw", &_reso2BWBPList));
+        curveNameMap.insert(std::make_pair("reso2freq", &_reso2FreqBPList));
+        curveNameMap.insert(std::make_pair("reso3amp", &_reso3AmpBPList));
+        curveNameMap.insert(std::make_pair("reso3bw", &_reso3BWBPList));
+        curveNameMap.insert(std::make_pair("reso3freq", &_reso3FreqBPList));
+        curveNameMap.insert(std::make_pair("reso4amp", &_reso4AmpBPList));
+        curveNameMap.insert(std::make_pair("reso4bw", &_reso4BWBPList));
+        curveNameMap.insert(std::make_pair("reso4freq", &_reso4FreqBPList));
     }
 };
 
