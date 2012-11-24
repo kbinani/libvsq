@@ -486,7 +486,7 @@ public:
         }
         */
 
-    const BPList *getCurve(const std::string &curveName)const {
+    const BPList *curve(const std::string &curveName)const {
         string search = StringUtil::toLower(curveName);
         std::map<std::string, BPList *>::const_iterator index
                 = curveNameMap.find(search);
@@ -502,7 +502,7 @@ public:
      * @param curve (string) カーブ名
      * @return (BPList) カーブ
      */
-    BPList *getCurve(const std::string &curveName) {
+    BPList *curve(const std::string &curveName) {
         string search = StringUtil::toLower(curveName);
         std::map<std::string, BPList *>::const_iterator index
                 = curveNameMap.find(search);

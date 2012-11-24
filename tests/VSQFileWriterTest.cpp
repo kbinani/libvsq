@@ -158,7 +158,7 @@ class VSQFileWriterTest : public CppUnit::TestCase{
                        "reso3amp", "reso3bw", "reso3freq",
                        "reso4amp", "reso4bw", "reso4freq" };
         for( int i = 0; i < CURVE_COUNT; i++ ){
-            BPList *list = sequence.track(0)->getCurve(curveNames[i]);
+            BPList *list = sequence.track(0)->curve(curveNames[i]);
             list->add( 1920, 1 + i );
         }
         Event noteEvent( 1920, EventType::NOTE );
@@ -464,7 +464,7 @@ class VSQFileWriterTest : public CppUnit::TestCase{
         curves.push_back( "OPE" );
         for( int i = 0; i < curves.size(); i++ ){
             string curveName = curves[i];
-            track.getCurve( curveName )->add( 480 + i, i );
+            track.curve(curveName)->add(480 + i, i);
         }
 
         TextStream stream;

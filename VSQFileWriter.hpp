@@ -341,81 +341,81 @@ protected:
             writeHandle( handle[i], stream );
         }
         string version = track->common()->version;
-        if (track->getCurve("pit")->size() > 0) {
-            track->getCurve("pit")->print(stream, start, "[PitchBendBPList]");
+        if (track->curve("pit")->size() > 0) {
+            track->curve("pit")->print(stream, start, "[PitchBendBPList]");
         }
-        if (track->getCurve("pbs")->size() > 0) {
-            track->getCurve("pbs")->print(stream, start, "[PitchBendSensBPList]");
+        if (track->curve("pbs")->size() > 0) {
+            track->curve("pbs")->print(stream, start, "[PitchBendSensBPList]");
         }
-        if (track->getCurve("dyn")->size() > 0) {
-            track->getCurve("dyn")->print(stream, start, "[DynamicsBPList]");
+        if (track->curve("dyn")->size() > 0) {
+            track->curve("dyn")->print(stream, start, "[DynamicsBPList]");
         }
-        if (track->getCurve("bre")->size() > 0) {
-            track->getCurve("bre")->print(stream, start, "[EpRResidualBPList]");
+        if (track->curve("bre")->size() > 0) {
+            track->curve("bre")->print(stream, start, "[EpRResidualBPList]");
         }
-        if (track->getCurve("bri")->size() > 0) {
-            track->getCurve("bri")->print(stream, start, "[EpRESlopeBPList]");
+        if (track->curve("bri")->size() > 0) {
+            track->curve("bri")->print(stream, start, "[EpRESlopeBPList]");
         }
-        if (track->getCurve("cle")->size() > 0) {
-            track->getCurve("cle")->print(stream, start, "[EpRESlopeDepthBPList]");
+        if (track->curve("cle")->size() > 0) {
+            track->curve("cle")->print(stream, start, "[EpRESlopeDepthBPList]");
         }
         if( version.substr( 0, 4 ) == "DSB2" ){
-            if (track->getCurve("harmonics")->size() > 0) {
-                track->getCurve("harmonics")->print(stream, start, "[EpRSineBPList]");
+            if (track->curve("harmonics")->size() > 0) {
+                track->curve("harmonics")->print(stream, start, "[EpRSineBPList]");
             }
-            if (track->getCurve("fx2depth")->size() > 0) {
-                track->getCurve("fx2depth")->print(stream, start, "[VibTremDepthBPList]");
-            }
-
-            if (track->getCurve("reso1Freq")->size() > 0) {
-                track->getCurve("reso1Freq")->print(stream, start, "[Reso1FreqBPList]");
-            }
-            if (track->getCurve("reso2Freq")->size() > 0) {
-                track->getCurve("reso2Freq")->print(stream, start, "[Reso2FreqBPList]");
-            }
-            if (track->getCurve("reso3Freq")->size() > 0) {
-                track->getCurve("reso3Freq")->print(stream, start, "[Reso3FreqBPList]");
-            }
-            if (track->getCurve("reso4Freq")->size() > 0) {
-                track->getCurve("reso4Freq")->print(stream, start, "[Reso4FreqBPList]");
+            if (track->curve("fx2depth")->size() > 0) {
+                track->curve("fx2depth")->print(stream, start, "[VibTremDepthBPList]");
             }
 
-            if (track->getCurve("reso1BW")->size() > 0) {
-                track->getCurve("reso1BW")->print(stream, start, "[Reso1BWBPList]");
+            if (track->curve("reso1Freq")->size() > 0) {
+                track->curve("reso1Freq")->print(stream, start, "[Reso1FreqBPList]");
             }
-            if (track->getCurve("reso2BW")->size() > 0) {
-                track->getCurve("reso2BW")->print(stream, start, "[Reso2BWBPList]");
+            if (track->curve("reso2Freq")->size() > 0) {
+                track->curve("reso2Freq")->print(stream, start, "[Reso2FreqBPList]");
             }
-            if (track->getCurve("reso3BW")->size() > 0) {
-                track->getCurve("reso3BW")->print(stream, start, "[Reso3BWBPList]");
+            if (track->curve("reso3Freq")->size() > 0) {
+                track->curve("reso3Freq")->print(stream, start, "[Reso3FreqBPList]");
             }
-            if (track->getCurve("reso4BW")->size() > 0) {
-                track->getCurve("reso4BW")->print(stream, start, "[Reso4BWBPList]");
+            if (track->curve("reso4Freq")->size() > 0) {
+                track->curve("reso4Freq")->print(stream, start, "[Reso4FreqBPList]");
             }
 
-            if (track->getCurve("reso1Amp")->size() > 0) {
-                track->getCurve("reso1Amp")->print(stream, start, "[Reso1AmpBPList]");
+            if (track->curve("reso1BW")->size() > 0) {
+                track->curve("reso1BW")->print(stream, start, "[Reso1BWBPList]");
             }
-            if (track->getCurve("reso2Amp")->size() > 0) {
-                track->getCurve("reso2Amp")->print(stream, start, "[Reso2AmpBPList]");
+            if (track->curve("reso2BW")->size() > 0) {
+                track->curve("reso2BW")->print(stream, start, "[Reso2BWBPList]");
             }
-            if (track->getCurve("reso3Amp")->size() > 0) {
-                track->getCurve("reso3Amp")->print(stream, start, "[Reso3AmpBPList]");
+            if (track->curve("reso3BW")->size() > 0) {
+                track->curve("reso3BW")->print(stream, start, "[Reso3BWBPList]");
             }
-            if (track->getCurve("reso4Amp")->size() > 0) {
-                track->getCurve("reso4Amp")->print(stream, start, "[Reso4AmpBPList]");
+            if (track->curve("reso4BW")->size() > 0) {
+                track->curve("reso4BW")->print(stream, start, "[Reso4BWBPList]");
+            }
+
+            if (track->curve("reso1Amp")->size() > 0) {
+                track->curve("reso1Amp")->print(stream, start, "[Reso1AmpBPList]");
+            }
+            if (track->curve("reso2Amp")->size() > 0) {
+                track->curve("reso2Amp")->print(stream, start, "[Reso2AmpBPList]");
+            }
+            if (track->curve("reso3Amp")->size() > 0) {
+                track->curve("reso3Amp")->print(stream, start, "[Reso3AmpBPList]");
+            }
+            if (track->curve("reso4Amp")->size() > 0) {
+                track->curve("reso4Amp")->print(stream, start, "[Reso4AmpBPList]");
             }
         }
 
-        if (track->getCurve("gen")->size() > 0) {
-            track->getCurve("gen")->print(stream, start, "[GenderFactorBPList]");
+        if (track->curve("gen")->size() > 0) {
+            track->curve("gen")->print(stream, start, "[GenderFactorBPList]");
         }
-        if (track->getCurve("por")->size() > 0) {
-            track->getCurve("por")->print(stream, start, "[PortamentoTimingBPList]");
+        if (track->curve("por")->size() > 0) {
+            track->curve("por")->print(stream, start, "[PortamentoTimingBPList]");
         }
         if( version.substr( 0, 4 ) == "DSB3" ){
-            if (track->getCurve("ope")->size() > 0) {
-                track->getCurve("ope")->print(stream, start, "[OpeningBPList]");
+            if (track->curve("ope")->size() > 0) {
+                track->curve("ope")->print(stream, start, "[OpeningBPList]");
             }
         }
     }

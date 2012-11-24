@@ -67,7 +67,7 @@ public:
     void test_generateExpressionNRPN(){
         Sequence sequence( "Miku", 1, 4, 4, 500000 );
         Track *track = sequence.track(0);
-        BPList *dynamics = track->getCurve( "DYN" );
+        BPList *dynamics = track->curve("DYN");
         dynamics->add( 480, 127 );
         dynamics->add( 1920, 0 );
 
@@ -386,7 +386,7 @@ public:
 
     void testGeneratePitchBendNRPN(){
         Sequence sequence( "Miku", 1, 4, 4, 500000 );
-        BPList *pit = sequence.track(0)->getCurve("PIT");
+        BPList *pit = sequence.track(0)->curve("PIT");
         pit->add( 480, 8191 );
         pit->add( 1920, -8192 );
 
@@ -418,7 +418,7 @@ public:
 
     void testGeneratePitchBendSensitivityNRPN(){
         Sequence sequence( "Miku", 1, 4, 4, 500000 );
-        BPList *pbs = sequence.track(0)->getCurve("PBS");
+        BPList *pbs = sequence.track(0)->curve("PBS");
         pbs->add( 480, 0 );
         pbs->add( 1920, 24 );
 
@@ -589,7 +589,7 @@ public:
         curveNames.push_back( "reso4freq" );
         for( int i = 0; i < curveNames.size(); i++ ){
             string curveName = curveNames[i];
-            BPList *list = track->getCurve( curveName );
+            BPList *list = track->curve(curveName);
             list->clear();
             list->setName( curveName );
             list->setDefault( 0 );
@@ -621,7 +621,7 @@ public:
 
     void testAddVoiceChangeParameters(){
         Sequence sequence( "Foo", 1, 4, 4, 500000 );
-        BPList *list = sequence.track(0)->getCurve("BRE");
+        BPList *list = sequence.track(0)->curve("BRE");
         list->clear();
         list->add( 480, 0 );
         list->add( 1920, 127 );
@@ -667,7 +667,7 @@ public:
     void testGenerateFx2DepthNRPN(){
         Sequence sequence( "Miku", 1, 4, 4, 500000 );
         Track *track = sequence.track(0);
-        BPList *list = track->getCurve( "fx2depth" );
+        BPList *list = track->curve("fx2depth");
         list->clear();
         list->add( 480, 64 );
         list->add( 1920, 63 );
@@ -751,7 +751,7 @@ public:
         curveNames.push_back( "OPE" );
         for( int i = 0; i < curveNames.size(); i++ ){
             string curveName = curveNames[i];
-            BPList *list = track->getCurve( curveName );
+            BPList *list = track->curve(curveName);
             list->clear();
             list->setDefault( 0 );
             list->setMinimum( 0 );
@@ -760,17 +760,17 @@ public:
         }
 
         // expression
-        track->getCurve( "dyn" )->clear();
-        track->getCurve( "dyn" )->add( 480, 127 );
-        track->getCurve( "dyn" )->add( 1920, 0 );
+        track->curve("dyn")->clear();
+        track->curve("dyn")->add(480, 127);
+        track->curve("dyn")->add(1920, 0);
 
         // pitchBendSensitivity
-        track->getCurve( "pbs" )->add( 480, 0 );
-        track->getCurve( "pbs" )->add( 1920, 24 );
+        track->curve("pbs")->add(480, 0);
+        track->curve("pbs")->add(1920, 24);
 
         // pitchBend
-        track->getCurve( "pit" )->add( 480, 8191 );
-        track->getCurve( "pit" )->add( 1920, -8192 );
+        track->curve("pit")->add(480, 8191);
+        track->curve("pit")->add(1920, -8192);
 
         // note
         Event noteEvent( 1920, EventType::NOTE );

@@ -168,19 +168,19 @@ protected:
         }
 
         int ms_presend = msPreSend;
-        if( target->getCurve( "dyn" )->size() > 0 ){
+        if (target->curve("dyn")->size() > 0) {
             vector<NrpnEvent> listdyn = generateExpressionNRPN( target, tempoList, ms_presend );
             if( ! listdyn.empty() ){
                 list.insert( list.end(), listdyn.begin(), listdyn.end() );
             }
         }
-        if( target->getCurve( "pbs" )->size() > 0 ){
+        if (target->curve("pbs")->size() > 0) {
             vector<NrpnEvent> listpbs = generatePitchBendSensitivityNRPN( target, tempoList, ms_presend );
             if( ! listpbs.empty() ){
                 list.insert( list.end(), listpbs.begin(), listpbs.end() );
             }
         }
-        if( target->getCurve( "pit" )->size() > 0 ){
+        if (target->curve("pit")->size() > 0) {
             vector<NrpnEvent> listpit = generatePitchBendNRPN( target, tempoList, ms_presend );
             if( ! listpit.empty() ){
                 list.insert( list.end(), listpit.begin(), listpit.end() );
@@ -246,7 +246,7 @@ protected:
      */
     static vector<NrpnEvent> generateExpressionNRPN( Track *track, TempoList *tempoList, int preSendMilliseconds ){
         vector<NrpnEvent> ret;
-        BPList *dyn = track->getCurve( "DYN" );
+        BPList *dyn = track->curve("DYN");
         NrpnEventProvider *provider = new NrpnEventProvider( MidiParameterType::CC_E_DELAY, MidiParameterType::CC_E_EXPRESSION );
         generateNRPNByBPList( ret, tempoList, preSendMilliseconds, dyn, provider );
         delete provider;
@@ -453,7 +453,7 @@ protected:
      */
     static vector<NrpnEvent> generatePitchBendNRPN( Track *track, TempoList *tempoList, int msPreSend ){
         vector<NrpnEvent> ret;
-        BPList *pit = track->getCurve( "PIT" );
+        BPList *pit = track->curve("PIT");
         PitchBendNrpnEventProvider *provider = new PitchBendNrpnEventProvider();
         generateNRPNByBPList( ret, tempoList, msPreSend, pit, provider );
         delete provider;
@@ -469,7 +469,7 @@ protected:
      */
     static vector<NrpnEvent> generatePitchBendSensitivityNRPN( Track *track, TempoList *tempoList, int msPreSend ){
         vector<NrpnEvent> ret;
-        BPList *pbs = track->getCurve( "PBS" );
+        BPList *pbs = track->curve("PBS");
         PitchBendSensitivityNrpnEventProvider *provider = new PitchBendSensitivityNrpnEventProvider();
         generateNRPNByBPList( ret, tempoList, msPreSend, pbs, provider );
         delete provider;
@@ -579,7 +579,7 @@ protected:
 
         int lastDelay = 0;
         for( int i = 0; i < curves.size(); i++ ){
-            BPList *list = track->getCurve( curves[i] );
+            BPList *list = track->curve(curves[i]);
             if( list->size() > 0 ){
                 lastDelay = addVoiceChangeParameters( res, list, tempoList, msPreSend, lastDelay );
             }
@@ -596,7 +596,7 @@ protected:
      */
     static vector<NrpnEvent> generateFx2DepthNRPN( Track *track, TempoList *tempoList, int preSendMilliseconds ){
         vector<NrpnEvent> ret;
-        BPList *fx2depth = track->getCurve( "fx2depth" );
+        BPList *fx2depth = track->curve("fx2depth");
         NrpnEventProvider *provider = new NrpnEventProvider( MidiParameterType::CC_FX2_DELAY, MidiParameterType::CC_FX2_EFFECT2_DEPTH );
         generateNRPNByBPList( ret, tempoList, preSendMilliseconds, fx2depth, provider );
         delete provider;
