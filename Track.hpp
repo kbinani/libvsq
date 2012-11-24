@@ -34,6 +34,7 @@ class Track
 protected:
     /**
      * @brief トラック名などの情報
+     * @todo Rename to _common.
      */
     Common common;// = nil;
 
@@ -483,7 +484,7 @@ public:
         }
         */
 
-    const BPList *getConstCurve( const std::string &curve )const{
+    const BPList *getCurve(const std::string &curve)const {
         string search = StringUtil::toLower( curve );
         if( search == "bre" ){
             return &_bre;
@@ -690,10 +691,18 @@ public:
     }
 
     /**
-     * @brief [Common] セクションの情報を取得する
-     * @return [Common] セクションの情報のポインタ
+     * @brief Get an instance of Common.
+     * @todo Rename to common.
      */
     Common *getCommon(){
+        return &common;
+    }
+
+    /**
+     * @brief Get an instance of Common.
+     * @todo Rename to common.
+     */
+    const Common *getCommon()const {
         return &common;
     }
 

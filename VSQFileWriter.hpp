@@ -74,7 +74,7 @@ public:
         stream->write( 0x00 );
         stream->write( 0x01 );
         // トラック数
-        writeUnsignedShort( stream, targetSequence->track.size() + 1 );
+        writeUnsignedShort(stream, targetSequence->tracks()->size() + 1);
         // 時間単位
         stream->write( 0x01 );
         stream->write( 0xe0 );
@@ -127,7 +127,7 @@ public:
         // トラック
         Sequence temp = targetSequence->clone();
         _printTrack( &temp, 0, stream, msPreSend, encoding, printPitch, &targetSequence->master, &targetSequence->mixer );
-        int count = targetSequence->track.size();
+        int count = targetSequence->tracks()->size();
         for( int track = 1; track < count; track++ ){
             _printTrack( targetSequence, track, stream, msPreSend, encoding, printPitch, 0, 0 );
         }
@@ -310,10 +310,9 @@ protected:
      * @param master 出力する Master 情報。出力しない場合は NULL を指定する
      * @param mixer 出力する Mixer 情報。出力しない場合は NULL を指定する
      */
-    void printMetaText( const Track &t, TextStream &stream, int eos, tick_t start, bool printPitch = false, Master *master = 0, Mixer *mixer = 0 ){
-        Track track = t;
+    void printMetaText(const Track *track, TextStream &stream, int eos, tick_t start, bool printPitch = false, Master *master = 0, Mixer *mixer = 0) {
         //if( common ~= nil ){
-            track.getCommon()->write( stream );
+            track->getCommon()->write(stream);
         //}
         if( master ){
             master->write( stream );
@@ -325,7 +324,7 @@ protected:
         vector<Handle> handle;
         {
             vector<TempEvent *> eventList;
-            Event::ListIterator itr = track.events()->iterator();
+            Event::ListConstIterator itr = track->events()->iterator();
             while( itr.hasNext() ){
                 Event *item = itr.next();
                 eventList.push_back( new TempEvent( *item ) );
@@ -341,82 +340,82 @@ protected:
         for( int i = 0; i < handle.size(); ++i ){
             writeHandle( handle[i], stream );
         }
-        string version = track.getCommon()->version;
-        if( track.getCurve( "pit" )->size() > 0 ){
-            track.getCurve( "pit" )->print( stream, start, "[PitchBendBPList]" );
+        string version = track->getCommon()->version;
+        if (track->getCurve("pit")->size() > 0) {
+            track->getCurve("pit")->print(stream, start, "[PitchBendBPList]");
         }
-        if( track.getCurve( "pbs" )->size() > 0 ){
-            track.getCurve( "pbs" )->print( stream, start, "[PitchBendSensBPList]" );
+        if (track->getCurve("pbs")->size() > 0) {
+            track->getCurve("pbs")->print(stream, start, "[PitchBendSensBPList]");
         }
-        if( track.getCurve( "dyn" )->size() > 0 ){
-            track.getCurve( "dyn" )->print( stream, start, "[DynamicsBPList]" );
+        if (track->getCurve("dyn")->size() > 0) {
+            track->getCurve("dyn")->print(stream, start, "[DynamicsBPList]");
         }
-        if( track.getCurve( "bre" )->size() > 0 ){
-            track.getCurve( "bre" )->print( stream, start, "[EpRResidualBPList]" );
+        if (track->getCurve("bre")->size() > 0) {
+            track->getCurve("bre")->print(stream, start, "[EpRResidualBPList]");
         }
-        if( track.getCurve( "bri" )->size() > 0 ){
-            track.getCurve( "bri" )->print( stream, start, "[EpRESlopeBPList]" );
+        if (track->getCurve("bri")->size() > 0) {
+            track->getCurve("bri")->print(stream, start, "[EpRESlopeBPList]");
         }
-        if( track.getCurve( "cle" )->size() > 0 ){
-            track.getCurve( "cle" )->print( stream, start, "[EpRESlopeDepthBPList]" );
+        if (track->getCurve("cle")->size() > 0) {
+            track->getCurve("cle")->print(stream, start, "[EpRESlopeDepthBPList]");
         }
         if( version.substr( 0, 4 ) == "DSB2" ){
-            if( track.getCurve( "harmonics" )->size() > 0 ){
-                track.getCurve( "harmonics" )->print( stream, start, "[EpRSineBPList]" );
+            if (track->getCurve("harmonics")->size() > 0) {
+                track->getCurve("harmonics")->print(stream, start, "[EpRSineBPList]");
             }
-            if( track.getCurve( "fx2depth" )->size() > 0 ){
-                track.getCurve( "fx2depth" )->print( stream, start, "[VibTremDepthBPList]" );
-            }
-
-            if( track.getCurve( "reso1Freq" )->size() > 0 ){
-                track.getCurve( "reso1Freq" )->print( stream, start, "[Reso1FreqBPList]" );
-            }
-            if( track.getCurve( "reso2Freq" )->size() > 0 ){
-                track.getCurve( "reso2Freq" )->print( stream, start, "[Reso2FreqBPList]" );
-            }
-            if( track.getCurve( "reso3Freq" )->size() > 0 ){
-                track.getCurve( "reso3Freq" )->print( stream, start, "[Reso3FreqBPList]" );
-            }
-            if( track.getCurve( "reso4Freq" )->size() > 0 ){
-                track.getCurve( "reso4Freq" )->print( stream, start, "[Reso4FreqBPList]" );
+            if (track->getCurve("fx2depth")->size() > 0) {
+                track->getCurve("fx2depth")->print(stream, start, "[VibTremDepthBPList]");
             }
 
-            if( track.getCurve( "reso1BW" )->size() > 0 ){
-                track.getCurve( "reso1BW" )->print( stream, start, "[Reso1BWBPList]" );
+            if (track->getCurve("reso1Freq")->size() > 0) {
+                track->getCurve("reso1Freq")->print(stream, start, "[Reso1FreqBPList]");
             }
-            if( track.getCurve( "reso2BW" )->size() > 0 ){
-                track.getCurve( "reso2BW" )->print( stream, start, "[Reso2BWBPList]" );
+            if (track->getCurve("reso2Freq")->size() > 0) {
+                track->getCurve("reso2Freq")->print(stream, start, "[Reso2FreqBPList]");
             }
-            if( track.getCurve( "reso3BW" )->size() > 0 ){
-                track.getCurve( "reso3BW" )->print( stream, start, "[Reso3BWBPList]" );
+            if (track->getCurve("reso3Freq")->size() > 0) {
+                track->getCurve("reso3Freq")->print(stream, start, "[Reso3FreqBPList]");
             }
-            if( track.getCurve( "reso4BW" )->size() > 0 ){
-                track.getCurve( "reso4BW" )->print( stream, start, "[Reso4BWBPList]" );
+            if (track->getCurve("reso4Freq")->size() > 0) {
+                track->getCurve("reso4Freq")->print(stream, start, "[Reso4FreqBPList]");
             }
 
-            if( track.getCurve( "reso1Amp" )->size() > 0 ){
-                track.getCurve( "reso1Amp" )->print( stream, start, "[Reso1AmpBPList]" );
+            if (track->getCurve("reso1BW")->size() > 0) {
+                track->getCurve("reso1BW")->print(stream, start, "[Reso1BWBPList]");
             }
-            if( track.getCurve( "reso2Amp" )->size() > 0 ){
-                track.getCurve( "reso2Amp" )->print( stream, start, "[Reso2AmpBPList]" );
+            if (track->getCurve("reso2BW")->size() > 0) {
+                track->getCurve("reso2BW")->print(stream, start, "[Reso2BWBPList]");
             }
-            if( track.getCurve( "reso3Amp" )->size() > 0 ){
-                track.getCurve( "reso3Amp" )->print( stream, start, "[Reso3AmpBPList]" );
+            if (track->getCurve("reso3BW")->size() > 0) {
+                track->getCurve("reso3BW")->print(stream, start, "[Reso3BWBPList]");
             }
-            if( track.getCurve( "reso4Amp" )->size() > 0 ){
-                track.getCurve( "reso4Amp" )->print( stream, start, "[Reso4AmpBPList]" );
+            if (track->getCurve("reso4BW")->size() > 0) {
+                track->getCurve("reso4BW")->print(stream, start, "[Reso4BWBPList]");
+            }
+
+            if (track->getCurve("reso1Amp")->size() > 0) {
+                track->getCurve("reso1Amp")->print(stream, start, "[Reso1AmpBPList]");
+            }
+            if (track->getCurve("reso2Amp")->size() > 0) {
+                track->getCurve("reso2Amp")->print(stream, start, "[Reso2AmpBPList]");
+            }
+            if (track->getCurve("reso3Amp")->size() > 0) {
+                track->getCurve("reso3Amp")->print(stream, start, "[Reso3AmpBPList]");
+            }
+            if (track->getCurve("reso4Amp")->size() > 0) {
+                track->getCurve("reso4Amp")->print(stream, start, "[Reso4AmpBPList]");
             }
         }
 
-        if( track.getCurve( "gen" )->size() > 0 ){
-            track.getCurve( "gen" )->print( stream, start, "[GenderFactorBPList]" );
+        if (track->getCurve("gen")->size() > 0) {
+            track->getCurve("gen")->print(stream, start, "[GenderFactorBPList]");
         }
-        if( track.getCurve( "por" )->size() > 0 ){
-            track.getCurve( "por" )->print( stream, start, "[PortamentoTimingBPList]" );
+        if (track->getCurve("por")->size() > 0) {
+            track->getCurve("por")->print(stream, start, "[PortamentoTimingBPList]");
         }
         if( version.substr( 0, 4 ) == "DSB3" ){
-            if( track.getCurve( "ope" )->size() > 0 ){
-                track.getCurve( "ope" )->print( stream, start, "[OpeningBPList]" );
+            if (track->getCurve("ope")->size() > 0) {
+                track->getCurve("ope")->print(stream, start, "[OpeningBPList]");
             }
         }
     }
@@ -443,14 +442,15 @@ protected:
         MidiEvent::writeDeltaClock( stream, 0x00 );// デルタタイム
         stream->write( 0xff );// ステータスタイプ
         stream->write( 0x03 );// イベントタイプSequence/Track Name
-        string seq_name = CP932Converter::convertFromUTF8( sequence->track[track].getName() );
+        string seq_name = CP932Converter::convertFromUTF8(sequence->track(track)->getName());
         MidiEvent::writeDeltaClock( stream, seq_name.size() ); // seq_nameの文字数
         //TODO: 第3引数の型キャスト要らなくなるかも
         stream->write( seq_name.c_str(), 0, (int)seq_name.size() );
 
         // Meta Textを準備
         TextStream textStream;
-        printMetaText( sequence->track[track], textStream, sequence->getTotalClocks() + 120, 0, printPitch, master, mixer );
+        printMetaText(sequence->track(track), textStream, sequence->getTotalClocks() + 120,
+                      0, printPitch, master, mixer);
         tick_t lastClock = 0;
         vector<MidiEvent> meta = getMidiEventsFromMetaText( &textStream, encoding );
         for( int i = 0; i < meta.size(); i++ ){
@@ -463,7 +463,7 @@ protected:
         lastClock = 0;
         vector<MidiEvent> nrpns =
             VocaloidMidiEventListFactory::generateMidiEventList(
-                &sequence->track[track], &sequence->tempoList,
+                sequence->track(track), &sequence->tempoList,
                 sequence->getTotalClocks(), sequence->getPreMeasureClocks(), msPreSend
             );
         for( int i = 0; i < nrpns.size(); i++ ){
@@ -476,7 +476,7 @@ protected:
 
         // トラックエンド
         lastClock = maxClock;
-        const Event *last_event = sequence->track[track].events()->get( sequence->track[track].events()->size() - 1 );
+        const Event *last_event = sequence->track(track)->events()->get(sequence->track(track)->events()->size() - 1);
         maxClock = ::max( maxClock, last_event->clock + last_event->getLength() );
         tick_t lastDeltaClock = maxClock - lastClock;
         if( lastDeltaClock < 0 ){

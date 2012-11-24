@@ -83,7 +83,7 @@ public:
         reader.read( stream, events, format, timeFormat );
 
         int num_track = events.size();
-        sequence.track.clear();
+        sequence.tracks()->clear();
         for( int i = 1; i < num_track; i++ ){
             TextStream textStream;
             string trackName;
@@ -99,7 +99,7 @@ public:
                 track = getTrackByTextStream( textStream );
             }
             track.setName( trackName );
-            sequence.track.push_back( track );
+            sequence.tracks()->push_back(track);
         }
 
         parseTempoList( events[0], sequence.tempoList );
