@@ -66,6 +66,10 @@ protected:
         void setCommon( const Common &value ){
             _common = value;
         }
+
+        std::map<std::string, std::string> getSectionNameMap()const {
+            return Track::getSectionNameMap();
+        }
     };
 
 public:
@@ -479,6 +483,7 @@ private:
         vector<VSQ_NS::Event *> temporaryEventList;
 
         TentativeTrack result;
+        std::map<std::string, std::string> sectionNameMap = result.getSectionNameMap();
 
         std::string lastLine = stream.readLine();
         while( 1 ){
@@ -486,7 +491,13 @@ private:
             if( lastLine.length() == 0 ){
                 break;
             }
-            if( lastLine == "[Common]" ){
+
+            std::map<std::string, std::string>::const_iterator index =
+                    sectionNameMap.find(lastLine);
+            if (index != sectionNameMap.end()) {
+                std::string name = index->second;
+                lastLine = result.curve(name)->appendFromText(stream);
+            } else if (lastLine == "[Common]") {
                 result.setCommon( VSQ_NS::Common( stream, lastLine ) );
             }else if( lastLine == "[Master]" && master != 0 ){
                 *master = VSQ_NS::Master( stream, lastLine );
@@ -513,52 +524,6 @@ private:
                         lastLine = stream.readLine();
                     }
                 }
-            }else if( lastLine == "[PitchBendBPList]" ){
-                lastLine = result.curve("pit")->appendFromText(stream);
-            }else if( lastLine == "[PitchBendSensBPList]" ){
-                lastLine = result.curve("pbs")->appendFromText(stream);
-            }else if( lastLine == "[DynamicsBPList]" ){
-                lastLine = result.curve("dyn")->appendFromText(stream);
-            }else if( lastLine == "[EpRResidualBPList]" ){
-                lastLine = result.curve("bre")->appendFromText(stream);
-            }else if( lastLine == "[EpRESlopeBPList]" ){
-                lastLine = result.curve("bri")->appendFromText(stream);
-            }else if( lastLine == "[EpRESlopeDepthBPList]" ){
-                lastLine = result.curve("cle")->appendFromText(stream);
-            }else if( lastLine == "[EpRSineBPList]" ){
-                lastLine = result.curve("harmonics")->appendFromText(stream);
-            }else if( lastLine == "[VibTremDepthBPList]" ){
-                lastLine = result.curve("fx2depth")->appendFromText(stream);
-            }else if( lastLine == "[Reso1FreqBPList]" ){
-                lastLine = result.curve("reso1Freq")->appendFromText(stream);
-            }else if( lastLine == "[Reso2FreqBPList]" ){
-                lastLine = result.curve("reso2Freq")->appendFromText(stream);
-            }else if( lastLine == "[Reso3FreqBPList]" ){
-                lastLine = result.curve("reso3Freq")->appendFromText(stream);
-            }else if( lastLine == "[Reso4FreqBPList]" ){
-                lastLine = result.curve("reso4Freq")->appendFromText(stream);
-            }else if( lastLine == "[Reso1BWBPList]" ){
-                lastLine = result.curve("reso1BW")->appendFromText(stream);
-            }else if( lastLine == "[Reso2BWBPList]" ){
-                lastLine = result.curve("reso2BW")->appendFromText(stream);
-            }else if( lastLine == "[Reso3BWBPList]" ){
-                lastLine = result.curve("reso3BW")->appendFromText(stream);
-            }else if( lastLine == "[Reso4BWBPList]" ){
-                lastLine = result.curve("reso4BW")->appendFromText(stream);
-            }else if( lastLine == "[Reso1AmpBPList]" ){
-                lastLine = result.curve("reso1Amp")->appendFromText(stream);
-            }else if( lastLine == "[Reso2AmpBPList]" ){
-                lastLine = result.curve("reso2Amp")->appendFromText(stream);
-            }else if( lastLine == "[Reso3AmpBPList]" ){
-                lastLine = result.curve("reso3Amp")->appendFromText(stream);
-            }else if( lastLine == "[Reso4AmpBPList]" ){
-                lastLine = result.curve("reso4Amp")->appendFromText(stream);
-            }else if( lastLine == "[GenderFactorBPList]" ){
-                lastLine = result.curve("gen")->appendFromText(stream);
-            }else if( lastLine == "[PortamentoTimingBPList]" ){
-                lastLine = result.curve("por")->appendFromText(stream);
-            }else if( lastLine == "[OpeningBPList]" ){
-                lastLine = result.curve("ope")->appendFromText(stream);
             }else{
                 std::string buffer = lastLine;
                 buffer = StringUtil::replace( buffer, "[", "" );
