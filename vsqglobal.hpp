@@ -16,11 +16,11 @@
 
 #include <cstdlib>
 
-#define VSQ_BEGIN_NAMESPACE namespace cadencii{ namespace vsq{
+#define VSQ_BEGIN_NAMESPACE namespace vsq {
 
-#define VSQ_END_NAMESPACE }}
+#define VSQ_END_NAMESPACE }
 
-#define VSQ_NS cadencii::vsq
+#define VSQ_NS vsq
 
 VSQ_BEGIN_NAMESPACE
 
