@@ -628,38 +628,45 @@ public:
      * @return A list of curve name.
      */
     virtual const std::vector<std::string> *curveNameList()const {
-        static std::vector<std::string> vocaloidCurveNameList;
-        if (vocaloidCurveNameList.empty()) {
-            vocaloidCurveNameList.push_back("Accent");
-            vocaloidCurveNameList.push_back("Decay");
-            vocaloidCurveNameList.push_back("Env");
-            vocaloidCurveNameList.push_back("DYN");
-            vocaloidCurveNameList.push_back("BRE");
-            vocaloidCurveNameList.push_back("BRI");
-            vocaloidCurveNameList.push_back("CLE");
-            vocaloidCurveNameList.push_back("OPE");
-            vocaloidCurveNameList.push_back("GEN");
-            vocaloidCurveNameList.push_back("POR");
-            vocaloidCurveNameList.push_back("PIT");
-            vocaloidCurveNameList.push_back("PBS");
-            vocaloidCurveNameList.push_back("VibratoRate");
-            vocaloidCurveNameList.push_back("VibratoDepth");
-            vocaloidCurveNameList.push_back("harmonics");
-            vocaloidCurveNameList.push_back("fx2depth");
-            vocaloidCurveNameList.push_back("reso1freq");
-            vocaloidCurveNameList.push_back("reso1bw");
-            vocaloidCurveNameList.push_back("reso1amp");
-            vocaloidCurveNameList.push_back("reso2freq");
-            vocaloidCurveNameList.push_back("reso2bw");
-            vocaloidCurveNameList.push_back("reso2amp");
-            vocaloidCurveNameList.push_back("reso3freq");
-            vocaloidCurveNameList.push_back("reso3bw");
-            vocaloidCurveNameList.push_back("reso3amp");
-            vocaloidCurveNameList.push_back("reso4freq");
-            vocaloidCurveNameList.push_back("reso4bw");
-            vocaloidCurveNameList.push_back("reso4amp");
+        static std::vector<std::string> vocaloid1;
+        static std::vector<std::string> vocaloid2;
+        if (vocaloid1.empty() || vocaloid2.empty()) {
+            vocaloid1.clear();
+            vocaloid2.clear();
+
+            addCurveNameTo(vocaloid1, vocaloid2, "PIT", true, true);
+            addCurveNameTo(vocaloid1, vocaloid2, "PBS", true, true);
+            addCurveNameTo(vocaloid1, vocaloid2, "DYN", true, true);
+            addCurveNameTo(vocaloid1, vocaloid2, "BRE", true, true);
+            addCurveNameTo(vocaloid1, vocaloid2, "BRI", true, true);
+            addCurveNameTo(vocaloid1, vocaloid2, "CLE", true, true);
+
+            addCurveNameTo(vocaloid1, vocaloid2, "harmonics", true, false);
+            addCurveNameTo(vocaloid1, vocaloid2, "fx2depth", true, false);
+            addCurveNameTo(vocaloid1, vocaloid2, "reso1Freq", true, false);
+            addCurveNameTo(vocaloid1, vocaloid2, "reso2Freq", true, false);
+            addCurveNameTo(vocaloid1, vocaloid2, "reso3Freq", true, false);
+            addCurveNameTo(vocaloid1, vocaloid2, "reso4Freq", true, false);
+            addCurveNameTo(vocaloid1, vocaloid2, "reso1BW", true, false);
+            addCurveNameTo(vocaloid1, vocaloid2, "reso2BW", true, false);
+            addCurveNameTo(vocaloid1, vocaloid2, "reso3BW", true, false);
+            addCurveNameTo(vocaloid1, vocaloid2, "reso4BW", true, false);
+            addCurveNameTo(vocaloid1, vocaloid2, "reso1Amp", true, false);
+            addCurveNameTo(vocaloid1, vocaloid2, "reso2Amp", true, false);
+            addCurveNameTo(vocaloid1, vocaloid2, "reso3Amp", true, false);
+            addCurveNameTo(vocaloid1, vocaloid2, "reso4Amp", true, false);
+
+            addCurveNameTo(vocaloid1, vocaloid2, "GEN", true, true);
+            addCurveNameTo(vocaloid1, vocaloid2, "POR", true, true);
+
+            addCurveNameTo(vocaloid1, vocaloid2, "OPE", false, true);
         }
-        return &vocaloidCurveNameList;
+
+        if (common()->version.substr(0, 4) == "DSB2") {
+            return &vocaloid1;
+        } else {
+            return &vocaloid2;
+        }
     }
 
 protected:
@@ -807,6 +814,14 @@ private:
         curveNameMap.insert(std::make_pair("reso4amp", &_reso4AmpBPList));
         curveNameMap.insert(std::make_pair("reso4bw", &_reso4BWBPList));
         curveNameMap.insert(std::make_pair("reso4freq", &_reso4FreqBPList));
+    }
+
+    void addCurveNameTo(std::vector<std::string> &vocaloid1CurveNameList,
+                        std::vector<std::string> &vocaloid2CurveNameList,
+                        const std::string &name,
+                        bool addToVocaloid1, bool addToVocaloid2)const {
+        if (addToVocaloid1) vocaloid1CurveNameList.push_back(name);
+        if (addToVocaloid2) vocaloid2CurveNameList.push_back(name);
     }
 };
 

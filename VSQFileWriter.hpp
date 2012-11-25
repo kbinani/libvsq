@@ -347,49 +347,21 @@ protected:
         for( int i = 0; i < handle.size(); ++i ){
             writeHandle( handle[i], stream );
         }
-        string version = track->common()->version;
 
         TempTrack tempTrack;
         std::map<std::string, std::string> sectionNameMap
                 = tempTrack.getSectionNameMap();
 
         // prepare list of curve name to be printed
-        std::vector<std::string> curveNameList;
-        curveNameList.push_back("pit");
-        curveNameList.push_back("pbs");
-        curveNameList.push_back("dyn");
-        curveNameList.push_back("bre");
-        curveNameList.push_back("bri");
-        curveNameList.push_back("cle");
-        if (version.substr(0, 4) == "DSB2") {
-            curveNameList.push_back("harmonics");
-            curveNameList.push_back("fx2depth");
-            curveNameList.push_back("reso1Freq");
-            curveNameList.push_back("reso2Freq");
-            curveNameList.push_back("reso3Freq");
-            curveNameList.push_back("reso4Freq");
-            curveNameList.push_back("reso1BW");
-            curveNameList.push_back("reso2BW");
-            curveNameList.push_back("reso3BW");
-            curveNameList.push_back("reso4BW");
-            curveNameList.push_back("reso1Amp");
-            curveNameList.push_back("reso2Amp");
-            curveNameList.push_back("reso3Amp");
-            curveNameList.push_back("reso4Amp");
-        }
-        curveNameList.push_back("gen");
-        curveNameList.push_back("por");
-        if (version.substr(0, 4) == "DSB3") {
-            curveNameList.push_back("ope");
-        }
+        const std::vector<std::string> *curveNameList = track->curveNameList();
 
-        std::vector<std::string>::iterator i = curveNameList.begin();
-        for (; i != curveNameList.end(); ++i) {
-            std::string curveName = *i;
+        std::vector<std::string>::const_iterator i = curveNameList->begin();
+        for (; i != curveNameList->end(); ++i) {
+            std::string curveName = StringUtil::toLower(*i);
             std::string sectionName;
             std::map<std::string, std::string>::iterator index = sectionNameMap.begin();
             for (; index != sectionNameMap.end(); ++index) {
-                if (index->second == curveName) {
+                if (StringUtil::toLower(index->second) == curveName) {
                     sectionName = index->first;
                     break;
                 }
