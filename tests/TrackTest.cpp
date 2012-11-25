@@ -356,9 +356,6 @@ public:
 */
     }
 
-    /**
-     * @todo
-     */
     void testClone(){
         Track track( "DummyTrackName", "DummySingerName" );
         Event event( 480, EventType::NOTE );
@@ -385,6 +382,69 @@ public:
         //fail();
     }
 
+    void testCurveNameList() {
+        {
+            Track track;
+            track.common()->version = "DSB200";
+            const std::vector<std::string> *list = track.curveNameList();
+            CPPUNIT_ASSERT_EQUAL((size_t)22, list->size());
+            CPPUNIT_ASSERT_EQUAL(string("PIT"), list->at(0));
+            CPPUNIT_ASSERT_EQUAL(string("PBS"), list->at(1));
+            CPPUNIT_ASSERT_EQUAL(string("DYN"), list->at(2));
+            CPPUNIT_ASSERT_EQUAL(string("BRE"), list->at(3));
+            CPPUNIT_ASSERT_EQUAL(string("BRI"), list->at(4));
+            CPPUNIT_ASSERT_EQUAL(string("CLE"), list->at(5));
+            CPPUNIT_ASSERT_EQUAL(string("harmonics"), list->at(6));
+            CPPUNIT_ASSERT_EQUAL(string("fx2depth"), list->at(7));
+            CPPUNIT_ASSERT_EQUAL(string("reso1Freq"), list->at(8));
+            CPPUNIT_ASSERT_EQUAL(string("reso2Freq"), list->at(9));
+            CPPUNIT_ASSERT_EQUAL(string("reso3Freq"), list->at(10));
+            CPPUNIT_ASSERT_EQUAL(string("reso4Freq"), list->at(11));
+            CPPUNIT_ASSERT_EQUAL(string("reso1BW"), list->at(12));
+            CPPUNIT_ASSERT_EQUAL(string("reso2BW"), list->at(13));
+            CPPUNIT_ASSERT_EQUAL(string("reso3BW"), list->at(14));
+            CPPUNIT_ASSERT_EQUAL(string("reso4BW"), list->at(15));
+            CPPUNIT_ASSERT_EQUAL(string("reso1Amp"), list->at(16));
+            CPPUNIT_ASSERT_EQUAL(string("reso2Amp"), list->at(17));
+            CPPUNIT_ASSERT_EQUAL(string("reso3Amp"), list->at(18));
+            CPPUNIT_ASSERT_EQUAL(string("reso4Amp"), list->at(19));
+            CPPUNIT_ASSERT_EQUAL(string("GEN"), list->at(20));
+            CPPUNIT_ASSERT_EQUAL(string("POR"), list->at(21));
+        }
+
+        {
+            Track track;
+            track.common()->version = "DSB302";
+            const std::vector<std::string> *list = track.curveNameList();
+            CPPUNIT_ASSERT_EQUAL((size_t)9, list->size());
+            CPPUNIT_ASSERT_EQUAL(string("PIT"), list->at(0));
+            CPPUNIT_ASSERT_EQUAL(string("PBS"), list->at(1));
+            CPPUNIT_ASSERT_EQUAL(string("DYN"), list->at(2));
+            CPPUNIT_ASSERT_EQUAL(string("BRE"), list->at(3));
+            CPPUNIT_ASSERT_EQUAL(string("BRI"), list->at(4));
+            CPPUNIT_ASSERT_EQUAL(string("CLE"), list->at(5));
+            CPPUNIT_ASSERT_EQUAL(string("GEN"), list->at(6));
+            CPPUNIT_ASSERT_EQUAL(string("POR"), list->at(7));
+            CPPUNIT_ASSERT_EQUAL(string("OPE"), list->at(8));
+        }
+
+        {
+            Track track;
+            track.common()->version = "";
+            const std::vector<std::string> *list = track.curveNameList();
+            CPPUNIT_ASSERT_EQUAL((size_t)9, list->size());
+            CPPUNIT_ASSERT_EQUAL(string("PIT"), list->at(0));
+            CPPUNIT_ASSERT_EQUAL(string("PBS"), list->at(1));
+            CPPUNIT_ASSERT_EQUAL(string("DYN"), list->at(2));
+            CPPUNIT_ASSERT_EQUAL(string("BRE"), list->at(3));
+            CPPUNIT_ASSERT_EQUAL(string("BRI"), list->at(4));
+            CPPUNIT_ASSERT_EQUAL(string("CLE"), list->at(5));
+            CPPUNIT_ASSERT_EQUAL(string("GEN"), list->at(6));
+            CPPUNIT_ASSERT_EQUAL(string("POR"), list->at(7));
+            CPPUNIT_ASSERT_EQUAL(string("OPE"), list->at(8));
+        }
+    }
+
     CPPUNIT_TEST_SUITE( TrackTest );
     CPPUNIT_TEST( testConstructNormalTrack );
     CPPUNIT_TEST( testConstructFromMidiEvents );
@@ -403,6 +463,7 @@ public:
     CPPUNIT_TEST( testGetterAndSetterCurve );
     CPPUNIT_TEST( testClone );
     CPPUNIT_TEST( testGetLyricLength );
+    CPPUNIT_TEST(testCurveNameList);
     CPPUNIT_TEST_SUITE_END();
 };
 
