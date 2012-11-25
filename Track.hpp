@@ -664,8 +664,6 @@ public:
 
         if (common()->version.substr(0, 4) == "DSB2") {
             return &vocaloid1;
-        } else if (common()->version.substr(0, 4) == "DSB3") {
-            return &vocaloid2;
         } else {
             return &vocaloid2;
         }
