@@ -8,7 +8,7 @@ libvsqは、VOCALOID2用の楽譜ファイルの読み込み、書き込み、�
 
 ## ライブラリ・リファレンス
 
-http://www.kbinani.info:8080/job/libvsq/doxygen/
+http://ci.kbinani.info/job/libvsq-devel/doxygen/
 
 ## 使い方
 

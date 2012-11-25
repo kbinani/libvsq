@@ -8,7 +8,7 @@ the BSD License.
 
 ## Library Reference
 
-http://www.kbinani.info:8080/job/libvsq/doxygen/
+http://ci.kbinani.info/job/libvsq-devel/doxygen/
 
 ## Usage
 
