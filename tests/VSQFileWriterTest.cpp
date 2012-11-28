@@ -436,7 +436,7 @@ class VSQFileWriterTest : public CppUnit::TestCase{
         track.common()->name = "foo";
         track.common()->color = "1,2,3";
         track.common()->dynamicsMode = DynamicsMode::STANDARD;
-        track.common()->playMode = PlayMode::PLAY_WITH_SYNTH;
+        track.common()->setPlayMode(PlayMode::PLAY_WITH_SYNTH);
 
         vector<string> curves;
         curves.push_back( "pit" );

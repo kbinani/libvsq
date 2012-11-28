@@ -22,7 +22,7 @@ public:
         CPPUNIT_ASSERT_EQUAL( string( "Foo" ), common.name );
         CPPUNIT_ASSERT_EQUAL( string( "1,2,3" ), common.color );
         CPPUNIT_ASSERT_EQUAL( DynamicsMode::EXPERT, common.dynamicsMode );
-        CPPUNIT_ASSERT_EQUAL( PlayMode::PLAY_WITH_SYNTH, common.playMode );
+        CPPUNIT_ASSERT_EQUAL(PlayMode::PLAY_WITH_SYNTH, common.playMode());
         CPPUNIT_ASSERT_EQUAL( string( "[Foo]" ), lastLine );
     }
 
@@ -31,7 +31,7 @@ public:
         CPPUNIT_ASSERT_EQUAL( string( "__foo__" ), common.name );
         CPPUNIT_ASSERT_EQUAL( string( "3,4,5" ), common.color );
         CPPUNIT_ASSERT_EQUAL( DynamicsMode::STANDARD, common.dynamicsMode );
-        CPPUNIT_ASSERT_EQUAL( PlayMode::PLAY_AFTER_SYNTH, common.playMode );
+        CPPUNIT_ASSERT_EQUAL(PlayMode::PLAY_AFTER_SYNTH, common.playMode());
     }
 
     void clone(){
@@ -40,7 +40,7 @@ public:
         CPPUNIT_ASSERT_EQUAL( string( "__foo__" ), copy.name );
         CPPUNIT_ASSERT_EQUAL( string( "3,4,5" ), copy.color );
         CPPUNIT_ASSERT_EQUAL( DynamicsMode::STANDARD, copy.dynamicsMode );
-        CPPUNIT_ASSERT_EQUAL( PlayMode::PLAY_AFTER_SYNTH, copy.playMode );
+        CPPUNIT_ASSERT_EQUAL(PlayMode::PLAY_AFTER_SYNTH, copy.playMode());
     }
 
     void write(){
@@ -57,11 +57,19 @@ public:
         CPPUNIT_ASSERT_EQUAL( expected, stream.toString() );
     }
 
+    void lastPlayMode() {
+        Common common;
+        common.setPlayMode(PlayMode::PLAY_AFTER_SYNTH);
+        common.setPlayMode(PlayMode::OFF);
+        CPPUNIT_ASSERT_EQUAL(PlayMode::PLAY_AFTER_SYNTH, common.lastPlayMode());
+    }
+
     CPPUNIT_TEST_SUITE( CommonTest );
     CPPUNIT_TEST( constructFromStream );
     CPPUNIT_TEST( constructFromArguments );
     CPPUNIT_TEST( clone );
     CPPUNIT_TEST( write );
+    CPPUNIT_TEST(lastPlayMode);
     CPPUNIT_TEST_SUITE_END();
 };
 
