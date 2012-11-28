@@ -117,7 +117,7 @@ public:
         CPPUNIT_ASSERT_EQUAL(string("Voice1"), track1->common()->name);
         CPPUNIT_ASSERT_EQUAL(string("179,181,123"), track1->common()->color);
         CPPUNIT_ASSERT_EQUAL(DynamicsMode::EXPERT, track1->common()->dynamicsMode);
-        CPPUNIT_ASSERT_EQUAL(PlayMode::PLAY_WITH_SYNTH, track1->common()->playMode);
+        CPPUNIT_ASSERT_EQUAL(PlayMode::PLAY_WITH_SYNTH, track1->common()->playMode());
         {
             // イベントリスト
             CPPUNIT_ASSERT_EQUAL( 2, track1->events()->size() );

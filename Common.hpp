@@ -45,20 +45,21 @@ public:
     DynamicsMode::DynamicsModeEnum dynamicsMode;// = DynamicsMode::EXPERT;
 
     /**
-     * @brief 再生モード
+     * @brief (Unknown)
      */
-    PlayMode::PlayModeEnum playMode;// = PlayMode::PLAY_WITH_SYNTH;
+    std::string color;
 
+protected:
     /**
-     * @brief (不明)
+     * @brief Play mode.
      */
-    std::string color;// = "179,181,123";
+    PlayMode::PlayModeEnum _playMode;
 
 private:
     /**
-     * @brief PlayModeがOff(-1)にされる直前に，PlayAfterSynthかPlayWithSynthのどちらが指定されていたかを記憶しておく．
+     * @brief Previous play mode before play mode is set to OFF.
      */
-    PlayMode::PlayModeEnum _lastPlayMode;// = PlayMode::PLAY_WITH_SYNTH;
+    PlayMode::PlayModeEnum _lastPlayMode;
 
 public:
     /**
@@ -80,7 +81,7 @@ public:
         this->name = "";
         this->color = "0,0,0";
         this->dynamicsMode = DynamicsMode::STANDARD;
-        this->playMode = PlayMode::PLAY_WITH_SYNTH;
+        this->_playMode = PlayMode::PLAY_WITH_SYNTH;
         lastLine = stream.readLine();
         while( lastLine.find( "[" ) != 0 ){
             std::vector<std::string> spl = StringUtil::explode( "=", lastLine );
@@ -94,7 +95,7 @@ public:
             }else if( search == "DynamicsMode" ){
                 this->dynamicsMode = (DynamicsMode::DynamicsModeEnum)StringUtil::parseInt<int>( spl[1] );
             }else if( search == "PlayMode" ){
-                this->playMode = (PlayMode::PlayModeEnum)StringUtil::parseInt<int>( spl[1] );
+                this->_playMode = (PlayMode::PlayModeEnum)StringUtil::parseInt<int>( spl[1] );
             }
             if( !stream.ready() ){
                 break;
@@ -120,7 +121,7 @@ public:
         oss << r << "," << g << "," << b;
         this->color = oss.str();
         this->dynamicsMode = dynamicsMode;
-        this->playMode = playMode;
+        this->_playMode = playMode;
     }
 
     /**
@@ -132,10 +133,34 @@ public:
         int r = StringUtil::parseInt<int>( spl[0] );
         int g = StringUtil::parseInt<int>( spl[1] );
         int b = StringUtil::parseInt<int>( spl[2] );
-        Common result( this->name, r, g, b, this->dynamicsMode, this->playMode );
+        Common result( this->name, r, g, b, this->dynamicsMode, this->_playMode );
         result.version = this->version;
         result._lastPlayMode = this->_lastPlayMode;
         return result;
+    }
+
+    /**
+     * @brief Get play mode.
+     */
+    PlayMode::PlayModeEnum playMode()const {
+        return _playMode;
+    }
+
+    /**
+     * @brief Set play mode.
+     */
+    void setPlayMode(PlayMode::PlayModeEnum mode) {
+        _playMode = mode;
+        if (mode != PlayMode::OFF) {
+            _lastPlayMode = mode;
+        }
+    }
+
+    /**
+     * @brief Get previous play mode before play mode is set to OFF.
+     */
+    PlayMode::PlayModeEnum lastPlayMode()const {
+        return _lastPlayMode;
     }
 
     /**
@@ -153,7 +178,7 @@ public:
         stream.writeLine( oss.str() );
 
         oss.str( "" );
-        oss << "PlayMode=" << (int)this->playMode;
+        oss << "PlayMode=" << (int)this->_playMode;
         stream.writeLine( oss.str() );
     }
 
@@ -162,7 +187,7 @@ private:
         this->version = "DSB301";
         this->name = "Miku";
         this->dynamicsMode = DynamicsMode::EXPERT;
-        this->playMode = PlayMode::PLAY_WITH_SYNTH;
+        this->_playMode = PlayMode::PLAY_WITH_SYNTH;
         this->color = "179,181,123";
         this->_lastPlayMode = PlayMode::PLAY_WITH_SYNTH;
     }
