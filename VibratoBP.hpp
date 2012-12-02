@@ -60,7 +60,7 @@ public:
      * @param item (VibratoBP) 比較対象のアイテム
      * @return (int) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
      */
-    int compareTo( const VSQ_NS::VibratoBP &item ){
+    int compareTo(const VSQ_NS::VibratoBP &item)const {
         return compareCore( *this, item );
     }
 
