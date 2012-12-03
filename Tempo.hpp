@@ -52,7 +52,7 @@ public:
      * @brief 文字列に変換する
      * @return (string) 変換後の文字列
      */
-    const std::string toString(){
+    const std::string toString()const {
         std::ostringstream oss;
         oss << "{Clock=" << clock << ", Tempo=" << tempo << ", Time=" << _time << "}";
         return oss.str();
@@ -81,7 +81,7 @@ public:
      * @param entry (Tempo) 比較対象のアイテム
      * @return (int) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
      */
-    int compareTo( const Tempo &entry ){
+    int compareTo( const Tempo &entry )const {
         return compareCore( *this, entry );
     }
 
@@ -90,7 +90,7 @@ public:
      * @param entry (Tempo) 比較対象のオブジェクト
      * @return (boolean) 比較対象と同じであれば <code>true</code> を、そうでなければ <code>false</code> を返す
      */
-    bool equals( const Tempo &entry ){
+    bool equals(const Tempo &entry)const {
         if( clock == entry.clock ){
             return true;
         }else{
@@ -102,7 +102,7 @@ public:
      * @brief 秒単位の時刻を取得する
      * @return (double) 秒単位の時刻
      */
-    double getTime(){
+    double getTime()const {
         return _time;
     }
 
