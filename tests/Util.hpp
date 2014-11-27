@@ -18,7 +18,7 @@ private:
 	static std::string fixtureRootPath;
 
 public:
-	static void setFixtureRootPath(const std::string& fixtureRootPath)
+	static void setFixtureRootPath(std::string const& fixtureRootPath)
 	{
 		TestUtil::fixtureRootPath = fixtureRootPath;
 	}

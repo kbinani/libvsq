@@ -1,6 +1,6 @@
 /**
  * BP.h
- * Copyright © 2012 kbinani
+ * Copyright © 2012,2014 kbinani
  *
  * This file is part of libvsq.
  *
@@ -11,10 +11,9 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-#ifndef __BP_h__
-#define __BP_h__
+#pragma once
 
-#include "vsqglobal.hpp"
+#include "./BasicTypes.hpp"
 
 VSQ_BEGIN_NAMESPACE
 
@@ -25,6 +24,23 @@ class BP
 {
 public:
 	/**
+	 * @brief コンストラクタ
+	 * @param value (int) データ点の値
+	 * @param id (int) データ点のユニーク ID
+	 */
+	BP(int value, int id);
+
+	/**
+	 * @brief コピーを作成する
+	 * @return (BP) このインスタンスのコピー
+	 */
+	BP clone() const;
+
+private:
+	BP();
+
+public:
+	/**
 	 * @brief データ点の値
 	 */
 	int value;
@@ -33,33 +49,6 @@ public:
 	 * @brief データ点のユニーク ID
 	 */
 	int id;
-
-	/**
-	 * @brief コンストラクタ
-	 * @param value (int) データ点の値
-	 * @param id (int) データ点のユニーク ID
-	 */
-	explicit BP(int value, int id)
-	{
-		this->value = value;
-		this->id = id;
-	}
-
-	/**
-	 * @brief コピーを作成する
-	 * @return (BP) このインスタンスのコピー
-	 */
-	BP clone() const
-	{
-		return BP(value, id);
-	}
-
-private:
-	BP()
-	{
-	}
 };
 
 VSQ_END_NAMESPACE
-
-#endif

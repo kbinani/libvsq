@@ -2,7 +2,7 @@
 #include "../PhoneticSymbolDictionary.hpp"
 
 using namespace std;
-using namespace VSQ_NS;
+using namespace vsq;
 
 class PhoneticSymbolDictionaryTest : public CppUnit::TestCase
 {

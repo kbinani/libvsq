@@ -1,5 +1,5 @@
 /**
- * BPListSearchResult.h
+ * BPListSearchResult.hpp
  * Copyright © 2012 kbinani
  *
  * This file is part of libvsq.
@@ -11,11 +11,10 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-#ifndef __BPListSearchResult_h__
-#define __BPListSearchResult_h__
+#pragma once
 
-#include "vsqglobal.hpp"
-#include "BP.hpp"
+#include "./BasicTypes.hpp"
+#include "./BP.hpp"
 
 VSQ_BEGIN_NAMESPACE
 
@@ -31,7 +30,7 @@ public:
 	 * データ点の Tick 単位の時刻
 	 * @var int
 	 */
-	VSQ_NS::tick_t clock;
+	tick_t clock;
 
 	/**
 	 * データ点のインデックス。最初のインデックスは 0
@@ -43,7 +42,7 @@ public:
 	 * データ点のオブジェクト
 	 * @var BP
 	 */
-	VSQ_NS::BP point;
+	BP point;
 
 	/**
 	 * 初期化を行う
@@ -59,5 +58,3 @@ public:
 };
 
 VSQ_END_NAMESPACE
-
-#endif

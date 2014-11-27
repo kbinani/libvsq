@@ -2,7 +2,7 @@
 #include "../FileInputStream.hpp"
 
 using namespace std;
-using namespace VSQ_NS;
+using namespace vsq;
 
 class FileInputStreamTest : public CppUnit::TestCase
 {

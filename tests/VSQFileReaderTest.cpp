@@ -1,9 +1,11 @@
 #include "Util.hpp"
 #include "../VSQFileReader.hpp"
 #include "../FileInputStream.hpp"
+#include "../TextStream.hpp"
+#include "../Sequence.hpp"
 
 using namespace std;
-using namespace VSQ_NS;
+using namespace vsq;
 
 class VSQFileReaderStub : public VSQFileReader
 {

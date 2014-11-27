@@ -2,7 +2,7 @@
 #include "../BPListSearchResult.hpp"
 
 using namespace std;
-using namespace VSQ_NS;
+using namespace vsq;
 
 class BPListSearchResultTest : public CppUnit::TestCase
 {

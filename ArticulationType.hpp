@@ -1,6 +1,6 @@
 /**
- * ArticulationType.h
- * Copyright © 2012 kbinani
+ * ArticulationType.hpp
+ * Copyright © 2012,2014 kbinani
  *
  * This file is part of libvsq.
  *
@@ -11,10 +11,9 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-#ifndef __ArticulationTypeEnum_h__
-#define __ArticulationTypeEnum_h__
+#pragma once
 
-#include "vsqglobal.hpp"
+#include "./Namespace.hpp"
 
 VSQ_BEGIN_NAMESPACE
 
@@ -55,8 +54,7 @@ enum ArticulationTypeEnum {
 	 */
 	NOTE_TRANSITION = 5
 };
+
 }
 
 VSQ_END_NAMESPACE
-
-#endif

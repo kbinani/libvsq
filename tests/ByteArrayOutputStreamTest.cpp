@@ -4,7 +4,7 @@
 #include <sstream>
 
 using namespace std;
-using namespace VSQ_NS;
+using namespace vsq;
 
 class ByteArrayOutputStreamStub : public ByteArrayOutputStream
 {

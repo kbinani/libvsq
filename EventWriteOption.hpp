@@ -1,6 +1,6 @@
 /**
- * EventWriteOption.h
- * Copyright © 2012 kbinani
+ * EventWriteOption.hpp
+ * Copyright © 2012,2014 kbinani
  *
  * This file is part of libvsq.
  *
@@ -11,10 +11,9 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-#ifndef __EventWriteOption_h__
-#define __EventWriteOption_h__
+#pragma once
 
-#include "vsqglobal.hpp"
+#include "./Namespace.hpp"
 
 VSQ_BEGIN_NAMESPACE
 
@@ -50,5 +49,3 @@ public:
 };
 
 VSQ_END_NAMESPACE
-
-#endif

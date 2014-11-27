@@ -1,6 +1,6 @@
 /**
- * EventType.h
- * Copyright © 2012 kbinani
+ * EventType.hpp
+ * Copyright © 2012,2014 kbinani
  *
  * This file is part of libvsq.
  *
@@ -11,11 +11,10 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-#ifndef __EventType_h__
-#define __EventType_h__
+#pragma once
 
+#include "./Namespace.hpp"
 #include <string>
-#include "vsqglobal.hpp"
 
 VSQ_BEGIN_NAMESPACE
 
@@ -52,26 +51,10 @@ public:
 	 * @param value 指定された列挙子の文字列表現
 	 * @return 変換後の文字列
 	 */
-	static const std::string toString(EventTypeEnum value)
-	{
-		if (value == EventType::SINGER) {
-			return "Singer";
-		} else if (value == EventType::NOTE) {
-			return "Anote";
-		} else if (value == EventType::ICON) {
-			return "Aicon";
-		} else {
-			return "Unknown";
-		}
-	}
+	static const std::string toString(EventTypeEnum value);
 
 private:
-	EventType()
-	{
-	}
-
+	EventType();
 };
 
 VSQ_END_NAMESPACE
-
-#endif

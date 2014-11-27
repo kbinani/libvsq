@@ -2,7 +2,7 @@
 #include "../CP932Converter.hpp"
 
 using namespace std;
-using namespace VSQ_NS;
+using namespace vsq;
 
 class CP932ConverterStub : public CP932Converter
 {

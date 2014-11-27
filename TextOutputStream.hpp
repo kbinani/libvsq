@@ -1,6 +1,6 @@
 /**
  * TextOutputStream.hpp
- * Copyright © 2012 kbinani
+ * Copyright © 2012,2014 kbinani
  *
  * This file is part of libvsq.
  *
@@ -11,10 +11,10 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-#ifndef __TextOutputStream_hpp__
-#define __TextOutputStream_hpp__
+#pragma once
 
-#include "vsqglobal.hpp"
+#include "./Namespace.hpp"
+#include <exception>
 #include <string>
 
 VSQ_BEGIN_NAMESPACE
@@ -29,10 +29,12 @@ public:
 	 * @brief IO 例外
 	 */
 	class IOException : std::exception
-	{
-	};
+	{};
 
 public:
+	virtual ~TextOutputStream()
+	{}
+
 	/**
 	 * @brief ストリームを閉じる
 	 */
@@ -42,15 +44,13 @@ public:
 	 * @brief 文字列をストリームに書きこむ
 	 * @param text 書きこむ文字列
 	 */
-	virtual void write(const std::string& text) = 0;
+	virtual void write(std::string const& text) = 0;
 
 	/**
 	 * @brief 文字列をストリームに書きこむ。末尾に改行文字を追加する
 	 * @param line 書きこむ文字列
 	 */
-	virtual void writeLine(const std::string& line) = 0;
+	virtual void writeLine(std::string const& line) = 0;
 };
 
 VSQ_END_NAMESPACE
-
-#endif

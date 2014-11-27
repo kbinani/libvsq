@@ -16,6 +16,9 @@
       --unpad-paren \
       --add-one-line-brackets \
       --mode=c \
+      --suffix=none \
+      --formatted \
+      --lineend=windows \
       "$FILE"
   done
 )

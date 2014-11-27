@@ -1,6 +1,6 @@
 /**
- * MeasureLine.h
- * Copyright © 2012 kbinani
+ * VibratoBPList.hpp
+ * Copyright © 2012,2014 kbinani
  *
  * This file is part of libvsq.
  *
@@ -11,12 +11,10 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-#ifndef __VibratoBPList_h__
-#define __VibratoBPList_h__
+#pragma once
 
-#include "vsqglobal.hpp"
-#include "VibratoBP.hpp"
-#include "StringUtil.hpp"
+#include "./Namespace.hpp"
+#include "./VibratoBP.hpp"
 #include <vector>
 
 VSQ_BEGIN_NAMESPACE
@@ -31,7 +29,7 @@ private:
 	/**
 	 * @brief カーブのデータ点を保持するリスト
 	 */
-	std::vector<VSQ_NS::VibratoBP> _list;
+	std::vector<VibratoBP> _list;
 
 public:
 	/**
@@ -41,47 +39,7 @@ public:
 	 * @param textBPY (string) y 軸のデータ点の値をカンマ区切りで繋げた文字列
 	 * @return (VibratoBPList)
 	 */
-	explicit VibratoBPList(const std::string& textNum, const std::string& textBPX, const std::string& textBPY)
-	{
-		int num = 0;
-		try {
-			num = StringUtil::parseInt<int>(textNum);
-		} catch (StringUtil::IntegerParseException&) {
-			num = 0;
-		}
-		vector<string> bpx = StringUtil::explode(",", textBPX);
-		vector<string> bpy = StringUtil::explode(",", textBPY);
-		int actNum = ::min(num, ::min((int)bpx.size(), (int)bpy.size()));
-		if (actNum > 0) {
-			double* x = new double[actNum]();
-			int* y = new int[actNum]();
-			try {
-				for (int i = 0; i < actNum; i++) {
-					x[i] = StringUtil::parseFloat<double>(bpx[i]);
-				}
-			} catch (StringUtil::FloatParseException&) {
-				delete [] x;
-				x = 0;
-			}
-			try {
-				for (int i = 0; i < actNum; i++) {
-					y[i] = StringUtil::parseInt<int>(bpy[i]);
-				}
-			} catch (StringUtil::IntegerParseException&) {
-				delete [] y;
-				y = 0;
-			}
-
-			if (x && y) {
-				for (int i = 0; i < actNum; i++) {
-					_list.push_back(VibratoBP(x[i], y[i]));
-				}
-				std::sort(_list.begin(), _list.end(), VibratoBP::compare);
-			}
-			if (x) { delete [] x; }
-			if (y) { delete [] y; }
-		}
-	}
+	VibratoBPList(std::string const& textNum, std::string const& textBPX, std::string const& textBPY);
 
 	/**
 	 * @brief 初期化を行う
@@ -89,14 +47,7 @@ public:
 	 * @param y (table<int>) y 軸の値のリスト
 	 * @return (VibratoBPList)
 	 */
-	explicit VibratoBPList(const std::vector<double>& x = std::vector<double>(), const std::vector<int>& y = std::vector<int>())
-	{
-		int len = ::min(x.size(), y.size());
-		for (int i = 0; i < len; i++) {
-			_list.push_back(VibratoBP(x[i], y[i]));
-		}
-		std::sort(_list.begin(), _list.end(), VibratoBP::compare);
-	}
+	explicit VibratoBPList(const std::vector<double>& x = std::vector<double>(), const std::vector<int>& y = std::vector<int>());
 
 	/**
 	 * @brief 指定した位置のビブラートカーブの値を取得する
@@ -104,120 +55,49 @@ public:
 	 * @param defaultValue (int) ビブラートカーブのデフォルト値
 	 * @return (int) ビブラートカーブの値
 	 */
-	int getValueAt(double x, int defaultValue) const
-	{
-		if (_list.size() <= 0) {
-			return defaultValue;
-		}
-		int index = -1;
-		for (int i = 0; i < _list.size(); i++) {
-			if (x < _list[i].x) {
-				break;
-			}
-			index = i;
-		}
-		if (index == -1) {
-			return defaultValue;
-		} else {
-			return _list[index].y;
-		}
-	}
+	int getValueAt(double x, int defaultValue) const;
 
 	/**
 	 * @brief コピーを作成する
 	 * @return (VibratoBPList) このオブジェクトのコピー
 	 */
-	VibratoBPList clone() const
-	{
-		VibratoBPList ret;
-		for (int i = 0; i < _list.size(); i++) {
-			ret._list.push_back(VibratoBP(_list[i].x, _list[i].y));
-		}
-		return ret;
-	}
+	VibratoBPList clone() const;
 
 	/**
 	 * @brief データ点の個数を返す
 	 * @return (int) データ点の個数
 	 */
-	int size() const
-	{
-		return (int)_list.size();
-	}
+	int size() const;
 
 	/**
 	 * @brief 指定したインデックスのデータ点を取得する
 	 * @param index (int) 0から始まるインデックス
 	 * @return (VibratoBP) データ点
 	 */
-	const VibratoBP get(int index) const
-	{
-		return _list[index];
-	}
+	const VibratoBP get(int index) const;
 
 	/**
 	 * @brief 指定したインデックスのデータ点を設定する
 	 * @param index (int) インデックス(最初のインデックスは0)
 	 * @param value (VibratoBP) 設定するデータ点
 	 */
-	void set(int index, const VSQ_NS::VibratoBP value)
-	{
-		_list[index] = value;
-	}
+	void set(int index, const VibratoBP value);
 
 	/**
 	 * @brief データ点のリストを、文字列に変換する。例えば "key1=value1,key2=value2" のように変換される
 	 * @return (string) 変換後の文字列
 	 */
-	const std::string getData() const
-	{
-		ostringstream ret;
-		for (int i = 0; i < _list.size(); i++) {
-			if (0 < i) {
-				ret << ",";
-			}
-			ret << _list[i].x << "=" << _list[i].y;
-		}
-		return ret.str();
-	}
+	const std::string getData() const;
 
 	/**
 	 * @brief "key1=value=1,key2=value2" のような文字列から、データ点のリストを設定する
 	 * @param value (string) データ点の文字列形式
 	 */
-	void setData(const std::string& value)
-	{
-		_list.clear();
-		vector<string> spl = StringUtil::explode(",", value);
-		vector<string>::iterator i;
-		for (i = spl.begin(); i != spl.end(); ++i) {
-			vector<string> spl2 = StringUtil::explode("=", (*i));
-			if (spl2.size() >= 2) {
-				double x;
-				int y;
-				try {
-					x = StringUtil::parseFloat<double>(spl2[0]);
-				} catch (StringUtil::FloatParseException&) {
-					continue;
-				}
-				try {
-					y = StringUtil::parseInt<int>(spl2[1]);
-				} catch (StringUtil::IntegerParseException&) {
-					continue;
-				}
-				_list.push_back(VibratoBP(x, y));
-			}
-		}
-		std::sort(_list.begin(), _list.end(), VibratoBP::compare);
-	}
+	void setData(std::string const& value);
 
 private:
-	VibratoBPList(const std::vector<double>&)
-	{
-	}
+	explicit VibratoBPList(const std::vector<double>&);
 
 };
 
 VSQ_END_NAMESPACE
-
-#endif

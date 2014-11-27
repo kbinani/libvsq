@@ -1,6 +1,6 @@
 /**
- * Tempo.h
- * Copyright © 2012 kbinani
+ * Tempo.hpp
+ * Copyright © 2012,2014 kbinani
  *
  * This file is part of libvsq.
  *
@@ -11,12 +11,10 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-#ifndef __Tempo_h__
-#define __Tempo_h__
+#pragma once
 
-#include "vsqglobal.hpp"
+#include "./BasicTypes.hpp"
 #include <string>
-#include <sstream>
 
 VSQ_BEGIN_NAMESPACE
 
@@ -53,78 +51,42 @@ public:
 	 * @brief 文字列に変換する
 	 * @return (string) 変換後の文字列
 	 */
-	const std::string toString()const
-	{
-		std::ostringstream oss;
-		oss << "{Clock=" << clock << ", Tempo=" << tempo << ", Time=" << _time << "}";
-		return oss.str();
-	}
+	const std::string toString() const;
 
 	/**
 	 * @brief 初期化を行う
 	 * @param clock (int) Tick 単位の時刻
 	 * @param tempo (int) テンポ値。四分音符の長さをマイクロ秒単位で表した値
 	 */
-	explicit Tempo(VSQ_NS::tick_t clock, int tempo)
-	{
-		this->clock = clock;
-		this->tempo = tempo;
-		_time = 0.0;
-	}
+	Tempo(tick_t clock, int tempo);
 
-	explicit Tempo()
-	{
-		clock = 0;
-		tempo = 0;
-		_time = 0.0;
-	}
-
+	Tempo();
 
 	/**
 	 * @brief 順序を比較する
 	 * @param entry (Tempo) 比較対象のアイテム
 	 * @return (int) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
 	 */
-	int compareTo(const Tempo& entry)const
-	{
-		return compareCore(*this, entry);
-	}
+	int compareTo(const Tempo& entry) const;
 
 	/**
 	 * @brief このオブジェクトのインスタンスと、指定されたオブジェクトが同じかどうかを調べる
 	 * @param entry (Tempo) 比較対象のオブジェクト
 	 * @return (boolean) 比較対象と同じであれば <code>true</code> を、そうでなければ <code>false</code> を返す
 	 */
-	bool equals(const Tempo& entry)const
-	{
-		if (clock == entry.clock) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+	bool equals(const Tempo& entry) const;
 
 	/**
 	 * @brief 秒単位の時刻を取得する
 	 * @return (double) 秒単位の時刻
 	 */
-	double getTime()const
-	{
-		return _time;
-	}
+	double getTime() const;
 
 	/**
 	 * @brief コピーを作成する
 	 * @return このオブジェクトのコピー
 	 */
-	Tempo clone() const
-	{
-		Tempo result;
-		result.clock = clock;
-		result.tempo = tempo;
-		result._time = _time;
-		return result;
-	}
+	Tempo clone() const;
 
 	/**
 	 * @brief 2 つの {@link Tempo} を比較する
@@ -132,19 +94,10 @@ public:
 	 * @param b (Tempo) 比較対象のオブジェクト
 	 * @return (boolean) <code>a</code> が <code>b</code> よりも小さい場合は <code>true</code>、そうでない場合は <code>false</code> を返す
 	 */
-	static bool compare(const Tempo& a, const Tempo& b)
-	{
-		return compareCore(a, b) < 0;
-	}
+	static bool compare(const Tempo& a, const Tempo& b);
 
 private:
-	static int compareCore(const Tempo& a, const Tempo& b)
-	{
-		return (int)(a.clock - b.clock);
-	}
-
+	static int compareCore(const Tempo& a, const Tempo& b);
 };
 
 VSQ_END_NAMESPACE
-
-#endif

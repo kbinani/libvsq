@@ -2,7 +2,7 @@
 #include "../NrpnEvent.hpp"
 
 using namespace std;
-using namespace VSQ_NS;
+using namespace vsq;
 
 class NrpnEventStub : public NrpnEvent
 {

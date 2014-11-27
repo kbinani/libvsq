@@ -2,7 +2,7 @@
 #include "../EventWriteOption.hpp"
 
 using namespace std;
-using namespace VSQ_NS;
+using namespace vsq;
 
 class EventWriteOptionTest : public CppUnit::TestCase
 {

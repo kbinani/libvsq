@@ -1,8 +1,9 @@
 #include "Util.hpp"
 #include "../StreamWriter.hpp"
+#include "../FileOutputStream.hpp"
 
 using namespace std;
-using namespace VSQ_NS;
+using namespace vsq;
 
 class StreamWriterTest : public CppUnit::TestCase
 {

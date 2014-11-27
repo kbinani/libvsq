@@ -1,6 +1,6 @@
 /**
  * MeasureLineIterator.hpp
- * Copyright © 2012 kbinani
+ * Copyright © 2012,2014 kbinani
  *
  * This file is part of libvsq.
  *
@@ -11,14 +11,15 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-#ifndef __MeasureLineIterator_hpp__
-#define __MeasureLineIterator_hpp__
+#pragma once
 
-#include "vsqglobal.hpp"
-#include "TimesigList.hpp"
-#include "MeasureLine.hpp"
+#include "./BasicTypes.hpp"
+#include "./MeasureLine.hpp"
+#include <exception>
 
 VSQ_BEGIN_NAMESPACE
+
+class TimesigList;
 
 /**
  * @brief 小節を区切る線の情報を順に返す反復子
@@ -53,130 +54,37 @@ public:
 	 * @brief 小節線の情報を取得する区間を指定し、初期化する
 	 * @param list テンポ変更リスト
 	 */
-	explicit MeasureLineIterator(const TimesigList* list, tick_t assistLineStep = 0)
-	{
-		this->list = list;
-		endTick = 0;
-		i = 0;
-		temporaryEndTick = -1;
-		tick = 0;
-		if (assistLineStep < 0 || assistLineStep % MIN_ASSIST_LINE_STEP != 0) {
-			throw InvalidAssistLineStep();
-		}
-		this->assistLineStep = assistLineStep;
-		this->reset(endTick);
-	}
+	explicit MeasureLineIterator(const TimesigList* list, tick_t assistLineStep = 0);
 
 	/**
 	 * @brief 次の小節線が取得可能かどうかを取得する
 	 * @return 取得可能であれば true を返す
 	 */
-	bool hasNext()
-	{
-		if (tick <= endTick) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+	bool hasNext();
 
 	/**
 	 * @brief 次の小節線を取得する
 	 * @return 次の小節線の情報
 	 */
-	MeasureLine next()
-	{
-		int mod = stepLength * currentNumerator;
-		if (tick < temporaryEndTick) {
-			if ((tick - currentTick) % mod == 0) {
-				return returnBorder();
-			} else {
-				return returnOther();
-			}
-		}
-
-		if (i < list->size()) {
-			currentDenominator = list->get(i).denominator;
-			currentNumerator = list->get(i).numerator;
-			currentTick = list->get(i).getClock();
-			int local_bar_count = list->get(i).barCount;
-			int denom = currentDenominator;
-			if (denom <= 0) {
-				denom = 4;
-			}
-			stepLength = 480 * 4 / denom;
-			if (0 < assistLineStep && assistLineStep < stepLength) {
-				actualStepLength = assistLineStep;
-			} else {
-				actualStepLength = stepLength;
-			}
-			mod = stepLength * currentNumerator;
-			barCount = local_bar_count - 1;
-			temporaryEndTick = endTick;
-			if (i + 1 < list->size()) {
-				temporaryEndTick = list->get(i + 1).getClock();
-			}
-			i++;
-			tick = currentTick;
-			if (tick < temporaryEndTick) {
-				if ((tick - currentTick) % mod == 0) {
-					return returnBorder();
-				} else {
-					return returnOther();
-				}
-			}
-		} else {
-			if ((tick - currentTick) % mod == 0) {
-				return returnBorder();
-			} else {
-				return returnOther();
-			}
-		}
-		return MeasureLine(0, 0, 4, 4, true, false);
-	}
+	MeasureLine next();
 
 	/**
 	 * @brief 反復子をリセットする
 	 * @param endTick 反復を行う最大の時刻(tick単位)を指定する
 	 * @todo startTick を指定できるようにする
 	 */
-	void reset(tick_t endTick)
-	{
-		this->endTick = endTick;
-		this->i = 0;
-		this->temporaryEndTick = -1;
-		this->tick = 0;
-		this->currentDenominator = 0;
-		this->currentNumerator = 0;
-		this->actualStepLength = 0;
-		this->currentTick = 0;
-		this->barCount = 0;
-		this->stepLength = 0;
-	}
+	void reset(tick_t endTick);
 
 private:
 	/**
 	 * @brief 小節の境界を表す MeasureLine のインスタンスを返す
 	 */
-	MeasureLine returnBorder()
-	{
-		barCount++;
-		MeasureLine ret(tick, barCount, currentNumerator, currentDenominator, true, false);
-		tick += actualStepLength;
-		return ret;
-	}
+	MeasureLine returnBorder();
 
 	/**
 	 * @brief 小節の境界でない MeasureLine のインスタンスを返す
 	 */
-	MeasureLine returnOther()
-	{
-		MeasureLine ret(tick, barCount, currentNumerator, currentDenominator, false, (tick - currentTick) % stepLength != 0);
-		tick += actualStepLength;
-		return ret;
-	}
+	MeasureLine returnOther();
 };
 
 VSQ_END_NAMESPACE
-
-#endif

@@ -1,6 +1,6 @@
 /**
- * StringUtil.h
- * Copyright © 2012 kbinani
+ * StringUtil.hpp
+ * Copyright © 2012,2014 kbinani
  *
  * This file is part of libvsq.
  *
@@ -11,21 +11,14 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-#ifndef __StringUtil_h__
-#define __StringUtil_h__
+#pragma once
 
+#include "./Namespace.hpp"
+#include <exception>
 #include <vector>
 #include <string>
-#include <sstream>
-#include <cstdlib>
-#include <algorithm>
-#include <iomanip>
-#include <boost/format.hpp>
-#include <boost/lexical_cast.hpp>
-#include <functional>
-#include <cctype>
 
-using namespace std;
+VSQ_BEGIN_NAMESPACE
 
 /**
  * @brief 文字列関連のユーティリティ
@@ -37,15 +30,13 @@ public:
 	 * @brief parseInt メソッドが投げる例外
 	 */
 	class IntegerParseException : public std::exception
-	{
-	};
+	{};
 
 	/**
 	 * @brief parseFloat メソッドが投げる例外
 	 */
 	class FloatParseException : public std::exception
-	{
-	};
+	{};
 
 public:
 	/**
@@ -55,23 +46,7 @@ public:
 	 * @param limit 区切る回数の最大値
 	 * @return 区切られた文字列のリスト
 	 */
-	static vector<string> explode(string delimiter, string text, string::size_type limit = string::npos, string escape = "")
-	{
-		vector<string> result;
-		string::size_type searchFrom = 0;
-		string::size_type delimiterIndex = getDelimiterIndex(text, delimiter, escape, searchFrom);
-		while (delimiterIndex != string::npos) {
-			string token = text.substr(searchFrom, delimiterIndex - searchFrom);
-			result.push_back(token);
-			searchFrom = delimiterIndex + delimiter.length();
-			if (result.size() + 1 == limit) {
-				break;
-			}
-			delimiterIndex = getDelimiterIndex(text, delimiter, escape, searchFrom);
-		}
-		result.push_back(text.substr(searchFrom));
-		return result;
-	}
+	static std::vector<std::string> explode(std::string const& delimiter, std::string const& text, std::string::size_type limit = std::string::npos, std::string const& escape = "");
 
 	/**
 	 * 含まれる文字列を全て置換する
@@ -80,22 +55,7 @@ public:
 	 * @param replace 置換する文字列
 	 * @return 置換後の文字列
 	 */
-	static string replace(string text, string search, string replace)
-	{
-		if (search == replace) {
-			return text;
-		}
-		string result = text;
-		string::size_type index = result.find(search, 0);
-		int searchLength = search.length();
-		int replaceLength = replace.length();
-
-		while (string::npos != index) {
-			result.replace(index, searchLength, replace);
-			index = result.find(search, index - searchLength + replaceLength + 1);
-		}
-		return result;
-	}
+	static std::string replace(std::string const& text, std::string const& search, std::string const& replace);
 
 	/**
 	 * @brief 文字列を整数に変換する
@@ -103,22 +63,12 @@ public:
 	 * @return 変換後の数値
 	 */
 	template<typename T>
-	static T parseInt(const std::string& text, int baseNumber = 10)throw(IntegerParseException)
+	static T parseInt(std::string const& text, int baseNumber = 10)
 	{
-		if (baseNumber == 10) {
-			try {
-				return boost::lexical_cast<T>(text);
-			} catch (boost::bad_lexical_cast& e) {
-				throw IntegerParseException();
-			}
-		} else {
-			char* endptr;
-			T result = (T)strtol(text.c_str(), &endptr, baseNumber);
-			if (*endptr != '\0') {
-				throw IntegerParseException();
-			} else {
-				return result;
-			}
+		try {
+			return static_cast<T>(std::stoll(text, 0, baseNumber));
+		} catch (...) {
+			throw IntegerParseException();
 		}
 	}
 
@@ -128,11 +78,11 @@ public:
 	 * @return 変換後の数値
 	 */
 	template<typename T>
-	static T parseFloat(const std::string& text)
+	static T parseFloat(std::string const& text)
 	{
 		try {
-			return boost::lexical_cast<T>(text);
-		} catch (boost::bad_lexical_cast&) {
+			return std::stold(text);
+		} catch (...) {
 			throw FloatParseException();
 		}
 	}
@@ -142,12 +92,7 @@ public:
 	 * @param value 変換する数値
 	 * @return 変換後の文字列
 	 */
-	static std::string toString(int value, int baseNumber = 10)
-	{
-		ostringstream oss;
-		oss << uppercase << setbase(baseNumber) << value;
-		return oss.str();
-	}
+	static std::string toString(int value, int baseNumber = 10);
 
 	/**
 	 * @brief 数値を文字列に変換する
@@ -156,9 +101,15 @@ public:
 	 * @return 変換後の文字列
 	 */
 	template<typename T>
-	static string toString(T value, const string& format)
+	static std::string toString(T value, std::string const& format)
 	{
-		return (boost::format(format) % value).str();
+		std::vector<char> buffer(32);
+		int amount = snprintf(buffer.data(), buffer.size(), format.c_str(), value);
+		if (amount > buffer.size()) {
+			buffer.resize(amount);
+			amount = snprintf(buffer.data(), buffer.size(), format.c_str(), value);
+		}
+		return std::string(buffer.data(), amount);
 	}
 
 	/**
@@ -166,12 +117,7 @@ public:
 	 * @param value 変換する文字列
 	 * @return 結果文字列
 	 */
-	static std::string toLower(std::string value)
-	{
-		std::string result = value;
-		transform(result.begin(), result.end(), result.begin(), _toLower);
-		return result;
-	}
+	static std::string toLower(std::string const& value);
 
 	/**
 	 * @brief 文字列を指定回数繰り返した文字列を取得する
@@ -179,32 +125,16 @@ public:
 	 * @param count 繰り返す回数
 	 * @return 結果文字列
 	 */
-	static std::string repeat(const std::string& value, int count)
-	{
-		ostringstream result;
-		for (int i = 0; i < count; i++) {
-			result << value;
-		}
-		return result.str();
-	}
+	static std::string repeat(std::string const& value, int count);
 
 	/**
 	 * @brief Trim leading and trailing blank characters.
 	 * @param value Source string.
 	 */
-	static std::string trim(const std::string& s)
-	{
-		std::string::const_iterator left
-			= std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun(::isspace)));
-		std::string::const_reverse_iterator right
-			= std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun(::isspace)));
-		return (left < right.base()) ? std::string(left, right.base()) : std::string();
-	}
+	static std::string trim(std::string const& s);
 
 private:
-	StringUtil()
-	{
-	}
+	StringUtil();
 
 	/**
 	 * @brief 文字列から、エスケープ文字を考慮してデリミタ文字列の位置を探す
@@ -214,38 +144,9 @@ private:
 	 * @param searchFrom 検索開始インデックス
 	 * @return デリミタ文字列の位置。見つからなければ string::npos を返す
 	 */
-	static string::size_type getDelimiterIndex(string& text, string& delimiter, string& escape, string::size_type searchFrom)
-	{
-		if (escape.length() == 0) {
-			return (int)text.find(delimiter, searchFrom);
-		} else {
-			while (searchFrom < text.length()) {
-				int draft = (int)text.find(delimiter, searchFrom);
-				if (draft == string::npos) {
-					return string::npos;
-				}
-				int expectedEscapeIndex = draft - escape.length();
-				if (0 <= expectedEscapeIndex) {
-					// エスケープ文字が存在する可能性がある
-					if (text.substr(expectedEscapeIndex, escape.length()) == escape) {
-						// エスケープ文字だった場合
-						searchFrom = draft + 1;
-					} else {
-						return draft;
-					}
-				} else {
-					// エスケープ文字が存在し得ない
-					return draft;
-				}
-			}
-			return string::npos;
-		}
-	}
+	static std::string::size_type getDelimiterIndex(std::string const& text, std::string const& delimiter, std::string const& escape, std::string::size_type searchFrom);
 
-	static char _toLower(char c)
-	{
-		return tolower(c);
-	}
+	static char _toLower(char c);
 };
 
-#endif
+VSQ_END_NAMESPACE

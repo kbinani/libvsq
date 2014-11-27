@@ -53,7 +53,7 @@ ADD_EXECUTABLE(libvsqtest
     VibratoBPListTest.cpp
     VibratoBPTest.cpp
     VocaloidMidiEventListFactoryTest.cpp
-    VoiceLanguageEnumTest.cpp
+    VoiceLanguageTest.cpp
     main.cpp
     Util.hpp)
 

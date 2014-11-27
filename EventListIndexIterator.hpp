@@ -1,6 +1,6 @@
 /**
  * EventListIndexIterator.hpp
- * Copyright © 2012 kbinani
+ * Copyright © 2012,2014 kbinani
  *
  * This file is part of libvsq.
  *
@@ -11,12 +11,10 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-#ifndef __EventListIndexIterator_hpp__
-#define __EventListIndexIterator_hpp__
+#pragma once
 
-#include "vsqglobal.hpp"
-#include "Event.hpp"
-#include "EventListIndexIteratorKind.hpp"
+#include "./Namespace.hpp"
+#include "./Event.hpp"
 
 VSQ_BEGIN_NAMESPACE
 
@@ -69,86 +67,26 @@ public:
 	 *
 	 * @todo iteratorKind の型を EventListIndexIteratorKind にできないか？
 	 */
-	explicit EventListIndexIterator(const Event::List* list, int iteratorKind)
-	{
-		this->_list = list;
-		this->_pos = -1;
-		this->_kindSinger = (iteratorKind & EventListIndexIteratorKind::SINGER) == EventListIndexIteratorKind::SINGER;
-		this->_kindNote = (iteratorKind & EventListIndexIteratorKind::NOTE) == EventListIndexIteratorKind::NOTE;
-		this->_kindCrescend = (iteratorKind & EventListIndexIteratorKind::CRESCENDO) == EventListIndexIteratorKind::CRESCENDO;
-		this->_kindDecrescend = (iteratorKind & EventListIndexIteratorKind::DECRESCENDO) == EventListIndexIteratorKind::DECRESCENDO;
-		this->_kindDynaff = (iteratorKind & EventListIndexIteratorKind::DYNAFF) == EventListIndexIteratorKind::DYNAFF;
-	}
+	EventListIndexIterator(const Event::List* list, int iteratorKind);
 
 	/**
 	 * @brief 反復子の次の要素を返す
 	 * @return (int) 次の要素
 	 */
-	int next()
-	{
-		int nextPosition = _nextPosition();
-		if (0 <= nextPosition) {
-			_pos = nextPosition;
-			return nextPosition;
-		} else {
-			return -1;
-		}
-	}
+	int next();
 
 	/**
 	 * @brief 反復子が次の要素を持つ場合に <code>true</code> を返す
 	 * @return (boolean) 反復子がさらに要素を持つ場合は <code>true</code> を、そうでなければ <code>false</code> を返す
 	 */
-	bool hasNext() const
-	{
-		return (0 <= this->_nextPosition());
-	}
+	bool hasNext() const;
 
 private:
 	/**
 	 * @brief 反復子の次の要素を探索する
 	 * @return (int) 次のインデックス
 	 */
-	int _nextPosition() const
-	{
-		int count = _list->size();
-		for (int i = _pos + 1; i < count; ++i) {
-			const Event* item = _list->get(i);
-			if (_kindSinger) {
-				if (item->type == EventType::SINGER) {
-					return i;
-				}
-			}
-			if (_kindNote) {
-				if (item->type == EventType::NOTE) {
-					return i;
-				}
-			}
-			if (_kindDynaff || _kindCrescend || _kindDecrescend) {
-				if (item->type == EventType::ICON
-					&& item->iconDynamicsHandle.getHandleType() != HandleType::UNKNOWN) {
-					if (_kindDynaff) {
-						if (item->iconDynamicsHandle.isDynaffType()) {
-							return i;
-						}
-					}
-					if (_kindCrescend) {
-						if (item->iconDynamicsHandle.isCrescendType()) {
-							return i;
-						}
-					}
-					if (_kindDecrescend) {
-						if (item->iconDynamicsHandle.isDecrescendType()) {
-							return i;
-						}
-					}
-				}
-			}
-		}
-		return -1;
-	}
+	int _nextPosition() const;
 };
 
 VSQ_END_NAMESPACE
-
-#endif

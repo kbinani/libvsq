@@ -1,6 +1,6 @@
 /**
- * MeasureLine.h
- * Copyright © 2012 kbinani
+ * MeasureLine.hpp
+ * Copyright © 2012,2014 kbinani
  *
  * This file is part of libvsq.
  *
@@ -11,10 +11,9 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-#ifndef __MeasureLine_h__
-#define __MeasureLine_h__
+#pragma once
 
-#include "vsqglobal.hpp"
+#include "./BasicTypes.hpp"
 
 VSQ_BEGIN_NAMESPACE
 
@@ -55,7 +54,7 @@ public:
 	int denominator;
 
 public:
-	explicit MeasureLine(tick_t tick, int barCount, int numerator, int denominator, bool isBorder, bool isAssistLine)
+	MeasureLine(tick_t tick, int barCount, int numerator, int denominator, bool isBorder, bool isAssistLine)
 	{
 		this->tick = tick;
 		this->barCount = barCount;
@@ -67,5 +66,3 @@ public:
 };
 
 VSQ_END_NAMESPACE
-
-#endif

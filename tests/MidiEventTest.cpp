@@ -1,9 +1,10 @@
 #include "Util.hpp"
 #include "../MidiEvent.hpp"
 #include "../ByteArrayOutputStream.hpp"
+#include "../InputStream.hpp"
 
 using namespace std;
-using namespace VSQ_NS;
+using namespace vsq;
 
 class MemoryInputStream : public InputStream
 {
@@ -31,12 +32,16 @@ public:
 
 	int read(char* buffer, int64_t startIndex, int64_t length)
 	{
-		int c;
-		int i = 0;
-		while ((c = read()) < 0 && i < length) {
+		int count = 0;
+		for (int64_t i = 0; i < length; ++i) {
+			int c = read();
+			if (c < 0) {
+				break;
+			}
 			buffer[startIndex + i] = c;
-			i++;
+			++count;
 		}
+		return count;
 	}
 
 	void close()

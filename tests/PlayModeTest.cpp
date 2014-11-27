@@ -2,7 +2,7 @@
 #include "../PlayMode.hpp"
 
 using namespace std;
-using namespace VSQ_NS;
+using namespace vsq;
 
 class PlayModeTest : public CppUnit::TestCase
 {

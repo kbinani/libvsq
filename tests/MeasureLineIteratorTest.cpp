@@ -1,7 +1,8 @@
 #include "Util.hpp"
 #include "../MeasureLineIterator.hpp"
+#include "../TimesigList.hpp"
 
-using namespace VSQ_NS;
+using namespace vsq;
 
 class MeasureLineIteratorTest : public CppUnit::TestCase
 {

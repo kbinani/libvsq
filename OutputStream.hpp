@@ -1,6 +1,6 @@
 /**
  * OutputStream.hpp
- * Copyright © 2012 kbinani
+ * Copyright © 2012,2014 kbinani
  *
  * This file is part of libvsq.
  *
@@ -11,12 +11,11 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-#ifndef __OutputStream_hpp__
-#define __OutputStream_hpp__
+#pragma once
 
-#include "vsqglobal.hpp"
+#include "./BasicTypes.hpp"
+#include <cstdint>
 #include <exception>
-#include <stdint.h>
 
 VSQ_BEGIN_NAMESPACE
 
@@ -34,6 +33,9 @@ public:
 	};
 
 public:
+	virtual ~OutputStream()
+	{}
+
 	/**
 	 * @brief 1 バイト書き込む
 	 * @param value 書き込む値
@@ -67,5 +69,3 @@ public:
 };
 
 VSQ_END_NAMESPACE
-
-#endif // __OutputStream_hpp__

@@ -1,10 +1,13 @@
 #include "Util.hpp"
 #include "../VSQFileWriter.hpp"
 #include "../ByteArrayOutputStream.hpp"
+#include "../Sequence.hpp"
+#include "../TextStream.hpp"
+#include "../StringUtil.hpp"
 #include <iostream>
 
 using namespace std;
-using namespace VSQ_NS;
+using namespace vsq;
 
 class VSQFileWriterStub : public VSQFileWriter
 {
@@ -48,7 +51,7 @@ public:
 		VSQFileWriter::printMetaText(t, stream, eos, start, printPitch, master, mixer);
 	}
 
-	void writeEvent(const TempEventStub& item, TextStream& stream, EventWriteOption printTargets = EventWriteOption())const
+	void writeEvent(const TempEventStub& item, TextStream& stream, EventWriteOption printTargets = EventWriteOption()) const
 	{
 		VSQFileWriter::writeEvent(item, stream, printTargets);
 	}

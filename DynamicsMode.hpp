@@ -11,10 +11,9 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-#ifndef __DynamicsMode_h__
-#define __DynamicsMode_h__
+#pragma once
 
-#include "vsqglobal.hpp"
+#include "./Namespace.hpp"
 
 VSQ_BEGIN_NAMESPACE
 
@@ -38,5 +37,3 @@ public:
 };
 
 VSQ_END_NAMESPACE
-
-#endif

@@ -1,8 +1,9 @@
 #include "../Master.hpp"
+#include "../TextStream.hpp"
 #include "Util.hpp"
 
 using namespace std;
-using namespace VSQ_NS;
+using namespace vsq;
 
 class MasterTest : public CppUnit::TestCase
 {

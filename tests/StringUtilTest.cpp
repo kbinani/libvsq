@@ -2,6 +2,7 @@
 #include "../StringUtil.hpp"
 
 using namespace std;
+using namespace vsq;
 
 class StringUtilTest : public CppUnit::TestFixture
 {

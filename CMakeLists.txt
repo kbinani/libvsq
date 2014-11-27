@@ -9,54 +9,96 @@ ADD_LIBRARY(vsq STATIC
     ArticulationType.hpp
     BP.hpp
     BPList.hpp
+	BPList.cpp
     BPListSearchResult.hpp
     BitConverter.hpp
+	BitConverter.cpp
     ByteArrayOutputStream.hpp
+	ByteArrayOutputStream.cpp
     CP932Converter.hpp
-    CP932ConverterData.hpp
+	CP932Converter.cpp
+    CP932ConverterData.inc
     Common.hpp
+	Common.cpp
     DynamicsMode.hpp
     Event.hpp
+	Event.cpp
     EventListIndexIterator.hpp
+	EventListIndexIterator.cpp
     EventListIndexIteratorKind.hpp
     EventType.hpp
+	EventType.cpp
     EventWriteOption.hpp
     FileInputStream.hpp
+	FileInputStream.cpp
     FileOutputStream.hpp
-    Handle.hpp
+	FileOutputStream.cpp
+	Handle.hpp
+    Handle.cpp
     HandleType.hpp
     InputStream.hpp
     Lyric.hpp
+	Lyric.cpp
     Master.hpp
+	Master.cpp
     MeasureLine.hpp
     MeasureLineIterator.hpp
+	MeasureLineIterator.cpp
     MidiEvent.hpp
+	MidiEvent.cpp
     MidiParameterType.hpp
+	MidiParameterType.cpp
     Mixer.hpp
-    MixerItem.hpp
+	Mixer.cpp
+	MixerItem.hpp
+	MixerItem.cpp
     MusicXmlWriter.hpp
+	MusicXmlWriter.cpp
     NoteNumberUtil.hpp
+	NoteNumberUtil.cpp
     NrpnEvent.hpp
+	NrpnEvent.cpp
     OutputStream.hpp
     PhoneticSymbol.hpp
-    PhoneticSymbolDictionary.hpp
+	PhoneticSymbol.cpp
+	PhoneticSymbolDictionary.hpp
+	PhoneticSymbolDictionary.cpp
+	PhoneticSymbolDictionaryVocaloidJp.inc
+	PhoneticSymbolDictionaryVocaloidEn.inc
     PlayMode.hpp
     SMFReader.hpp
+    SMFReader.cpp
     Sequence.hpp
+    Sequence.cpp
     StreamWriter.hpp
+    StreamWriter.cpp
     StringUtil.hpp
+    StringUtil.cpp
     Tempo.hpp
+    Tempo.cpp
     TempoList.hpp
+    TempoList.cpp
     TextOutputStream.hpp
     TextStream.hpp
+    TextStream.cpp
     Timesig.hpp
+    Timesig.cpp
     TimesigList.hpp
+    TimesigList.cpp
     Track.hpp
+    Track.cpp
     VSQFileReader.hpp
+    VSQFileReader.cpp
     VSQFileWriter.hpp
+    VSQFileWriter.cpp
     VibratoBP.hpp
+    VibratoBP.cpp
     VibratoBPList.hpp
+    VibratoBPList.cpp
     VocaloidMidiEventListFactory.hpp
-    VoiceLanguageEnum.hpp
-    vsqglobal.hpp
+    VocaloidMidiEventListFactory.cpp
+	VoiceLanguage.hpp
+	VoiceLanguage.cpp
+	Namespace.hpp
+	BasicTypes.hpp
     BP.cpp)

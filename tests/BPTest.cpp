@@ -2,7 +2,7 @@
 #include "../BP.hpp"
 
 using namespace std;
-using namespace VSQ_NS;
+using namespace vsq;
 
 class BPTest : public CppUnit::TestCase
 {

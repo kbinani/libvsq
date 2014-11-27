@@ -1,6 +1,6 @@
 /**
  * InputStream.hpp
- * Copyright © 2012 kbinani
+ * Copyright © 2012,2014 kbinani
  *
  * This file is part of libvsq.
  *
@@ -11,11 +11,10 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-#ifndef __InputStream_hpp__
-#define __InputStream_hpp__
+#pragma once
 
-#include "vsqglobal.hpp"
-#include <stdint.h>
+#include "./Namespace.hpp"
+#include <cstdint>
 
 VSQ_BEGIN_NAMESPACE
 
@@ -25,6 +24,9 @@ VSQ_BEGIN_NAMESPACE
 class InputStream
 {
 public:
+	virtual ~InputStream()
+	{}
+
 	/**
 	 * @brief 1 バイトを読み込む
 	 * @return 読み込んだバイト値。ストリームの末尾に達した場合は負の値を返す
@@ -59,5 +61,3 @@ public:
 };
 
 VSQ_END_NAMESPACE
-
-#endif // __InputStream_hpp__

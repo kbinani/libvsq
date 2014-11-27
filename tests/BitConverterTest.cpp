@@ -1,7 +1,7 @@
 #include "Util.hpp"
 #include "../BitConverter.hpp"
 
-using namespace VSQ_NS;
+using namespace vsq;
 using namespace std;
 
 class BitConverterTest : public CppUnit::TestCase

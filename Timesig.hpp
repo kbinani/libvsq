@@ -1,6 +1,6 @@
 /**
- * Timesig.h
- * Copyright © 2012 kbinani
+ * Timesig.hpp
+ * Copyright © 2012,2014 kbinani
  *
  * This file is part of libvsq.
  *
@@ -11,16 +11,12 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-#ifndef __Timesig_h__
-#define __Timesig_h__
+#pragma once
 
+#include "./BasicTypes.hpp"
 #include <string>
-#include <sstream>
-#include "vsqglobal.hpp"
 
 VSQ_BEGIN_NAMESPACE
-
-using namespace std;
 
 /**
  * 拍子変更情報テーブル内の要素を表現するためのクラス
@@ -52,13 +48,7 @@ protected:
 	tick_t clock;
 
 public:
-	explicit Timesig()
-	{
-		this->clock = 0;
-		this->numerator = 4;
-		this->denominator = 4;
-		this->barCount = 0;
-	}
+	Timesig();
 
 	/**
 	 * @brief 初期化を行う
@@ -66,65 +56,38 @@ public:
 	 * @param denominator 拍子の分母値
 	 * @param barCount 小節数
 	 */
-	explicit Timesig(int numerator, int denominator, int barCount)
-	{
-		this->clock = 0;
-		this->numerator = numerator;
-		this->denominator = denominator;
-		this->barCount = barCount;
-	}
+	Timesig(int numerator, int denominator, int barCount);
 
 	/**
 	 * @brief このイベントの tick 単位の時刻を取得する
 	 * @return tick 単位の時刻
 	 */
-	tick_t getClock()const
-	{
-		return clock;
-	}
+	tick_t getClock() const;
 
 	/**
 	 * @brief 文字列に変換する
 	 * @return (string) 変換後の文字列
 	 */
-	const std::string toString() const
-	{
-		ostringstream oss;
-		oss << "{Clock=" << this->clock << ", Numerator=" << this->numerator << ", Denominator=" << this->denominator << ", BarCount=" << this->barCount << "}";
-		return oss.str();
-	}
+	const std::string toString() const;
 
 	/**
 	 * @brief 順序を比較する
 	 * @param item 比較対象のアイテム
 	 * @return 比較対象がこのインスタンスより大であれば true を、そうでなければ false を返す
 	 */
-	bool compareTo(const Timesig& item) const
-	{
-		return (this->barCount - item.barCount) < 0;
-	}
+	bool compareTo(const Timesig& item) const;
 
 	/**
 	 * @brief コピーを作成する
 	 * @return このオブジェクトのコピー
 	 */
-	Timesig clone() const
-	{
-		Timesig result(numerator, denominator, barCount);
-		result.clock = clock;
-		return result;
-	}
+	Timesig clone() const;
 
 	/**
 	 * @brief 順序を比較する
 	 * @return b が a より大であれば true を、そうでなければ false を返す
 	 */
-	static bool compare(const Timesig& a, const Timesig& b)
-	{
-		return a.compareTo(b);
-	}
+	static bool compare(const Timesig& a, const Timesig& b);
 };
 
 VSQ_END_NAMESPACE
-
-#endif

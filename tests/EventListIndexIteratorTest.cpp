@@ -1,7 +1,8 @@
 #include "Util.hpp"
 #include "../EventListIndexIterator.hpp"
+#include "../EventListIndexIteratorKind.hpp"
 
-using namespace VSQ_NS;
+using namespace vsq;
 
 class EventListIndexIteratorTest : public CppUnit::TestCase
 {

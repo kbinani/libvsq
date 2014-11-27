@@ -1,6 +1,6 @@
 /**
  * MixerItem.hpp
- * Copyright © 2012 kbinani
+ * Copyright © 2012,2014 kbinani
  *
  * This file is part of libvsq.
  *
@@ -11,10 +11,9 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-#ifndef __MixerItem_hpp__
-#define __MixerItem_hpp__
+#pragma once
 
-#include "vsqglobal.hpp"
+#include "./Namespace.hpp"
 
 VSQ_BEGIN_NAMESPACE
 
@@ -51,24 +50,13 @@ public:
 	 * @param mute (int) Mute値
 	 * @param solo (int) Solo値
 	 */
-	explicit MixerItem(int feder, int panpot, int mute, int solo)
-	{
-		this->feder = feder;
-		this->panpot = panpot;
-		this->mute = mute;
-		this->solo = solo;
-	}
+	MixerItem(int feder, int panpot, int mute, int solo);
 
 	/**
 	 * @brief コピーを作成する
 	 * @return このオブジェクトのコピー
 	 */
-	MixerItem clone() const
-	{
-		return MixerItem(this->feder, this->panpot, this->mute, this->solo);
-	}
+	MixerItem clone() const;
 };
 
 VSQ_END_NAMESPACE
-
-#endif

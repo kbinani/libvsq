@@ -1,7 +1,7 @@
 #include "Util.hpp"
 #include "../MixerItem.hpp"
 
-using namespace VSQ_NS;
+using namespace vsq;
 
 class MixerItemTest : public CppUnit::TestCase
 {

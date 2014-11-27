@@ -1,6 +1,6 @@
 /**
  * FileInputStream.hpp
- * Copyright © 2012 kbinani
+ * Copyright © 2012,2014 kbinani
  *
  * This file is part of libvsq.
  *
@@ -11,13 +11,11 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-#ifndef __FileInputStream_hpp__
-#define __FileInputStream_hpp__
+#pragma once
 
-#include "vsqglobal.hpp"
-#include "InputStream.hpp"
+#include "./Namespace.hpp"
+#include "./InputStream.hpp"
 #include <fstream>
-#include <string>
 
 VSQ_BEGIN_NAMESPACE
 
@@ -30,24 +28,13 @@ private:
 	std::ifstream stream;
 
 public:
-	explicit FileInputStream(const std::string& filePath)
-		: stream(filePath.c_str(), std::ios::binary)
-	{
-	}
+	explicit FileInputStream(std::string const& filePath);
 
 	/**
 	 * @brief 1 バイトを読み込む
 	 * @return 読み込んだバイト値
 	 */
-	int read()
-	{
-		int result = stream.get();
-		if (stream.eof()) {
-			return -1;
-		} else {
-			return result;
-		}
-	}
+	int read();
 
 	/**
 	 * @brief バッファーに読み込む
@@ -55,39 +42,24 @@ public:
 	 * @param startIndex 読み込んだデータを格納するオフセット
 	 * @param length 読み込む長さ
 	 */
-	int read(char* buffer, int64_t startIndex, int64_t length)
-	{
-		return stream.read(buffer + sizeof(char) * startIndex, length).gcount();
-	}
+	int read(char* buffer, int64_t startIndex, int64_t length);
 
 	/**
 	 * @brief ファイルポインターを移動する
 	 * @param position ファイルポインター
 	 */
-	void seek(int64_t position)
-	{
-		stream.clear();
-		stream.seekg(position);
-	}
+	void seek(int64_t position);
 
 	/**
 	 * @brief ファイルポインターを取得する
 	 * @return ファイルポインター
 	 */
-	int64_t getPointer()
-	{
-		return (int64_t)stream.tellg();
-	}
+	int64_t getPointer();
 
 	/**
 	 * @brief ストリームを閉じる
 	 */
-	void close()
-	{
-		stream.close();
-	}
+	void close();
 };
 
 VSQ_END_NAMESPACE
-
-#endif // __FileInputStream_hpp__

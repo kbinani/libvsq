@@ -1,7 +1,8 @@
 #include "Util.hpp"
 #include "../Mixer.hpp"
+#include "../TextStream.hpp"
 
-using namespace VSQ_NS;
+using namespace vsq;
 
 class MixerTest : public CppUnit::TestCase
 {

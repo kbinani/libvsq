@@ -1,6 +1,6 @@
 /**
  * PlayMode.hpp
- * Copyright © 2012 kbinani
+ * Copyright © 2012,2014 kbinani
  *
  * This file is part of libvsq.
  *
@@ -11,10 +11,9 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-#ifndef __PlayMode_h__
-#define __PlayMode_h__
+#pragma once
 
-#include "vsqglobal.hpp"
+#include "./Namespace.hpp"
 
 VSQ_BEGIN_NAMESPACE
 
@@ -43,5 +42,3 @@ public:
 };
 
 VSQ_END_NAMESPACE
-
-#endif

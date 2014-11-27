@@ -1,8 +1,10 @@
 #include "Util.hpp"
 #include "../MusicXmlWriter.hpp"
 #include "../ByteArrayOutputStream.hpp"
+#include "../TextStream.hpp"
+#include "../Sequence.hpp"
 
-using namespace VSQ_NS;
+using namespace vsq;
 
 class MusicXmlWriterTest : public CppUnit::TestCase
 {
@@ -29,12 +31,12 @@ public:
 
 		writer.write(&sequence, &stream, "foo");
 
-		string actualString = stream.toString();
+		std::string actualString = stream.toString();
 		stream.close();
 
 		// 期待値と比較する
-		vector<char> expected;
-		string fixturePath = TestUtil::getFixtureRootPath() + "/MusicXmlWriterTest/expected/expected.xml";
+		std::vector<char> expected;
+		std::string fixturePath = TestUtil::getFixtureRootPath() + "/MusicXmlWriterTest/expected/expected.xml";
 		FILE* fileHandle = fopen(fixturePath.c_str(), "rb");
 		if (! fileHandle) {
 			CPPUNIT_FAIL("fixture を読み込めなかった");
@@ -46,7 +48,7 @@ public:
 		}
 		fclose(fileHandle);
 
-		vector<char> actual;
+		std::vector<char> actual;
 		actual.insert(actual.begin(), actualString.begin(), actualString.end());
 		CPPUNIT_ASSERT(expected == actual);
 	}

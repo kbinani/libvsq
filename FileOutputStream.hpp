@@ -1,6 +1,6 @@
 /**
  * FileOutputStream.hpp
- * Copyright © 2012 kbinani
+ * Copyright © 2012,2014 kbinani
  *
  * This file is part of libvsq.
  *
@@ -11,8 +11,8 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-#ifndef __libvsq_FileOutputStream_hpp__
-#define __libvsq_FileOutputStream_hpp__
+#pragma once
+
 #include "OutputStream.hpp"
 #include <string>
 #include <fstream>
@@ -34,44 +34,19 @@ public:
 	/**
 	 * @brief 出力先のファイルパスを指定し、初期化する
 	 */
-	explicit FileOutputStream(const std::string& filePath)
-	{
-		stream.open(filePath.c_str(), std::ios::binary);
-		if (!stream.is_open()) { throw OutputStream::IOException(); }
-	}
+	explicit FileOutputStream(std::string const& filePath);
 
-	~FileOutputStream()
-	{
-		if (stream.is_open()) { stream.close(); }
-	}
+	~FileOutputStream();
 
-	void write(const char* buffer, int64_t startIndex, int64_t length)
-	{
-		stream.write(buffer + sizeof(char) * startIndex, length);
-	}
+	void write(const char* buffer, int64_t startIndex, int64_t length);
 
-	void write(int value)
-	{
-		char c = 0xFF & value;
-		stream.write(&c, 1);
-	}
+	void write(int value);
 
-	void seek(int64_t position)
-	{
-		stream.seekp(position, std::ios::beg);
-	}
+	void seek(int64_t position);
 
-	int64_t getPointer()
-	{
-		return (int64_t)stream.tellp();
-	}
+	int64_t getPointer();
 
-	void close()
-	{
-		stream.close();
-	}
+	void close();
 };
 
 VSQ_END_NAMESPACE
-
-#endif

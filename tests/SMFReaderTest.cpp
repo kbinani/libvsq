@@ -3,7 +3,7 @@
 #include "../FileInputStream.hpp"
 
 using namespace std;
-using namespace VSQ_NS;
+using namespace vsq;
 
 class SMFReaderTest : public CppUnit::TestCase
 {

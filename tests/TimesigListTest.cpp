@@ -1,7 +1,7 @@
 #include "Util.hpp"
 #include "../TimesigList.hpp"
 
-using namespace VSQ_NS;
+using namespace vsq;
 
 class TimesigListTest : public CppUnit::TestCase
 {

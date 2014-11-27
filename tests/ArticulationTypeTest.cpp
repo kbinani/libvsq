@@ -1,7 +1,7 @@
 #include "Util.hpp"
 #include "../ArticulationType.hpp"
 
-using namespace VSQ_NS;
+using namespace vsq;
 
 class ArticulationTypeTest : public CppUnit::TestCase
 {

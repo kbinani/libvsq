@@ -1,6 +1,6 @@
 /**
  * Common.hpp
- * Copyright © 2012 kbinani
+ * Copyright © 2012,2014 kbinani
  *
  * This file is part of libvsq.
  *
@@ -11,18 +11,16 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-#ifndef __Common_hpp__
-#define __Common_hpp__
+#pragma once
 
-#include "vsqglobal.hpp"
+#include "./BasicTypes.hpp"
+#include "./DynamicsMode.hpp"
+#include "./PlayMode.hpp"
 #include <string>
-#include <vector>
-#include "DynamicsMode.hpp"
-#include "PlayMode.hpp"
-#include "TextStream.hpp"
-#include "StringUtil.hpp"
 
 VSQ_BEGIN_NAMESPACE
+
+class TextStream;
 
 /**
  * @brief VSQ ファイルのメタテキストの [Common] セクションに記録される内容を格納するクラス
@@ -66,10 +64,7 @@ public:
 	/**
 	 * @brief 初期化を行う
 	 */
-	explicit Common()
-	{
-		init();
-	}
+	Common();
 
 	/**
 	 * @brief 初期化を行う
@@ -77,35 +72,7 @@ public:
 	 * @param lastLine 読み込んだ最後の行。テーブルの ["value"] に文字列が格納される
 	 * @todo VSQFileReaderに移動する
 	 */
-	explicit Common(TextStream& stream, std::string& lastLine)
-	{
-		init();
-		this->version = "";
-		this->name = "";
-		this->color = "0,0,0";
-		this->dynamicsMode = DynamicsMode::STANDARD;
-		this->_playMode = PlayMode::PLAY_WITH_SYNTH;
-		lastLine = stream.readLine();
-		while (lastLine.find("[") != 0) {
-			std::vector<std::string> spl = StringUtil::explode("=", lastLine);
-			std::string search = spl[0];
-			if (search == "Version") {
-				this->version = spl[1];
-			} else if (search == "Name") {
-				this->name = spl[1];
-			} else if (search == "Color") {
-				this->color = spl[1];
-			} else if (search == "DynamicsMode") {
-				this->dynamicsMode = (DynamicsMode::DynamicsModeEnum)StringUtil::parseInt<int>(spl[1]);
-			} else if (search == "PlayMode") {
-				this->_playMode = (PlayMode::PlayModeEnum)StringUtil::parseInt<int>(spl[1]);
-			}
-			if (!stream.ready()) {
-				break;
-			}
-			lastLine = stream.readLine();
-		}
-	}
+	Common(TextStream& stream, std::string& lastLine);
 
 	/**
 	 * @brief 初期化を行う
@@ -116,93 +83,38 @@ public:
 	 * @param dynamicsMode シーケンスの Dynamics モード
 	 * @param playMode シーケンスの Play モード
 	 */
-	explicit Common(std::string name, int r, int g, int b, DynamicsMode::DynamicsModeEnum dynamicsMode, PlayMode::PlayModeEnum playMode)
-	{
-		init();
-		this->version = "DSB301";
-		this->name = name;
-		ostringstream oss;
-		oss << r << "," << g << "," << b;
-		this->color = oss.str();
-		this->dynamicsMode = dynamicsMode;
-		this->_playMode = playMode;
-	}
+	Common(std::string name, int r, int g, int b, DynamicsMode::DynamicsModeEnum dynamicsMode, PlayMode::PlayModeEnum playMode);
 
 	/**
 	 * @brief コピーを作成する
 	 * @return このインスタンスのコピー
 	 */
-	Common clone() const
-	{
-		std::vector<std::string> spl = StringUtil::explode(",", this->color);
-		int r = StringUtil::parseInt<int>(spl[0]);
-		int g = StringUtil::parseInt<int>(spl[1]);
-		int b = StringUtil::parseInt<int>(spl[2]);
-		Common result(this->name, r, g, b, this->dynamicsMode, this->_playMode);
-		result.version = this->version;
-		result._lastPlayMode = this->_lastPlayMode;
-		return result;
-	}
+	Common clone() const;
 
 	/**
 	 * @brief Get play mode.
 	 */
-	PlayMode::PlayModeEnum playMode()const
-	{
-		return _playMode;
-	}
+	PlayMode::PlayModeEnum playMode() const;
 
 	/**
 	 * @brief Set play mode.
 	 */
-	void setPlayMode(PlayMode::PlayModeEnum mode)
-	{
-		_playMode = mode;
-		if (mode != PlayMode::OFF) {
-			_lastPlayMode = mode;
-		}
-	}
+	void setPlayMode(PlayMode::PlayModeEnum mode);
 
 	/**
 	 * @brief Get previous play mode before play mode is set to OFF.
 	 */
-	PlayMode::PlayModeEnum lastPlayMode()const
-	{
-		return _lastPlayMode;
-	}
+	PlayMode::PlayModeEnum lastPlayMode() const;
 
 	/**
 	 * @brief テキストストリームに出力する
 	 * @param stream (TextStream) 出力先のストリーム
 	 * @todo VSQFileWriterに移動する
 	 */
-	void write(TextStream& stream) const
-	{
-		stream.writeLine("[Common]");
-		stream.writeLine("Version=" + this->version);
-		stream.writeLine("Name=" + this->name);
-		stream.writeLine("Color=" + this->color);
-		ostringstream oss;
-		oss << "DynamicsMode=" << (int)this->dynamicsMode;
-		stream.writeLine(oss.str());
-
-		oss.str("");
-		oss << "PlayMode=" << (int)this->_playMode;
-		stream.writeLine(oss.str());
-	}
+	void write(TextStream& stream) const;
 
 private:
-	void init()
-	{
-		this->version = "DSB301";
-		this->name = "Miku";
-		this->dynamicsMode = DynamicsMode::EXPERT;
-		this->_playMode = PlayMode::PLAY_WITH_SYNTH;
-		this->color = "179,181,123";
-		this->_lastPlayMode = PlayMode::PLAY_WITH_SYNTH;
-	}
+	void init();
 };
 
 VSQ_END_NAMESPACE
-
-#endif

@@ -1,6 +1,6 @@
 /**
- * MeasureLine.h
- * Copyright © 2012 kbinani
+ * VibratoBP.hpp
+ * Copyright © 2012,2014 kbinani
  *
  * This file is part of libvsq.
  *
@@ -11,10 +11,9 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-#ifndef __VibratoBP_h__
-#define __VibratoBP_h__
+#pragma once
 
-#include "vsqglobal.hpp"
+#include "./Namespace.hpp"
 
 VSQ_BEGIN_NAMESPACE
 
@@ -39,11 +38,7 @@ public:
 	int y;
 
 public:
-	VibratoBP()
-	{
-		x = 0.0;
-		y = 0;
-	}
+	VibratoBP();
 
 	/**
 	 * @brief 初期化を行う
@@ -51,21 +46,14 @@ public:
 	 * @param y (int) y 軸の値
 	 * @return (VibratoBP)
 	 */
-	VibratoBP(double x, int y)
-	{
-		this->x = x;
-		this->y = y;
-	}
+	VibratoBP(double x, int y);
 
 	/**
 	 * @brief 順序を比較する
 	 * @param item (VibratoBP) 比較対象のアイテム
 	 * @return (int) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
 	 */
-	int compareTo(const VSQ_NS::VibratoBP& item)const
-	{
-		return compareCore(*this, item);
-	}
+	int compareTo(const VibratoBP& item) const;
 
 	/**
 	 * @brief 2 つの {@link VibratoBP} を比較する
@@ -73,25 +61,10 @@ public:
 	 * @param b (VibratoBP) 比較対象のオブジェクト
 	 * @return (boolean) <code>a</code> が <code>b</code> よりも小さい場合は <code>true</code>、そうでない場合は <code>false</code> を返す
 	 */
-	static bool compare(const VSQ_NS::VibratoBP& a, const VSQ_NS::VibratoBP& b)
-	{
-		return compareCore(a, b) < 0;
-	}
+	static bool compare(const VibratoBP& a, const VibratoBP& b);
 
 private:
-	static int compareCore(const VSQ_NS::VibratoBP& a, const VSQ_NS::VibratoBP& b)
-	{
-		double v = a.x - b.x;
-		if (v > 0.0) {
-			return 1;
-		} else if (v < 0.0) {
-			return -1;
-		}
-		return 0;
-	}
-
+	static int compareCore(const VibratoBP& a, const VibratoBP& b);
 };
 
 VSQ_END_NAMESPACE
-
-#endif

@@ -2,7 +2,7 @@
 #include "../MidiParameterType.hpp"
 
 using namespace std;
-using namespace VSQ_NS;
+using namespace vsq;
 
 class MidiParameterTypeTest : public CppUnit::TestCase
 {

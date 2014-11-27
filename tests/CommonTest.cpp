@@ -1,8 +1,9 @@
 #include "Util.hpp"
 #include "../Common.hpp"
+#include "../TextStream.hpp"
 
 using namespace std;
-using namespace VSQ_NS;
+using namespace vsq;
 
 class CommonTest : public CppUnit::TestCase
 {

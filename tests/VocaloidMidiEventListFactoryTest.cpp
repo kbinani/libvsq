@@ -5,7 +5,7 @@
 #include <iostream> // debug
 
 using namespace std;
-using namespace VSQ_NS;
+using namespace vsq;
 
 struct NrpnEventSpec {
 	tick_t clock;// = 0;
