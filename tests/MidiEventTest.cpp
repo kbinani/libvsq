@@ -107,7 +107,7 @@ public:
 		b.clock = 0;
 		CPPUNIT_ASSERT_EQUAL(0, a.compareTo(b));
 
-		//同じ音程の、Note OnとNote Offが続いていた場合、Note Offが先、Note Onが後ろになる
+		//同じ音程の, Note OnとNote Offが続いていた場合, Note Offが先, Note Onが後ろになる
 		a.firstByte = 0x92;
 		b.firstByte = 0x82;
 		a.clock = 0;
@@ -122,8 +122,8 @@ public:
 		CPPUNIT_ASSERT(0 < a.compareTo(b));
 		CPPUNIT_ASSERT(0 > b.compareTo(a));
 
-		//同じ音程の、Note OnとNote Offが続いていた場合、Note Offが先、Note Onが後ろになる
-		//ただし、Note Offが、ベロシティー0のNote Onとして表現されている場合
+		//同じ音程の, Note OnとNote Offが続いていた場合, Note Offが先, Note Onが後ろになる
+		//ただし, Note Offが, ベロシティー0のNote Onとして表現されている場合
 		a.firstByte = 0x91;
 		b.firstByte = 0x91;
 		a.clock = 0;
@@ -133,7 +133,7 @@ public:
 		a.data.push_back(127);   // note#=64, vel=127の Note On
 		b.data.clear();
 		b.data.push_back(64);
-		b.data.push_back(0);     // note#=64, vel=0の Note On、vel=0なので Note Off とみなされる
+		b.data.push_back(0);     // note#=64, vel=0の Note On, vel=0なので Note Off とみなされる
 		// b => a
 		CPPUNIT_ASSERT(0 < a.compareTo(b));
 		CPPUNIT_ASSERT(0 > b.compareTo(a));

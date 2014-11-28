@@ -19,32 +19,27 @@
 VSQ_BEGIN_NAMESPACE
 
 /**
- * 歌手の歌唱言語を表す列挙子
- * @class table
- * @name VoiceLanguageEnum
+ * @brief 歌手の歌唱言語を表す列挙子.
  */
 class VoiceLanguage
 {
 public:
 	enum VoiceLanguageEnum {
 		/**
-		 * 日本語
-		 * @var int
+		 * @brief 日本語.
 		 */
 		JAPANESE = 0,
 
 		/**
-		 * 英語
-		 * @var int
+		 * @brief 英語.
 		 */
 		ENGLISH = 1
 	};
 
 	/**
-	 * 歌手の名前から、その歌手の歌唱言語を取得する
-	 * @param name (string) 歌手の名前
-	 * @return (VoiceLanguageEnum) 歌唱言語
-	 * @access static
+	 * @brief 歌手の名前から, その歌手の歌唱言語を取得する.
+	 * @param name 歌手の名前.
+	 * @return 歌唱言語.
 	 */
 	static VoiceLanguageEnum valueFromSingerName(std::string const& name);
 };

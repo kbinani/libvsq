@@ -24,123 +24,99 @@
 VSQ_BEGIN_NAMESPACE
 
 /**
- * @todo _pit とかを一般化する
+ * @todo _pit とかを一般化する.
  */
 class Track
 {
 protected:
 	/**
-	 * @brief トラック名などの情報
+	 * @brief トラック名などの情報.
 	 * @todo Rename to _common.
 	 */
 	Common _common;
 
 	/**
-	 * @brief イベントの一覧
+	 * @brief イベントの一覧.
 	 */
 	Event::List _events;
 
 private:
 	/**
-	 * @brief PIT。ピッチベンド(pitchBendBPList)。default=0
+	 * @brief PIT. ピッチベンド(pitchBendBPList). default=0.
 	 */
 	BPList _pit;
 
 	/**
-	 * @brief PBS。ピッチベンドセンシティビティ(pitchBendSensBPList)。default=2
+	 * @brief PBS. ピッチベンドセンシティビティ(pitchBendSensBPList). default=2.
 	 */
 	BPList _pbs;
 
 	/**
-	 * @brief DYN。ダイナミクス(dynamicsBPList)。default=64
+	 * @brief DYN. ダイナミクス(dynamicsBPList). default=64.
 	 */
 	BPList _dyn;
 
 	/**
-	 * @brief BRE。ブレシネス(epRResidualBPList)。default=0
+	 * @brief BRE. ブレシネス(epRResidualBPList). default=0.
 	 */
 	BPList _bre;
 
 	/**
-	 * @brief BRI。ブライトネス(epRESlopeBPList)。default=64
+	 * @brief BRI. ブライトネス(epRESlopeBPList). default=64.
 	 */
 	BPList _bri;
 
 	/**
-	 * @brief CLE。クリアネス(epRESlopeDepthBPList)。default=0
+	 * @brief CLE. クリアネス(epRESlopeDepthBPList). default=0.
 	 */
 	BPList _cle;
 
-	/**
-	 */
 	BPList _reso1FreqBPList;
 
-	/**
-	 */
 	BPList _reso2FreqBPList;
 
-	/**
-	 */
 	BPList _reso3FreqBPList;
 
-	/**
-	 */
 	BPList _reso4FreqBPList;
 
-	/**
-	 */
 	BPList _reso1BWBPList;
 
-	/**
-	 */
 	BPList _reso2BWBPList;
 
-	/**
-	 */
 	BPList _reso3BWBPList;
 
-	/**
-	 */
 	BPList _reso4BWBPList;
 
-	/**
-	 */
 	BPList _reso1AmpBPList;
 
-	/**
-	 */
 	BPList _reso2AmpBPList;
 
-	/**
-	 */
 	BPList _reso3AmpBPList;
 
-	/**
-	 */
 	BPList _reso4AmpBPList;
 
 	/**
-	 * @brief Harmonics。(EpRSineBPList)default = 64
+	 * @brief Harmonics. (EpRSineBPList)default = 64.
 	 */
 	BPList _harmonics;
 
 	/**
-	 * @brief Effect2 Depth。
+	 * @brief Effect2 Depth.
 	 */
 	BPList _fx2depth;
 
 	/**
-	 * @brief GEN。ジェンダーファクター(genderFactorBPList)。default=64
+	 * @brief GEN. ジェンダーファクター(genderFactorBPList). default=64.
 	 */
 	BPList _gen;
 
 	/**
-	 * @brief POR。ポルタメントタイミング(portamentoTimingBPList)。default=64
+	 * @brief POR. ポルタメントタイミング(portamentoTimingBPList). default=64.
 	 */
 	BPList _por;
 
 	/**
-	 * @brief OPE。オープニング(openingBPList)。default=127
+	 * @brief OPE. オープニング(openingBPList). default=127.
 	 */
 	BPList _ope;
 
@@ -148,44 +124,44 @@ private:
 
 public:
 	/**
-	 * @brief Master Trackを構築
+	 * @brief Master Trackを構築.
 	 */
 	Track();
 
 	/**
-	 * @brief Master Trackでないトラックを構築
-	 * @param name (string) トラック名
-	 * @param singer (string) トラックのデフォルトの歌手名
+	 * @brief Master Trackでないトラックを構築.
+	 * @param name トラック名.
+	 * @param singer トラックのデフォルトの歌手名.
 	 */
-	Track(std::string name, std::string singer);
+	Track(std::string const& name, std::string const& singer);
 
-	Track(const Track& value);
+	Track(Track const& value);
 
-	Track& operator = (const Track& value);
+	Track& operator = (Track const& value);
 
 	/**
-	 * @brief トラックの名前を取得する
-	 * @return (string) トラック名
+	 * @brief トラックの名前を取得する.
+	 * @return トラック名.
 	 */
 	const std::string getName() const;
 
 	/**
-	 * @brief トラックの名前を設定する
-	 * @param value (string) トラック名
+	 * @brief トラックの名前を設定する.
+	 * @param value トラック名.
 	 */
 	void setName(std::string const& value);
 
 	/**
-	 * @brief 指定された種類のイベントのインデクスを順に返す反復子を取得する
-	 * @param iteratorKind 反復子の種類
-	 * @return 反復子
+	 * @brief 指定された種類のイベントのインデクスを順に返す反復子を取得する.
+	 * @param iteratorKind 反復子の種類.
+	 * @return 反復子.
 	 */
 	EventListIndexIterator getIndexIterator(EventListIndexIteratorKind::EventListIndexIteratorKindEnum iteratorKind) const;
 
 	/**
-	 * @brief 指定したゲートタイムにおいて、歌唱を担当している歌手の歌手変更イベントを取得する
-	 * @param clock ゲートタイム
-	 * @return 歌手イベント。存在しなければ null を返す
+	 * @brief 指定したゲートタイムにおいて, 歌唱を担当している歌手の歌手変更イベントを取得する.
+	 * @param clock ゲートタイム.
+	 * @return 歌手イベント. 存在しなければ null を返す.
 	 * @todo Change to const method.
 	 */
 	const Event* getSingerEventAt(tick_t clock) const;
@@ -193,21 +169,21 @@ public:
 	const BPList* curve(std::string const& curveName) const;
 
 	/**
-	 * @brief 指定された名前のカーブを取得します
-	 * @param curve (string) カーブ名
-	 * @return (BPList) カーブ
+	 * @brief 指定された名前のカーブを取得する.
+	 * @param curve カーブ名.
+	 * @return カーブ.
 	 */
 	BPList* curve(std::string const& curveName);
 
 	/**
-	 * @brief コピーを作成する
-	 * @return (Track) このオブジェクトのコピー
+	 * @brief コピーを作成する.
+	 * @return このオブジェクトのコピー.
 	 */
 	Track clone() const;
 
 	/**
-	 * @brief イベントリストを取得する
-	 * @return イベントリストのポインタ
+	 * @brief イベントリストを取得する.
+	 * @return イベントリストのポインタ.
 	 */
 	Event::List* events();
 
@@ -237,11 +213,11 @@ protected:
 
 private:
 	/**
-	 * @brief 初期化を行う
-	 * @param name (string)
-	 * @param singer (string)
+	 * @brief 初期化を行う.
+	 * @param name
+	 * @param singer
 	 */
-	void _initCor(std::string name, std::string singer);
+	void _initCor(std::string const& name, std::string const& singer);
 
 	/**
 	 * @brief Deep copy instance.

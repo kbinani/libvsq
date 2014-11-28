@@ -18,7 +18,7 @@
 VSQ_BEGIN_NAMESPACE
 
 /**
- * @brief tick 単位の時刻を表す整数値の型
+ * @brief tick 単位の時刻を表す整数値の型.
  */
 typedef long int tick_t;
 

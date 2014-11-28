@@ -51,10 +51,6 @@ bool Handle::isDecrescendType() const
 	return iconId.find(Handle::getIconIdPrefixDecrescend()) == 0;
 }
 
-/**
- * @brief Tick 単位の長さを取得する
- * @return
- */
 tick_t Handle::getLength() const
 {
 	return _length;

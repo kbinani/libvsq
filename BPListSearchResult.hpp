@@ -19,42 +19,34 @@
 VSQ_BEGIN_NAMESPACE
 
 /**
- * コントロールパラメータのデータ点検索結果を格納するクラス
- * @class table
- * @name BPListSearchResult
+ * @brief コントロールパラメータのデータ点検索結果を格納するクラス.
  */
 class BPListSearchResult
 {
 public:
 	/**
-	 * データ点の Tick 単位の時刻
-	 * @var int
+	 * @brief データ点の Tick 単位の時刻.
 	 */
 	tick_t clock;
 
 	/**
-	 * データ点のインデックス。最初のインデックスは 0
-	 * @var int
+	 * @brief データ点のインデックス. 最初のインデックスは 0.
 	 */
 	int index;
 
 	/**
-	 * データ点のオブジェクト
-	 * @var BP
+	 * @brief データ点のオブジェクト.
 	 */
 	BP point;
 
 	/**
-	 * 初期化を行う
-	 * @return (BPListSearchResult)
-	 * @access static ctor
+	 * @brief 初期化を行う.
 	 */
-	BPListSearchResult() :
-		clock(0),
-		index(0),
-		point(0, 0)
-	{
-	}
+	BPListSearchResult()
+		: clock(0)
+		, index(0)
+		, point(0, 0)
+	{}
 };
 
 VSQ_END_NAMESPACE

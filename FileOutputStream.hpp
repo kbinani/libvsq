@@ -20,19 +20,19 @@
 VSQ_BEGIN_NAMESPACE
 
 /**
- * @brief ファイルへの出力を行う、OutputStream の実装
+ * @brief ファイルへの出力を行う, OutputStream の実装.
  */
 class FileOutputStream : public OutputStream
 {
 private:
 	/**
-	 * @brief 出力先のストリーム
+	 * @brief 出力先のストリーム.
 	 */
 	std::ofstream stream;
 
 public:
 	/**
-	 * @brief 出力先のファイルパスを指定し、初期化する
+	 * @brief 出力先のファイルパスを指定し, 初期化する.
 	 */
 	explicit FileOutputStream(std::string const& filePath);
 

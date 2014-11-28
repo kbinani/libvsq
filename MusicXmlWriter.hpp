@@ -28,13 +28,13 @@ class MusicXmlWriter
 {
 public:
 	/**
-	 * @brief シーケンスを MusicXML として、指定されたストリームに出力する
-	 * @param sequence 出力するシーケンス
-	 * @param stream 出力先のストリーム
-	 * @todo change_tempo を changeTempo に名前を変える
-	 * @todo sw を stream に名前変える
-	 * @todo vsq を sequence に名前変える
-	 * @todo tempo と change_tempo を渡せるようにする
+	 * @brief シーケンスを MusicXML として, 指定されたストリームに出力する.
+	 * @param sequence 出力するシーケンス.
+	 * @param stream 出力先のストリーム.
+	 * @todo change_tempo を changeTempo に名前を変える.
+	 * @todo sw を stream に名前変える.
+	 * @todo vsq を sequence に名前変える.
+	 * @todo tempo と change_tempo を渡せるようにする.
 	 */
 	void write(const Sequence* sequence, TextOutputStream* sw, std::string const& software);
 

@@ -18,43 +18,43 @@
 VSQ_BEGIN_NAMESPACE
 
 /**
- * @brief @link Mixer の <code>slave</code> 要素に格納されるアイテムを表すクラス
+ * @brief @link Mixer の <code>slave</code> 要素に格納されるアイテムを表すクラス.
  */
 class MixerItem
 {
 public:
 	/**
-	 * @brief Feder値
+	 * @brief Feder値.
 	 */
 	int feder;
 
 	/**
-	 * @brief Panpot値
+	 * @brief Panpot値.
 	 */
 	int panpot;
 
 	/**
-	 * @brief Mute値
+	 * @brief Mute値.
 	 */
 	int mute;
 
 	/**
-	 * @brief Solo値
+	 * @brief Solo値.
 	 */
 	int solo;
 
 	/**
-	 * @brief 各パラメータを指定し、初期化を行う
-	 * @param feder (int) Feder値
-	 * @param panpot (int) Panpot値
-	 * @param mute (int) Mute値
-	 * @param solo (int) Solo値
+	 * @brief 各パラメータを指定し, 初期化を行う.
+	 * @param feder Feder値.
+	 * @param panpot Panpot値.
+	 * @param mute Mute値.
+	 * @param solo Solo値.
 	 */
 	MixerItem(int feder, int panpot, int mute, int solo);
 
 	/**
-	 * @brief コピーを作成する
-	 * @return このオブジェクトのコピー
+	 * @brief コピーを作成する.
+	 * @return このオブジェクトのコピー.
 	 */
 	MixerItem clone() const;
 };

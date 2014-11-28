@@ -22,22 +22,22 @@ class NoteNumberUtil
 {
 public:
 	/**
-	 * @brief ノートのオクターブ，変化記号を除いた部分の文字列表記を調べます．
+	 * @brief ノートのオクターブ, 変化記号を除いた部分の文字列表記を調べる.
 	 * 例：C4 => "C", D#4 => "D"
-	 * @param note ノート番号
+	 * @param note ノート番号.
 	 */
 	static std::string getNoteStringBase(int note);
 
 	/**
-	 * @brief ノート#のオクターブ部分の表記を調べます．
+	 * @brief ノート#のオクターブ部分の表記を調べる.
 	 * 例：C4 => 4, D#4 => 4
-	 * @param note ノート番号
+	 * @param note ノート番号.
 	 */
 	static int getNoteOctave(int note);
 
 	/**
-	 * @brief C#4なら+1, C4なら0, Cb4なら-1
-	 * @param note ノート番号
+	 * @brief C#4なら+1, C4なら0, Cb4なら-1.
+	 * @param note ノート番号.
 	 */
 	static int getNoteAlter(int note);
 

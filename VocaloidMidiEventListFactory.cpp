@@ -357,7 +357,7 @@ std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateVibratoNRPN(TempoLi
 		add2.append(MidiParameterType::CC_VR_VERSION_AND_DEVICE, 0x00, 0x00);
 		add2.append(MidiParameterType::CC_VD_DELAY, delayMsb, delayLsb);
 		add2.append(MidiParameterType::CC_VR_DELAY, delayMsb, delayLsb);
-		// CC_VD_VIBRATO_DEPTH, CC_VR_VIBRATO_RATE では、NRPN の MSB を省略してはいけない
+		// CC_VD_VIBRATO_DEPTH, CC_VR_VIBRATO_RATE では, NRPN の MSB を省略してはいけない
 		add2.append(MidiParameterType::CC_VD_VIBRATO_DEPTH, noteEvent->vibratoHandle.startDepth);
 		add2.append(MidiParameterType::CC_VR_VIBRATO_RATE, noteEvent->vibratoHandle.startRate);
 		ret.push_back(add2);

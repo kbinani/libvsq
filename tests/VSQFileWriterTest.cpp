@@ -719,9 +719,9 @@ class VSQFileWriterTest : public CppUnit::TestCase
 		CPPUNIT_ASSERT_EQUAL(expected, stream.toString());
 
 		// handleに全部値が入っている音符イベント
-		// 現在、PreUtteranceとVoiceOverlapは扱わないようにしているので、
-		// オプション全指定と、オプションが無い場合の動作が全くおなじになってしまっている。
-		// ustEventをちゃんと処理するようになったら、TODOコメントのところを外すこと
+		// 現在, PreUtteranceとVoiceOverlapは扱わないようにしているので,
+		// オプション全指定と, オプションが無い場合の動作が全くおなじになってしまっている.
+		// ustEventをちゃんと処理するようになったら, TODOコメントのところを外すこと
 		event.lyricHandle = Handle(HandleType::LYRIC);
 		event.lyricHandle.setLyricAt(0, Lyric("わ", "w a"));
 		event.lyricHandle.index = 11;

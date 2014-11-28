@@ -20,48 +20,48 @@
 VSQ_BEGIN_NAMESPACE
 
 /**
- * @brief UTF8 から CP932 への文字コード変換ユーティリティ
+ * @brief UTF8 から CP932 への文字コード変換ユーティリティ.
  */
 class CP932Converter
 {
 public:
 	/**
-	 * @brief UTF8 の文字列を CP932 の文字列に変換する
-	 * @param utf8 (string) 変換前の文字列
-	 * @return (string) 変換後の文字列
+	 * @brief UTF8 の文字列を CP932 の文字列に変換する.
+	 * @param utf8 変換前の文字列.
+	 * @return 変換後の文字列.
 	 */
 	static std::string convertFromUTF8(std::string const& utf8);
 
 	/**
-	 * @brief CP932のバイト列をUTF8の文字列に変換します
-	 * @param cp932 変換する CP932 のバイト列
-	 * @return 変換後の UTF8 文字列
+	 * @brief CP932のバイト列をUTF8の文字列に変換します.
+	 * @param cp932 変換する CP932 のバイト列.
+	 * @return 変換後の UTF8 文字列.
 	 */
 	static std::string convertToUTF8(std::string const& cp932);
 
 protected:
 	/**
-	 * @brief UTF8 の文字列を unicode のバイト列に変換する
-	 * @param s (string) 変換前の文字列
-	 * @return (table) 変換後の unicode のバイト列
+	 * @brief UTF8 の文字列を unicode のバイト列に変換する.
+	 * @param s 変換前の文字列.
+	 * @return 変換後の unicode のバイト列.
 	 */
 	static std::vector<std::vector<int> > _getUnicodeBytesFromUTF8String(std::string const& s);
 
 	/**
-	 * @brief UTF8 のバイト列を Unicode のバイト列に変換する
-	 * @param (table) utf8 UTF8のバイト列
-	 * @return (table) Unicode のバイト列
+	 * @brief UTF8 のバイト列を Unicode のバイト列に変換する.
+	 * @param utf8 UTF8のバイト列.
+	 * @return Unicode のバイト列.
 	 */
-	static std::vector<int> _getUnicodeBytesFromUTF8Bytes(const std::vector<int>& utf8);
+	static std::vector<int> _getUnicodeBytesFromUTF8Bytes(std::vector<int> const& utf8);
 
 private:
 	/**
-	 * @brief Unicode から CP932 への変換テーブルを初期化する
+	 * @brief Unicode から CP932 への変換テーブルを初期化する.
 	 */
 	static void initializeUnicodeToCp932Dictionary(int dict[256][256][2]);
 
 	/**
-	 * @brief CP932 から UTF8 への変換テーブルを初期化する
+	 * @brief CP932 から UTF8 への変換テーブルを初期化する.
 	 */
 	static void initializeCP932ToUTF8Dictionary(int dict[0xFFFF]);
 };

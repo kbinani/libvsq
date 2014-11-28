@@ -21,88 +21,86 @@
 VSQ_BEGIN_NAMESPACE
 
 /**
- * データがバイト配列に書き込まれるストリームの実装
+ * @brief データがバイト配列に書き込まれるストリームの実装.
  */
 class ByteArrayOutputStream : public OutputStream
 {
 protected:
 	/**
-	 * @brief 確保するバッファー・ブロックのサイズ(バイト単位)
+	 * @brief 確保するバッファー・ブロックのサイズ(バイト単位).
 	 */
 	static const int UNIT_BUFFER_LENGTH = 512;
 
 private:
 	/**
-	 * 現在のファイルポインタ
+	 * @brief 現在のファイルポインタ.
 	 */
 	int64_t _pointer;
 
 	/**
-	 * @brief 書き込み先のバイト列
+	 * @brief 書き込み先のバイト列.
 	 */
 	char* _array;
 
 	/**
-	 * @brief 確保されたバイト列の現在の長さ
+	 * @brief 確保されたバイト列の現在の長さ.
 	 */
 	int64_t _arrayLength;
 
 	/**
-	 * @brief 書き込み済みバイト数
+	 * @brief 書き込み済みバイト数.
 	 */
 	int64_t _length;
 
 public:
 	/**
-	 * @brief 初期化を行う
+	 * @brief 初期化を行う.
 	 */
 	ByteArrayOutputStream();
 
 	~ByteArrayOutputStream();
 
 	/**
-	 * 指定されたバイト値をストリームに書きこむ
-	 * @param byte (int) 書きこむバイト値
-	 * @name write<! *1 *>
+	 * @brief 指定されたバイト値をストリームに書きこむ.
+	 * @param byte 書きこむバイト値.
 	 */
 	void write(int byte);
 
 	/**
-	 * @brief 指定された配列の、指定した範囲のバイト値をストリームに書きこむ
-	 * @param array (table) 書きこむバイト列が格納された配列
-	 * @param startIndex (int) 書き込み開始位置
-	 * @param length (int) 書き込むバイト値の個数
-	 * @name write<! *2 *>
+	 * @brief 指定された配列の, 指定した範囲のバイト値をストリームに書きこむ.
+	 * @param array 書きこむバイト列が格納された配列.
+	 * @param startIndex 書き込み開始位置.
+	 * @param length 書き込むバイト値の個数.
 	 */
 	void write(const char* array, int64_t startIndex, int64_t length);
 
 	/**
-	 * @brief バイト列を文字列に変換する
-	 * @return (string) 変換された文字列
+	 * @brief バイト列を文字列に変換する.
+	 * @return 変換された文字列.
 	 */
 	const std::string toString();
 
 	/**
-	 * @brief 現在のファイルポインタを取得する
-	 * @return (int) 現在のファイルポインタ
+	 * @brief 現在のファイルポインタを取得する.
+	 * @return 現在のファイルポインタ.
 	 */
 	int64_t getPointer();
 
 	/**
-	 * @brief ファイルポインタを指定した位置に変更する
-	 * @param position (int) 新しいポインタ値
+	 * @brief ファイルポインタを指定した位置に変更する.
+	 * @param position 新しいポインタ値.
 	 */
 	void seek(int64_t position);
 
 	/**
-	 * @brief ストリームを閉じる
+	 * @brief ストリームを閉じる.
 	 */
 	void close();
 
 private:
 	/**
-	 * @brief バッファーを指定した長さまで確保する
-	 * @param length 確保するバッファーの長さ
+	 * @brief バッファーを指定した長さまで確保する.
+	 * @param length 確保するバッファーの長さ.
 	 */
 	void ensureBufferLength(int length);
 };

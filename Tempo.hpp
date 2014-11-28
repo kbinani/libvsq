@@ -19,7 +19,7 @@
 VSQ_BEGIN_NAMESPACE
 
 /**
- * @brief テンポ情報テーブル内の要素を表現するクラス
+ * @brief テンポ情報テーブル内の要素を表現するクラス.
  */
 class Tempo
 {
@@ -27,77 +27,73 @@ class Tempo
 
 public:
 	/**
-	 * Tick 単位の時刻
-	 * @var int
+	 * @brief Tick 単位の時刻.
 	 */
 	tick_t clock;
 
 	/**
-	 * テンポ値。四分音符の長さをマイクロ秒単位で表した値
-	 * @var int
+	 * @brief テンポ値. 四分音符の長さをマイクロ秒単位で表した値.
 	 */
 	int tempo;
 
 protected:
 	/**
-	 * テンポ変更の秒単位の時刻
-	 * @var double
-	 * @access private
+	 * @brief テンポ変更の秒単位の時刻.
 	 */
 	double _time;
 
 public:
 	/**
-	 * @brief 文字列に変換する
-	 * @return (string) 変換後の文字列
+	 * @brief 文字列に変換する.
+	 * @return 変換後の文字列.
 	 */
 	const std::string toString() const;
 
 	/**
-	 * @brief 初期化を行う
-	 * @param clock (int) Tick 単位の時刻
-	 * @param tempo (int) テンポ値。四分音符の長さをマイクロ秒単位で表した値
+	 * @brief 初期化を行う.
+	 * @param clock Tick 単位の時刻.
+	 * @param tempo テンポ値. 四分音符の長さをマイクロ秒単位で表した値.
 	 */
 	Tempo(tick_t clock, int tempo);
 
 	Tempo();
 
 	/**
-	 * @brief 順序を比較する
-	 * @param entry (Tempo) 比較対象のアイテム
-	 * @return (int) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
+	 * @brief 順序を比較する.
+	 * @param entry 比較対象のアイテム.
+	 * @return このインスタンスが比較対象よりも小さい場合は負の整数, 等しい場合は 0, 大きい場合は正の整数を返す.
 	 */
-	int compareTo(const Tempo& entry) const;
+	int compareTo(Tempo const& entry) const;
 
 	/**
-	 * @brief このオブジェクトのインスタンスと、指定されたオブジェクトが同じかどうかを調べる
-	 * @param entry (Tempo) 比較対象のオブジェクト
-	 * @return (boolean) 比較対象と同じであれば <code>true</code> を、そうでなければ <code>false</code> を返す
+	 * @brief このオブジェクトのインスタンスと, 指定されたオブジェクトが同じかどうかを調べる.
+	 * @param entry 比較対象のオブジェクト.
+	 * @return 比較対象と同じであれば <code>true</code> を, そうでなければ <code>false</code> を返す.
 	 */
-	bool equals(const Tempo& entry) const;
+	bool equals(Tempo const& entry) const;
 
 	/**
-	 * @brief 秒単位の時刻を取得する
-	 * @return (double) 秒単位の時刻
+	 * @brief 秒単位の時刻を取得する.
+	 * @return 秒単位の時刻.
 	 */
 	double getTime() const;
 
 	/**
-	 * @brief コピーを作成する
-	 * @return このオブジェクトのコピー
+	 * @brief コピーを作成する.
+	 * @return このオブジェクトのコピー.
 	 */
 	Tempo clone() const;
 
 	/**
-	 * @brief 2 つの {@link Tempo} を比較する
-	 * @param a (Tempo) 比較対象のオブジェクト
-	 * @param b (Tempo) 比較対象のオブジェクト
-	 * @return (boolean) <code>a</code> が <code>b</code> よりも小さい場合は <code>true</code>、そうでない場合は <code>false</code> を返す
+	 * @brief 2 つの {@link Tempo} を比較する.
+	 * @param a 比較対象のオブジェクト.
+	 * @param b 比較対象のオブジェクト.
+	 * @return <code>a</code> が <code>b</code> よりも小さい場合は <code>true</code>, そうでない場合は <code>false</code> を返す.
 	 */
-	static bool compare(const Tempo& a, const Tempo& b);
+	static bool compare(Tempo const& a, Tempo const& b);
 
 private:
-	static int compareCore(const Tempo& a, const Tempo& b);
+	static int compareCore(Tempo const& a, Tempo const& b);
 };
 
 VSQ_END_NAMESPACE

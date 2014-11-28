@@ -21,7 +21,7 @@ Track::Track()
 	this->_initCor("Track1", "Miku");
 }
 
-Track::Track(std::string name, std::string singer)
+Track::Track(std::string const& name, std::string const& singer)
 {
 	this->_initCor(name, singer);
 }
@@ -57,7 +57,7 @@ EventListIndexIterator Track::getIndexIterator(EventListIndexIteratorKind::Event
 }
 
 /**
-	-- このトラックの再生モードを取得します．
+	-- このトラックの再生モードを取得します.
 	--
 	-- @return [int] PlayMode.PlayAfterSynthまたはPlayMode.PlayWithSynth
 	function this:getPlayMode()
@@ -73,7 +73,7 @@ EventListIndexIterator Track::getIndexIterator(EventListIndexIteratorKind::Event
 	*/
 
 /**
-	-- このトラックの再生モードを設定します．
+	-- このトラックの再生モードを設定します.
 	--
 	-- @param value [int] PlayMode.PlayAfterSynth, PlayMode.PlayWithSynth, またはPlayMode.Offのいずれかを指定します
 	-- @return [void]
@@ -95,7 +95,7 @@ EventListIndexIterator Track::getIndexIterator(EventListIndexIteratorKind::Event
 	*/
 
 /**
-	-- このトラックがレンダリングされるかどうかを取得します．
+	-- このトラックがレンダリングされるかどうかを取得します.
 	--
 	-- @return [bool]
 	function this:isTrackOn()
@@ -106,7 +106,7 @@ EventListIndexIterator Track::getIndexIterator(EventListIndexIteratorKind::Event
 	*/
 
 /**
-	-- このトラックがレンダリングされるかどうかを設定します，
+	-- このトラックがレンダリングされるかどうかを設定します,
 	--
 	-- @param value [bool]
 	function this:setTrackOn( value )
@@ -131,7 +131,7 @@ EventListIndexIterator Track::getIndexIterator(EventListIndexIteratorKind::Event
 	*/
 
 /**
-	-- このトラックの，指定したゲートタイムにおけるピッチベンドを取得します．単位はCentです．
+	-- このトラックの, 指定したゲートタイムにおけるピッチベンドを取得します. 単位はCentです.
 	--
 	-- @param clock [int] ピッチベンドを取得するゲートタイム
 	-- @return [double]
@@ -144,8 +144,8 @@ EventListIndexIterator Track::getIndexIterator(EventListIndexIteratorKind::Event
 	*/
 
 /**
-	-- クレッシェンド，デクレッシェンド，および強弱記号をダイナミクスカーブに反映させます．
-	-- この操作によって，ダイナミクスカーブに設定されたデータは全て削除されます．
+	-- クレッシェンド, デクレッシェンド, および強弱記号をダイナミクスカーブに反映させます.
+	-- この操作によって, ダイナミクスカーブに設定されたデータは全て削除されます.
 	-- @return [void]
 	function this:reflectDynamics()
 		local dyn = self.getCurve( "dyn" );
@@ -164,7 +164,7 @@ EventListIndexIterator Track::getIndexIterator(EventListIndexIteratorKind::Event
 				-- 強弱記号
 				dyn.add( clock, handle.getStartDyn() );
 			else
-				-- クレッシェンド，デクレッシェンド
+				-- クレッシェンド, デクレッシェンド
 				local start_dyn = dyn.getValue( clock );
 
 				-- 範囲内のアイテムを削除
@@ -234,7 +234,7 @@ EventListIndexIterator Track::getIndexIterator(EventListIndexIteratorKind::Event
 						last_clock = pointClock;
 					}
 
-					-- bplistの末尾から，clock => clock + lengthまでのデータ点を追加
+					-- bplistの末尾から, clock => clock + lengthまでのデータ点を追加
 					local last2 = last;
 					if( last_clock < clock + length ){
 						local a = (handle.getEndDyn() - last_val) / (clock + length - last_clock);
@@ -276,7 +276,7 @@ const Event* Track::getSingerEventAt(tick_t clock) const
 
 
 /**
-	-- このトラックに設定されているイベントを，ゲートタイム順に並べ替えます．
+	-- このトラックに設定されているイベントを, ゲートタイム順に並べ替えます.
 	--
 	-- @reutrn [void]
 	function this:sortEvent()
@@ -530,7 +530,7 @@ std::map<std::string, std::string> Track::getSectionNameMap() const
 	return result;
 }
 
-void Track::_initCor(std::string name, std::string singer)
+void Track::_initCor(std::string const& name, std::string const& singer)
 {
 	this->_common = Common(name, 179, 181, 123, DynamicsMode::EXPERT, PlayMode::PLAY_WITH_SYNTH);
 	this->_pit = BPList("pit", 0, -8192, 8191);

@@ -22,7 +22,7 @@ VSQ_BEGIN_NAMESPACE
 class OutputStream;
 
 /**
- * @brief ファイルへの出力を行う TextOutputStream の実装
+ * @brief ファイルへの出力を行う TextOutputStream の実装.
  */
 class StreamWriter : public TextOutputStream
 {
@@ -32,15 +32,15 @@ private:
 
 public:
 	/**
-	 * @brief 出力先のファイルパスを指定して初期化する
-	 * @param filePath 出力先のファイルパス
+	 * @brief 出力先のファイルパスを指定して初期化する.
+	 * @param filePath 出力先のファイルパス.
 	 */
 	explicit StreamWriter(std::string const& filePath);
 
 	/**
 	 * @brief Initialize writer by stream.
 	 * @param  stream  A stream. This stream is automatically closed
-	 *     when 'close' is called (however, not to be deleted)
+	 *     when 'close' is called (however, not to be deleted).
 	 */
 	explicit StreamWriter(OutputStream* stream);
 

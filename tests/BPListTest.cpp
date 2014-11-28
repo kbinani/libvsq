@@ -319,13 +319,13 @@ public:
 		CPPUNIT_ASSERT_EQUAL(1, idA);
 		CPPUNIT_ASSERT_EQUAL(11, list.getValue(0));
 
-		// 同じclockに値をaddすると、データ点は増えずに値が上書きされる
+		// 同じclockに値をaddすると, データ点は増えずに値が上書きされる
 		idA = list.add(480, 12);
 		CPPUNIT_ASSERT_EQUAL(1, list.size());
 		CPPUNIT_ASSERT_EQUAL(1, idA);
 		CPPUNIT_ASSERT_EQUAL(12, list.getValue(0));
 
-		// 既存の点より小さいclockに値をaddすると、並び替えが起こる
+		// 既存の点より小さいclockに値をaddすると, 並び替えが起こる
 		int idB = list.add(240, 99);
 		CPPUNIT_ASSERT_EQUAL(2, list.size());
 		CPPUNIT_ASSERT(idA != idB);
@@ -345,13 +345,13 @@ public:
 		CPPUNIT_ASSERT_EQUAL(11, list.getValue(0));
 		CPPUNIT_ASSERT_EQUAL(3, list.getMaxId());
 
-		// 同じclockに値をaddすると、データ点は増えずに値が上書きされる
+		// 同じclockに値をaddすると, データ点は増えずに値が上書きされる
 		idA = list.addWithId(480, 12, 4);
 		CPPUNIT_ASSERT_EQUAL(4, idA);
 		CPPUNIT_ASSERT_EQUAL(12, list.getValue(0));
 		CPPUNIT_ASSERT_EQUAL(4, list.getMaxId());
 
-		// 既存の点より小さいclockに値をaddすると、並び替えが起こる
+		// 既存の点より小さいclockに値をaddすると, 並び替えが起こる
 		int idB = list.addWithId(240, 99, 5);
 		CPPUNIT_ASSERT_EQUAL(5, idB);
 		CPPUNIT_ASSERT_EQUAL(5, list.getMaxId());

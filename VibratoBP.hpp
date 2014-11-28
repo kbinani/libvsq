@@ -18,22 +18,18 @@
 VSQ_BEGIN_NAMESPACE
 
 /**
- * ビブラートのデータポイント
- * @class table
- * @name VibratoBP
+ * @brief ビブラートのデータポイント.
  */
 class VibratoBP
 {
 public:
 	/**
-	 * データ点の X 値
-	 * @var double
+	 * @brief データ点の X 値.
 	 */
 	double x;
 
 	/**
-	 * データ点の Y 値
-	 * @var int
+	 * @brief データ点の Y 値.
 	 */
 	int y;
 
@@ -41,30 +37,29 @@ public:
 	VibratoBP();
 
 	/**
-	 * @brief 初期化を行う
-	 * @param x (double) x 軸の値
-	 * @param y (int) y 軸の値
-	 * @return (VibratoBP)
+	 * @brief 初期化を行う.
+	 * @param x x 軸の値.
+	 * @param y y 軸の値.
 	 */
 	VibratoBP(double x, int y);
 
 	/**
-	 * @brief 順序を比較する
-	 * @param item (VibratoBP) 比較対象のアイテム
-	 * @return (int) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
+	 * @brief 順序を比較する.
+	 * @param item 比較対象のアイテム.
+	 * @return このインスタンスが比較対象よりも小さい場合は負の整数, 等しい場合は 0, 大きい場合は正の整数を返す.
 	 */
-	int compareTo(const VibratoBP& item) const;
+	int compareTo(VibratoBP const& item) const;
 
 	/**
-	 * @brief 2 つの {@link VibratoBP} を比較する
-	 * @param a (VibratoBP) 比較対象のオブジェクト
-	 * @param b (VibratoBP) 比較対象のオブジェクト
-	 * @return (boolean) <code>a</code> が <code>b</code> よりも小さい場合は <code>true</code>、そうでない場合は <code>false</code> を返す
+	 * @brief 2 つの {@link VibratoBP} を比較する.
+	 * @param a 比較対象のオブジェクト.
+	 * @param b 比較対象のオブジェクト.
+	 * @return <code>a</code> が <code>b</code> よりも小さい場合は <code>true</code>, そうでない場合は <code>false</code> を返す.
 	 */
-	static bool compare(const VibratoBP& a, const VibratoBP& b);
+	static bool compare(VibratoBP const& a, VibratoBP const& b);
 
 private:
-	static int compareCore(const VibratoBP& a, const VibratoBP& b);
+	static int compareCore(VibratoBP const& a, VibratoBP const& b);
 };
 
 VSQ_END_NAMESPACE

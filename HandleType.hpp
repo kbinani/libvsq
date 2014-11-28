@@ -21,40 +21,33 @@ namespace HandleType
 {
 
 /**
- * @brief {@link Handle} の種類を表現する列挙子
- * @class table
- * @name HandleTypeEnum
+ * @brief {@link Handle} の種類を表現する列挙子.
  */
 enum HandleTypeEnum {
 	UNKNOWN = 0,
 
 	/**
-	 * 歌詞ハンドル
-	 * @var int
+	 * @brief 歌詞ハンドル.
 	 */
 	LYRIC = 1,
 
 	/**
-	 * ビブラートハンドル
-	 * @var int
+	 * @brief ビブラートハンドル.
 	 */
 	VIBRATO = 2,
 
 	/**
-	 * 歌手ハンドル
-	 * @var int
+	 * @brief 歌手ハンドル.
 	 */
 	SINGER = 3,
 
 	/**
-	 * アタックハンドル
-	 * @var int
+	 * @brief アタックハンドル.
 	 */
 	NOTE_HEAD = 4,
 
 	/**
-	 * Dynamics ハンドル
-	 * @var int
+	 * @brief Dynamics ハンドル.
 	 */
 	DYNAMICS = 5
 };

@@ -214,7 +214,7 @@ public:
 		noteEvent.lyricHandle.setLyricAt(0, Lyric("あ", "a"));
 		sequence.track(0)->common()->version = "DSB3";
 
-		// lastDelay が nil であるために、CVM_NM_VERSION_AND_DEVICE が出力されるケース
+		// lastDelay が nil であるために, CVM_NM_VERSION_AND_DEVICE が出力されるケース
 		int lastDelay;// = nil;
 		int noteLocation = 1;
 		int msPreSend = 500;
@@ -375,21 +375,21 @@ public:
 		CPPUNIT_ASSERT_EQUAL(false, item.hasLSB);
 		CPPUNIT_ASSERT(item.isMSBOmittingRequired);
 
-		// lastDelay が nil でないために、CVM_NM_VERSION_AND_DEVICE が出力されないパターン
+		// lastDelay が nil でないために, CVM_NM_VERSION_AND_DEVICE が出力されないパターン
 		lastDelay = 0;
 		actual = VocaloidMidiEventListFactoryStub::generateNoteNRPN(sequence.track(track), &sequence.tempoList, &noteEvent, msPreSend, noteLocation, &lastDelay, &delay);
 		actualExpanded = actual.expand();
 		CPPUNIT_ASSERT_EQUAL((size_t)23, actualExpanded.size());
 		CPPUNIT_ASSERT_EQUAL(500, delay);
 
-		// lastDelay が、該当音符についての delay と同じであるために、CVM_NM_DELAY が出力されないパターン
+		// lastDelay が, 該当音符についての delay と同じであるために, CVM_NM_DELAY が出力されないパターン
 		lastDelay = 500;
 		actual = VocaloidMidiEventListFactoryStub::generateNoteNRPN(sequence.track(track), &sequence.tempoList, &noteEvent, msPreSend, noteLocation, &lastDelay, &delay);
 		actualExpanded = actual.expand();
 		CPPUNIT_ASSERT_EQUAL((size_t)22, actualExpanded.size());
 		CPPUNIT_ASSERT_EQUAL(500, delay);
 
-		// vibratoHandle が nil であるために、CVM_NM_INDEX_OF_VIBRATO_DB, CVM_NM_VIBRATO_CONFIG, CVM_NM_VIBRATO_DELAY
+		// vibratoHandle が nil であるために, CVM_NM_INDEX_OF_VIBRATO_DB, CVM_NM_VIBRATO_CONFIG, CVM_NM_VIBRATO_DELAY
 		// が出力されないパターン
 		lastDelay = 500;
 		noteEvent.vibratoHandle = Handle();
@@ -399,7 +399,7 @@ public:
 		CPPUNIT_ASSERT_EQUAL(500, delay);
 
 		sequence.track(0)->common()->version = "DSB2";
-		// VOCALOID1 であるために、0x5011が出力され、CVM_NM_PHONETIC_SYMBOL_CONTINUATIONとVOCALOID2用のNRPNが出力されない
+		// VOCALOID1 であるために, 0x5011が出力され, CVM_NM_PHONETIC_SYMBOL_CONTINUATIONとVOCALOID2用のNRPNが出力されない
 		lastDelay = 500;
 		noteEvent.vibratoHandle = Handle();
 		actual = VocaloidMidiEventListFactoryStub::generateNoteNRPN(sequence.track(track), &sequence.tempoList, &noteEvent, msPreSend, noteLocation, &lastDelay, &delay);
@@ -485,7 +485,7 @@ public:
 		Event noteEvent(480, EventType::NOTE);
 		noteEvent.vibratoHandle = Handle();
 
-		// ビブラートがないため、NRPN が生成されない場合
+		// ビブラートがないため, NRPN が生成されない場合
 		vector<NrpnEvent> actual = VocaloidMidiEventListFactoryStub::generateVibratoNRPN(&sequence.tempoList, &noteEvent, 500);
 		CPPUNIT_ASSERT_EQUAL((size_t)0, actual.size());
 
@@ -599,7 +599,7 @@ public:
 		Sequence sequence("Foo", 1, 4, 4, 500000);
 		Track* track = sequence.track(0);
 
-		// 全種類のカーブに、データ点を1個ずつ入れる
+		// 全種類のカーブに, データ点を1個ずつ入れる
 		vector<string> curveNames;
 		curveNames.push_back("BRE");
 		curveNames.push_back("BRI");
@@ -634,8 +634,8 @@ public:
 		// VOCALOID1 の場合
 		track->common()->version = "DSB2";
 		vector<NrpnEvent> events = VocaloidMidiEventListFactoryStub::generateVoiceChangeParameterNRPN(track, &sequence.tempoList, 500, sequence.getPreMeasureClocks());
-		// 中身は見ない。各カーブに MIDI イベントが1つずつできることだけをチェック
-		// 各イベントの子にあたるイベントのテストは、test_addVoiceChangeParameters で行う
+		// 中身は見ない. 各カーブに MIDI イベントが1つずつできることだけをチェック
+		// 各イベントの子にあたるイベントのテストは, test_addVoiceChangeParameters で行う
 		// vocaloid1 で出力されるのは 18 種類 + DELAY イベント 1 個
 		CPPUNIT_ASSERT_EQUAL((size_t)(18 + 1), events.size());
 

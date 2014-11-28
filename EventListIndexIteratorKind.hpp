@@ -18,39 +18,39 @@
 VSQ_BEGIN_NAMESPACE
 
 /**
- * @brief IndexIterator の反復子の種類を表す列挙子
+ * @brief IndexIterator の反復子の種類を表す列挙子.
  */
 class EventListIndexIteratorKind
 {
 public:
 	enum EventListIndexIteratorKindEnum {
 		/**
-		 * @brief 全てのイベント
+		 * @brief 全てのイベント.
 		 */
 		ALL = 0xffff,
 
 		/**
-		 * @brief 歌手イベント
+		 * @brief 歌手イベント.
 		 */
 		SINGER = 1,
 
 		/**
-		 * @brief 音符イベント
+		 * @brief 音符イベント.
 		 */
 		NOTE = 2,
 
 		/**
-		 * @brief クレッシェンドイベント
+		 * @brief クレッシェンドイベント.
 		 */
 		CRESCENDO = 4,
 
 		/**
-		 * @brief デクレッシェンドイベント
+		 * @brief デクレッシェンドイベント.
 		 */
 		DECRESCENDO = 8,
 
 		/**
-		 * @brief 強弱記号イベント
+		 * @brief 強弱記号イベント.
 		 */
 		DYNAFF = 16
 	};

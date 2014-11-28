@@ -22,19 +22,18 @@
 VSQ_BEGIN_NAMESPACE
 
 /**
- * VSQ ファイルのメタテキスト内に記述されるイベントを表すクラス
- * @class table
- * @name Event
+ * @brief VSQ ファイルのメタテキスト内に記述されるイベントを表すクラス.
  */
 class Event
 {
-	friend class VSQFileReader; //TODO:Track::Track(TextStream &, ...)の機能がVSQFIleREaderに移動したら、ここは不要になるので消す
+	// TODO: Track::Track(TextStream &, ...)の機能がVSQFileReaderに移動したら, ここは不要になるので消す.
+	friend class VSQFileReader;
 public:
 	class ListIterator;
 	class ListConstIterator;
 
 	/**
-	 * @brief 固有 ID 付きの {@link Event} のリストを取り扱うクラス
+	 * @brief 固有 ID 付きの {@link Event} のリストを取り扱うクラス.
 	 */
 	class List
 	{
@@ -43,119 +42,119 @@ public:
 
 	protected:
 		/**
-		 * @brief イベントのリスト
+		 * @brief イベントのリスト.
 		 */
 		std::vector<Event*> _events;
 
 		/**
-		 * @brief イベントの ID のリスト
+		 * @brief イベントの ID のリスト.
 		 */
 		std::vector<int> _ids;
 
 	public:
 		List();
 
-		List(const List& list);
+		List(List const& list);
 
-		List& operator = (const List& list);
+		List& operator = (List const& list);
 
 		~List();
 
 		/**
-		 * @brief イベント ID を基にイベントを検索し、そのインデックスを返す
-		 * @param internalId 検索するイベント ID
-		 * @return 検索結果のインデックス(最初のインデックスは0)。イベントが見つからなければ負の値を返す
+		 * @brief イベント ID を基にイベントを検索し, そのインデックスを返す.
+		 * @param internalId 検索するイベント ID.
+		 * @return 検索結果のインデックス(最初のインデックスは0). イベントが見つからなければ負の値を返す.
 		 */
 		int findIndexFromId(int internalId) const;
 
 		/**
-		 * @brief イベント ID を基にイベントを検索し、そのオブジェクトを返す
-		 * @param internalId 検索するイベント ID
-		 * @return 検索結果のイベント。イベントが見つからなければ <code>nil</code> を返す
+		 * @brief イベント ID を基にイベントを検索し, そのオブジェクトを返す.
+		 * @param internalId 検索するイベント ID.
+		 * @return 検索結果のイベント. イベントが見つからなければ <code>nil</code> を返す.
 		 */
-		const Event* findFromId(int internalId) const;
+		Event const* findFromId(int internalId) const;
 
 		/**
-		 * @brief 指定されたイベント ID をもつイベントのオブジェクトを置き換える。イベントが見つからなければ何もしない
-		 * @param internalId 検索するイベント ID
-		 * @param value 置換するオブジェクト
+		 * @brief 指定されたイベント ID をもつイベントのオブジェクトを置き換える. イベントが見つからなければ何もしない.
+		 * @param internalId 検索するイベント ID.
+		 * @param value 置換するオブジェクト.
 		 */
 		void setForId(int internalId, const Event& value);
 
 		/**
-		 * @brief イベントを並べ替える
+		 * @brief イベントを並べ替える.
 		 */
 		void sort();
 
 		/**
-		 * @brief 全てのイベントを削除する
+		 * @brief 全てのイベントを削除する.
 		 */
 		void clear();
 
 		/**
-		 * @brief リスト内のイベントを順に返す反復子を取得する
-		 * @return 反復子
+		 * @brief リスト内のイベントを順に返す反復子を取得する.
+		 * @return 反復子.
 		 */
 		ListIterator iterator();
 
 		const ListConstIterator iterator() const;
 
 		/**
-		 * @brief イベントを追加する
-		 * @param item 追加するオブジェクト
-		 * @return 追加したオブジェクトに割り振られたイベント ID
+		 * @brief イベントを追加する.
+		 * @param item 追加するオブジェクト.
+		 * @return 追加したオブジェクトに割り振られたイベント ID.
 		 */
-		int add(const Event& item);
+		int add(Event const& item);
 
 		/**
-		 * @brief イベントを追加する
-		 * @param item 追加するオブジェクト
-		 * @param internalId 追加するオブジェクトに割り振るイベント ID
-		 * @return オブジェクトに割り振られたイベント ID
+		 * @brief イベントを追加する.
+		 * @param item 追加するオブジェクト.
+		 * @param internalId 追加するオブジェクトに割り振るイベント ID.
+		 * @return オブジェクトに割り振られたイベント ID.
 		 */
-		int add(const Event& item, int internalId);
+		int add(Event const& item, int internalId);
 
 		/**
-		 * @brief イベントを削除する
-		 * @param index 削除するイベントのインデックス(最初のインデックスは0)
+		 * @brief イベントを削除する.
+		 * @param index 削除するイベントのインデックス(最初のインデックスは0).
 		 */
 		void removeAt(int index);
 
 		/**
-		 * @brief イベントの個数を返す
-		 * @return データ点の個数
+		 * @brief イベントの個数を返す.
+		 * @return データ点の個数.
 		 */
 		int size() const;
 
 		/**
-		 * @brief 指定したインデックスのイベントを取得する
-		 * @param index インデックス(最初のインデックスは0)
-		 * @return イベント
+		 * @brief 指定したインデックスのイベントを取得する.
+		 * @param index インデックス(最初のインデックスは0).
+		 * @return イベント.
 		 */
-		const Event* get(int index) const;
+		Event const* get(int index) const;
 
 		/**
-		 * @brief 指定したインデックスのイベントを設定する
-		 * @param index インデックス(最初のインデックスは0)
-		 * @param value 設定するイベント
+		 * @brief 指定したインデックスのイベントを設定する.
+		 * @param index インデックス(最初のインデックスは0).
+		 * @param value 設定するイベント.
 		 */
-		void set(int index, const Event& value);
+		void set(int index, Event const& value);
 
 		/**
-		 * @brief リスト内部のイベント ID のデータを更新する
+		 * @brief リスト内部のイベント ID のデータを更新する.
 		 */
 		void updateIdList();
 
 	private:
 		/**
-		 * @brief イベントを追加する
-		 * @param item 追加するオブジェクト
-		 * @param internal_id 追加するオブジェクトに割り振るイベント ID
+		 * @brief イベントを追加する.
+		 * @param item 追加するオブジェクト.
+		 * @param internal_id 追加するオブジェクトに割り振るイベント ID.
 		 */
-		void _addCor(const Event& item, int internalId);
+		void _addCor(Event const& item, int internalId);
 
 		/**
-		 * @brief イベントに割り振る ID を取得する
+		 * @brief イベントに割り振る ID を取得する.
 		 * @param next
 		 * @return
 		 */
@@ -165,41 +164,41 @@ public:
 		 * @brief Deep copy member fields.
 		 * @param list Copy source.
 		 */
-		void copy(const List& list);
+		void copy(List const& list);
 	};
 
 	/**
-	 * @brief イベントリストのアイテムを順に返す反復子
+	 * @brief イベントリストのアイテムを順に返す反復子.
 	 */
 	class ListConstIterator
 	{
 	protected:
 		/**
-		 * @brief 反復子の元になるリスト
+		 * @brief 反復子の元になるリスト.
 		 */
 		const List* _list;
 
 		/**
-		 * @brief 反復子の現在の位置
+		 * @brief 反復子の現在の位置.
 		 */
 		int _pos;
 
 	public:
 		/**
-		 * @brief 初期化を行う
-		 * @param list 反復子の元になるリスト
+		 * @brief 初期化を行う.
+		 * @param list 反復子の元になるリスト.
 		 */
-		ListConstIterator(const List* list);
+		ListConstIterator(List const* list);
 
 		/**
-		 * @brief 反復子が次の要素を持つ場合に <code>true</code> を返す
-		 * @return 反復子がさらに要素を持つ場合は <code>true</code> を、そうでなければ <code>false</code> を返す
+		 * @brief 反復子が次の要素を持つ場合に <code>true</code> を返す.
+		 * @return 反復子がさらに要素を持つ場合は <code>true</code> を, そうでなければ <code>false</code> を返す.
 		 */
 		bool hasNext();
 
 		/**
-		 * @brief 反復子の次の要素を返す
-		 * @return 次の要素
+		 * @brief 反復子の次の要素を返す.
+		 * @return 次の要素.
 		 */
 		Event* next();
 	};
@@ -213,7 +212,7 @@ public:
 		explicit ListIterator(List* list);
 
 		/**
-		 * @brief 反復子によって最後に返された要素を削除する
+		 * @brief 反復子によって最後に返された要素を削除する.
 		 */
 		void remove();
 	};
@@ -234,199 +233,167 @@ public:
 	static const int MIN_NOTE_NUMBER = 0;
 
 	/**
-	 * イベントに付けるタグ文字列
-	 * @var string
+	 * @brief イベントに付けるタグ文字列.
 	 */
 	std::string tag;
 
 	/**
-	 * 内部で使用するオブジェクト固有の ID
-	 * @var int
+	 * @brief 内部で使用するオブジェクト固有の ID.
 	 */
 	int id;
 
 	/**
-	 * Tick 単位の時刻
-	 * @var int
+	 * @brief Tick 単位の時刻.
 	 */
 	tick_t clock;
 
 	/**
-	 * イベントの種類
-	 * @var EventTypeEnum
-	 * @todo private|protectedにするべきでは
+	 * @brief イベントの種類.
+	 * @todo private|protected にするべきでは.
 	 */
 	EventType::EventTypeEnum type;
 
 	/**
-	 * @brief 歌手ハンドル
+	 * @brief 歌手ハンドル.
 	 */
 	Handle singerHandle;
 
 	/**
-	 * ノート番号
-	 * @var int
+	 * @brief ノート番号.
 	 */
 	int note;
 
 	/**
-	 * ベロシティ
-	 * @var int
+	 * @brief ベロシティ.
 	 */
 	int dynamics;
 
 	/**
-	 * ベンド深さ
-	 * @var int
+	 * @brief ベンド深さ.
 	 */
 	int pmBendDepth;
 
 	/**
-	 * ベンド長さ
-	 * @var int
+	 * @brief ベンド長さ.
 	 */
 	int pmBendLength;
 
 	/**
-	 * ポルタメント
-	 * @var int
+	 * @brief ポルタメント.
 	 */
 	int pmbPortamentoUse;
 
 	/**
-	 * ディケイ
-	 * @var int
+	 * @brief ディケイ.
 	 */
 	int demDecGainRate;
 
 	/**
-	 * アクセント
-	 * @var int
+	 * @brief アクセント.
 	 */
 	int demAccent ;
 
 	/**
-	 * @brief 歌詞ハンドル
+	 * @brief 歌詞ハンドル.
 	 */
 	Handle lyricHandle;
 
 	/**
-	 * @brief ビブラートハンドル
+	 * @brief ビブラートハンドル.
 	 */
 	Handle vibratoHandle;
 
 	/**
-	 * イベント先頭から測った、ビブラートの開始位置(Tick 単位)
-	 * @var int
+	 * @brief イベント先頭から測った, ビブラートの開始位置(Tick 単位).
 	 */
 	int vibratoDelay ;
 
 	/**
-	 * @brief アタックハンドル
+	 * @brief アタックハンドル.
 	 */
 	Handle noteHeadHandle;
 
-	/**
-	 * @var int
-	 */
 	int pMeanOnsetFirstNote;
 
-	/**
-	 * @var int
-	 */
 	int vMeanNoteTransition;
 
-	/**
-	 * @var int
-	 */
 	int d4mean;
 
-	/**
-	 * @var int
-	 */
 	int pMeanEndingNote;
 
 	/**
-	 * @brief 強弱記号ハンドル
-	 * @todo 型をHandle*に変える
+	 * @brief 強弱記号ハンドル.
+	 * @todo 型をHandle*に変える.
 	 */
 	Handle iconDynamicsHandle;
 
 protected:
 	/**
-	 * @brief EOSイベントかどうか
+	 * @brief EOSイベントかどうか.
 	 */
 	bool isEos;
 
 private:
 	/**
-	 * Tick 単位のイベント長さ
-	 * @var int
-	 * @access private
+	 * @brief Tick 単位のイベント長さ.
 	 */
 	tick_t _length;
 
-	/**
-	 * @todo 未実装
-	 * @var UstEvent
-	UstEvent ustEvent = nil;
-	 */
-
 public:
 	/**
-	 * @brief 初期化を行う
-	 * @param line (string) VSQ メタテキスト中の [EventList] セクション内のイベント宣言文字列(ex."480=ID#0001")
+	 * @brief 初期化を行う.
+	 * @param line VSQ メタテキスト中の [EventList] セクション内のイベント宣言文字列(ex."480=ID#0001").
 	 */
 	explicit Event(std::string const& line);
 
 	/**
-	 * @brief 初期化を行う。この初期化メソッドは末尾のイベントリストを表すインスタンスを初期化する
+	 * @brief 初期化を行う. この初期化メソッドは末尾のイベントリストを表すインスタンスを初期化する.
 	 */
 	Event();
 
 	/**
-	 * @brief 初期化を行う
-	 * @param clock (int) Tick 単位の時刻
-	 * @param eventType (EventTypeEnum) イベントの種類
+	 * @brief 初期化を行う.
+	 * @param clock Tick 単位の時刻.
+	 * @param eventType イベントの種類.
 	 */
 	Event(tick_t clock, EventType::EventTypeEnum eventType);
 
 	/**
-	 * @brief 長さを取得する
-	 * @return (int) 長さ
+	 * @brief 長さを取得する.
+	 * @return 長さ.
 	 */
 	tick_t getLength() const;
 
 	/**
-	 * @brief 長さを設定する
-	 * @param value (int) 長さ
+	 * @brief 長さを設定する.
+	 * @param value 長さ.
 	 */
 	void setLength(tick_t value);
 
 	/**
-	 * @brief コピーを作成する
-	 * @return (Event) このインスタンスのコピー
+	 * @brief コピーを作成する.
+	 * @return このインスタンスのコピー.
 	 */
 	Event clone() const;
 
 	/**
-	 * このオブジェクトがイベントリストの末尾の要素( EOS )かどうかを取得する
-	 * @return (boolean) このオブジェクトが EOS 要素であれば <code>true</code> を、そうでなければ <code>false</code> を返す
+	 * @brief このオブジェクトがイベントリストの末尾の要素( EOS )かどうかを取得する.
+	 * @return このオブジェクトが EOS 要素であれば <code>true</code> を, そうでなければ <code>false</code> を返す.
 	 */
 	bool isEOS() const;
 
 	/**
-	 * @brief 順序を比較する
-	 * @param item (Event) 比較対象のアイテム
-	 * @return (int) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
+	 * @brief 順序を比較する.
+	 * @param item 比較対象のアイテム.
+	 * @return このインスタンスが比較対象よりも小さい場合は負の整数, 等しい場合は 0, 大きい場合は正の整数を返す.
 	 */
 	int compareTo(const Event& item) const;
 
 	/**
-	 * @brief 2 つの {@link Event} を比較する
-	 * @param a (Event) 比較対象のオブジェクト
-	 * @param b (Event) 比較対象のオブジェクト
-	 * @return (boolean) <code>a</code> が <code>b</code> よりも小さい場合は <code>true</code>、そうでない場合は <code>false</code> を返す
+	 * @brief 2 つの {@link Event} を比較する.
+	 * @param a 比較対象のオブジェクト.
+	 * @param b 比較対象のオブジェクト.
+	 * @return <code>a</code> が <code>b</code> よりも小さい場合は <code>true</code>, そうでない場合は <code>false</code> を返す.
 	 */
 	static bool compare(Event const& a, Event const& b);
 
@@ -438,16 +405,16 @@ public:
 	static bool comp(Event const* a, Event const* b);
 
 	/**
-	 * @brief イベントリストの末尾の要素を表すオブジェクトを取得する
-	 * @return (Event) オブジェクト
+	 * @brief イベントリストの末尾の要素を表すオブジェクトを取得する.
+	 * @return オブジェクト.
 	 */
 	static const Event getEOS();
 
 	/*
-	    -- @param item [VsqEvent]
-	    -- @return [bool]
-	    -- @todo 実装できたら、TrackTest::testGetIndexIteratorNote, testGetIndexIteratorDynamics
-	             の中のequals使うassertionを復活させること
+	 * @param item [VsqEvent]
+	 * @return [bool]
+	 * @todo 実装できたら, TrackTest::testGetIndexIteratorNote, testGetIndexIteratorDynamics
+	 *       の中のequals使うassertionを復活させること
 	bool equals(Event const& other) const;
 	 */
 

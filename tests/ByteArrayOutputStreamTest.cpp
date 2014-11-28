@@ -50,11 +50,11 @@ public:
 	{
 		ByteArrayOutputStream stream;
 
-		// 負の値を指定した場合、0になる
+		// 負の値を指定した場合, 0になる
 		stream.seek(-100);
 		CPPUNIT_ASSERT_EQUAL((int64_t)0, stream.getPointer());
 
-		// 初期に確保されるバッファーより後ろにseekしても、正しくseekできる
+		// 初期に確保されるバッファーより後ろにseekしても, 正しくseekできる
 		stream.seek(ByteArrayOutputStreamStub::getUnitBufferLength() + 10);
 		stream.write((int)'a');
 

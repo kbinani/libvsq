@@ -1,5 +1,5 @@
 /**
- * BP.h
+ * BP.hpp
  * Copyright © 2012,2014 kbinani
  *
  * This file is part of libvsq.
@@ -13,26 +13,26 @@
  */
 #pragma once
 
-#include "./BasicTypes.hpp"
+#include "./Namespace.hpp"
 
 VSQ_BEGIN_NAMESPACE
 
 /**
- * @brief コントロールカーブのデータ点を表現するクラス
+ * @brief コントロールカーブのデータ点を表現するクラス.
  */
 class BP
 {
 public:
 	/**
-	 * @brief コンストラクタ
-	 * @param value (int) データ点の値
-	 * @param id (int) データ点のユニーク ID
+	 * @brief コンストラクタ.
+	 * @param[in] value データ点の値.
+	 * @param[in] id データ点のユニーク ID.
 	 */
 	BP(int value, int id);
 
 	/**
-	 * @brief コピーを作成する
-	 * @return (BP) このインスタンスのコピー
+	 * @brief コピーを作成する.
+	 * @return このインスタンスのコピー.
 	 */
 	BP clone() const;
 
@@ -41,12 +41,12 @@ private:
 
 public:
 	/**
-	 * @brief データ点の値
+	 * @brief データ点の値.
 	 */
 	int value;
 
 	/**
-	 * @brief データ点のユニーク ID
+	 * @brief データ点のユニーク ID.
 	 */
 	int id;
 };

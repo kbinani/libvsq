@@ -170,87 +170,81 @@ protected:
 	static NrpnEvent generateNoteNRPN(Track* track, TempoList* tempoList, const Event* noteEvent, int msPreSend, int noteLocation, int* lastDelay, int* delay);
 
 	/**
-	 * @brief 指定したシーケンスの指定したトラックから、PitchBend の NRPN リストを作成する
-	 * @param sequence (Sequence) 出力元のシーケンス
-	 * @param track (int) 出力するトラックの番号
-	 * @param msPreSend (int) ミリ秒単位のプリセンド時間
-	 * @return (table<NrpnEvent>) NrpnEvent の配列
+	 * @brief 指定したシーケンスの指定したトラックから, PitchBend の NRPN リストを作成する.
+	 * @param sequence 出力元のシーケンス.
+	 * @param track 出力するトラックの番号.
+	 * @param msPreSend ミリ秒単位のプリセンド時間.
+	 * @return NrpnEvent の配列.
 	 */
 	static std::vector<NrpnEvent> generatePitchBendNRPN(Track* track, TempoList* tempoList, int msPreSend);
 
 	/**
-	 * @brief 指定したシーケンスの指定したトラックから、PitchBendSensitivity の NRPN リストを作成する
-	 * @param sequence (Sequence) 出力元のシーケンス
-	 * @param track (int) 出力するトラックの番号
-	 * @param msPreSend (int) ミリ秒単位のプリセンド時間
-	 * @return (table<NrpnEvent>) NrpnEvent の配列
+	 * @brief 指定したシーケンスの指定したトラックから, PitchBendSensitivity の NRPN リストを作成する.
+	 * @param sequence 出力元のシーケンス.
+	 * @param track 出力するトラックの番号.
+	 * @param msPreSend ミリ秒単位のプリセンド時間.
+	 * @return NrpnEvent の配列.
 	 */
 	static std::vector<NrpnEvent> generatePitchBendSensitivityNRPN(Track* track, TempoList* tempoList, int msPreSend);
 
 	/**
-	 * @brief トラックの音符イベントから、ビブラート出力用の NRPN のリストを作成する
-	 * @param sequence (Sequence) 出力元のシーケンス
-	 * @param noteEvent (Event) 出力する音符イベント
-	 * @param msPreSend (int) ミリ秒単位のプリセンド時間
-	 * @return (table<NrpnEvent>) NrpnEvent の配列
+	 * @brief トラックの音符イベントから, ビブラート出力用の NRPN のリストを作成する.
+	 * @param sequence 出力元のシーケンス.
+	 * @param noteEvent 出力する音符イベント.
+	 * @param msPreSend ミリ秒単位のプリセンド時間.
+	 * @return NrpnEvent の配列.
 	 */
 	static std::vector<NrpnEvent> generateVibratoNRPN(TempoList* tempoList, const Event* noteEvent, int msPreSend);
 
 	/**
-	 * @brief 指定したシーケンスの指定したトラックから、VoiceChangeParameter の NRPN リストを作成する
-	 * @param sequence (Sequence) 出力元のシーケンス
-	 * @param track (int) 出力するトラックの番号
-	 * @param msPreSend (int) ミリ秒単位のプリセンド時間
-	 * @return (table<NrpnEvent>) NrpnEvent の配列
+	 * @brief 指定したシーケンスの指定したトラックから, VoiceChangeParameter の NRPN リストを作成する.
+	 * @param sequence 出力元のシーケンス.
+	 * @param track 出力するトラックの番号.
+	 * @param msPreSend ミリ秒単位のプリセンド時間.
+	 * @return NrpnEvent の配列.
 	 */
 	static std::vector<NrpnEvent> generateVoiceChangeParameterNRPN(Track* track, TempoList* tempoList, int msPreSend, tick_t premeasure_clock);
 
-	/**
-	 * @param vsq [VsqFile]
-	 * @param track [int]
-	 * @param msPreSend [int]
-	 * @return [VsqNrpn[] ]
-	 */
 	static std::vector<NrpnEvent> generateFx2DepthNRPN(Track* track, TempoList* tempoList, int preSendMilliseconds);
 
 	/**
-	 * @brief Voice Change Parameter の NRPN を追加する
-	 * @param dest (table) 追加先のテーブル
-	 * @param list (BPList) Voice Change Parameter のデータ点が格納された BPList
-	 * @param sequence (Sequence) シーケンス
-	 * @param msPreSend (int) ミリ秒単位のプリセンド時間
-	 * @param lastDelay (int) 直前の delay 値(ミリ秒単位)
-	 * @return (int) delay 値(ミリ秒単位)
+	 * @brief Voice Change Parameter の NRPN を追加する.
+	 * @param dest 追加先のテーブル.
+	 * @param list Voice Change Parameter のデータ点が格納された BPList.
+	 * @param sequence シーケンス.
+	 * @param msPreSend ミリ秒単位のプリセンド時間.
+	 * @param lastDelay 直前の delay 値(ミリ秒単位).
+	 * @return delay 値(ミリ秒単位).
 	 */
 	static int addVoiceChangeParameters(std::vector<NrpnEvent>& dest, BPList* list, TempoList* tempoList, int msPreSend, int lastDelay);
 
 	/**
-	 * @brief 指定した時刻における、プリセンド込の時刻と、ディレイを取得する
-	 * @param tempoList テンポ情報
-	 * @param clock (int) Tick 単位の時刻
-	 * @param msPreSend (int) ミリ秒単位のプリセンド時間
-	 * @return (int) プリセンド分のクロックを引いた Tick 単位の時刻
-	 * @return (int) ミリ秒単位のプリセンド時間
+	 * @brief 指定した時刻における, プリセンド込の時刻と, ディレイを取得する.
+	 * @param tempoList テンポ情報.
+	 * @param clock Tick 単位の時刻.
+	 * @param msPreSend ミリ秒単位のプリセンド時間.
+	 * @param[out] actualClock プリセンド分のクロックを引いた Tick 単位の時刻.
+	 * @param[out] delay ミリ秒単位のプリセンド時間.
 	 */
 	static void _getActualClockAndDelay(TempoList* tempoList, tick_t clock, int msPreSend, tick_t* actualClock, int* delay);
 
 	/**
-	 * @brief DATA の値を MSB と LSB に分解する
-	 * @param value (int) 分解する値
-	 * @param (int) MSB の値
-	 * @param (int) LSB の値
+	 * @brief DATA の値を MSB と LSB に分解する.
+	 * @param value 分解する値.
+	 * @param[out] MSB の値.
+	 * @param[out] LSB の値.
 	 */
 	static void _getMsbAndLsb(int value, int* msb, int* lsb);
 
 private:
 	/**
-	 * @brief データ点のリストから、NRPN のリストを作成する
-	 * @param result 作成した NRPN のリストの格納先
-	 * @param tempoList テンポ情報
-	 * @param preSendMilliseconds ミリ秒単位のプリセンド秒
-	 * @param list NRPN リストの元になるデータのリスト
-	 * @param delayNrpnType delay を指定する際の NRPN のタイプ
-	 * @param nrpnType データ点の値を指定する際の NRPN のタイプ
+	 * @brief データ点のリストから, NRPN のリストを作成する.
+	 * @param[out] result 作成した NRPN のリストの格納先.
+	 * @param tempoList テンポ情報.
+	 * @param preSendMilliseconds ミリ秒単位のプリセンド秒.
+	 * @param list NRPN リストの元になるデータのリスト.
+	 * @param delayNrpnType delay を指定する際の NRPN のタイプ.
+	 * @param nrpnType データ点の値を指定する際の NRPN のタイプ.
 	 */
 	static void generateNRPNByBPList(
 		std::vector<NrpnEvent>& result,

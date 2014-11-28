@@ -33,7 +33,7 @@ public:
 		list.add(a, 0);
 		list.add(b, 1);
 
-		// aのほうがclockが大きいので、後ろに並び替えられる
+		// aのほうがclockが大きいので, 後ろに並び替えられる
 		CPPUNIT_ASSERT_EQUAL(0, list.findIndexFromId(1));
 		CPPUNIT_ASSERT_EQUAL(1, list.findIndexFromId(0));
 	}
@@ -68,7 +68,7 @@ public:
 		CPPUNIT_ASSERT_EQUAL(10, listA.get(0)->id);
 		CPPUNIT_ASSERT_EQUAL(90, listA.get(0)->note);
 
-		// 無効なinternalIdを渡すので、setが行われない場合
+		// 無効なinternalIdを渡すので, setが行われない場合
 		Event::List listB;
 		listB.add(event, 10);
 		listB.setForId(9999, replace);
@@ -117,7 +117,7 @@ public:
 		int idOfA = list.add(a);
 		int idOfB = list.add(b);
 
-		// bよりaのほうがclockが大きいので、並べ替えが起きるはず
+		// bよりaのほうがclockが大きいので, 並べ替えが起きるはず
 		CPPUNIT_ASSERT_EQUAL(idOfB, list.get(0)->id);
 		CPPUNIT_ASSERT_EQUAL(idOfA, list.get(1)->id);
 		CPPUNIT_ASSERT(idOfA != idOfB);

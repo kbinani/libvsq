@@ -20,7 +20,7 @@
 VSQ_BEGIN_NAMESPACE
 
 /**
- * @brief ファイルからの読み込みストリーム
+ * @brief ファイルからの読み込みストリーム.
  */
 class FileInputStream : public InputStream
 {
@@ -31,33 +31,33 @@ public:
 	explicit FileInputStream(std::string const& filePath);
 
 	/**
-	 * @brief 1 バイトを読み込む
-	 * @return 読み込んだバイト値
+	 * @brief 1 バイトを読み込む.
+	 * @return 読み込んだバイト値.
 	 */
 	int read();
 
 	/**
-	 * @brief バッファーに読み込む
-	 * @param buffer 読み込んだデータを格納するバッファー
-	 * @param startIndex 読み込んだデータを格納するオフセット
-	 * @param length 読み込む長さ
+	 * @brief バッファーに読み込む.
+	 * @param buffer 読み込んだデータを格納するバッファー.
+	 * @param startIndex 読み込んだデータを格納するオフセット.
+	 * @param length 読み込む長さ.
 	 */
 	int read(char* buffer, int64_t startIndex, int64_t length);
 
 	/**
-	 * @brief ファイルポインターを移動する
-	 * @param position ファイルポインター
+	 * @brief ファイルポインターを移動する.
+	 * @param position ファイルポインター.
 	 */
 	void seek(int64_t position);
 
 	/**
-	 * @brief ファイルポインターを取得する
-	 * @return ファイルポインター
+	 * @brief ファイルポインターを取得する.
+	 * @return ファイルポインター.
 	 */
 	int64_t getPointer();
 
 	/**
-	 * @brief ストリームを閉じる
+	 * @brief ストリームを閉じる.
 	 */
 	void close();
 };

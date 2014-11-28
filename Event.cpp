@@ -334,7 +334,7 @@ const Event Event::getEOS()
 /**
 	-- @param item [VsqEvent]
 	-- @return [bool]
-	-- @todo 実装できたら、TrackTest::testGetIndexIteratorNote, testGetIndexIteratorDynamics
+	-- @todo 実装できたら, TrackTest::testGetIndexIteratorNote, testGetIndexIteratorDynamics
 			 の中のequals使うassertionを復活させること
 	function this:equals( item )
 		if( self.clock ~= item.clock )then

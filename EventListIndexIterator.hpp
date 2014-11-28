@@ -19,72 +19,72 @@
 VSQ_BEGIN_NAMESPACE
 
 /**
- * @brief イベントリスト中の、インデックスを順に返す反復子
+ * @brief イベントリスト中の, インデックスを順に返す反復子.
  */
 class EventListIndexIterator
 {
 private:
 	/**
-	 * @brief 反復子の元になるリスト
+	 * @brief 反復子の元になるリスト.
 	 */
 	const Event::List* _list;
 
 	/**
-	 * @brief next メソッドで最後に返したインデックス
+	 * @brief next メソッドで最後に返したインデックス.
 	 */
 	int _pos;
 
 	/**
-	 * @brief 歌手イベントを対象に含めるかどうか
+	 * @brief 歌手イベントを対象に含めるかどうか.
 	 */
 	bool _kindSinger;
 
 	/**
-	 * @brief 音符イベントを対象に含めるかどうか
+	 * @brief 音符イベントを対象に含めるかどうか.
 	 */
 	bool _kindNote;
 
 	/**
-	 * @brief クレッシェンドイベントを対象に含めるかどうか
+	 * @brief クレッシェンドイベントを対象に含めるかどうか.
 	 */
 	bool _kindCrescend;
 
 	/**
-	 * @brief デクレッシェンドイベントを対象に含めるかどうか
+	 * @brief デクレッシェンドイベントを対象に含めるかどうか.
 	 */
 	bool _kindDecrescend;
 
 	/**
-	 * @brief 強弱記号イベントを対象に含めるかどうか
+	 * @brief 強弱記号イベントを対象に含めるかどうか.
 	 */
 	bool _kindDynaff;
 
 public:
 	/**
-	 * @brief 初期化を行う
-	 * @param list (EventList) 反復子の元になるリスト
-	 * @param iteratorKind (EventList.IndexIteratorKindEnum) 反復子の種類
+	 * @brief 初期化を行う.
+	 * @param list 反復子の元になるリスト.
+	 * @param iteratorKind 反復子の種類.
 	 *
-	 * @todo iteratorKind の型を EventListIndexIteratorKind にできないか？
+	 * @todo iteratorKind の型を EventListIndexIteratorKind にできないか?
 	 */
 	EventListIndexIterator(const Event::List* list, int iteratorKind);
 
 	/**
-	 * @brief 反復子の次の要素を返す
-	 * @return (int) 次の要素
+	 * @brief 反復子の次の要素を返す.
+	 * @return 次の要素.
 	 */
 	int next();
 
 	/**
-	 * @brief 反復子が次の要素を持つ場合に <code>true</code> を返す
-	 * @return (boolean) 反復子がさらに要素を持つ場合は <code>true</code> を、そうでなければ <code>false</code> を返す
+	 * @brief 反復子が次の要素を持つ場合に <code>true</code> を返す.
+	 * @return 反復子がさらに要素を持つ場合は <code>true</code> を, そうでなければ <code>false</code> を返す.
 	 */
 	bool hasNext() const;
 
 private:
 	/**
-	 * @brief 反復子の次の要素を探索する
-	 * @return (int) 次のインデックス
+	 * @brief 反復子の次の要素を探索する.
+	 * @return 次のインデックス.
 	 */
 	int _nextPosition() const;
 };

@@ -18,51 +18,50 @@
 VSQ_BEGIN_NAMESPACE
 
 /**
- * 小節を区切る線を表現するクラス
+ * @brief 小節を区切る線を表現するクラス.
  */
 class MeasureLine
 {
 public:
 	/**
-	 * @brief tick 単位の時刻
+	 * @brief tick 単位の時刻.
 	 */
 	tick_t tick;
 
 	/**
-	 * @brief 小節の境界かどうか
+	 * @brief 小節の境界かどうか.
 	 */
 	bool isBorder;
 
 	/**
-	 * @brief 補助線かどうか
+	 * @brief 補助線かどうか.
 	 */
 	bool isAssistLine;
 
 	/**
-	 * @brief 小節数
+	 * @brief 小節数.
 	 */
 	int barCount;
 
 	/**
-	 * @brief 拍子の分子
+	 * @brief 拍子の分子.
 	 */
 	int numerator;
 
 	/**
-	 * @brief 拍子の分母
+	 * @brief 拍子の分母.
 	 */
 	int denominator;
 
 public:
-	MeasureLine(tick_t tick, int barCount, int numerator, int denominator, bool isBorder, bool isAssistLine)
-	{
-		this->tick = tick;
-		this->barCount = barCount;
-		this->numerator = numerator;
-		this->denominator = denominator;
-		this->isBorder = isBorder;
-		this->isAssistLine = isAssistLine;
-	}
+	MeasureLine(tick_t tick_, int barCount_, int numerator_, int denominator_, bool isBorder_, bool isAssistLine_)
+		: tick(tick_)
+		, isBorder(isBorder_)
+		, isAssistLine(isAssistLine_)
+		, barCount(barCount_)
+		, numerator(numerator_)
+		, denominator(denominator_)
+	{}
 };
 
 VSQ_END_NAMESPACE

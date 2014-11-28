@@ -22,66 +22,66 @@ VSQ_BEGIN_NAMESPACE
 class TextStream;
 
 /**
- * @brief VSQ ファイルのメタテキストの [Mixer] セクションに記録される内容を取り扱うクラス
+ * @brief VSQ ファイルのメタテキストの [Mixer] セクションに記録される内容を取り扱うクラス.
  */
 class Mixer
 {
 public:
 	/**
-	 * @brief MasterFader 値
+	 * @brief MasterFader 値.
 	 */
-	int masterFeder;// = 0;
+	int masterFeder;
 
 	/**
-	 * @brief MasterMute 値
+	 * @brief MasterMute 値.
 	 */
-	int masterMute;// = 0;
+	int masterMute;
 
 	/**
-	 * @brief MasterPanpot 値
+	 * @brief MasterPanpot 値.
 	 */
-	int masterPanpot;// = 0;
+	int masterPanpot;
 
 	/**
-	 * @brief OutputMode 値
+	 * @brief OutputMode 値.
 	 */
-	int outputMode;// = 0;
+	int outputMode;
 
 	/**
-	 * @brief 各トラックのミキサー情報
+	 * @brief 各トラックのミキサー情報.
 	 */
 	std::vector<MixerItem> slave;
 
 	/**
-	 * @brief 初期化を行う
+	 * @brief 初期化を行う.
 	 */
 	Mixer();
 
 	/**
-	 * @brief 各パラメータを指定し、初期化を行う
-	 * @param masterFeder MasterFader 値
-	 * @param masterPanpot MasterPanpot 値
-	 * @param masterMute MasterMute 値
-	 * @param outputMode OutputMode 値
+	 * @brief 各パラメータを指定し, 初期化を行う.
+	 * @param masterFeder MasterFader 値.
+	 * @param masterPanpot MasterPanpot 値.
+	 * @param masterMute MasterMute 値.
+	 * @param outputMode OutputMode 値.
 	 */
 	Mixer(int masterFeder, int masterPanpot, int masterMute, int outputMode);
 
 	/**
-	 * @brief テキストストリームから読み込みを行い、初期化を行う
-	 * @param stream (TextStream) 読み込むテキストストリーム
-	 * @param lastLine (table) 読み込んだ最後の行。テーブルの ["value"] に文字列が格納される
+	 * @brief テキストストリームから読み込みを行い, 初期化を行う.
+	 * @param stream 読み込むテキストストリーム.
+	 * @param lastLine 読み込んだ最後の行. テーブルの ["value"] に文字列が格納される.
 	 */
 	Mixer(TextStream& stream, std::string& lastLine);
 
 	/**
-	 * @brief コピーを作成する
-	 * @return このオブジェクトのコピー
+	 * @brief コピーを作成する.
+	 * @return このオブジェクトのコピー.
 	 */
 	Mixer clone() const;
 
 	/**
-	 * @brief テキストストリームに出力する
-	 * @param stream (TextStream) 出力先のストリーム
+	 * @brief テキストストリームに出力する.
+	 * @param stream 出力先のストリーム.
 	 */
 	void write(TextStream& stream) const;
 };

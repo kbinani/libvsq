@@ -20,13 +20,13 @@
 VSQ_BEGIN_NAMESPACE
 
 /**
- * @brief テキスト出力のためのストリーム
+ * @brief テキスト出力のためのストリーム.
  */
 class TextOutputStream
 {
 public:
 	/**
-	 * @brief IO 例外
+	 * @brief IO 例外.
 	 */
 	class IOException : std::exception
 	{};
@@ -36,19 +36,19 @@ public:
 	{}
 
 	/**
-	 * @brief ストリームを閉じる
+	 * @brief ストリームを閉じる.
 	 */
 	virtual void close() = 0;
 
 	/**
-	 * @brief 文字列をストリームに書きこむ
-	 * @param text 書きこむ文字列
+	 * @brief 文字列をストリームに書きこむ.
+	 * @param text 書きこむ文字列.
 	 */
 	virtual void write(std::string const& text) = 0;
 
 	/**
-	 * @brief 文字列をストリームに書きこむ。末尾に改行文字を追加する
-	 * @param line 書きこむ文字列
+	 * @brief 文字列をストリームに書きこむ. 末尾に改行文字を追加する.
+	 * @param line 書きこむ文字列.
 	 */
 	virtual void writeLine(std::string const& line) = 0;
 };

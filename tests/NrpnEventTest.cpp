@@ -102,7 +102,7 @@ public:
 		CPPUNIT_ASSERT(list[0].hasLSB);
 		CPPUNIT_ASSERT_EQUAL(false, list[0].isMSBOmittingRequired);
 
-		// NRPN, DATA MSBと、MSB省略フラグを指定したappend
+		// NRPN, DATA MSBと, MSB省略フラグを指定したappend
 		target = NrpnEventStub(1920, MidiParameterType::CVM_NM_DELAY, 0x01, 0x23);
 		target.append(MidiParameterType::CVM_NM_VELOCITY, 0x01, true);
 		list = target.getList();
@@ -114,7 +114,7 @@ public:
 		CPPUNIT_ASSERT_EQUAL(false, list[0].hasLSB);
 		CPPUNIT_ASSERT(list[0].isMSBOmittingRequired);
 
-		// NRPN, DATA MSB, DATA LSBと、MSB省略フラグを指定したappend
+		// NRPN, DATA MSB, DATA LSBと, MSB省略フラグを指定したappend
 		target = NrpnEventStub(1920, MidiParameterType::CVM_NM_DELAY, 0x01, 0x23);
 		target.append(MidiParameterType::CVM_NM_VELOCITY, 0x01, 0x02, true);
 		list = target.getList();

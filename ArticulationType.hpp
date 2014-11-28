@@ -21,36 +21,36 @@ namespace ArticulationType
 {
 
 /**
- * @brief アイコン設定の種類を表す
+ * @brief アイコン設定の種類を表す.
  */
 enum ArticulationTypeEnum {
 	/**
-	 * @brief アイコン設定がない
+	 * @brief アイコン設定がない.
 	 */
 	NONE = 0,
 
 	/**
-	 * @brief ビブラート
+	 * @brief ビブラート.
 	 */
 	VIBRATO = 1,
 
 	/**
-	 * @brief クレッシェンド、またはデクレッシェンド
+	 * @brief クレッシェンド, またはデクレッシェンド.
 	 */
 	CRESCENDO = 2,
 
 	/**
-	 * @brief ピアノ、フォルテ等の強弱記号
+	 * @brief ピアノ, フォルテ等の強弱記号.
 	 */
 	DYNAFF = 3,
 
 	/**
-	 * @brief アタック
+	 * @brief アタック.
 	 */
 	NOTE_ATTACK = 4,
 
 	/**
-	 * @brief NoteTransition(詳細不明)
+	 * @brief NoteTransition(詳細不明).
 	 */
 	NOTE_TRANSITION = 5
 };

@@ -23,7 +23,7 @@ VSQ_BEGIN_NAMESPACE
 class InputStream;
 
 /**
- * @brief SMF(Standard MIDI File)の読み込みを行うクラス
+ * @brief SMF(Standard MIDI File)の読み込みを行うクラス.
  */
 class SMFReader
 {
@@ -32,11 +32,11 @@ public:
 	{};
 
 	/**
-	 * @brief ストリームから、SMF を読み込む
-	 * @param [in] stream 読み込むストリーム
-	 * @param [out] dest 読み込んだ MIDI イベントのリスト。MIDI イベントは、トラックごとに格納される
-	 * @param [out] format SMF のフォーマット
-	 * @param [out] timeFormat 時間分解能
+	 * @brief ストリームから, SMF を読み込む.
+	 * @param[in] stream 読み込むストリーム.
+	 * @param[out] dest 読み込んだ MIDI イベントのリスト. MIDI イベントは, トラックごとに格納される.
+	 * @param[out] format SMF のフォーマット.
+	 * @param[out] timeFormat 時間分解能.
 	 */
 	void read(InputStream* stream, std::vector<std::vector<MidiEvent> >& dest, int& format, int& timeFormat);
 };

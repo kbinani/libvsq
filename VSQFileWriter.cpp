@@ -53,7 +53,7 @@ void VSQFileWriter::write(const Sequence* sequence, OutputStream* stream, int ms
 	// チャンクタイプ
 	std::string mtrk = getTrackHeader();
 	stream->write(mtrk.c_str(), 0, 4);
-	// データ長。とりあえず0を入れておく
+	// データ長. とりあえず0を入れておく
 	char empty[] = { 0x00, 0x00, 0x00, 0x00 };
 	stream->write(empty, 0, 4);
 	first_position = stream->getPointer();
@@ -63,7 +63,7 @@ void VSQFileWriter::write(const Sequence* sequence, OutputStream* stream, int ms
 	MidiEvent::writeDeltaClock(stream, 0);  // デルタタイム
 	stream->write(0xff);  // ステータスタイプ
 	stream->write(0x03);  // イベントタイプSequence/Track Name
-	stream->write(masterTrackNameLength);  // トラック名の文字数。これは固定
+	stream->write(masterTrackNameLength);  // トラック名の文字数. これは固定
 	stream->write(masterTrackName, 0, masterTrackNameLength);
 
 	std::vector<MidiEvent> events;
@@ -321,7 +321,7 @@ void VSQFileWriter::_printTrack(Sequence* sequence, int track, OutputStream* str
 	// ヘッダ
 	std::string mtrk = getTrackHeader();
 	stream->write(mtrk.c_str(), 0, 4);
-	// データ長。とりあえず0
+	// データ長. とりあえず0
 	char empty[] = { 0x00, 0x00, 0x00, 0x00 };
 	stream->write(empty, 0, 4);
 	int64_t first_position = stream->getPointer();
@@ -583,7 +583,7 @@ const std::vector<Handle> VSQFileWriter::getHandleList(std::vector<TempEvent*>& 
 			item->iconDynamicsHandle.index = current_handle;
 			item->iconDynamicsHandle.setLength(item->getLength());
 			handle.push_back(item->iconDynamicsHandle);
-			// IconDynamicsHandleは、歌手ハンドルと同じ扱いなので
+			// IconDynamicsHandleは, 歌手ハンドルと同じ扱いなので
 			// _singerHandleIndexでよい
 			item->singerHandleIndex = current_handle;
 		}

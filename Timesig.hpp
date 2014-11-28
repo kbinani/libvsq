@@ -19,7 +19,7 @@
 VSQ_BEGIN_NAMESPACE
 
 /**
- * 拍子変更情報テーブル内の要素を表現するためのクラス
+ * @brief 拍子変更情報テーブル内の要素を表現するためのクラス.
  */
 class Timesig
 {
@@ -27,23 +27,23 @@ class Timesig
 
 public:
 	/**
-	 * @brief 拍子の分子
+	 * @brief 拍子の分子.
 	 */
 	int numerator;
 
 	/**
-	 * @brief 拍子の分母
+	 * @brief 拍子の分母.
 	 */
 	int denominator;
 
 	/**
-	 * @brief 何小節目か
+	 * @brief 何小節目か.
 	 */
 	int barCount;
 
 protected:
 	/**
-	 * @brief Tick 単位の時刻
+	 * @brief Tick 単位の時刻.
 	 */
 	tick_t clock;
 
@@ -51,43 +51,43 @@ public:
 	Timesig();
 
 	/**
-	 * @brief 初期化を行う
-	 * @param numerator 拍子の分子の値
-	 * @param denominator 拍子の分母値
-	 * @param barCount 小節数
+	 * @brief 初期化を行う.
+	 * @param numerator 拍子の分子の値.
+	 * @param denominator 拍子の分母値.
+	 * @param barCount 小節数.
 	 */
 	Timesig(int numerator, int denominator, int barCount);
 
 	/**
-	 * @brief このイベントの tick 単位の時刻を取得する
-	 * @return tick 単位の時刻
+	 * @brief このイベントの tick 単位の時刻を取得する.
+	 * @return tick 単位の時刻.
 	 */
 	tick_t getClock() const;
 
 	/**
-	 * @brief 文字列に変換する
-	 * @return (string) 変換後の文字列
+	 * @brief 文字列に変換する.
+	 * @return 変換後の文字列.
 	 */
 	const std::string toString() const;
 
 	/**
-	 * @brief 順序を比較する
-	 * @param item 比較対象のアイテム
-	 * @return 比較対象がこのインスタンスより大であれば true を、そうでなければ false を返す
+	 * @brief 順序を比較する.
+	 * @param item 比較対象のアイテム.
+	 * @return 比較対象がこのインスタンスより大であれば true を, そうでなければ false を返す.
 	 */
-	bool compareTo(const Timesig& item) const;
+	bool compareTo(Timesig const& item) const;
 
 	/**
-	 * @brief コピーを作成する
-	 * @return このオブジェクトのコピー
+	 * @brief コピーを作成する.
+	 * @return このオブジェクトのコピー.
 	 */
 	Timesig clone() const;
 
 	/**
-	 * @brief 順序を比較する
-	 * @return b が a より大であれば true を、そうでなければ false を返す
+	 * @brief 順序を比較する.
+	 * @return b が a より大であれば true を, そうでなければ false を返す.
 	 */
-	static bool compare(const Timesig& a, const Timesig& b);
+	static bool compare(Timesig const& a, Timesig const& b);
 };
 
 VSQ_END_NAMESPACE

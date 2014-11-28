@@ -76,7 +76,7 @@ void MusicXmlWriter::write(const Sequence* sequence, TextOutputStream* sw, std::
 			Timesig timesigEntryThis = vsq.timesigList.get(n);
 			clockPerMeasure = timesigEntryThis.numerator * 480 * 4 / timesigEntryThis.denominator;
 
-			// この拍子が曲の終まで続くとしたら，あと何小節出力する必要があるのか？
+			// この拍子が曲の終まで続くとしたら, あと何小節出力する必要があるのか？
 			int remainingMeasures = 0;
 			if (n + 1 < countTimesig) {
 				Timesig timesigEntryNext = vsq.timesigList.get(n + 1);
@@ -94,7 +94,7 @@ void MusicXmlWriter::write(const Sequence* sequence, TextOutputStream* sw, std::
 				int clockStart = clockLastBase + (j - totalMeasure) * clockPerMeasure;
 				int clockEnd = clockStart + clockPerMeasure;
 
-				// 今出力している小節内に、テンポ変更が挿入されているかどうか
+				// 今出力している小節内に, テンポ変更が挿入されているかどうか
 				int numTempo = vsq.tempoList.size();
 				std::vector<Tempo> tempoInsert; // 挿入するテンポ情報のリスト
 				for (int k = 0; k < numTempo; k++) {
@@ -148,14 +148,14 @@ void MusicXmlWriter::write(const Sequence* sequence, TextOutputStream* sw, std::
 						continue;
 					}
 
-					// 第 k 番目の音符が、第 j 小節の範囲に入っているかどうか。
-					// 入っていれば、出力する。
+					// 第 k 番目の音符が, 第 j 小節の範囲に入っているかどうか.
+					// 入っていれば, 出力する.
 					if ((clockStart <= itemk->clock && itemk->clock < clockEnd) ||
 						(clockStart <= itemk->clock + itemk->getLength() && itemk->clock + itemk->getLength() < clockEnd) ||
 						(itemk->clock <= clockStart && clockEnd <= itemk->clock + itemk->getLength())) {
 						if (clockLast < itemk->clock) {
-							// 第 j 小節の開始位置から、第 k 番目の音符の間に、休符があるので、出力する
-							// [clockLast, itemk.Clock) の間でテンポ変更イベントがあれば、これも出力する
+							// 第 j 小節の開始位置から, 第 k 番目の音符の間に, 休符があるので, 出力する
+							// [clockLast, itemk.Clock) の間でテンポ変更イベントがあれば, これも出力する
 							std::vector<Tempo> insert;
 							if (!change_tempo) {
 								for (int m = 0; m < tempoInsert.size(); m++) {

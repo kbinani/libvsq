@@ -18,38 +18,30 @@
 VSQ_BEGIN_NAMESPACE
 
 /**
- * 文字列への読み書きストリーム
- * @class table
- * @name TextStream
+ * @brief 文字列への読み書きストリーム.
  */
 class TextStream : public TextOutputStream
 {
 private:
 	/**
-	 * 書き込まれたデータを保持するバッファー
-	 * @var table
-	 * @access private
+	 * @brief 書き込まれたデータを保持するバッファー.
 	 */
 	char* _array;
 
 	/**
-	 * _array の現在の長さ
+	 * @brief _array の現在の長さ.
 	 */
 	int _arrayLength;
 
 	/**
-	 * データの現在の長さ
-	 * @var int
-	 * @access private
+	 * @brief データの現在の長さ.
 	 */
-	int _length;// = 0;
+	int _length;
 
 	/**
-	 * 現在の読み書き位置
-	 * @var int
-	 * @access private
+	 * @brief 現在の読み書き位置.
 	 */
-	int _position;// = -1;
+	int _position;
 
 public:
 	TextStream();
@@ -57,62 +49,62 @@ public:
 	~TextStream();
 
 	/**
-	 * @brief 現在の読み書き位置を取得する
-	 * @return (int) 現在の読み書き位置
+	 * @brief 現在の読み書き位置を取得する.
+	 * @return 現在の読み書き位置.
 	 */
 	int getPointer();
 
 	/**
-	 * @brief 現在の読み書き位置を設定する
-	 * @param value (int) 設定する読み書き位置
+	 * @brief 現在の読み書き位置を設定する.
+	 * @param value 設定する読み書き位置.
 	 */
 	void setPointer(int value);
 
 	/**
-	 * @brief 現在の読み込み位置から 1 文字を読み込み、読み書き位置を一つ進める
-	 * @return (string) 読み込んだ文字
+	 * @brief 現在の読み込み位置から 1 文字を読み込み, 読み書き位置を一つ進める.
+	 * @return 読み込んだ文字.
 	 */
 	const std::string get();
 
 	/**
-	 * @brief 現在の読み込み位置から、改行またはファイル末端まで読み込む
-	 * @return (string) 読み込んだ文字列
+	 * @brief 現在の読み込み位置から, 改行またはファイル末端まで読み込む.
+	 * @return 読み込んだ文字列.
 	 */
 	const std::string readLine();
 
 	/**
-	 * @brief テキストストリームが読み込み可能な状態かどうかを返す
-	 * @return (boolean) 読み込み可能であれば <code>true</code> を、そうでなければ <code>false</code> を返す
+	 * @brief テキストストリームが読み込み可能な状態かどうかを返す.
+	 * @return 読み込み可能であれば <code>true</code> を, そうでなければ <code>false</code> を返す.
 	 */
 	bool ready();
 
 	/**
-	 * @brief 文字列をストリームに書きこむ
-	 * @param str (string) 書きこむ文字列
+	 * @brief 文字列をストリームに書きこむ.
+	 * @param str 書きこむ文字列.
 	 */
 	void write(std::string const& str);
 
 	/**
-	 * @brief 文字列をストリームに書きこむ。末尾に改行文字を追加する
-	 * @param str (string) 書きこむ文字列
+	 * @brief 文字列をストリームに書きこむ. 末尾に改行文字を追加する.
+	 * @param str 書きこむ文字列.
 	 */
 	void writeLine(std::string const& str);
 
 	/**
-	 * @brief ストリームを閉じる
+	 * @brief ストリームを閉じる.
 	 */
 	void close();
 
 	/**
-	 * @brief ストリームに書きこまれた文字列を連結し、返す
-	 * @return (string) 文字列
+	 * @brief ストリームに書きこまれた文字列を連結し, 返す.
+	 * @return 文字列.
 	 */
 	const std::string toString();
 
 private:
 	/**
-	 * @brief 内部のバッファー容量を確保する
-	 * @param length (int) 確保したいバッファー容量
+	 * @brief 内部のバッファー容量を確保する.
+	 * @param length 確保したいバッファー容量.
 	 */
 	void _ensureCapacity(int length);
 };

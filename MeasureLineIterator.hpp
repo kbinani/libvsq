@@ -22,15 +22,16 @@ VSQ_BEGIN_NAMESPACE
 class TimesigList;
 
 /**
- * @brief 小節を区切る線の情報を順に返す反復子
+ * @brief 小節を区切る線の情報を順に返す反復子.
  */
 class MeasureLineIterator
 {
 private:
 	/**
-	 * @brief 補助線の間隔として利用可能な最小時間(tick単位)
+	 * @brief 補助線の間隔として利用可能な最小時間(tick単位).
 	 */
 	const static tick_t MIN_ASSIST_LINE_STEP = 15;
+
 	const TimesigList* list;
 	tick_t endTick;
 	int i;
@@ -46,43 +47,42 @@ private:
 
 public:
 	class InvalidAssistLineStep : public std::exception
-	{
-	};
+	{};
 
 public:
 	/**
-	 * @brief 小節線の情報を取得する区間を指定し、初期化する
-	 * @param list テンポ変更リスト
+	 * @brief 小節線の情報を取得する区間を指定し, 初期化する.
+	 * @param list テンポ変更リスト.
 	 */
 	explicit MeasureLineIterator(const TimesigList* list, tick_t assistLineStep = 0);
 
 	/**
-	 * @brief 次の小節線が取得可能かどうかを取得する
-	 * @return 取得可能であれば true を返す
+	 * @brief 次の小節線が取得可能かどうかを取得する.
+	 * @return 取得可能であれば true を返す.
 	 */
 	bool hasNext();
 
 	/**
-	 * @brief 次の小節線を取得する
-	 * @return 次の小節線の情報
+	 * @brief 次の小節線を取得する.
+	 * @return 次の小節線の情報.
 	 */
 	MeasureLine next();
 
 	/**
-	 * @brief 反復子をリセットする
-	 * @param endTick 反復を行う最大の時刻(tick単位)を指定する
-	 * @todo startTick を指定できるようにする
+	 * @brief 反復子をリセットする.
+	 * @param endTick 反復を行う最大の時刻(tick単位)を指定する.
+	 * @todo startTick を指定できるようにする.
 	 */
 	void reset(tick_t endTick);
 
 private:
 	/**
-	 * @brief 小節の境界を表す MeasureLine のインスタンスを返す
+	 * @brief 小節の境界を表す MeasureLine のインスタンスを返す.
 	 */
 	MeasureLine returnBorder();
 
 	/**
-	 * @brief 小節の境界でない MeasureLine のインスタンスを返す
+	 * @brief 小節の境界でない MeasureLine のインスタンスを返す.
 	 */
 	MeasureLine returnOther();
 };

@@ -34,18 +34,17 @@ public:
 	bool voiceOverlap;
 
 	EventWriteOption()
-	{
-		length = true;
-		note = true;
-		dynamics = true;
-		pmBendDepth = true;
-		pmBendLength = true;
-		pmbPortamentoUse = true;
-		demDecGainRate = true;
-		demAccent = true;
-		preUtterance = false;
-		voiceOverlap = false;
-	}
+		: length(true)
+		, note(true)
+		, dynamics(true)
+		, pmBendDepth(true)
+		, pmBendLength(true)
+		, pmbPortamentoUse(true)
+		, demDecGainRate(true)
+		, demAccent(true)
+		, preUtterance(false)
+		, voiceOverlap(false)
+	{}
 };
 
 VSQ_END_NAMESPACE
