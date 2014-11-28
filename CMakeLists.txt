@@ -101,4 +101,5 @@ ADD_LIBRARY(vsq STATIC
 	VoiceLanguage.cpp
 	Namespace.hpp
 	BasicTypes.hpp
+	EnumUtil.hpp
     BP.cpp)

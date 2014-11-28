@@ -9,10 +9,10 @@ class EventTypeTest : public CppUnit::TestCase
 public:
 	void testToString()
 	{
-		CPPUNIT_ASSERT_EQUAL(string("Singer"), EventType::toString(EventType::SINGER));
-		CPPUNIT_ASSERT_EQUAL(string("Anote"), EventType::toString(EventType::NOTE));
-		CPPUNIT_ASSERT_EQUAL(string("Aicon"), EventType::toString(EventType::ICON));
-		CPPUNIT_ASSERT_EQUAL(string("Unknown"), EventType::toString(EventType::UNKNOWN));
+		CPPUNIT_ASSERT_EQUAL(string("Singer"), EventTypeUtil::toString(EventType::SINGER));
+		CPPUNIT_ASSERT_EQUAL(string("Anote"), EventTypeUtil::toString(EventType::NOTE));
+		CPPUNIT_ASSERT_EQUAL(string("Aicon"), EventTypeUtil::toString(EventType::ICON));
+		CPPUNIT_ASSERT_EQUAL(string("Unknown"), EventTypeUtil::toString(EventType::UNKNOWN));
 	}
 
 	CPPUNIT_TEST_SUITE(EventTypeTest);

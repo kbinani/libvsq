@@ -9,7 +9,7 @@ using namespace vsq;
 
 struct NrpnEventSpec {
 	tick_t clock;// = 0;
-	MidiParameterType::MidiParameterTypeEnum nrpn;// = 0;
+	MidiParameterType nrpn;// = 0;
 	int dataMSB;// = 0;
 	bool hasLSB;// = false;
 	int dataLSB;// = 0;
@@ -291,7 +291,7 @@ public:
 		CPPUNIT_ASSERT(item.isMSBOmittingRequired);
 		item = actualExpanded[10];
 		CPPUNIT_ASSERT_EQUAL((tick_t)1440, item.clock);
-		CPPUNIT_ASSERT_EQUAL((MidiParameterType::MidiParameterTypeEnum)0x5013, item.nrpn);
+		CPPUNIT_ASSERT_EQUAL((MidiParameterType)0x5013, item.nrpn);
 		CPPUNIT_ASSERT_EQUAL((int)'a', item.dataMSB);
 		CPPUNIT_ASSERT_EQUAL(0, item.dataLSB);
 		CPPUNIT_ASSERT(item.hasLSB);
@@ -407,7 +407,7 @@ public:
 		CPPUNIT_ASSERT_EQUAL((size_t)8, actualExpanded.size());
 		item = actualExpanded[4];
 		CPPUNIT_ASSERT_EQUAL((tick_t)1440, item.clock);
-		CPPUNIT_ASSERT_EQUAL((MidiParameterType::MidiParameterTypeEnum)0x5011, item.nrpn);
+		CPPUNIT_ASSERT_EQUAL((MidiParameterType)0x5011, item.nrpn);
 		CPPUNIT_ASSERT_EQUAL(0x01, item.dataMSB);
 		CPPUNIT_ASSERT_EQUAL(false, item.hasLSB);
 		CPPUNIT_ASSERT(item.isMSBOmittingRequired);
@@ -888,7 +888,7 @@ public:
 			{ (tick_t)1440, MidiParameterType::CVM_NM_NOTE_LOCATION,				3,			false,	0xFF,	true },
 			// 35
 			{ (tick_t)1440, MidiParameterType::CVM_NM_PHONETIC_SYMBOL_BYTES,		1,			false,	0xFF,	true },
-			{ (tick_t)1440, (MidiParameterType::MidiParameterTypeEnum)0x5013,	(int)'a',	true,	0,		true },
+			{ (tick_t)1440, (MidiParameterType)0x5013,	(int)'a',	true,	0,		true },
 			{ (tick_t)1440, MidiParameterType::CVM_NM_PHONETIC_SYMBOL_CONTINUATION,	0x7f,		false,	0xFF,	true },
 			{ (tick_t)1440, MidiParameterType::CVM_NM_V1MEAN,						4,			false,	0xFF,	true },
 			{ (tick_t)1440, MidiParameterType::CVM_NM_D1MEAN,						8,			false,	0xFF,	true },

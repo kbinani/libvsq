@@ -34,7 +34,7 @@ public:
 	/**
 	 * @brief NRPN の値.
 	 */
-	MidiParameterType::MidiParameterTypeEnum nrpn;
+	MidiParameterType nrpn;
 
 	/**
 	 * @brief DATA MSB.
@@ -69,7 +69,7 @@ public:
 	 * @param nrpn NRPN.
 	 * @param dataMsb DATA MSB.
 	 */
-	NrpnEvent(tick_t clock, MidiParameterType::MidiParameterTypeEnum nrpn, int dataMsb);
+	NrpnEvent(tick_t clock, MidiParameterType nrpn, int dataMsb);
 
 	/**
 	 * @brief 時刻, NRPN, DATA MSB, DATA LSB を指定し, 初期化を行う.
@@ -78,7 +78,7 @@ public:
 	 * @param dataMsb DATA MSB.
 	 * @param dataLsb DATA LSB.
 	 */
-	NrpnEvent(tick_t clock, MidiParameterType::MidiParameterTypeEnum nrpn, int dataMsb, int dataLsb);
+	NrpnEvent(tick_t clock, MidiParameterType nrpn, int dataMsb, int dataLsb);
 
 	/**
 	 * @brief 親子関係によって入れ子になっている NRPN イベントを展開し, 配列に変換する.
@@ -98,7 +98,7 @@ public:
 	 * @param nrpn NRPN.
 	 * @param dataMsb DATA MSB.
 	 */
-	void append(MidiParameterType::MidiParameterTypeEnum nrpn, int dataMsb);
+	void append(MidiParameterType nrpn, int dataMsb);
 
 	/**
 	 * @brief NRPN, DATA MSB, DATA LSB を指定し, イベントを追加する.
@@ -106,7 +106,7 @@ public:
 	 * @param dataMsb DATA MSB.
 	 * @param dataLsb DATA LSB.
 	 */
-	void append(MidiParameterType::MidiParameterTypeEnum nrpn, int dataMsb, int dataLsb);
+	void append(MidiParameterType nrpn, int dataMsb, int dataLsb);
 
 	/**
 	 * @brief NRPN, DATA MSB, MSB 省略フラグを指定し, イベントを追加する.
@@ -114,7 +114,7 @@ public:
 	 * @param dataMsb DATA MSB.
 	 * @param isMsbOmittingRequired NRPN MSB を省略する場合は <code>true</code> を, そうでない場合は <code>false</code> を指定する.
 	 */
-	void append(MidiParameterType::MidiParameterTypeEnum nrpn, int dataMsb, bool isMsbOmittingRequired);
+	void append(MidiParameterType nrpn, int dataMsb, bool isMsbOmittingRequired);
 
 	/**
 	 * @brief NRPN, DATA MSB, DATA LSB, MSB 省略フラグを指定し, イベントを追加する.
@@ -123,7 +123,7 @@ public:
 	 * @param dataLsb DATA LSB.
 	 * @param isMsbOmittingRequired NRPN MSB を省略する場合は <code>true</code> を, そうでない場合は <code>false</code> を指定する.
 	 */
-	void append(MidiParameterType::MidiParameterTypeEnum nrpn, int dataMsb, int dataLsb, bool isMsbOmittingRequired);
+	void append(MidiParameterType nrpn, int dataMsb, int dataLsb, bool isMsbOmittingRequired);
 
 	/**
 	 * @brief 2 つの {@link NrpnEvent} を比較する.

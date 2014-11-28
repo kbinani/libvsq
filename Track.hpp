@@ -156,7 +156,7 @@ public:
 	 * @param iteratorKind 反復子の種類.
 	 * @return 反復子.
 	 */
-	EventListIndexIterator getIndexIterator(EventListIndexIteratorKind::EventListIndexIteratorKindEnum iteratorKind) const;
+	EventListIndexIterator getIndexIterator(EventListIndexIteratorKind iteratorKind) const;
 
 	/**
 	 * @brief 指定したゲートタイムにおいて, 歌唱を担当している歌手の歌手変更イベントを取得する.

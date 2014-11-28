@@ -13,32 +13,30 @@
  */
 #pragma once
 
-#include "./Namespace.hpp"
+#include "./EnumUtil.hpp"
 
 VSQ_BEGIN_NAMESPACE
 
 /**
  * @brief 歌声合成の再生モードを表す列挙子.
  */
-class PlayMode
-{
-public:
-	enum PlayModeEnum {
-		/**
-		 * @brief トラックはミュートされる(-1).
-		 */
-		OFF = -1,
+enum class PlayMode {
+	/**
+	 * @brief トラックはミュートされる(-1).
+	 */
+	OFF = -1,
 
-		/**
-		 * @brief トラックは合成された後再生される(0).
-		 */
-		PLAY_AFTER_SYNTH = 0,
+	/**
+	 * @brief トラックは合成された後再生される(0).
+	 */
+	PLAY_AFTER_SYNTH = 0,
 
-		/**
-		 * @brief トラックは合成しながら再生される(1).
-		 */
-		PLAY_WITH_SYNTH = 1
-	};
+	/**
+	 * @brief トラックは合成しながら再生される(1).
+	 */
+	PLAY_WITH_SYNTH = 1,
 };
+
+LIBVSQ_DECLARE_ENUM_TO_OSTREAM_OPERATOR(PlayMode)
 
 VSQ_END_NAMESPACE

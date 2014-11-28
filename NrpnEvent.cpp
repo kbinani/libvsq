@@ -15,7 +15,7 @@
 
 VSQ_BEGIN_NAMESPACE
 
-NrpnEvent::NrpnEvent(tick_t clock, MidiParameterType::MidiParameterTypeEnum nrpn, int dataMsb)
+NrpnEvent::NrpnEvent(tick_t clock, MidiParameterType nrpn, int dataMsb)
 {
 	this->clock = clock;
 	this->nrpn = nrpn;
@@ -25,7 +25,7 @@ NrpnEvent::NrpnEvent(tick_t clock, MidiParameterType::MidiParameterTypeEnum nrpn
 	this->isMSBOmittingRequired = false;
 }
 
-NrpnEvent::NrpnEvent(tick_t clock, MidiParameterType::MidiParameterTypeEnum nrpn, int dataMsb, int dataLsb)
+NrpnEvent::NrpnEvent(tick_t clock, MidiParameterType nrpn, int dataMsb, int dataLsb)
 {
 	this->clock = clock;
 	this->nrpn = nrpn;
@@ -59,32 +59,36 @@ std::vector<NrpnEvent> NrpnEvent::expand()
 int NrpnEvent::compareTo(NrpnEvent const& item) const
 {
 	if (clock == item.clock) {
-		int thisNrpnMsb = (nrpn - (nrpn % 0x100)) / 0x100;
-		int itemNrpnMsb = (item.nrpn - (item.nrpn % 0x100)) / 0x100;
+		int const thisNrpn = static_cast<int>(nrpn);
+		int const itemNrpn = static_cast<int>(item.nrpn);
+
+		int const thisNrpnMsb = (thisNrpn - (thisNrpn % 0x100)) / 0x100;
+		int const itemNrpnMsb = (itemNrpn - (itemNrpn % 0x100)) / 0x100;
+
 		return itemNrpnMsb - thisNrpnMsb;
 	} else {
 		return clock - item.clock;
 	}
 }
 
-void NrpnEvent::append(MidiParameterType::MidiParameterTypeEnum nrpn, int dataMsb)
+void NrpnEvent::append(MidiParameterType nrpn, int dataMsb)
 {
 	_list.push_back(NrpnEvent(clock, nrpn, dataMsb));
 }
 
-void NrpnEvent::append(MidiParameterType::MidiParameterTypeEnum nrpn, int dataMsb, int dataLsb)
+void NrpnEvent::append(MidiParameterType nrpn, int dataMsb, int dataLsb)
 {
 	_list.push_back(NrpnEvent(clock, nrpn, dataMsb, dataLsb));
 }
 
-void NrpnEvent::append(MidiParameterType::MidiParameterTypeEnum nrpn, int dataMsb, bool isMsbOmittingRequired)
+void NrpnEvent::append(MidiParameterType nrpn, int dataMsb, bool isMsbOmittingRequired)
 {
 	NrpnEvent v(this->clock, nrpn, dataMsb);
 	v.isMSBOmittingRequired = isMsbOmittingRequired;
 	_list.push_back(v);
 }
 
-void NrpnEvent::append(MidiParameterType::MidiParameterTypeEnum nrpn, int dataMsb, int dataLsb, bool isMsbOmittingRequired)
+void NrpnEvent::append(MidiParameterType nrpn, int dataMsb, int dataLsb, bool isMsbOmittingRequired)
 {
 	NrpnEvent v(this->clock, nrpn, dataMsb, dataLsb);
 	v.isMSBOmittingRequired = isMsbOmittingRequired;
@@ -102,7 +106,7 @@ bool NrpnEvent::compare(NrpnEvent const& a, NrpnEvent const& b)
 
 std::vector<MidiEvent> NrpnEvent::convert(std::vector<NrpnEvent> const& source)
 {
-	int nrpn = source[0].nrpn;
+	int nrpn = static_cast<int>(source[0].nrpn);
 	int msb = 0xff & (nrpn >> 8);
 	int lsb = nrpn - (0xff00 & (msb << 8));
 	std::vector<MidiEvent> ret;
@@ -140,7 +144,7 @@ std::vector<MidiEvent> NrpnEvent::convert(std::vector<NrpnEvent> const& source)
 
 	for (int i = 1; i < source.size(); i++) {
 		NrpnEvent item = source[i];
-		int tnrpn = item.nrpn;
+		int tnrpn = static_cast<int>(item.nrpn);
 		msb = 0xff & (tnrpn >> 8);
 		lsb = tnrpn - (0xff00 & (msb << 8));
 		if (false == item.isMSBOmittingRequired) {
@@ -184,7 +188,7 @@ NrpnEvent::NrpnEvent()
 	this->dataMSB = 0;
 	this->hasLSB = false;
 	this->isMSBOmittingRequired = false;
-	this->nrpn = (MidiParameterType::MidiParameterTypeEnum)0;
+	this->nrpn = (MidiParameterType)0;
 }
 
 VSQ_END_NAMESPACE

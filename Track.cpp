@@ -51,9 +51,9 @@ void Track::setName(std::string const& value)
 	_common.name = value;
 }
 
-EventListIndexIterator Track::getIndexIterator(EventListIndexIteratorKind::EventListIndexIteratorKindEnum iteratorKind) const
+EventListIndexIterator Track::getIndexIterator(EventListIndexIteratorKind iteratorKind) const
 {
-	return EventListIndexIterator(&this->_events, (int)iteratorKind);
+	return EventListIndexIterator(&this->_events, iteratorKind);
 }
 
 /**

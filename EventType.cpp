@@ -15,7 +15,10 @@
 
 VSQ_BEGIN_NAMESPACE
 
-std::string EventType::toString(EventTypeEnum value)
+namespace EventTypeUtil
+{
+
+std::string toString(EventType value)
 {
 	if (value == EventType::SINGER) {
 		return "Singer";
@@ -28,7 +31,6 @@ std::string EventType::toString(EventTypeEnum value)
 	}
 }
 
-EventType::EventType()
-{}
+}
 
 VSQ_END_NAMESPACE

@@ -193,7 +193,7 @@ void VSQFileWriter::writeEvent(TempEvent const& item, TextStream& stream, EventW
 	stream.write(StringUtil::toString(item.index, "%04d"));
 	stream.writeLine("]");
 	stream.write("Type=");
-	stream.writeLine(EventType::toString(item.type));
+	stream.writeLine(EventTypeUtil::toString(item.type));
 	if (item.type == EventType::NOTE) {
 		if (printTargets.length) {
 			stream.write("Length=");
@@ -552,7 +552,7 @@ std::vector<Handle> VSQFileWriter::getHandleList(std::vector<TempEvent*>& eventL
 			item->singerHandle.index = current_handle;
 			handle.push_back(item->singerHandle);
 			item->singerHandleIndex = current_handle;
-			VoiceLanguage::VoiceLanguageEnum lang = VoiceLanguage::valueFromSingerName(item->singerHandle.ids);
+			VoiceLanguage lang = VoiceLanguageUtil::valueFromSingerName(item->singerHandle.ids);
 			add_quotation_mark = lang == VoiceLanguage::JAPANESE;
 		}
 		// LyricHandle

@@ -275,7 +275,7 @@ NrpnEvent VocaloidMidiEventListFactory::generateNoteNRPN(Track const* track, Tem
 
 	std::string renderer = track->common()->version;
 	if (renderer.substr(0, 4) == std::string("DSB2")) {
-		add.append((MidiParameterType::MidiParameterTypeEnum)0x5011, 0x01, true);  //TODO: Meaning of (byte)0x5011 is unknown.
+		add.append((MidiParameterType)0x5011, 0x01, true);  //TODO: Meaning of (byte)0x5011 is unknown.
 	}
 
 	add.append(MidiParameterType::CVM_NM_PHONETIC_SYMBOL_BYTES, symbols.size(), true);  // (byte)0x12(Number of phonetic symbols in bytes)
@@ -286,9 +286,9 @@ NrpnEvent VocaloidMidiEventListFactory::generateNoteNRPN(Track const* track, Tem
 		for (int k = 0; k < chars.length(); k++) {
 			count = count + 1;
 			if (k == 0) {
-				add.append((MidiParameterType::MidiParameterTypeEnum)((0x50 << 8) | (0x13 + count)), chars[k], consonantAdjustment[j], true);   // Phonetic symbol j
+				add.append((MidiParameterType)((0x50 << 8) | (0x13 + count)), chars[k], consonantAdjustment[j], true);   // Phonetic symbol j
 			} else {
-				add.append((MidiParameterType::MidiParameterTypeEnum)((0x50 << 8) | (0x13 + count)), chars[k], true);   // Phonetic symbol j
+				add.append((MidiParameterType)((0x50 << 8) | (0x13 + count)), chars[k], true);   // Phonetic symbol j
 			}
 		}
 	}
@@ -474,7 +474,7 @@ std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateFx2DepthNRPN(Track 
 
 int VocaloidMidiEventListFactory::addVoiceChangeParameters(std::vector<NrpnEvent>& dest, BPList const* list, TempoList const* tempoList, int msPreSend, int lastDelay)
 {
-	int id = MidiParameterType::getVoiceChangeParameterId(list->getName());
+	int id = MidiParameterTypeUtil::getVoiceChangeParameterId(list->getName());
 	for (int j = 0; j < list->size(); j++) {
 		tick_t clock = list->getKeyClock(j);
 		int value = list->getValue(j);

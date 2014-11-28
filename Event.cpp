@@ -247,7 +247,7 @@ Event::Event()
 	id = 0;
 }
 
-Event::Event(tick_t clock, EventType::EventTypeEnum eventType)
+Event::Event(tick_t clock, EventType eventType)
 {
 	init();
 	this->clock = clock;
@@ -310,7 +310,7 @@ int Event::compareTo(Event const& item) const
 {
 	tick_t ret = clock - item.clock;
 	if (ret == 0) {
-		return type - item.type;
+		return static_cast<int>(type) - static_cast<int>(item.type);
 	} else {
 		return (int)ret;
 	}

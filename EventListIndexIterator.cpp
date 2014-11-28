@@ -16,15 +16,15 @@
 
 VSQ_BEGIN_NAMESPACE
 
-EventListIndexIterator::EventListIndexIterator(Event::List const* list, int iteratorKind)
+EventListIndexIterator::EventListIndexIterator(Event::List const* list, EventListIndexIteratorKind iteratorKind)
 {
 	this->_list = list;
 	this->_pos = -1;
-	this->_kindSinger = (iteratorKind & EventListIndexIteratorKind::SINGER) == EventListIndexIteratorKind::SINGER;
-	this->_kindNote = (iteratorKind & EventListIndexIteratorKind::NOTE) == EventListIndexIteratorKind::NOTE;
-	this->_kindCrescend = (iteratorKind & EventListIndexIteratorKind::CRESCENDO) == EventListIndexIteratorKind::CRESCENDO;
-	this->_kindDecrescend = (iteratorKind & EventListIndexIteratorKind::DECRESCENDO) == EventListIndexIteratorKind::DECRESCENDO;
-	this->_kindDynaff = (iteratorKind & EventListIndexIteratorKind::DYNAFF) == EventListIndexIteratorKind::DYNAFF;
+	this->_kindSinger = (static_cast<int>(iteratorKind) & static_cast<int>(EventListIndexIteratorKind::SINGER)) == static_cast<int>(EventListIndexIteratorKind::SINGER);
+	this->_kindNote = (static_cast<int>(iteratorKind) & static_cast<int>(EventListIndexIteratorKind::NOTE)) == static_cast<int>(EventListIndexIteratorKind::NOTE);
+	this->_kindCrescend = (static_cast<int>(iteratorKind) & static_cast<int>(EventListIndexIteratorKind::CRESCENDO)) == static_cast<int>(EventListIndexIteratorKind::CRESCENDO);
+	this->_kindDecrescend = (static_cast<int>(iteratorKind) & static_cast<int>(EventListIndexIteratorKind::DECRESCENDO)) == static_cast<int>(EventListIndexIteratorKind::DECRESCENDO);
+	this->_kindDynaff = (static_cast<int>(iteratorKind) & static_cast<int>(EventListIndexIteratorKind::DYNAFF)) == static_cast<int>(EventListIndexIteratorKind::DYNAFF);
 }
 
 int EventListIndexIterator::next()

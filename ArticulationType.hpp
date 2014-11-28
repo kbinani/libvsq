@@ -13,17 +13,14 @@
  */
 #pragma once
 
-#include "./Namespace.hpp"
+#include "./EnumUtil.hpp"
 
 VSQ_BEGIN_NAMESPACE
-
-namespace ArticulationType
-{
 
 /**
  * @brief アイコン設定の種類を表す.
  */
-enum ArticulationTypeEnum {
+enum class ArticulationType {
 	/**
 	 * @brief アイコン設定がない.
 	 */
@@ -52,9 +49,9 @@ enum ArticulationTypeEnum {
 	/**
 	 * @brief NoteTransition(詳細不明).
 	 */
-	NOTE_TRANSITION = 5
+	NOTE_TRANSITION = 5,
 };
 
-}
+LIBVSQ_DECLARE_ENUM_TO_OSTREAM_OPERATOR(ArticulationType)
 
 VSQ_END_NAMESPACE

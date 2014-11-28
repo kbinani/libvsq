@@ -11,12 +11,12 @@ public:
 	{
 	}
 
-	explicit NrpnEventStub(tick_t clock, MidiParameterType::MidiParameterTypeEnum nrpn, int dataMsb)
+	explicit NrpnEventStub(tick_t clock, MidiParameterType nrpn, int dataMsb)
 		: NrpnEvent(clock, nrpn, dataMsb)
 	{
 	}
 
-	explicit NrpnEventStub(tick_t clock, MidiParameterType::MidiParameterTypeEnum nrpn, int dataMsb, int dataLsb)
+	explicit NrpnEventStub(tick_t clock, MidiParameterType nrpn, int dataMsb, int dataLsb)
 		: NrpnEvent(clock, nrpn, dataMsb, dataLsb)
 	{
 	}
@@ -208,13 +208,13 @@ public:
 		CPPUNIT_ASSERT_EQUAL(0xb0, e.firstByte);
 		CPPUNIT_ASSERT_EQUAL((size_t)2, e.data.size());
 		CPPUNIT_ASSERT_EQUAL(0x63, e.data[0]);
-		CPPUNIT_ASSERT_EQUAL(((MidiParameterType::CVM_NM_DELAY & 0xff00) >> 8), e.data[1]);
+		CPPUNIT_ASSERT_EQUAL(((static_cast<int>(MidiParameterType::CVM_NM_DELAY) & 0xff00) >> 8), e.data[1]);
 		e = events[1];
 		CPPUNIT_ASSERT_EQUAL((tick_t)1920, e.clock);
 		CPPUNIT_ASSERT_EQUAL(0xb0, e.firstByte);
 		CPPUNIT_ASSERT_EQUAL((size_t)2, e.data.size());
 		CPPUNIT_ASSERT_EQUAL(0x62, e.data[0]);
-		CPPUNIT_ASSERT_EQUAL((MidiParameterType::CVM_NM_DELAY & 0xff), e.data[1]);
+		CPPUNIT_ASSERT_EQUAL((static_cast<int>(MidiParameterType::CVM_NM_DELAY) & 0xff), e.data[1]);
 		e = events[2];
 		CPPUNIT_ASSERT_EQUAL((tick_t)1920, e.clock);
 		CPPUNIT_ASSERT_EQUAL(0xb0, e.firstByte);
@@ -234,7 +234,7 @@ public:
 		CPPUNIT_ASSERT_EQUAL(0xb0, e.firstByte);
 		CPPUNIT_ASSERT_EQUAL((size_t)2, e.data.size());
 		CPPUNIT_ASSERT_EQUAL(0x62, e.data[0]);
-		CPPUNIT_ASSERT_EQUAL(MidiParameterType::CVM_NM_VELOCITY & 0xff, e.data[1]);
+		CPPUNIT_ASSERT_EQUAL(static_cast<int>(MidiParameterType::CVM_NM_VELOCITY) & 0xff, e.data[1]);
 		e = events[5];
 		CPPUNIT_ASSERT_EQUAL((tick_t)1920, e.clock);
 		CPPUNIT_ASSERT_EQUAL(0xb0, e.firstByte);
@@ -254,13 +254,13 @@ public:
 		CPPUNIT_ASSERT_EQUAL(0xb0, e.firstByte);
 		CPPUNIT_ASSERT_EQUAL((size_t)2, e.data.size());
 		CPPUNIT_ASSERT_EQUAL(0x63, e.data[0]);
-		CPPUNIT_ASSERT_EQUAL(((MidiParameterType::CVM_NM_NOTE_NUMBER & 0xff00) >> 8), e.data[1]);
+		CPPUNIT_ASSERT_EQUAL(((static_cast<int>(MidiParameterType::CVM_NM_NOTE_NUMBER) & 0xff00) >> 8), e.data[1]);
 		e = events[8];
 		CPPUNIT_ASSERT_EQUAL((tick_t)1920, e.clock);
 		CPPUNIT_ASSERT_EQUAL(0xb0, e.firstByte);
 		CPPUNIT_ASSERT_EQUAL((size_t)2, e.data.size());
 		CPPUNIT_ASSERT_EQUAL(0x62, e.data[0]);
-		CPPUNIT_ASSERT_EQUAL(MidiParameterType::CVM_NM_NOTE_NUMBER & 0xff, e.data[1]);
+		CPPUNIT_ASSERT_EQUAL(static_cast<int>(MidiParameterType::CVM_NM_NOTE_NUMBER) & 0xff, e.data[1]);
 		e = events[9];
 		CPPUNIT_ASSERT_EQUAL((tick_t)1920, e.clock);
 		CPPUNIT_ASSERT_EQUAL(0xb0, e.firstByte);

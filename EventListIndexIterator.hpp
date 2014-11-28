@@ -15,6 +15,7 @@
 
 #include "./Namespace.hpp"
 #include "./Event.hpp"
+#include "./EventListIndexIteratorKind.hpp"
 
 VSQ_BEGIN_NAMESPACE
 
@@ -67,7 +68,7 @@ public:
 	 *
 	 * @todo iteratorKind の型を EventListIndexIteratorKind にできないか?
 	 */
-	EventListIndexIterator(Event::List const* list, int iteratorKind);
+	EventListIndexIterator(Event::List const* list, EventListIndexIteratorKind iteratorKind);
 
 	/**
 	 * @brief 反復子の次の要素を返す.

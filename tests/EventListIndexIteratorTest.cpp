@@ -76,11 +76,7 @@ public:
 		CPPUNIT_ASSERT_EQUAL((tick_t)720, event->clock);
 		CPPUNIT_ASSERT_EQUAL(4, event->id);
 
-		int kindAll = EventListIndexIteratorKind::NOTE |
-					  EventListIndexIteratorKind::SINGER |
-					  EventListIndexIteratorKind::DYNAFF |
-					  EventListIndexIteratorKind::CRESCENDO |
-					  EventListIndexIteratorKind::DECRESCENDO;
+		EventListIndexIteratorKind kindAll = EventListIndexIteratorKind::ALL;
 		EventListIndexIterator iteratorAll(&list, kindAll);
 		CPPUNIT_ASSERT(iteratorAll.hasNext());
 		CPPUNIT_ASSERT_EQUAL(0, iteratorAll.next());

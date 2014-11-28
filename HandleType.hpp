@@ -13,17 +13,14 @@
  */
 #pragma once
 
-#include "./Namespace.hpp"
+#include "./EnumUtil.hpp"
 
 VSQ_BEGIN_NAMESPACE
-
-namespace HandleType
-{
 
 /**
  * @brief {@link Handle} の種類を表現する列挙子.
  */
-enum HandleTypeEnum {
+enum class HandleType {
 	UNKNOWN = 0,
 
 	/**
@@ -49,9 +46,9 @@ enum HandleTypeEnum {
 	/**
 	 * @brief Dynamics ハンドル.
 	 */
-	DYNAMICS = 5
+	DYNAMICS = 5,
 };
 
-}
+LIBVSQ_DECLARE_ENUM_TO_OSTREAM_OPERATOR(HandleType)
 
 VSQ_END_NAMESPACE

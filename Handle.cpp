@@ -16,7 +16,7 @@
 
 VSQ_BEGIN_NAMESPACE
 
-Handle::Handle(HandleType::HandleTypeEnum type)
+Handle::Handle(HandleType type)
 {
 	init();
 	_type = type;
@@ -31,7 +31,7 @@ Handle::Handle(HandleType::HandleTypeEnum type)
 	}
 }
 
-ArticulationType::ArticulationTypeEnum Handle::getArticulation() const
+ArticulationType Handle::getArticulation() const
 {
 	return _articulation;
 }
@@ -92,7 +92,7 @@ std::string Handle::getDisplayString() const
 	return ids + caption;
 }
 
-HandleType::HandleTypeEnum Handle::getHandleType() const
+HandleType Handle::getHandleType() const
 {
 	return _type;
 }

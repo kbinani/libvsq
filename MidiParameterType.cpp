@@ -16,7 +16,7 @@
 
 VSQ_BEGIN_NAMESPACE
 
-int MidiParameterType::getVoiceChangeParameterId(std::string const& curve_name)
+int MidiParameterTypeUtil::getVoiceChangeParameterId(std::string const& curve_name)
 {
 	int lsb = 0x31;
 	std::string curveName = StringUtil::toLower(curve_name);
@@ -62,7 +62,7 @@ int MidiParameterType::getVoiceChangeParameterId(std::string const& curve_name)
 	return lsb;
 }
 
-bool MidiParameterType::isDataLsbRequire(int nrpn)
+bool MidiParameterTypeUtil::isDataLsbRequire(MidiParameterType nrpn)
 {
 	if (nrpn == MidiParameterType::CVM_NM_VERSION_AND_DEVICE ||
 		nrpn == MidiParameterType::CVM_NM_DELAY ||

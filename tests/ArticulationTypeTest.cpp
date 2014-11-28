@@ -8,8 +8,7 @@ class ArticulationTypeTest : public CppUnit::TestCase
 public:
 	void test()
 	{
-		ArticulationType::ArticulationTypeEnum e
-			= ArticulationType::CRESCENDO;
+		ArticulationType e = ArticulationType::CRESCENDO;
 		CPPUNIT_ASSERT(e != ArticulationType::DYNAFF);
 		CPPUNIT_ASSERT(e == ArticulationType::CRESCENDO);
 	}

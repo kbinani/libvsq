@@ -43,9 +43,9 @@ Common::Common(TextStream& stream, std::string& lastLine)
 		} else if (search == "Color") {
 			this->color = spl[1];
 		} else if (search == "DynamicsMode") {
-			this->dynamicsMode = (DynamicsMode::DynamicsModeEnum)StringUtil::parseInt<int>(spl[1]);
+			this->dynamicsMode = static_cast<DynamicsMode>(StringUtil::parseInt<int>(spl[1]));
 		} else if (search == "PlayMode") {
-			this->_playMode = (PlayMode::PlayModeEnum)StringUtil::parseInt<int>(spl[1]);
+			this->_playMode = (PlayMode)StringUtil::parseInt<int>(spl[1]);
 		}
 		if (!stream.ready()) {
 			break;
@@ -54,7 +54,7 @@ Common::Common(TextStream& stream, std::string& lastLine)
 	}
 }
 
-Common::Common(std::string const& name, int r, int g, int b, DynamicsMode::DynamicsModeEnum dynamicsMode, PlayMode::PlayModeEnum playMode)
+Common::Common(std::string const& name, int r, int g, int b, DynamicsMode dynamicsMode, PlayMode playMode)
 {
 	init();
 	this->version = "DSB301";
@@ -78,12 +78,12 @@ Common Common::clone() const
 	return result;
 }
 
-PlayMode::PlayModeEnum Common::playMode() const
+PlayMode Common::playMode() const
 {
 	return _playMode;
 }
 
-void Common::setPlayMode(PlayMode::PlayModeEnum mode)
+void Common::setPlayMode(PlayMode mode)
 {
 	_playMode = mode;
 	if (mode != PlayMode::OFF) {
@@ -91,7 +91,7 @@ void Common::setPlayMode(PlayMode::PlayModeEnum mode)
 	}
 }
 
-PlayMode::PlayModeEnum Common::lastPlayMode() const
+PlayMode Common::lastPlayMode() const
 {
 	return _lastPlayMode;
 }

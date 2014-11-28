@@ -13,6 +13,8 @@
  */
 #pragma once
 
-#define VSQ_BEGIN_NAMESPACE	namespace vsq {
+#define VSQ_NS vsq
+
+#define VSQ_BEGIN_NAMESPACE	namespace VSQ_NS {
 
 #define VSQ_END_NAMESPACE	}

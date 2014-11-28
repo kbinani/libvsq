@@ -37,11 +37,11 @@ protected:
 	class TentativeHandle : public Handle
 	{
 	public:
-		explicit TentativeHandle(HandleType::HandleTypeEnum type) :
+		explicit TentativeHandle(HandleType type) :
 			Handle(type)
 		{}
 
-		void setHandleType(HandleType::HandleTypeEnum type)
+		void setHandleType(HandleType type)
 		{
 			_type = type;
 		}

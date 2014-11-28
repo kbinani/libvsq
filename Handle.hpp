@@ -115,9 +115,9 @@ public:
 	VibratoBPList dynBP;
 
 protected:
-	HandleType::HandleTypeEnum _type;
+	HandleType _type;
 
-	ArticulationType::ArticulationTypeEnum _articulation;
+	ArticulationType _articulation;
 
 	/**
 	 * @brief 歌詞一覧.
@@ -160,13 +160,13 @@ public:
 	/**
 	 * @param type ハンドルの種類.
 	 */
-	explicit Handle(HandleType::HandleTypeEnum type = HandleType::UNKNOWN);
+	explicit Handle(HandleType type = HandleType::UNKNOWN);
 
 	/**
 	 * @brief articulation の種類を取得する.
 	 * @return articulation の種類.
 	 */
-	ArticulationType::ArticulationTypeEnum getArticulation() const;
+	ArticulationType getArticulation() const;
 
 	/**
 	 * @brief このハンドルが強弱記号を表すものかどうかを表すブール値を取得する.
@@ -233,7 +233,7 @@ public:
 	 * @brief ハンドルのタイプを取得する.
 	 * @return ハンドルのタイプ.
 	 */
-	HandleType::HandleTypeEnum getHandleType() const;
+	HandleType getHandleType() const;
 
 	/**
 	 * @brief コピーを作成する.

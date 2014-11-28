@@ -16,8 +16,8 @@
 
 VSQ_BEGIN_NAMESPACE
 
-VoiceLanguage::VoiceLanguageEnum
-VoiceLanguage::valueFromSingerName(std::string const& name)
+VoiceLanguage
+VoiceLanguageUtil::valueFromSingerName(std::string const& name)
 {
 	std::string search = StringUtil::toLower(name);
 	if (search == "meiko" ||

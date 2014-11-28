@@ -13,27 +13,25 @@
  */
 #pragma once
 
-#include "./Namespace.hpp"
+#include "./EnumUtil.hpp"
 
 VSQ_BEGIN_NAMESPACE
 
 /**
  * @brief VOCALOID1における, ダイナミクスモードを表す定数を格納するための列挙子.
  */
-class DynamicsMode
-{
-public:
-	enum DynamicsModeEnum {
-		/**
-		 * @brief DYNカーブが非表示になるモード(デフォルト).
-		 */
-		STANDARD = 0,
+enum class DynamicsMode {
+	/**
+	 * @brief DYNカーブが非表示になるモード(デフォルト).
+	 */
+	STANDARD = 0,
 
-		/**
-		 * @brief DYNカーブが表示されるモード(エキスパートモード).
-		 */
-		EXPERT = 1
-	};
+	/**
+	 * @brief DYNカーブが表示されるモード(エキスパートモード).
+	 */
+	EXPERT = 1,
 };
+
+LIBVSQ_DECLARE_ENUM_TO_OSTREAM_OPERATOR(DynamicsMode)
 
 VSQ_END_NAMESPACE

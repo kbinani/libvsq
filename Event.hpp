@@ -251,7 +251,7 @@ public:
 	 * @brief イベントの種類.
 	 * @todo private|protected にするべきでは.
 	 */
-	EventType::EventTypeEnum type;
+	EventType type;
 
 	/**
 	 * @brief 歌手ハンドル.
@@ -356,7 +356,7 @@ public:
 	 * @param clock Tick 単位の時刻.
 	 * @param eventType イベントの種類.
 	 */
-	Event(tick_t clock, EventType::EventTypeEnum eventType);
+	Event(tick_t clock, EventType eventType);
 
 	/**
 	 * @brief 長さを取得する.

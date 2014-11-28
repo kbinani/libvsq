@@ -13,48 +13,35 @@
  */
 #pragma once
 
-#include "./Namespace.hpp"
-#include <string>
+#include "./EnumUtil.hpp"
 
 VSQ_BEGIN_NAMESPACE
 
-class EventType
-{
-public:
+/**
+ * {@link Event} の種類を表現する列挙子.
+ */
+enum class EventType {
 	/**
-	 * {@link Event} の種類を表現する列挙子.
+	 * @brief 不明.
 	 */
-	enum EventTypeEnum {
-		/**
-		 * @brief 不明.
-		 */
-		UNKNOWN = 0,
-
-		/**
-		 * @brief 歌手.
-		 */
-		SINGER = 1,
-
-		/**
-		 * @brief 歌詞.
-		 */
-		NOTE = 2,
-
-		/**
-		 * @brief アイコン.
-		 */
-		ICON = 3
-	};
+	UNKNOWN = 0,
 
 	/**
-	 * @brief 文字列に変換する.
-	 * @param value 指定された列挙子の文字列表現.
-	 * @return 変換後の文字列.
+	 * @brief 歌手.
 	 */
-	static std::string toString(EventTypeEnum value);
+	SINGER = 1,
 
-private:
-	EventType();
+	/**
+	 * @brief 歌詞.
+	 */
+	NOTE = 2,
+
+	/**
+	 * @brief アイコン.
+	 */
+	ICON = 3,
 };
+
+LIBVSQ_DECLARE_ENUM_TO_STRING_FREE_FUNCTION(EventType)
 
 VSQ_END_NAMESPACE

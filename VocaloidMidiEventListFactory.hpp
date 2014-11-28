@@ -35,13 +35,13 @@ private:
 	class NrpnEventProvider
 	{
 	protected:
-		MidiParameterType::MidiParameterTypeEnum delayNrpn;
-		MidiParameterType::MidiParameterTypeEnum nrpn;
+		MidiParameterType delayNrpn;
+		MidiParameterType nrpn;
 
 	public:
 		NrpnEventProvider(
-			MidiParameterType::MidiParameterTypeEnum delayNrpnType,
-			MidiParameterType::MidiParameterTypeEnum nrpnType)
+			MidiParameterType delayNrpnType,
+			MidiParameterType nrpnType)
 		{
 			this->delayNrpn = delayNrpnType;
 			this->nrpn = nrpnType;

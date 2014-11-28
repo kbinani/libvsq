@@ -41,7 +41,7 @@ public:
 	/**
 	 * @brief ダイナミクスモード.
 	 */
-	DynamicsMode::DynamicsModeEnum dynamicsMode;
+	DynamicsMode dynamicsMode;
 
 	/**
 	 * @brief (Unknown)
@@ -52,13 +52,13 @@ protected:
 	/**
 	 * @brief Play mode.
 	 */
-	PlayMode::PlayModeEnum _playMode;
+	PlayMode _playMode;
 
 private:
 	/**
 	 * @brief Previous play mode before play mode is set to OFF.
 	 */
-	PlayMode::PlayModeEnum _lastPlayMode;
+	PlayMode _lastPlayMode;
 
 public:
 	/**
@@ -83,7 +83,7 @@ public:
 	 * @param dynamicsMode シーケンスの Dynamics モード.
 	 * @param playMode シーケンスの Play モード.
 	 */
-	Common(std::string const& name, int r, int g, int b, DynamicsMode::DynamicsModeEnum dynamicsMode, PlayMode::PlayModeEnum playMode);
+	Common(std::string const& name, int r, int g, int b, DynamicsMode dynamicsMode, PlayMode playMode);
 
 	/**
 	 * @brief コピーを作成する.
@@ -94,17 +94,17 @@ public:
 	/**
 	 * @brief Get play mode.
 	 */
-	PlayMode::PlayModeEnum playMode() const;
+	PlayMode playMode() const;
 
 	/**
 	 * @brief Set play mode.
 	 */
-	void setPlayMode(PlayMode::PlayModeEnum mode);
+	void setPlayMode(PlayMode mode);
 
 	/**
 	 * @brief Get previous play mode before play mode is set to OFF.
 	 */
-	PlayMode::PlayModeEnum lastPlayMode() const;
+	PlayMode lastPlayMode() const;
 
 	/**
 	 * @brief テキストストリームに出力する.

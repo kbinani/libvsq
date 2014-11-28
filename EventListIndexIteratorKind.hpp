@@ -13,47 +13,45 @@
  */
 #pragma once
 
-#include "./Namespace.hpp"
+#include "./EnumUtil.hpp"
 
 VSQ_BEGIN_NAMESPACE
 
 /**
  * @brief IndexIterator の反復子の種類を表す列挙子.
  */
-class EventListIndexIteratorKind
-{
-public:
-	enum EventListIndexIteratorKindEnum {
-		/**
-		 * @brief 全てのイベント.
-		 */
-		ALL = 0xffff,
+enum class EventListIndexIteratorKind {
+	/**
+	 * @brief 全てのイベント.
+	 */
+	ALL = 0xFFFF,
 
-		/**
-		 * @brief 歌手イベント.
-		 */
-		SINGER = 1,
+	/**
+	 * @brief 歌手イベント.
+	 */
+	SINGER = 1,
 
-		/**
-		 * @brief 音符イベント.
-		 */
-		NOTE = 2,
+	/**
+	 * @brief 音符イベント.
+	 */
+	NOTE = 1 << 1,
 
-		/**
-		 * @brief クレッシェンドイベント.
-		 */
-		CRESCENDO = 4,
+	/**
+	 * @brief クレッシェンドイベント.
+	 */
+	CRESCENDO = 1 << 2,
 
-		/**
-		 * @brief デクレッシェンドイベント.
-		 */
-		DECRESCENDO = 8,
+	/**
+	 * @brief デクレッシェンドイベント.
+	 */
+	DECRESCENDO = 1 << 3,
 
-		/**
-		 * @brief 強弱記号イベント.
-		 */
-		DYNAFF = 16
-	};
+	/**
+	 * @brief 強弱記号イベント.
+	 */
+	DYNAFF = 1 << 4,
 };
+
+LIBVSQ_DECLARE_ENUM_TO_OSTREAM_OPERATOR(EventListIndexIteratorKind)
 
 VSQ_END_NAMESPACE

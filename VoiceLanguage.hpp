@@ -13,35 +13,35 @@
  */
 #pragma once
 
-#include "./Namespace.hpp"
-#include <string>
+#include "./EnumUtil.hpp"
 
 VSQ_BEGIN_NAMESPACE
 
 /**
  * @brief 歌手の歌唱言語を表す列挙子.
  */
-class VoiceLanguage
-{
-public:
-	enum VoiceLanguageEnum {
-		/**
-		 * @brief 日本語.
-		 */
-		JAPANESE = 0,
-
-		/**
-		 * @brief 英語.
-		 */
-		ENGLISH = 1
-	};
+enum class VoiceLanguage {
+	/**
+	 * @brief 日本語.
+	 */
+	JAPANESE = 0,
 
 	/**
-	 * @brief 歌手の名前から, その歌手の歌唱言語を取得する.
-	 * @param name 歌手の名前.
-	 * @return 歌唱言語.
+	 * @brief 英語.
 	 */
-	static VoiceLanguageEnum valueFromSingerName(std::string const& name);
+	ENGLISH = 1,
 };
+
+LIBVSQ_DECLARE_ENUM_TO_OSTREAM_OPERATOR(VoiceLanguage)
+
+namespace VoiceLanguageUtil
+{
+/**
+ * @brief 歌手の名前から, その歌手の歌唱言語を取得する.
+ * @param name 歌手の名前.
+ * @return 歌唱言語.
+ */
+extern VoiceLanguage valueFromSingerName(std::string const& name);
+}
 
 VSQ_END_NAMESPACE
