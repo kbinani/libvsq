@@ -18,7 +18,7 @@
 LIBVSQ_BEGIN_NAMESPACE
 
 /**
- * @brief {@link Handle} の種類を表現する列挙子.
+ * @brief Handle の種類を表現する列挙子.
  */
 enum class HandleType {
 	UNKNOWN = 0,

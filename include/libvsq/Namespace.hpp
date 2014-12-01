@@ -13,8 +13,20 @@
  */
 #pragma once
 
+/**
+ * @def LIBVSQ_NS
+ * @brief libvsq のルート名前空間.
+ */
 #define LIBVSQ_NS vsq
 
+/**
+ * @def LIBVSQ_BEGIN_NAMESPACE
+ * @brief libvsq のルート名前空間を開始する namespace ブロックを挿入する.
+ */
 #define LIBVSQ_BEGIN_NAMESPACE	namespace LIBVSQ_NS {
 
+/**
+ * @def LIBVSQ_END_NAMESPACE
+ * @brief libvsq のルート名前空間を終了する "}" を挿入する.
+ */
 #define LIBVSQ_END_NAMESPACE	}

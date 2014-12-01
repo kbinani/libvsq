@@ -65,8 +65,6 @@ public:
 	 * @brief 初期化を行う.
 	 * @param list 反復子の元になるリスト.
 	 * @param iteratorKind 反復子の種類.
-	 *
-	 * @todo iteratorKind の型を EventListIndexIteratorKind にできないか?
 	 */
 	EventListIndexIterator(Event::List const* list, EventListIndexIteratorKind iteratorKind);
 

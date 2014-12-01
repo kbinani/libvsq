@@ -26,6 +26,9 @@ class OutputStream;
 class Master;
 class Mixer;
 
+/**
+ * @brief Sequence を VSQ ファイルに書き込む処理を行うクラス.
+ */
 class VSQFileWriter
 {
 public:
@@ -35,7 +38,7 @@ public:
 
 	/**
 	 * @brief ストリームに出力する.
-	 * @param 出力するシーケンス.
+	 * @param sequence 出力するシーケンス.
 	 * @param stream 出力先のストリーム.
 	 * @param msPreSend ミリ秒単位のプリセンドタイム.
 	 * @param encoding マルチバイト文字のテキストエンコーディング(現在は Shift_JIS 固定で, 引数は無視される).

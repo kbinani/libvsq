@@ -24,6 +24,7 @@
 LIBVSQ_BEGIN_NAMESPACE
 
 /**
+ * @brief トラックを表すクラス.
  * @todo _pit とかを一般化する.
  */
 class Track
@@ -168,14 +169,17 @@ public:
 	 */
 	Event const* singerEventAt(tick_t tick) const;
 
-	BPList const* curve(std::string const& curveName) const;
-
 	/**
 	 * @brief 指定された名前のカーブを取得する.
 	 * @param curve カーブ名.
 	 * @return カーブ.
 	 */
 	BPList* curve(std::string const& curveName);
+
+	/**
+	 * @copydoc Track::curve
+	 */
+	BPList const* curve(std::string const& curveName) const;
 
 	/**
 	 * @brief コピーを作成する.
@@ -189,6 +193,9 @@ public:
 	 */
 	Event::List& events();
 
+	/**
+	 * @copydoc Track::events
+	 */
 	Event::List const& events() const;
 
 	/**
@@ -197,7 +204,7 @@ public:
 	Common& common();
 
 	/**
-	 * @brief Get an instance of Common.
+	 * @copydoc Track::common
 	 */
 	Common const& common() const;
 

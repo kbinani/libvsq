@@ -20,7 +20,7 @@
 LIBVSQ_BEGIN_NAMESPACE
 
 /**
- * @brief 書き込みストリーム.
+ * @brief バイト列の書き込みを行う何らかの出力先を表す抽象クラス.
  */
 class OutputStream
 {

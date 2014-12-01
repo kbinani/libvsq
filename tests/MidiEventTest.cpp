@@ -353,7 +353,7 @@ public:
 				MidiEvent::read(stream, lastTick, lastStatus);
 				CPPUNIT_FAIL("期待した例外がスローされない");
 			} catch (MidiEvent::ParseException& e) {
-				CPPUNIT_ASSERT_EQUAL(string("don't know how to process first_byte: 0xF4"), e.getMessage());
+				CPPUNIT_ASSERT_EQUAL(string("don't know how to process first_byte: 0xF4"), e.message());
 			}
 		}
 	}

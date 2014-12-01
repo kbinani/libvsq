@@ -19,7 +19,7 @@
 LIBVSQ_BEGIN_NAMESPACE
 
 /**
- * @brief 読み込みストリーム.
+ * @brief バイト列を読み込む何らかの入力元を表す抽象クラス.
  */
 class InputStream
 {

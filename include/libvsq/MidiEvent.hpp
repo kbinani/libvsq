@@ -25,25 +25,37 @@ class InputStream;
 
 /**
  * @brief MIDI イベントを表現するクラス.
- * メタイベントは, メタイベントのデータ長をData[1]に格納せず, 生のデータをDataに格納するので, 注意が必要.
+ * @details メタイベントは, メタイベントのデータ長をData[1]に格納せず, 生のデータをDataに格納するので, 注意が必要.
  */
 class MidiEvent
 {
 public:
+	/**
+	 * @brief MIDI イベントのパースに失敗したことを表す例外.
+	 * @sa MidiEvent::read
+	 */
 	class ParseException : public std::exception
 	{
-		std::string message;
+		std::string _message;
 	public:
+		/**
+		 * @brief メッセージを指定して初期化する.
+		 * @param message 例外の概要を表すメッセージ.
+		 */
 		explicit ParseException(std::string const& message)
-			: message(message)
+			: _message(message)
 		{}
 
 		~ParseException()
 		{}
 
-		std::string getMessage() const
+		/**
+		 * @brief 例外の概要を表すメッセージを返す.
+		 * @return 例外の概要を表すメッセージ.
+		 */
+		std::string message() const
 		{
-			return message;
+			return _message;
 		}
 	};
 
@@ -59,7 +71,7 @@ public:
 
 	/**
 	 * @brief MIDI イベントのデータ.
-	 * メタイベントについては長さ値を保持せず, 出力時に <code>data</code> フィールドの長さに応じた値を自動的に出力する.
+	 * @details メタイベントについては長さ値を保持せず, 出力時に <code>data</code> フィールドの長さに応じた値を自動的に出力する.
 	 */
 	std::vector<int> data;
 
@@ -114,6 +126,7 @@ public:
 	 * @param stream 読み込み元のストリーム.
 	 * @param last_tick
 	 * @param last_status_byte
+	 * @throw ParseException
 	 */
 	static MidiEvent read(InputStream& stream, tick_t& last_tick, uint8_t& last_status_byte);
 

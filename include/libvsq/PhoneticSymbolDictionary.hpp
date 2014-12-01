@@ -20,50 +20,60 @@
 LIBVSQ_BEGIN_NAMESPACE
 
 /**
- * @brief Convert phrase into corresponding VOCALOID symbols.
+ * @brief \~japanese-en 歌詞を VOCALOID の発音記号列に変換する処理を行うクラス. \~english Convert phrase into corresponding VOCALOID symbols.
  */
 class PhoneticSymbolDictionary
 {
 public:
 	/**
-	 * @brief Dictionary item used in PhoneticSymbolConverter.
+	 * @brief \~japanese-en 歌詞と発音記号とのマッピング 1 つ分を表すクラス.
+	 *        \~english Dictionary item used in PhoneticSymbolConverter.
 	 */
 	class Element
 	{
 	private:
 		/**
-		 * @brief A word. In case English, phrases are separated by '-' letter.
+		 * @brief \~japanese-en 歌詞.
+		 *        \~english A word. In case English, phrases are separated by '-' letter.
 		 */
 		std::string _word;
 		/**
-		 * @brief A string of phonetic symbols, contains '\t'.
+		 * @brief \~japanese-en 歌詞 @a _word に対応する発音記号列. タブ文字で区切られる.
+		 *        \~english A string of phonetic symbols, contains TAB character.
 		 */
 		std::string _rawSymbol;
 		/**
-		 * @brief A string of phonetic symbols, doesn't contain '\t'.
+		 * @brief \~japanese-en 歌詞 @a _word に対応する発音記号列. 空白文字 ' ' で区切られる.
+		 *        \~english A string of phonetic symbols, separated by space ' ' character.
 		 */
 		std::string _symbol;
 
 	public:
 		/**
-		 * @brief Initialize an element.
-		 * @param word A word. In case English, phrases are separated by '-' letter.
-		 * @param symbol A string of phonetic symbols, contains '\t'.
+		 * @brief \~japanese-en 初期化する.
+		 *        \~english Initialize an element.
+		 * @param word \~japanese-en 歌詞.
+		 *             \~english A word. In case English, phrases are separated by '-' letter.
+		 * @param symbol \~japanese-en @a word に対応する発音記号列. タブ文字で区切られる.
+		 *               \~english A string of phonetic symbols, contains TAB character.
 		 */
 		Element(std::string const& word, std::string const& symbol);
 
 		/**
-		 * @brief Get a word. In case English, phrases are separated by '-' letter.
+		 * @brief \~japanese-en 歌詞を取得する. 英語の場合, 音節は '-' で区切られる.
+		 *        \~english Get a word. In case English, phrases are separated by '-' letter.
 		 */
 		std::string word() const;
 
 		/**
-		 * @brief Get a string of phonetic symbols, contains '\t'.
+		 * @brief \~japanese-en タブ文字で区切られた発音記号列を取得する.
+		 *        \~english Get a string of phonetic symbols, contains TAB character.
 		 */
 		std::string rawSymbol() const;
 
 		/**
-		 * @brief Get a string of phonetic symbols, doesn't contain '\t'.
+		 * @brief \~japanese-en 空白文字 ' ' で区切られた発音記号列を取得する.
+		 *        \~english Get a string of phonetic symbols, separated by space ' ' character.
 		 */
 		std::string symbol() const;
 	};
@@ -74,53 +84,71 @@ private:
 
 public:
 	/**
-	 * @brief Read dictionary from file.
-	 * @param filePath File path of dictionary.
+	 * @brief \~japanese-en ファイルから辞書を読み込む.
+	 *        \~english Read dictionary from file.
+	 * @param filePath \~japanese-en 読み込むファイルのファイルパス.
+	 *                 \~english File path of dictionary.
 	 */
 	explicit PhoneticSymbolDictionary(std::string const& filePath);
 
 	/**
-	 * @brief Default constructor.
+	 * @brief \~japanese-en 辞書を初期化する.
+	 *        \~english Initialize dictionary.
 	 */
 	PhoneticSymbolDictionary();
 
 	/**
-	 * @brief Get symbol information, corresponding a 'word'.
-	 * @param word A word to get symbol information.
-	 * @return Symbol information. Returns 0 if symbol information was not found.
+	 * @brief \~japanese-en 歌詞 @a word に対応する発音記号情報を検索する.
+	 *        \~english Get symbol information, corresponding a @a word.
+	 * @param word \~japanese-en 歌詞.
+	 *             \~english A word to get symbol information.
+	 * @return \~japanese-en 発音記号情報. 対応する発音記号が見つからなければ null を返す.
+	 *         \~english Symbol information. Returns 0 if symbol information was not found.
 	 */
 	Element const* attach(std::string const& word) const;
 
 	/**
-	 * @brief Get a maximum division number in this dictionary.
-	 *     Usuary, a word is separated into several phrases. (ex. 'acorn' is separated into 'a-', 'corn'.)
-	 *     This method returns the maximum number of phrase-division in all word in this dictionary.
+	 * @brief \~japanese-en ひとつの単語が, 最大何個の音節に分割されるかを取得する.
+	 *        \~english Get a maximum division number in this dictionary.
+	 * @details \~japanese-en 通常, 単語は音節に分割される. (例えば 'acorn' は 'a-', 'corn' というように.)
+	 *                        この関数は, このオブジェクトが持っている単語のうち音節分割数が最大のものを返す.
+	 *          \~english Usuary, a word is separated into several phrases. (ex. 'acorn' is separated into 'a-', 'corn'.)
+	 *                    This method returns the maximum number of phrase-division in all word in this dictionary.
 	 */
 	int maxDivisions() const;
 
 	/**
-	 * @brief Get an instance of dictionary used for VOCALOID Japanese voice bank.
-	 * @return An instance of dictionary.
+	 * @brief \~japanese-en VOCALOID 日本語ライブラリに使用される発音記号辞書を返す.
+	 *        \~english Get an instance of dictionary used for VOCALOID Japanese voice bank.
+	 * @return \~japanese-en 辞書オブジェクト.
+	 *         \~english An instance of dictionary.
 	 */
 	static PhoneticSymbolDictionary const* vocaloidJpDictionary();
 
 	/**
-	 * @brief Get an instance of dictionary used for VOCALOID English voice bank.
-	 * @return An instance of dictionary.
+	 * @brief \~japanese-en VOCALOID 英語ライブラリに使用される発音記号辞書を返す.
+	 *        \~english Get an instance of dictionary used for VOCALOID English voice bank.
+	 * @return \~japanese-en 辞書オブジェクト.
+	 *         \~english An instance of dictionary.
 	 */
 	static PhoneticSymbolDictionary const* vocaloidEnDictionary();
 
 private:
 	/**
-	 * @brief Read dictionary from file.
-	 * @param filePath File path of dictionary.
+	 * @brief \~japanese-en ファイルから辞書を読み込む.
+	 *        \~english Read dictionary from file.
+	 * @param filePath \~japanese-en 辞書ファイルのファイルパス.
+	 *                 \~english File path of dictionary.
 	 */
 	void read(std::string const& filePath);
 
 	/**
-	 * @brief Add a dictionary entry.
-	 * @param word A word, phrase separated by TAB letter. (ex. 'a-\tcid' for 'acid'.)
-	 * @param symbol A symbol. (ex. '{\ts I d' for 'acid')
+	 * @brief \~japanese-en 辞書の要素を追加する.
+	 *        \~english Add a dictionary entry.
+	 * @param word \~japanese-en 音節を TAB 文字で区切った単語. (例えば 'acid' なら 'a-\tcid'.)
+	 *             \~english A word, phrase separated by TAB letter. (ex. 'a-\tcid' for 'acid'.)
+	 * @param symbol \~japanese-en 発音記号列. (例えば 'acid' なら '{\ts I d'.)
+	 *               \~english A symbol. (ex. '{\ts I d' for 'acid'.)
 	 */
 	void add(std::string const& word, std::string const& symbol);
 

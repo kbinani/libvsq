@@ -99,28 +99,34 @@ public:
 	Sequence clone() const;
 
 	/**
-	 * @brief Get an instance of Track.
+	 * @brief 先頭から @a trackIndex 番目のトラックを取得する.
 	 */
 	Track const& track(int trackIndex) const;
 
 	/**
-	 * @brief Get an instance of Track.
+	 * @copydoc Sequence::track
 	 */
 	Track& track(int trackIndex);
 
+	/**
+	 * @brief 全トラックのリストを取得する.
+	 */
 	std::vector<Track> const& tracks() const;
 
+	/**
+	 * @copydoc Sequence::tracks
+	 */
 	std::vector<Track>& tracks();
 
 	/**
 	 * @brief テンポが一つも指定されていない場合の, 基本テンポ値を取得する.
-	 * @return (int) テンポ値. 四分音符の長さのマイクロ秒単位の長さ.
+	 * @return テンポ値. 四分音符の長さのマイクロ秒単位の長さ.
 	 */
 	int baseTempo() const;
 
 	/**
 	 * @brief Tick 単位の曲の長さを取得する.
-	 * シーケンスに変更を加えた場合, <code><a href="#updateTotalTicks">updateTotalTicks</a></code> を呼んでからこのメソッドを呼ぶこと.
+	 * @details シーケンスに変更を加えた場合, Sequence::updateTotalTicks を呼んでからこのメソッドを呼ぶこと.
 	 * @return Tick 単位の曲の長さ.
 	 */
 	tick_t totalTicks() const;

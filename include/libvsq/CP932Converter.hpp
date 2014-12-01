@@ -14,6 +14,7 @@
 #pragma once
 
 #include "./BasicTypes.hpp"
+#include "./PublicForUnitTest.hpp"
 #include <string>
 #include <vector>
 
@@ -39,7 +40,7 @@ public:
 	 */
 	static std::string convertToUTF8(std::string const& cp932);
 
-protected:
+LIBVSQ_PRIVATE_BUT_PUBLIC_FOR_UNITTEST:
 	/**
 	 * @brief UTF8 の文字列を unicode のバイト列に変換する.
 	 * @param s 変換前の文字列.

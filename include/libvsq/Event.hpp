@@ -55,8 +55,17 @@ public:
 	public:
 		List();
 
+		/**
+		 * @brief コピーコンストラクタ. @a list のコピーを作成する.
+		 * @param list コピー元のリスト.
+		 */
 		List(List const& list);
 
+		/**
+		 * @brief コピー演算子. @a list のコピーを作成する.
+		 * @param list コピー元のリスト.
+		 * @return @a list のコピー.
+		 */
 		List& operator = (List const& list);
 
 		~List();
@@ -98,6 +107,9 @@ public:
 		 */
 		ListIterator iterator();
 
+		/**
+		 * @copydoc List::iterator
+		 */
 		ListConstIterator iterator() const;
 
 		/**
@@ -207,12 +219,18 @@ public:
 		Event* next();
 	};
 
+	/**
+	 * @brief イベントリストのアイテムを順に返す反復子.
+	 */
 	class ListIterator : public ListConstIterator
 	{
 	private:
 		List* _nonConstList;
 
 	public:
+		/**
+		 * @copydoc ListConstIterator::ListConstIterator
+		 */
 		explicit ListIterator(List* list);
 
 		/**
@@ -222,17 +240,20 @@ public:
 	};
 
 	/**
-	 * @brief Maximum length of note event in milli second.
+	 * @brief \~japanese-en ノートの最大長さ(ミリ秒).
+	 *        \~english Maximum length of note event in milli second.
 	 */
 	static const int MAX_NOTE_MILLISEC_LENGTH = 16383;
 
 	/**
-	 * @brief Maximum note number.
+	 * @brief \~japanese-en ノートナンバーの最大値.
+	 *        \~english Maximum note number.
 	 */
 	static const int MAX_NOTE_NUMBER = 127;
 
 	/**
-	 * @brief Minimum note number.
+	 * @brief \~japanese-en ノートナンバーの最小値.
+	 *        \~english Minimum note number.
 	 */
 	static const int MIN_NOTE_NUMBER = 0;
 
@@ -311,17 +332,28 @@ public:
 	 */
 	Handle noteHeadHandle;
 
+	/**
+	 * @brief pMeanOnsetFirstNote の値.
+	 */
 	int pMeanOnsetFirstNote;
 
+	/**
+	 * @brief vMeanNoteTransition の値.
+	 */
 	int vMeanNoteTransition;
 
+	/**
+	 * @brief d4mean の値.
+	 */
 	int d4mean;
 
+	/**
+	 * @brief pMeanEndingNote の値.
+	 */
 	int pMeanEndingNote;
 
 	/**
 	 * @brief 強弱記号ハンドル.
-	 * @todo 型をHandle*に変える.
 	 */
 	Handle iconDynamicsHandle;
 
@@ -396,17 +428,22 @@ public:
 	int compareTo(Event const& item) const;
 
 	/**
-	 * @brief 2 つの {@link Event} を比較する.
-	 * @param a 比較対象のオブジェクト.
-	 * @param b 比較対象のオブジェクト.
-	 * @return <code>a</code> が <code>b</code> よりも小さい場合は <code>true</code>, そうでない場合は <code>false</code> を返す.
+	 * @brief \~japanese-en 2 つの Event を比較する.
+	 *        \~english Compare two Event objects.
+	 *
+	 * @param a \~japanese-en 比較対象のオブジェクト.
+	 *          \~english Compare target.
+	 *
+	 * @param b \~japanese-en 比較対象のオブジェクト.
+	 *          \~english Compare target.
+	 *
+	 * @return \~japanese-en @a a が @a b よりも小さい場合は <code>true</code>, そうでない場合は <code>false</code> を返す.
+	 *         \~english Return <code>true</code> if @a a is less than @a b, <code>false</code> if else.
 	 */
 	static bool compare(Event const& a, Event const& b);
 
 	/**
-	 * @brief Compare 2 Event objects.
-	 * @param a Compare target.
-	 * @param b Compare target.
+	 * @copydoc Event::compare
 	 */
 	static bool comp(Event const* a, Event const* b);
 
@@ -414,7 +451,7 @@ public:
 	 * @brief イベントリストの末尾の要素を表すオブジェクトを取得する.
 	 * @return オブジェクト.
 	 */
-	static Event getEOS();
+	static Event eos();
 
 	/*
 	 * @param item [VsqEvent]
@@ -425,6 +462,9 @@ public:
 	 */
 
 protected:
+	/**
+	 * @brief イベントの種類を設定する.
+	 */
 	void type(EventType type);
 
 private:

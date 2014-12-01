@@ -48,13 +48,12 @@ public:
 	 */
 	std::string color;
 
-protected:
+private:
 	/**
 	 * @brief Play mode.
 	 */
 	PlayMode _playMode;
 
-private:
 	/**
 	 * @brief Previous play mode before play mode is set to OFF.
 	 */

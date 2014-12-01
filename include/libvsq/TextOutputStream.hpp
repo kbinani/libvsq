@@ -20,7 +20,7 @@
 LIBVSQ_BEGIN_NAMESPACE
 
 /**
- * @brief テキスト出力のためのストリーム.
+ * @brief 文字列を書き込む何らかの出力先を表す抽象クラス.
  */
 class TextOutputStream
 {

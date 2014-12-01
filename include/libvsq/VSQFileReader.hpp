@@ -29,7 +29,7 @@ class Master;
 class Mixer;
 
 /**
- * @brief VSQ ファイルからのシーケンス読み込みを行うクラス.
+ * @brief VSQ ファイルのシーケンスを読み込み, Sequence オブジェクトを作成するクラス.
  */
 class VSQFileReader
 {

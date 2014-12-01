@@ -16,76 +16,6 @@ struct NrpnEventSpec {
 	bool isMSBOmittingRequired;// = false;
 };
 
-class VocaloidMidiEventListFactoryStub : public VocaloidMidiEventListFactory
-{
-public:
-	static vector<NrpnEvent> generateNRPN(
-		Track const& target, TempoList const& tempoList, tick_t totalTicks, tick_t preMeasureTicks, int msPreSend)
-	{
-		return VocaloidMidiEventListFactory::generateNRPN(target, tempoList, totalTicks, preMeasureTicks, msPreSend);
-	}
-
-	static vector<NrpnEvent> generateExpressionNRPN(Track& track, TempoList& tempoList, int preSendMilliseconds)
-	{
-		return VocaloidMidiEventListFactory::generateExpressionNRPN(track, tempoList, preSendMilliseconds);
-	}
-
-	static NrpnEvent generateHeaderNRPN()
-	{
-		return VocaloidMidiEventListFactory::generateHeaderNRPN();
-	}
-
-	static vector<NrpnEvent> generateSingerNRPN(TempoList& tempoList, Event const& singerEvent, int preSendMilliseconds)
-	{
-		return VocaloidMidiEventListFactory::generateSingerNRPN(tempoList, singerEvent, preSendMilliseconds);
-	}
-
-	static NrpnEvent generateNoteNRPN(Track& track, TempoList& tempoList, Event const& noteEvent, int msPreSend, int noteLocation, int* lastDelay, int* delay)
-	{
-		return VocaloidMidiEventListFactory::generateNoteNRPN(track, tempoList, noteEvent, msPreSend, noteLocation, lastDelay, delay);
-	}
-
-	static vector<NrpnEvent> generatePitchBendNRPN(Track& track, TempoList& tempoList, int msPreSend)
-	{
-		return VocaloidMidiEventListFactory::generatePitchBendNRPN(track, tempoList, msPreSend);
-	}
-
-	static vector<NrpnEvent> generatePitchBendSensitivityNRPN(Track& track, TempoList& tempoList, int msPreSend)
-	{
-		return VocaloidMidiEventListFactory::generatePitchBendSensitivityNRPN(track, tempoList, msPreSend);
-	}
-
-	static vector<NrpnEvent> generateVibratoNRPN(TempoList& tempoList, Event& noteEvent, int msPreSend)
-	{
-		return VocaloidMidiEventListFactory::generateVibratoNRPN(tempoList, noteEvent, msPreSend);
-	}
-
-	static vector<NrpnEvent> generateVoiceChangeParameterNRPN(Track& track, TempoList& tempoList, int msPreSend, tick_t preMeasureTicks)
-	{
-		return VocaloidMidiEventListFactory::generateVoiceChangeParameterNRPN(track, tempoList, msPreSend, preMeasureTicks);
-	}
-
-	static vector<NrpnEvent> generateFx2DepthNRPN(Track& track, TempoList& tempoList, int preSendMilliseconds)
-	{
-		return VocaloidMidiEventListFactory::generateFx2DepthNRPN(track, tempoList, preSendMilliseconds);
-	}
-
-	static int addVoiceChangeParameters(vector<NrpnEvent>& dest, BPList& list, TempoList& tempoList, int msPreSend, int lastDelay)
-	{
-		return VocaloidMidiEventListFactory::addVoiceChangeParameters(dest, list, tempoList, msPreSend, lastDelay);
-	}
-
-	static void getActualTickAndDelay(TempoList& tempoList, tick_t tick, int msPreSend, tick_t* actualTick, int* delay)
-	{
-		_getActualTickAndDelay(tempoList, tick, msPreSend, actualTick, delay);
-	}
-
-	static void getMsbAndLsb(int value, int* msb, int* lsb)
-	{
-		_getMsbAndLsb(value, msb, lsb);
-	}
-};
-
 class VocaloidMidiEventListFactoryTest : public CppUnit::TestCase
 {
 public:
@@ -97,7 +27,7 @@ public:
 		dynamics->add(480, 127);
 		dynamics->add(1920, 0);
 
-		vector<NrpnEvent> actual = VocaloidMidiEventListFactoryStub::generateExpressionNRPN(track, sequence.tempoList, 500);
+		vector<NrpnEvent> actual = VocaloidMidiEventListFactory::generateExpressionNRPN(track, sequence.tempoList, 500);
 		CPPUNIT_ASSERT_EQUAL((size_t)2, actual.size());
 
 		vector<NrpnEvent> expandedActual = actual[0].expand();
@@ -123,7 +53,7 @@ public:
 
 	void test_generateHeaderNRPN()
 	{
-		vector<NrpnEvent> actual = VocaloidMidiEventListFactoryStub::generateHeaderNRPN().expand();
+		vector<NrpnEvent> actual = VocaloidMidiEventListFactory::generateHeaderNRPN().expand();
 		CPPUNIT_ASSERT_EQUAL((size_t)3, actual.size());
 
 		CPPUNIT_ASSERT_EQUAL((tick_t)0, actual[0].tick);
@@ -153,7 +83,7 @@ public:
 		Event singerEvent(1920, EventType::SINGER);
 		singerEvent.singerHandle = Handle(HandleType::SINGER);
 		sequence.track(0).events().add(singerEvent);
-		vector<NrpnEvent> actual = VocaloidMidiEventListFactoryStub::generateSingerNRPN(sequence.tempoList, singerEvent, 500);
+		vector<NrpnEvent> actual = VocaloidMidiEventListFactory::generateSingerNRPN(sequence.tempoList, singerEvent, 500);
 
 		CPPUNIT_ASSERT_EQUAL((size_t)1, actual.size());
 		vector<NrpnEvent> actualExpanded = actual[0].expand();
@@ -220,7 +150,7 @@ public:
 		int msPreSend = 500;
 		int track = 0;
 		int delay;
-		NrpnEvent actual = VocaloidMidiEventListFactoryStub::generateNoteNRPN(sequence.track(0), sequence.tempoList, noteEvent, msPreSend, noteLocation, (int*)0, &delay);
+		NrpnEvent actual = VocaloidMidiEventListFactory::generateNoteNRPN(sequence.track(0), sequence.tempoList, noteEvent, msPreSend, noteLocation, (int*)0, &delay);
 		vector<NrpnEvent> actualExpanded = actual.expand();
 		CPPUNIT_ASSERT_EQUAL((size_t)24, actualExpanded.size());
 		CPPUNIT_ASSERT_EQUAL(500, delay);
@@ -377,14 +307,14 @@ public:
 
 		// lastDelay が nil でないために, CVM_NM_VERSION_AND_DEVICE が出力されないパターン
 		lastDelay = 0;
-		actual = VocaloidMidiEventListFactoryStub::generateNoteNRPN(sequence.track(track), sequence.tempoList, noteEvent, msPreSend, noteLocation, &lastDelay, &delay);
+		actual = VocaloidMidiEventListFactory::generateNoteNRPN(sequence.track(track), sequence.tempoList, noteEvent, msPreSend, noteLocation, &lastDelay, &delay);
 		actualExpanded = actual.expand();
 		CPPUNIT_ASSERT_EQUAL((size_t)23, actualExpanded.size());
 		CPPUNIT_ASSERT_EQUAL(500, delay);
 
 		// lastDelay が, 該当音符についての delay と同じであるために, CVM_NM_DELAY が出力されないパターン
 		lastDelay = 500;
-		actual = VocaloidMidiEventListFactoryStub::generateNoteNRPN(sequence.track(track), sequence.tempoList, noteEvent, msPreSend, noteLocation, &lastDelay, &delay);
+		actual = VocaloidMidiEventListFactory::generateNoteNRPN(sequence.track(track), sequence.tempoList, noteEvent, msPreSend, noteLocation, &lastDelay, &delay);
 		actualExpanded = actual.expand();
 		CPPUNIT_ASSERT_EQUAL((size_t)22, actualExpanded.size());
 		CPPUNIT_ASSERT_EQUAL(500, delay);
@@ -393,7 +323,7 @@ public:
 		// が出力されないパターン
 		lastDelay = 500;
 		noteEvent.vibratoHandle = Handle();
-		actual = VocaloidMidiEventListFactoryStub::generateNoteNRPN(sequence.track(track), sequence.tempoList, noteEvent, msPreSend, noteLocation, &lastDelay, &delay);
+		actual = VocaloidMidiEventListFactory::generateNoteNRPN(sequence.track(track), sequence.tempoList, noteEvent, msPreSend, noteLocation, &lastDelay, &delay);
 		actualExpanded = actual.expand();
 		CPPUNIT_ASSERT_EQUAL((size_t)19, actualExpanded.size());
 		CPPUNIT_ASSERT_EQUAL(500, delay);
@@ -402,7 +332,7 @@ public:
 		// VOCALOID1 であるために, 0x5011が出力され, CVM_NM_PHONETIC_SYMBOL_CONTINUATIONとVOCALOID2用のNRPNが出力されない
 		lastDelay = 500;
 		noteEvent.vibratoHandle = Handle();
-		actual = VocaloidMidiEventListFactoryStub::generateNoteNRPN(sequence.track(track), sequence.tempoList, noteEvent, msPreSend, noteLocation, &lastDelay, &delay);
+		actual = VocaloidMidiEventListFactory::generateNoteNRPN(sequence.track(track), sequence.tempoList, noteEvent, msPreSend, noteLocation, &lastDelay, &delay);
 		actualExpanded = actual.expand();
 		CPPUNIT_ASSERT_EQUAL((size_t)8, actualExpanded.size());
 		item = actualExpanded[4];
@@ -420,7 +350,7 @@ public:
 		pit->add(480, 8191);
 		pit->add(1920, -8192);
 
-		vector<NrpnEvent> actual = VocaloidMidiEventListFactoryStub::generatePitchBendNRPN(sequence.track(0), sequence.tempoList, 500);
+		vector<NrpnEvent> actual = VocaloidMidiEventListFactory::generatePitchBendNRPN(sequence.track(0), sequence.tempoList, 500);
 		CPPUNIT_ASSERT_EQUAL((size_t)2, actual.size());
 
 		vector<NrpnEvent> expandedActual = actual[0].expand();
@@ -453,7 +383,7 @@ public:
 		pbs->add(480, 0);
 		pbs->add(1920, 24);
 
-		vector<NrpnEvent> actual = VocaloidMidiEventListFactoryStub::generatePitchBendSensitivityNRPN(sequence.track(0), sequence.tempoList, 500);
+		vector<NrpnEvent> actual = VocaloidMidiEventListFactory::generatePitchBendSensitivityNRPN(sequence.track(0), sequence.tempoList, 500);
 		CPPUNIT_ASSERT_EQUAL((size_t)2, actual.size());
 
 		vector<NrpnEvent> expandedActual = actual[0].expand();
@@ -486,7 +416,7 @@ public:
 		noteEvent.vibratoHandle = Handle();
 
 		// ビブラートがないため, NRPN が生成されない場合
-		vector<NrpnEvent> actual = VocaloidMidiEventListFactoryStub::generateVibratoNRPN(sequence.tempoList, noteEvent, 500);
+		vector<NrpnEvent> actual = VocaloidMidiEventListFactory::generateVibratoNRPN(sequence.tempoList, noteEvent, 500);
 		CPPUNIT_ASSERT_EQUAL((size_t)0, actual.size());
 
 		// ビブラートがある場合
@@ -500,7 +430,7 @@ public:
 		VibratoBPList depthCurve("2", "0.4,0.9", "13,14");
 		noteEvent.vibratoHandle.rateBP = rateCurve;
 		noteEvent.vibratoHandle.depthBP = depthCurve;
-		actual = VocaloidMidiEventListFactoryStub::generateVibratoNRPN(sequence.tempoList, noteEvent, 500);
+		actual = VocaloidMidiEventListFactory::generateVibratoNRPN(sequence.tempoList, noteEvent, 500);
 		CPPUNIT_ASSERT_EQUAL((size_t)5, actual.size());
 
 		vector<NrpnEvent> actualExpanded = actual[0].expand();
@@ -633,7 +563,7 @@ public:
 
 		// VOCALOID1 の場合
 		track.common().version = "DSB2";
-		vector<NrpnEvent> events = VocaloidMidiEventListFactoryStub::generateVoiceChangeParameterNRPN(track, sequence.tempoList, 500, sequence.preMeasureTicks());
+		vector<NrpnEvent> events = VocaloidMidiEventListFactory::generateVoiceChangeParameterNRPN(track, sequence.tempoList, 500, sequence.preMeasureTicks());
 		// 中身は見ない. 各カーブに MIDI イベントが1つずつできることだけをチェック
 		// 各イベントの子にあたるイベントのテストは, test_addVoiceChangeParameters で行う
 		// vocaloid1 で出力されるのは 18 種類 + DELAY イベント 1 個
@@ -642,13 +572,13 @@ public:
 		// VOCALOID2 の場合
 		// 6 種類 + DELAY イベント 1 個
 		track.common().version = "DSB3";
-		events = VocaloidMidiEventListFactoryStub::generateVoiceChangeParameterNRPN(track, sequence.tempoList, 500, sequence.preMeasureTicks());
+		events = VocaloidMidiEventListFactory::generateVoiceChangeParameterNRPN(track, sequence.tempoList, 500, sequence.preMeasureTicks());
 		CPPUNIT_ASSERT_EQUAL((size_t)(6 + 1), events.size());
 
 		// UNKNOWN の場合
 		// 5 種類 + DELAY イベント 1 個
 		track.common().version = "";
-		events = VocaloidMidiEventListFactoryStub::generateVoiceChangeParameterNRPN(track, sequence.tempoList, 500, sequence.preMeasureTicks());
+		events = VocaloidMidiEventListFactory::generateVoiceChangeParameterNRPN(track, sequence.tempoList, 500, sequence.preMeasureTicks());
 		CPPUNIT_ASSERT_EQUAL((size_t)(5 + 1), events.size());
 	}
 
@@ -661,7 +591,7 @@ public:
 		list->add(1920, 127);
 		vector<NrpnEvent> dest;
 		int preSend = 500;
-		int delay = VocaloidMidiEventListFactoryStub::addVoiceChangeParameters(dest, *list, sequence.tempoList, preSend, 0);
+		int delay = VocaloidMidiEventListFactory::addVoiceChangeParameters(dest, *list, sequence.tempoList, preSend, 0);
 
 		CPPUNIT_ASSERT_EQUAL((size_t)3, dest.size());
 		CPPUNIT_ASSERT_EQUAL(500, delay);
@@ -717,7 +647,7 @@ public:
 		list->add(480, 64);
 		list->add(1920, 63);
 
-		vector<NrpnEvent> actual = VocaloidMidiEventListFactoryStub::generateFx2DepthNRPN(track, sequence.tempoList, 500);
+		vector<NrpnEvent> actual = VocaloidMidiEventListFactory::generateFx2DepthNRPN(track, sequence.tempoList, 500);
 		CPPUNIT_ASSERT_EQUAL((size_t)2, actual.size());
 
 		vector<NrpnEvent> expandedActual = actual[0].expand();
@@ -750,23 +680,23 @@ public:
 		tick_t actualTick;
 		int delay;
 
-		VocaloidMidiEventListFactoryStub::getActualTickAndDelay(sequence.tempoList, 1920, 500, &actualTick, &delay);
+		VocaloidMidiEventListFactory::_getActualTickAndDelay(sequence.tempoList, 1920, 500, &actualTick, &delay);
 		CPPUNIT_ASSERT_EQUAL((tick_t)1440, actualTick);
 		CPPUNIT_ASSERT_EQUAL(500, delay);
 
-		VocaloidMidiEventListFactoryStub::getActualTickAndDelay(sequence.tempoList, 1920, 499, &actualTick, &delay);
+		VocaloidMidiEventListFactory::_getActualTickAndDelay(sequence.tempoList, 1920, 499, &actualTick, &delay);
 		CPPUNIT_ASSERT_EQUAL((tick_t)1440, actualTick);
 		CPPUNIT_ASSERT_EQUAL(500, delay);
 
-		VocaloidMidiEventListFactoryStub::getActualTickAndDelay(sequence.tempoList, 1920, 498, &actualTick, &delay);
+		VocaloidMidiEventListFactory::_getActualTickAndDelay(sequence.tempoList, 1920, 498, &actualTick, &delay);
 		CPPUNIT_ASSERT_EQUAL((tick_t)1441, actualTick);
 		CPPUNIT_ASSERT_EQUAL(498, delay);
 
-		VocaloidMidiEventListFactoryStub::getActualTickAndDelay(sequence.tempoList, 0, 500, &actualTick, &delay);
+		VocaloidMidiEventListFactory::_getActualTickAndDelay(sequence.tempoList, 0, 500, &actualTick, &delay);
 		CPPUNIT_ASSERT_EQUAL((tick_t)0, actualTick);
 		CPPUNIT_ASSERT_EQUAL(0, delay);
 
-		VocaloidMidiEventListFactoryStub::getActualTickAndDelay(sequence.tempoList, 0, 0, &actualTick, &delay);
+		VocaloidMidiEventListFactory::_getActualTickAndDelay(sequence.tempoList, 0, 0, &actualTick, &delay);
 		CPPUNIT_ASSERT_EQUAL((tick_t)0, actualTick);
 		CPPUNIT_ASSERT_EQUAL(0, delay);
 	}
@@ -774,7 +704,7 @@ public:
 	void test_getMsbAndLsb()
 	{
 		int msb, lsb;
-		VocaloidMidiEventListFactoryStub::getMsbAndLsb(264, &msb, &lsb);
+		VocaloidMidiEventListFactory::_getMsbAndLsb(264, &msb, &lsb);
 		CPPUNIT_ASSERT_EQUAL(2, msb);
 		CPPUNIT_ASSERT_EQUAL(8, lsb);
 	}
@@ -840,7 +770,7 @@ public:
 		track.events().add(noteEvent);
 
 		int preSendMilliseconds = 500;
-		vector<NrpnEvent> actual = VocaloidMidiEventListFactoryStub::generateNRPN(
+		vector<NrpnEvent> actual = VocaloidMidiEventListFactory::generateNRPN(
 									   track, sequence.tempoList, sequence.totalTicks(), sequence.preMeasureTicks(), preSendMilliseconds);
 
 		std::vector<NrpnEventSpec> expected = {

@@ -22,8 +22,8 @@
 LIBVSQ_BEGIN_NAMESPACE
 
 /**
- * @brief ハンドルを取り扱います. ハンドルには LyricHandle, VibratoHandle, SingerHandle および NoteHeadHandle がある.
- * @todo get, set 両方あるプロパティについては, fieldにしてよいのでは.
+ * @brief VSQ ファイルのメタテキストに含まれる, [h\#NNNN] セクションに記録される内容を保持するクラス.
+ * @details Handle には LyricHandle, VibratoHandle, SingerHandle および NoteHeadHandle がある.
  */
 class Handle
 {
@@ -158,6 +158,7 @@ public:
 	}
 
 	/**
+	 * @brief @a type で指定された種類のハンドルを初期化する.
 	 * @param type ハンドルの種類.
 	 */
 	explicit Handle(HandleType type = HandleType::UNKNOWN);
@@ -207,6 +208,9 @@ public:
 	 */
 	Lyric const& get(int index) const;
 
+	/**
+	 * @copydoc Handle::get
+	 */
 	Lyric& get(int index);
 
 	/**

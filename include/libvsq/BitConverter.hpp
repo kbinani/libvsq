@@ -19,37 +19,50 @@
 
 LIBVSQ_BEGIN_NAMESPACE
 
+/**
+ * @brief バイト列と整数との相互変換を行うクラス.
+ */
 class BitConverter
 {
 public:
+	/**
+	 * @brief uint16 の整数値から, big endian のバイト列を取得する.
+	 * @param value 変換する整数値.
+	 * @return 変換後のバイト列.
+	 */
 	static std::vector<char> getBytesUInt16BE(uint16_t value);
 
+	/**
+	 * @brief uint32 の整数値から, big endian のバイト列を取得する.
+	 * @param value 変換する整数値.
+	 * @return 変換後のバイト列.
+	 */
 	static std::vector<char> getBytesUInt32BE(uint32_t value);
 
 	/**
-	 * @brief 4 バイトのデータを little endian とみなし, uint32 の整数値を取得する.
-	 * @param bytes 変換元のデータ.
+	 * @brief 4 バイトのバイト列を little endian とみなし, uint32 の整数値を取得する.
+	 * @param bytes 変換元のバイト列.
 	 * @return 変換後の整数値.
 	 */
 	static uint32_t makeUInt32LE(char bytes[4]);
 
 	/**
-	 * @brief 4 バイトのデータを big endian とみなし, uint32 の整数値を取得する.
-	 * @param bytes 変換元のデータ.
+	 * @brief 4 バイトのバイト列を big endian とみなし, uint32 の整数値を取得する.
+	 * @param bytes 変換元のバイト列.
 	 * @return 変換後の整数値.
 	 */
 	static uint32_t makeUInt32BE(char bytes[4]);
 
 	/**
-	 * @brief 2 バイトのデータを little endian とみなし, int16 の整数値を取得する.
-	 * @param bytes 変換元のデータ.
+	 * @brief 2 バイトのバイト列を little endian とみなし, int16 の整数値を取得する.
+	 * @param bytes 変換元のバイト列.
 	 * @return 変換後の整数値.
 	 */
 	static int16_t makeInt16LE(char bytes[2]);
 
 	/**
-	 * @brief 2 バイトのデータを big endian とみなし, uint16 の整数値を取得する.
-	 * @param bytes 変換元のデータ.
+	 * @brief 2 バイトのバイト列を big endian とみなし, uint16 の整数値を取得する.
+	 * @param bytes 変換元のバイト列.
 	 * @return 変換後の整数値.
 	 */
 	static uint16_t makeUInt16BE(char bytes[2]);

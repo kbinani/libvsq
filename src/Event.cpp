@@ -323,7 +323,7 @@ bool Event::comp(Event const* a, Event const* b)
 	return (a->compareTo(*b) < 0);
 }
 
-Event Event::getEOS()
+Event Event::eos()
 {
 	return Event();
 }

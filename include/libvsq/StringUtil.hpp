@@ -27,13 +27,15 @@ class StringUtil
 {
 public:
 	/**
-	 * @brief parseInt メソッドが投げる例外.
+	 * @brief 文字列から整数への変換に失敗したことを表す例外.
+	 * @sa StringUtil::parseInt
 	 */
 	class IntegerParseException : public std::exception
 	{};
 
 	/**
-	 * @brief parseFloat メソッドが投げる例外.
+	 * @brief 文字列から浮動小数点数への変換に失敗したことを表す例外.
+	 * @sa StringUtil::parseFloat
 	 */
 	class FloatParseException : public std::exception
 	{};
@@ -60,6 +62,7 @@ public:
 	/**
 	 * @brief 文字列を整数に変換する.
 	 * @param text 変換する文字列.
+	 * @param baseNumber 基数.
 	 * @return 変換後の数値.
 	 */
 	template<typename T>
@@ -90,6 +93,7 @@ public:
 	/**
 	 * @brief 整数を文字列に変換する.
 	 * @param value 変換する数値.
+	 * @param baseNumber 基数.
 	 * @return 変換後の文字列.
 	 */
 	static std::string toString(int value, int baseNumber = 10);

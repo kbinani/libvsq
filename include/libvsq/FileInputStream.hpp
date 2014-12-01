@@ -28,6 +28,10 @@ private:
 	std::ifstream stream;
 
 public:
+	/**
+	 * @brief ファイルパスを指定してストリームを開く.
+	 * @param filePath 開くファイルのファイルパス.
+	 */
 	explicit FileInputStream(std::string const& filePath);
 
 	/**

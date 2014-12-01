@@ -40,7 +40,7 @@ public:
 
 	void testConstruct()
 	{
-		Event event = Event::getEOS();
+		Event event = Event::eos();
 		CPPUNIT_ASSERT_EQUAL((tick_t)0, event.tick);
 		CPPUNIT_ASSERT_EQUAL(0, event.id);
 		CPPUNIT_ASSERT(event.isEOS());
@@ -179,7 +179,7 @@ public:
 
 	void testIsEos()
 	{
-		Event eos = Event::getEOS();
+		Event eos = Event::eos();
 		CPPUNIT_ASSERT(eos.isEOS());
 	}
 

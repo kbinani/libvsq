@@ -28,6 +28,9 @@ public:
 	static const int gatetimePerQuater = 480;
 	static const int baseTempo = 500000;
 
+	/**
+	 * @brief テンポ変更イベントを順に返す反復子.
+	 */
 	class Iterator
 	{
 	private:

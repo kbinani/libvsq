@@ -13,6 +13,11 @@
  */
 #pragma once
 
+/**
+ * @def LIBVSQ_PRIVATE_BUT_PUBLIC_FOR_UNITTEST
+ * @brief リリース版では private だが, それ以外では単体テストのため public となるマクロ.
+ * @details NDEBUG が define されていれば private に, それ以外では public となる.
+ */
 #if defined NDEBUG
 #    define LIBVSQ_PRIVATE_BUT_PUBLIC_FOR_UNITTEST private
 #else

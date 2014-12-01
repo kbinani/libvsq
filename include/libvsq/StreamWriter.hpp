@@ -38,9 +38,14 @@ public:
 	explicit StreamWriter(std::string const& filePath);
 
 	/**
-	 * @brief Initialize writer by stream.
-	 * @param  stream  A stream. This stream is automatically closed
-	 *     when 'close' is called. The ownership of @a stream object will be moved to this object.
+	 * @brief \~japanese-en 出力先のストリームを指定して初期化する.
+	 *        \~english Initialize writer by stream.
+	 * @param stream \~japanese-en 出力先のストリーム.
+	 *                             このストリームは StreamWriter::close が呼ばれる時自動で OutputStream::close される.
+	 *                             また, このストリームの所有権は StreamWriter に移動する.
+	 *               \~english A stream. This stream is automatically OutputStream::close 'ed
+	 *                         when StreamWriter::close is called.
+	 *                         The ownership of @a stream object will be moved to this object.
 	 */
 	explicit StreamWriter(OutputStream* stream);
 

@@ -18,6 +18,9 @@
 
 LIBVSQ_BEGIN_NAMESPACE
 
+/**
+ * @brief ノートナンバーを表示用の文字列に変換するためのユーティリティをまとめたクラス.
+ */
 class NoteNumberUtil
 {
 public:

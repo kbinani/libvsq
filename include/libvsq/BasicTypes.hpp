@@ -18,6 +18,7 @@
 LIBVSQ_BEGIN_NAMESPACE
 
 /**
+ * @typedef tick_t
  * @brief tick 単位の時刻を表す整数値の型.
  */
 typedef long int tick_t;

@@ -15,6 +15,7 @@
 
 #include "./BasicTypes.hpp"
 #include "./OutputStream.hpp"
+#include "./PublicForUnitTest.hpp"
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -22,16 +23,10 @@
 LIBVSQ_BEGIN_NAMESPACE
 
 /**
- * @brief データがバイト配列に書き込まれるストリームの実装.
+ * @brief データをメモリストレージに書き込む OutputStream の実装.
  */
 class ByteArrayOutputStream : public OutputStream
 {
-protected:
-	/**
-	 * @brief 確保するバッファー・ブロックのサイズ(バイト単位).
-	 */
-	static const int UNIT_BUFFER_LENGTH = 512;
-
 private:
 	/**
 	 * @brief 現在のファイルポインタ.
@@ -52,6 +47,12 @@ private:
 	 * @brief 書き込み済みバイト数.
 	 */
 	int64_t _length;
+
+LIBVSQ_PRIVATE_BUT_PUBLIC_FOR_UNITTEST:
+	/**
+	 * @brief 確保するバッファー・ブロックのサイズ(バイト単位).
+	 */
+	static const int UNIT_BUFFER_LENGTH = 512;
 
 public:
 	/**

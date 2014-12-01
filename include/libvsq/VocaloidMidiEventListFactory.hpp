@@ -15,6 +15,7 @@
 
 #include "./MidiParameterType.hpp"
 #include "./NrpnEvent.hpp"
+#include "./PublicForUnitTest.hpp"
 
 LIBVSQ_BEGIN_NAMESPACE
 
@@ -24,13 +25,16 @@ class Event;
 class BPList;
 
 /**
- * @brief A class to generate NRPN list from an instance of Track. The NRPN list is used for VOCALOID.
+ * @brief \~japanese-en Track オブジェクトから NRPN リストを作成するファクトリクラス. この NRPN は VOCALOID VSTi で使用される.
+ *        \~english A class to generate NRPN list from an instance of Track. The NRPN list is used for VOCALOID VSTi.
  */
 class VocaloidMidiEventListFactory
 {
 private:
 	/**
-	 * @brief A base class to provide Delay NrpnEvent and Value NrpnEvent from an instance of BPList.
+	 * @brief \~japanese-en BPList オブジェクトから, 対応するコントロールカーブのディレイを表す NrpnEvent と, 
+	 *                      値を表す NrpnEvent をそれぞれ提供する何らかのオブジェクトを表す抽象クラス.
+	 *        \~english A base class to provide Delay NrpnEvent and Value NrpnEvent from an instance of BPList.
 	 */
 	class NrpnEventProvider
 	{
@@ -64,7 +68,8 @@ private:
 	};
 
 	/**
-	 * @brief An implementation of NrpnEventProvider for "Pitch Bend" BPList.
+	 * @brief \~japanese-en ピッチベンドを格納した BPList を元データとする NrpnEventProvier の実装.
+	 *        \~english An implementation of NrpnEventProvider for "Pitch Bend" BPList.
 	 */
 	class PitchBendNrpnEventProvider : public NrpnEventProvider
 	{
@@ -83,7 +88,8 @@ private:
 	};
 
 	/**
-	 * @brief An implementation of NrpnEventProvider for "Pitch Bend Sensitivity" BPList.
+	 * @brief \~japanese-en ピッチベンドセンシティビティを格納した BPList を元データとする NrpnEventProvider の実装.
+	 *        \~english An implementation of NrpnEventProvider for "Pitch Bend Sensitivity" BPList.
 	 */
 	class PitchBendSensitivityNrpnEventProvider : public NrpnEventProvider
 	{
@@ -100,18 +106,25 @@ private:
 
 public:
 	/**
-	 * @brief Generate a list of VOCALOID MIDI event from a specified track.
-	 * @param target An instance of Track.
-	 * @param tempoList Tempo information.
-	 * @param totalTicks Length of the sequence (in tick unit).
-	 * @param preMeasureTicks Length of pre-measure (in tick unit).
-	 * @param msPreSend Length of pre-send time in milli seconds.
-	 * @return A list of VOCALOID MIDI event.
+	 * @brief \~japanese-en 指定されたトラックから VOCALOID MIDI イベントのリストを生成する.
+	 *        \~english Generate a list of VOCALOID MIDI event from a specified track.
+	 * @param target \~japanese-en Track のオブジェクト.
+	 *               \~english An instance of Track.
+	 * @param tempoList \~japanese-en テンポ情報.
+	 *                  \~english Tempo information.
+	 * @param totalTicks \~japanese-en Tick 単位のシーケンスの長さ.
+	 *                   \~english Length of the sequence (in tick unit).
+	 * @param preMeasureTicks \~japanese-en Tick 単位のプリメジャーの長さ.
+	 *                        \~english Length of pre-measure (in tick unit).
+	 * @param msPreSend \~japanese-en ミリ秒単位のプリセンドタイム.
+	 *                  \~english Length of pre-send time in milli seconds.
+	 * @return \~japanese-en VOCALOID MIDI イベントのリスト.
+	 *         \~english A list of VOCALOID MIDI event.
 	 */
 	static std::vector<MidiEvent> generateMidiEventList(
 		Track const& target, TempoList const& tempoList, tick_t totalTicks, tick_t preMeasureTicks, int msPreSend);
 
-protected:
+LIBVSQ_PRIVATE_BUT_PUBLIC_FOR_UNITTEST:
 	/**
 	 * @brief Generate a list of NrpnEvent from a specified track.
 	 * @param track An instance of Track.

@@ -46,6 +46,10 @@ private:
 	tick_t stepLength;
 
 public:
+	/**
+	 * @brief MeasureLineIterator のコンストラクタに不正な値が指定された時スローされる例外.
+	 * @sa MeasureLineIterator
+	 */
 	class InvalidAssistLineStep : public std::exception
 	{};
 
@@ -53,6 +57,7 @@ public:
 	/**
 	 * @brief 小節線の情報を取得する区間を指定し, 初期化する.
 	 * @param list テンポ変更リスト.
+	 * @throw InvalidAssistLineStep @a assistLineStep に不正な値が指定された時スローされる.
 	 */
 	explicit MeasureLineIterator(TimesigList const* list, tick_t assistLineStep = 0);
 

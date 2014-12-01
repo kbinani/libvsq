@@ -4,20 +4,6 @@
 using namespace std;
 using namespace vsq;
 
-class CP932ConverterStub : public CP932Converter
-{
-public:
-	static vector<int> getUnicodeBytesFromUTF8Bytes(const vector<int>& utf8)
-	{
-		return CP932Converter::_getUnicodeBytesFromUTF8Bytes(utf8);
-	}
-
-	static vector<vector<int> > getUnicodeBytesFromUTF8String(const string& s)
-	{
-		return CP932Converter::_getUnicodeBytesFromUTF8String(s);
-	}
-};
-
 class CP932ConverterTest : public CppUnit::TestCase
 {
 public:
@@ -58,12 +44,12 @@ public:
 		// 1 byte
 		vector<int> fixture;
 		fixture.push_back(0x00);
-		a = CP932ConverterStub::getUnicodeBytesFromUTF8Bytes(fixture);
+		a = CP932Converter::_getUnicodeBytesFromUTF8Bytes(fixture);
 		CPPUNIT_ASSERT_EQUAL((size_t)1, a.size());
 		CPPUNIT_ASSERT_EQUAL(0x00, a[0]);
 		fixture.clear();
 		fixture.push_back(0x7F);
-		a = CP932ConverterStub::getUnicodeBytesFromUTF8Bytes(fixture);
+		a = CP932Converter::_getUnicodeBytesFromUTF8Bytes(fixture);
 		CPPUNIT_ASSERT_EQUAL((size_t)1, a.size());
 		CPPUNIT_ASSERT_EQUAL(0x7F, a[0]);
 
@@ -71,14 +57,14 @@ public:
 		fixture.clear();
 		fixture.push_back(0xC2);
 		fixture.push_back(0x80);
-		a = CP932ConverterStub::getUnicodeBytesFromUTF8Bytes(fixture);
+		a = CP932Converter::_getUnicodeBytesFromUTF8Bytes(fixture);
 		CPPUNIT_ASSERT_EQUAL((size_t)1, a.size());
 		CPPUNIT_ASSERT_EQUAL(0x80, a[0]);
 
 		fixture.clear();
 		fixture.push_back(0xDF);
 		fixture.push_back(0xBF);
-		a = CP932ConverterStub::getUnicodeBytesFromUTF8Bytes(fixture);
+		a = CP932Converter::_getUnicodeBytesFromUTF8Bytes(fixture);
 		CPPUNIT_ASSERT_EQUAL((size_t)2, a.size());
 		CPPUNIT_ASSERT_EQUAL(0x07, a[0]);
 		CPPUNIT_ASSERT_EQUAL(0xFF, a[1]);
@@ -88,7 +74,7 @@ public:
 		fixture.push_back(0xE0);
 		fixture.push_back(0xA0);
 		fixture.push_back(0x80);
-		a = CP932ConverterStub::getUnicodeBytesFromUTF8Bytes(fixture);
+		a = CP932Converter::_getUnicodeBytesFromUTF8Bytes(fixture);
 		CPPUNIT_ASSERT_EQUAL((size_t)2, a.size());
 		CPPUNIT_ASSERT_EQUAL(0x08, a[0]);
 		CPPUNIT_ASSERT_EQUAL(0x00, a[1]);
@@ -97,7 +83,7 @@ public:
 		fixture.push_back(0xEF);
 		fixture.push_back(0xBF);
 		fixture.push_back(0xBF);
-		a = CP932ConverterStub::getUnicodeBytesFromUTF8Bytes(fixture);
+		a = CP932Converter::_getUnicodeBytesFromUTF8Bytes(fixture);
 		CPPUNIT_ASSERT_EQUAL((size_t)2, a.size());
 		CPPUNIT_ASSERT_EQUAL(0xFF, a[0]);
 		CPPUNIT_ASSERT_EQUAL(0xFF, a[1]);
@@ -108,7 +94,7 @@ public:
 		fixture.push_back(0x90);
 		fixture.push_back(0x80);
 		fixture.push_back(0x80);
-		a = CP932ConverterStub::getUnicodeBytesFromUTF8Bytes(fixture);
+		a = CP932Converter::_getUnicodeBytesFromUTF8Bytes(fixture);
 		CPPUNIT_ASSERT_EQUAL((size_t)3, a.size());
 		CPPUNIT_ASSERT_EQUAL(0x01, a[0]);
 		CPPUNIT_ASSERT_EQUAL(0x00, a[1]);
@@ -119,7 +105,7 @@ public:
 		fixture.push_back(0xBF);
 		fixture.push_back(0xBF);
 		fixture.push_back(0xBF);
-		a = CP932ConverterStub::getUnicodeBytesFromUTF8Bytes(fixture);
+		a = CP932Converter::_getUnicodeBytesFromUTF8Bytes(fixture);
 		CPPUNIT_ASSERT_EQUAL((size_t)3, a.size());
 		CPPUNIT_ASSERT_EQUAL(0x1F, a[0]);
 		CPPUNIT_ASSERT_EQUAL(0xFF, a[1]);
@@ -132,7 +118,7 @@ public:
 		fixture.push_back(0x80);
 		fixture.push_back(0x80);
 		fixture.push_back(0x80);
-		a = CP932ConverterStub::getUnicodeBytesFromUTF8Bytes(fixture);
+		a = CP932Converter::_getUnicodeBytesFromUTF8Bytes(fixture);
 		CPPUNIT_ASSERT_EQUAL((size_t)3, a.size());
 		CPPUNIT_ASSERT_EQUAL(0x20, a[0]);
 		CPPUNIT_ASSERT_EQUAL(0x00, a[1]);
@@ -144,7 +130,7 @@ public:
 		fixture.push_back(0xBF);
 		fixture.push_back(0xBF);
 		fixture.push_back(0xBF);
-		a = CP932ConverterStub::getUnicodeBytesFromUTF8Bytes(fixture);
+		a = CP932Converter::_getUnicodeBytesFromUTF8Bytes(fixture);
 		CPPUNIT_ASSERT_EQUAL((size_t)4, a.size());
 		CPPUNIT_ASSERT_EQUAL(0x03, a[0]);
 		CPPUNIT_ASSERT_EQUAL(0xFF, a[1]);
@@ -159,7 +145,7 @@ public:
 		fixture.push_back(0x80);
 		fixture.push_back(0x80);
 		fixture.push_back(0x80);
-		a = CP932ConverterStub::getUnicodeBytesFromUTF8Bytes(fixture);
+		a = CP932Converter::_getUnicodeBytesFromUTF8Bytes(fixture);
 		CPPUNIT_ASSERT_EQUAL((size_t)4, a.size());
 		CPPUNIT_ASSERT_EQUAL(0x04, a[0]);
 		CPPUNIT_ASSERT_EQUAL(0x00, a[1]);
@@ -172,7 +158,7 @@ public:
 		fixture.push_back(0xBF);
 		fixture.push_back(0xBF);
 		fixture.push_back(0xBF);
-		a = CP932ConverterStub::getUnicodeBytesFromUTF8Bytes(fixture);
+		a = CP932Converter::_getUnicodeBytesFromUTF8Bytes(fixture);
 		CPPUNIT_ASSERT_EQUAL((size_t)4, a.size());
 		CPPUNIT_ASSERT_EQUAL(0x7F, a[0]);
 		CPPUNIT_ASSERT_EQUAL(0xFF, a[1]);

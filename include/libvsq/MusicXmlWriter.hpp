@@ -24,39 +24,27 @@ LIBVSQ_BEGIN_NAMESPACE
 class Sequence;
 class TextOutputStream;
 
+/**
+ * @brief Sequence を MusicXML ファイルに書き込む処理を行うクラス.
+ */
 class MusicXmlWriter
 {
 public:
+	MusicXmlWriter();
+
+	~MusicXmlWriter();
+
 	/**
 	 * @brief シーケンスを MusicXML として, 指定されたストリームに出力する.
 	 * @param sequence 出力するシーケンス.
 	 * @param stream 出力先のストリーム.
-	 * @todo change_tempo を changeTempo に名前を変える.
 	 * @todo tempo と change_tempo を渡せるようにする.
 	 */
-	void write(Sequence const& sequence, TextOutputStream& stream, std::string const& software);
+	void write(Sequence const& sequence, TextOutputStream& stream, std::string const& software) const;
 
-protected:
-	void printStyledNote(
-		TextOutputStream& writer,
-		int tickStart,
-		int tickLength,
-		int note,
-		std::vector<Tempo>& tempoInsert,
-		std::string lyric,
-		std::map<std::string, bool>& alteredContext,
-		bool tieStartRequired,
-		bool tieStopRequired);
-
-	void printStyledNoteCor(
-		TextOutputStream& writer,
-		int tickLength,
-		int note,
-		std::string lyric,
-		std::map<std::string, bool>& alteredContext,
-		bool tieStartRequired,
-		bool tieStopRequired,
-		std::string type);
+private:
+	class Impl;
+	std::unique_ptr<Impl> _impl;
 };
 
 LIBVSQ_END_NAMESPACE

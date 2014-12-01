@@ -69,8 +69,6 @@ public:
 		void remove();
 	};
 
-	static const int INIT_BUFLEN = 512;
-
 private:
 	/**
 	 * @brief Tick 単位の時刻を格納したリスト.
@@ -111,6 +109,9 @@ private:
 	 * @brief コントロールカーブの名前.
 	 */
 	std::string _name;
+
+private:
+	static const int INIT_BUFLEN = 512;
 
 public:
 	BPList();
@@ -160,8 +161,15 @@ public:
 	 */
 	void renumberIds();
 
+	/**
+	 * @brief このオブジェクトが保持するコントロールカーブのデータから, "0=64,1920=127" のように
+	 * "{tick}={value}" の組を "," 区切りでつなげた形式の文字列を取得する.
+	 */
 	std::string data() const;
 
+	/**
+	 * @brief "0=64,1920=127" のように "{tick}={value}" の組を "," 区切りでつなげた形式の文字列を元に, このオブジェクトのコントロールカーブのデータを初期化する.
+	 */
 	void data(std::string const& value);
 
 	/**
@@ -194,8 +202,17 @@ public:
 	 */
 	void minimum(int value);
 
+	/**
+	 * @brief Tick 単位の時刻 @a tick におけるデータ点を削除する.
+	 * @details 指定した時刻にデータ点が無ければ何もしない.
+	 * @param tick 削除したいデータ点の Tick 単位の時刻.
+	 */
 	void remove(tick_t tick);
 
+	/**
+	 * @brief 先頭から @a index 番目のデータ点を削除する.
+	 * @param index 削除したいデータ点のインデックス.
+	 */
 	void removeElementAt(int index);
 
 	/**
@@ -300,6 +317,11 @@ public:
 	 */
 	int addWithId(tick_t tick, int value, int id);
 
+	/**
+	 * @brief @a id で指定した ID を持つデータ点を削除する.
+	 * @details データ点が見つからなければ何もしない.
+	 * @param id 削除したいデータ点の ID.
+	 */
 	void removeWithId(int id);
 
 	/**
