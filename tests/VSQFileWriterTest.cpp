@@ -9,59 +9,6 @@
 using namespace std;
 using namespace vsq;
 
-class VSQFileWriterStub : public VSQFileWriter
-{
-public:
-	class TempEventStub : public TempEvent
-	{
-	public:
-		explicit TempEventStub(Event const& item) :
-			TempEvent(item)
-		{}
-	};
-
-	void writeUnsignedShort(OutputStream& stream, int data)
-	{
-		VSQFileWriter::writeUnsignedShort(stream, data);
-	}
-
-	void writeUnsignedInt(OutputStream& stream, int data)
-	{
-		VSQFileWriter::writeUnsignedInt(stream, data);
-	}
-
-	vector<MidiEvent> getMidiEventsFromMetaText(TextStream* stream, const string& encoding)
-	{
-		return VSQFileWriter::getMidiEventsFromMetaText(stream, encoding);
-	}
-
-	vector<int> getLinePrefixBytes(int count)
-	{
-		return VSQFileWriter::getLinePrefixBytes(count);
-	}
-
-	int getHowManyDigits(int number)
-	{
-		return VSQFileWriter::getHowManyDigits(number);
-	}
-
-	void printMetaText(Track const& t, TextStream& stream, int eos, tick_t start, bool printPitch, Master* master, Mixer* mixer)
-	{
-		VSQFileWriter::printMetaText(t, stream, eos, start, printPitch, master, mixer);
-	}
-
-	void writeEvent(std::unique_ptr<TempEventStub> const& e, TextStream& stream, EventWriteOption printTargets = EventWriteOption()) const
-	{
-		std::unique_ptr<TempEvent> item(new TempEvent(*e));
-		VSQFileWriter::writeEvent(item, stream, printTargets);
-	}
-
-	void writeHandle(Handle const& item, TextStream& stream)
-	{
-		VSQFileWriter::writeHandle(item, stream);
-	}
-};
-
 class VSQFileWriterTest : public CppUnit::TestCase
 {
 	static string getLF()
@@ -227,8 +174,8 @@ class VSQFileWriterTest : public CppUnit::TestCase
 		// 「あ」が Shift_JIS になった時分割される「あ」を Shift_JIS にすると「0x82 0xA0」
 		stream.write(StringUtil::repeat("a", 118) + "あ");
 		stream.write(StringUtil::repeat("b", 63));
-		VSQFileWriterStub writer;
-		vector<MidiEvent> events = writer.getMidiEventsFromMetaText(&stream, "Shift_JIS");
+		VSQFileWriter writer;
+		vector<MidiEvent> events = writer._getMidiEventsFromMetaText(&stream, "Shift_JIS");
 		CPPUNIT_ASSERT_EQUAL((size_t)2, events.size());
 
 		CPPUNIT_ASSERT_EQUAL((tick_t)0, events[0].tick);
@@ -254,7 +201,7 @@ class VSQFileWriterTest : public CppUnit::TestCase
 
 	void test_getLinePrefixBytes()
 	{
-		VSQFileWriterStub writer;
+		VSQFileWriter writer;
 
 		// 4 桁
 		vector<int> expected;
@@ -266,7 +213,7 @@ class VSQFileWriterTest : public CppUnit::TestCase
 		expected.push_back(0xff & '2');
 		expected.push_back(0xff & '3');
 		expected.push_back(0xff & ':');
-		vector<int> actual = writer.getLinePrefixBytes(123);
+		vector<int> actual = writer._getLinePrefixBytes(123);
 		CPPUNIT_ASSERT_EQUAL(expected.size(), actual.size());
 		for (int i = 0; i < expected.size(); i++) {
 			CPPUNIT_ASSERT_EQUAL(expected[i], actual[i]);
@@ -282,7 +229,7 @@ class VSQFileWriterTest : public CppUnit::TestCase
 		expected.push_back(0xff & '9');
 		expected.push_back(0xff & '9');
 		expected.push_back(0xff & ':');
-		actual = writer.getLinePrefixBytes(9999);
+		actual = writer._getLinePrefixBytes(9999);
 		CPPUNIT_ASSERT_EQUAL(expected.size(), actual.size());
 		for (int i = 0; i < expected.size(); i++) {
 			CPPUNIT_ASSERT_EQUAL(expected[i], actual[i]);
@@ -302,7 +249,7 @@ class VSQFileWriterTest : public CppUnit::TestCase
 		expected.push_back(0xff & '4');
 		expected.push_back(0xff & '5');
 		expected.push_back(0xff & ':');
-		actual = writer.getLinePrefixBytes(12345);
+		actual = writer._getLinePrefixBytes(12345);
 		CPPUNIT_ASSERT_EQUAL(expected.size(), actual.size());
 		for (int i = 0; i < expected.size(); i++) {
 			CPPUNIT_ASSERT_EQUAL(expected[i], actual[i]);
@@ -322,7 +269,7 @@ class VSQFileWriterTest : public CppUnit::TestCase
 		expected.push_back(0xff & '6');
 		expected.push_back(0xff & '7');
 		expected.push_back(0xff & ':');
-		actual = writer.getLinePrefixBytes(1234567);
+		actual = writer._getLinePrefixBytes(1234567);
 		CPPUNIT_ASSERT_EQUAL(expected.size(), actual.size());
 		for (int i = 0; i < expected.size(); i++) {
 			CPPUNIT_ASSERT_EQUAL(expected[i], actual[i]);
@@ -331,19 +278,19 @@ class VSQFileWriterTest : public CppUnit::TestCase
 
 	void test_getHowManyDigits()
 	{
-		VSQFileWriterStub writer;
-		CPPUNIT_ASSERT_EQUAL(1, writer.getHowManyDigits(0));
-		CPPUNIT_ASSERT_EQUAL(1, writer.getHowManyDigits(9));
-		CPPUNIT_ASSERT_EQUAL(2, writer.getHowManyDigits(99));
-		CPPUNIT_ASSERT_EQUAL(10, writer.getHowManyDigits(1000000000));
-		CPPUNIT_ASSERT_EQUAL(2, writer.getHowManyDigits(-10));
+		VSQFileWriter writer;
+		CPPUNIT_ASSERT_EQUAL(1, writer._getHowManyDigits(0));
+		CPPUNIT_ASSERT_EQUAL(1, writer._getHowManyDigits(9));
+		CPPUNIT_ASSERT_EQUAL(2, writer._getHowManyDigits(99));
+		CPPUNIT_ASSERT_EQUAL(10, writer._getHowManyDigits(1000000000));
+		CPPUNIT_ASSERT_EQUAL(2, writer._getHowManyDigits(-10));
 	}
 
 	void test_writeUnsignedShort()
 	{
 		ByteArrayOutputStream stream;
-		VSQFileWriterStub writer;
-		writer.writeUnsignedShort(stream, 0x8421);
+		VSQFileWriter writer;
+		writer._writeUnsignedShort(stream, 0x8421);
 		string actual = stream.toString();
 		ostringstream expected;
 		expected << (char)0x84 << (char)0x21;
@@ -353,8 +300,8 @@ class VSQFileWriterTest : public CppUnit::TestCase
 	void test_writeUnsignedInt()
 	{
 		ByteArrayOutputStream stream;
-		VSQFileWriterStub writer;
-		writer.writeUnsignedInt(stream, 0x84212184);
+		VSQFileWriter writer;
+		writer._writeUnsignedInt(stream, 0x84212184);
 		string actual = stream.toString();
 		ostringstream expected;
 		expected << (char)0x84 << (char)0x21 << (char)0x21 << (char)0x84;
@@ -497,8 +444,8 @@ class VSQFileWriterTest : public CppUnit::TestCase
 		}
 
 		TextStream stream;
-		VSQFileWriterStub writer;
-		writer.printMetaText(track, stream, 2400, 0, false, &master, &mixer);
+		VSQFileWriter writer;
+		writer._printMetaText(track, stream, 2400, 0, false, &master, &mixer);
 		string expected =
 			"[Common]\n"
 			"Version=DSB301\n"
@@ -668,9 +615,9 @@ class VSQFileWriterTest : public CppUnit::TestCase
 		CPPUNIT_ASSERT_EQUAL(expected, stream.toString());
 	}
 
-	void testWriteEventNoteWithOption()
+	void testWriteEventNote()
 	{
-		std::unique_ptr<VSQFileWriterStub::TempEventStub> event(new VSQFileWriterStub::TempEventStub(Event(0, EventType::NOTE)));
+		std::unique_ptr<Event> event(new Event(0, EventType::NOTE));
 		event->length(2);
 		event->note = 6;
 		event->dynamics = 21;
@@ -682,22 +629,13 @@ class VSQFileWriterTest : public CppUnit::TestCase
 		event->vibratoDelay = 13;
 		event->lyricHandle.index = 1;
 		event->tick = 20;
-		event->index = 1;
-		EventWriteOption optionAll;
-		optionAll.length = true;
-		optionAll.note = true;
-		optionAll.dynamics = true;
-		optionAll.pmBendDepth = true;
-		optionAll.pmBendLength = true;
-		optionAll.pmbPortamentoUse = true;
-		optionAll.demDecGainRate = true;
-		optionAll.demAccent = true;
+		int event_index = 1;
 
 		TextStream stream;
 
 		// handleがどれもnilな音符イベント
-		VSQFileWriterStub writer;
-		writer.writeEvent(event, stream, optionAll);
+		VSQFileWriter writer;
+		writer._writeEvent(event.get(), event_index, stream);
 		string expected =
 			"[ID#0001]\n"
 			"Type=Anote\n"
@@ -724,7 +662,7 @@ class VSQFileWriterTest : public CppUnit::TestCase
 		event->noteHeadHandle = Handle(HandleType::NOTE_HEAD);
 		event->noteHeadHandle.index = 14;
 		stream = TextStream();
-		writer.writeEvent(event, stream, optionAll);
+		writer._writeEvent(event.get(), event_index, stream);
 		expected =
 			"[ID#0001]\n"
 			"Type=Anote\n"
@@ -736,47 +674,6 @@ class VSQFileWriterTest : public CppUnit::TestCase
 			"PMbPortamentoUse=3\n"
 			"DEMdecGainRate=7\n"
 			"DEMaccent=8\n"
-			"LyricHandle=h#0011\n"
-			"VibratoHandle=h#0012\n"
-			"VibratoDelay=13\n"
-			"NoteHeadHandle=h#0014\n";
-		CPPUNIT_ASSERT_EQUAL(expected, stream.toString());
-
-		// オプションが無い場合
-		stream = TextStream();
-		writer.writeEvent(event, stream);
-		expected =
-			"[ID#0001]\n"
-			"Type=Anote\n"
-			"Length=2\n"
-			"Note#=6\n"
-			"Dynamics=21\n"
-			"PMBendDepth=4\n"
-			"PMBendLength=5\n"
-			"PMbPortamentoUse=3\n"
-			"DEMdecGainRate=7\n"
-			"DEMaccent=8\n"
-			"LyricHandle=h#0011\n"
-			"VibratoHandle=h#0012\n"
-			"VibratoDelay=13\n"
-			"NoteHeadHandle=h#0014\n";
-		CPPUNIT_ASSERT_EQUAL(expected, stream.toString());
-
-		// オプションが空の場合
-		stream = TextStream();
-		EventWriteOption emptyOption;
-		emptyOption.demAccent = false;
-		emptyOption.demDecGainRate = false;
-		emptyOption.dynamics = false;
-		emptyOption.length = false;
-		emptyOption.note = false;
-		emptyOption.pmBendDepth = false;
-		emptyOption.pmBendLength = false;
-		emptyOption.pmbPortamentoUse = false;
-		writer.writeEvent(event, stream, emptyOption);
-		expected =
-			"[ID#0001]\n"
-			"Type=Anote\n"
 			"LyricHandle=h#0011\n"
 			"VibratoHandle=h#0012\n"
 			"VibratoDelay=13\n"
@@ -786,15 +683,14 @@ class VSQFileWriterTest : public CppUnit::TestCase
 
 	void testWriteEventSinger()
 	{
-		std::unique_ptr<VSQFileWriterStub::TempEventStub> event(new VSQFileWriterStub::TempEventStub(Event(0, EventType::SINGER)));
+		std::unique_ptr<Event> event(new Event(0, EventType::SINGER));
 		event->singerHandle = Handle(HandleType::SINGER);
 		event->singerHandle.index = 16;
-		event->index = 16;
 		event->tick = 1;
-		event->index = 15;
+		int event_index = 15;
 		TextStream stream;
-		VSQFileWriterStub writer;
-		writer.writeEvent(event, stream);
+		VSQFileWriter writer;
+		writer._writeEvent(event.get(), event_index, stream);
 		string expected =
 			"[ID#0015]\n"
 			"Type=Singer\n"
@@ -804,16 +700,15 @@ class VSQFileWriterTest : public CppUnit::TestCase
 
 	void testWriteEventIcon()
 	{
-		std::unique_ptr<VSQFileWriterStub::TempEventStub> event(new VSQFileWriterStub::TempEventStub(Event(0, EventType::ICON)));
+		std::unique_ptr<Event> event(new Event(0, EventType::ICON));
 		event->note = 19;
-		event->index = 17;
 		event->iconDynamicsHandle = Handle(HandleType::DYNAMICS);
 		event->iconDynamicsHandle.index = 18;
 		event->tick = 2;
-		event->index = 17;
+		int event_index = 17;
 		TextStream stream;
-		VSQFileWriterStub writer;
-		writer.writeEvent(event, stream);
+		VSQFileWriter writer;
+		writer._writeEvent(event.get(), event_index, stream);
 		string expected =
 			"[ID#0017]\n"
 			"Type=Aicon\n"
@@ -827,8 +722,8 @@ class VSQFileWriterTest : public CppUnit::TestCase
 		Handle handle = getLyricHandle();
 
 		TextStream stream;
-		VSQFileWriterStub writer;
-		writer.writeHandle(handle, stream);
+		VSQFileWriter writer;
+		writer._writeHandle(handle, stream);
 		string expected =
 			"[h#0001]" + getLF() +
 			"L0=\"あ\",\"a\",0.4,0,1" + getLF() +
@@ -842,8 +737,8 @@ class VSQFileWriterTest : public CppUnit::TestCase
 		Handle handle = getVibratoHandle();
 		{
 			TextStream stream;
-			VSQFileWriterStub writer;
-			writer.writeHandle(handle, stream);
+			VSQFileWriter writer;
+			writer._writeHandle(handle, stream);
 			string expected =
 				"[h#0001]" + lf +
 				"IconID=$04040004" + lf +
@@ -866,8 +761,8 @@ class VSQFileWriterTest : public CppUnit::TestCase
 			handle.rateBP = VibratoBPList(vector<double>(), vector<int>());
 			handle.depthBP = VibratoBPList(vector<double>(), vector<int>());
 			TextStream stream;
-			VSQFileWriterStub writer;
-			writer.writeHandle(handle, stream);
+			VSQFileWriter writer;
+			writer._writeHandle(handle, stream);
 			string expected =
 				"[h#0001]" + lf +
 				"IconID=$04040004" + lf +
@@ -887,8 +782,8 @@ class VSQFileWriterTest : public CppUnit::TestCase
 	{
 		Handle handle = getSingerHandle();
 		TextStream stream;
-		VSQFileWriterStub writer;
-		writer.writeHandle(handle, stream);
+		VSQFileWriter writer;
+		writer._writeHandle(handle, stream);
 		string lf = getLF();
 		string expected =
 			"[h#0002]" + lf +
@@ -906,8 +801,8 @@ class VSQFileWriterTest : public CppUnit::TestCase
 	{
 		Handle handle = getAttackHandle();
 		TextStream stream;
-		VSQFileWriterStub writer;
-		writer.writeHandle(handle, stream);
+		VSQFileWriter writer;
+		writer._writeHandle(handle, stream);
 		string lf = getLF();
 		string expected =
 			"[h#0003]" + lf +
@@ -927,8 +822,8 @@ class VSQFileWriterTest : public CppUnit::TestCase
 		Handle handle = getCrescendoHandle();
 		{
 			TextStream stream;
-			VSQFileWriterStub writer;
-			writer.writeHandle(handle, stream);
+			VSQFileWriter writer;
+			writer._writeHandle(handle, stream);
 			string expected =
 				"[h#0004]" + lf +
 				"IconID=$05020001" + lf +
@@ -948,8 +843,8 @@ class VSQFileWriterTest : public CppUnit::TestCase
 			// dynBPのデータ点が複数
 			handle.dynBP = VibratoBPList("2", "0.4,0.8", "1,2");
 			TextStream stream;
-			VSQFileWriterStub writer;
-			writer.writeHandle(handle, stream);
+			VSQFileWriter writer;
+			writer._writeHandle(handle, stream);
 			string expected =
 				"[h#0004]" + lf +
 				"IconID=$05020001" + lf +
@@ -969,8 +864,8 @@ class VSQFileWriterTest : public CppUnit::TestCase
 			// dynBPのデータ点が 0 個
 			handle.dynBP = VibratoBPList(vector<double>(), vector<int>());
 			TextStream stream;
-			VSQFileWriterStub writer;
-			writer.writeHandle(handle, stream);
+			VSQFileWriter writer;
+			writer._writeHandle(handle, stream);
 			string expected =
 				"[h#0004]" + lf +
 				"IconID=$05020001" + lf +
@@ -988,8 +883,8 @@ class VSQFileWriterTest : public CppUnit::TestCase
 			// dynBPがから
 			handle.dynBP = VibratoBPList(vector<double>(), vector<int>());
 			TextStream stream;
-			VSQFileWriterStub writer;
-			writer.writeHandle(handle, stream);
+			VSQFileWriter writer;
+			writer._writeHandle(handle, stream);
 			string expected =
 				"[h#0004]" + lf +
 				"IconID=$05020001" + lf +
@@ -1013,7 +908,7 @@ class VSQFileWriterTest : public CppUnit::TestCase
 	CPPUNIT_TEST(test_writeUnsignedShort);
 	CPPUNIT_TEST(test_writeUnsignedInt);
 	CPPUNIT_TEST(testPrintTrackMetaText);
-	CPPUNIT_TEST(testWriteEventNoteWithOption);
+	CPPUNIT_TEST(testWriteEventNote);
 	CPPUNIT_TEST(testWriteEventSinger);
 	CPPUNIT_TEST(testWriteEventIcon);
 	CPPUNIT_TEST(testWriteHandleLyric);

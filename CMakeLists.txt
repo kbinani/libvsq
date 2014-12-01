@@ -28,7 +28,6 @@ ADD_LIBRARY(vsq STATIC
     include/libvsq/EventListIndexIteratorKind.hpp
     include/libvsq/EventType.hpp
     src/EventType.cpp
-    include/libvsq/EventWriteOption.hpp
     include/libvsq/FileInputStream.hpp
     src/FileInputStream.cpp
     include/libvsq/FileOutputStream.hpp
@@ -103,4 +102,5 @@ ADD_LIBRARY(vsq STATIC
     include/libvsq/BasicTypes.hpp
     include/libvsq/EnumUtil.hpp
     src/BP.cpp
-	include/libvsq/libvsq.h)
+	include/libvsq/libvsq.h
+	include/libvsq/PublicForUnitTest.hpp)

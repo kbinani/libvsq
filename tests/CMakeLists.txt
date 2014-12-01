@@ -20,7 +20,6 @@ ADD_EXECUTABLE(libvsqtest
     EventListIndexIteratorTest.cpp
     EventTest.cpp
     EventTypeTest.cpp
-    EventWriteOptionTest.cpp
     FileInputStreamTest.cpp
     FileOutputStreamTest.cpp
     HandleTest.cpp

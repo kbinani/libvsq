@@ -15,6 +15,7 @@
 
 #include "./Namespace.hpp"
 #include "./BasicTypes.hpp"
+#include "./PublicForUnitTest.hpp"
 
 #include "./ArticulationType.hpp"
 #include "./BP.hpp"
@@ -30,7 +31,6 @@
 #include "./EventListIndexIterator.hpp"
 #include "./EventListIndexIteratorKind.hpp"
 #include "./EventType.hpp"
-#include "./EventWriteOption.hpp"
 #include "./FileInputStream.hpp"
 #include "./FileOutputStream.hpp"
 #include "./Handle.hpp"
