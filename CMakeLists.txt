@@ -63,7 +63,35 @@ ADD_LIBRARY(vsq STATIC
     include/libvsq/PhoneticSymbolDictionary.hpp
     src/PhoneticSymbolDictionary.cpp
 	src/PhoneticSymbolDictionaryVocaloidJp.inc
-	src/PhoneticSymbolDictionaryVocaloidEn.inc
+	src/PhoneticSymbolDictionaryVocaloidEn.0.inc
+	src/PhoneticSymbolDictionaryVocaloidEn.1.inc
+	src/PhoneticSymbolDictionaryVocaloidEn.2.inc
+	src/PhoneticSymbolDictionaryVocaloidEn.3.inc
+	src/PhoneticSymbolDictionaryVocaloidEn.4.inc
+	src/PhoneticSymbolDictionaryVocaloidEn.5.inc
+	src/PhoneticSymbolDictionaryVocaloidEn.6.inc
+	src/PhoneticSymbolDictionaryVocaloidEn.7.inc
+	src/PhoneticSymbolDictionaryVocaloidEn.8.inc
+	src/PhoneticSymbolDictionaryVocaloidEn.9.inc
+	src/PhoneticSymbolDictionaryVocaloidEn.10.inc
+	src/PhoneticSymbolDictionaryVocaloidEn.11.inc
+	src/PhoneticSymbolDictionaryVocaloidEn.12.inc
+	src/PhoneticSymbolDictionaryVocaloidEn.13.inc
+	src/PhoneticSymbolDictionaryVocaloidEn.14.inc
+	src/PhoneticSymbolDictionaryVocaloidEn.15.inc
+	src/PhoneticSymbolDictionaryVocaloidEn.16.inc
+	src/PhoneticSymbolDictionaryVocaloidEn.17.inc
+	src/PhoneticSymbolDictionaryVocaloidEn.18.inc
+	src/PhoneticSymbolDictionaryVocaloidEn.19.inc
+	src/PhoneticSymbolDictionaryVocaloidEn.20.inc
+	src/PhoneticSymbolDictionaryVocaloidEn.21.inc
+	src/PhoneticSymbolDictionaryVocaloidEn.22.inc
+	src/PhoneticSymbolDictionaryVocaloidEn.23.inc
+	src/PhoneticSymbolDictionaryVocaloidEn.24.inc
+	src/PhoneticSymbolDictionaryVocaloidEn.25.inc
+	src/PhoneticSymbolDictionaryVocaloidEn.26.inc
+	src/PhoneticSymbolDictionaryVocaloidEn.27.inc
+	src/PhoneticSymbolDictionaryVocaloidEn.28.inc
     include/libvsq/PlayMode.hpp
     include/libvsq/SMFReader.hpp
     src/SMFReader.cpp

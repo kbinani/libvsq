@@ -1,4 +1,4 @@
-R"(a-	b-	s
+a-	b-	s
 eI	b i:	e s
 a-	ba-	ba
 V	b Q	b V
@@ -144816,4 +144816,3 @@ zyu-	ga-	nov
 z j u:	g Q	n Q v
 zyu-	ga-	nov's
 z j u:	g Q	n Q v z
-)"

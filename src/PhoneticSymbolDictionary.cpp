@@ -15,6 +15,8 @@
 #include "../include/libvsq/StringUtil.hpp"
 #include <fstream>
 
+#pragma execution_character_set("utf-8")
+
 LIBVSQ_BEGIN_NAMESPACE
 
 PhoneticSymbolDictionary::Element::Element(std::string const& word, std::string const& symbol)
@@ -70,7 +72,7 @@ PhoneticSymbolDictionary const* PhoneticSymbolDictionary::vocaloidJpDictionary()
 {
 	static PhoneticSymbolDictionary result;
 	if (result.table.empty()) {
-		result.init(
+		result.addAllFromText(
 #			include "PhoneticSymbolDictionaryVocaloidJp.inc"
 		);
 	}
@@ -81,8 +83,95 @@ PhoneticSymbolDictionary const* PhoneticSymbolDictionary::vocaloidEnDictionary()
 {
 	static PhoneticSymbolDictionary result;
 	if (result.table.empty()) {
-		result.init(
-#			include "PhoneticSymbolDictionaryVocaloidEn.inc"
+		// MSVC でも gcc でもコンパイルできる方法にしたらこうなった.
+		// PhoneticSymbolDictionaryVocaloidEn.*.inc の元ファイルは resources/PhoneticSymbolDictionaryVocaloidEn.inc で,
+		// これを resources/separate.rb を引数なしで実行すると自動生成される.
+		result.addAllFromText(
+#			include "PhoneticSymbolDictionaryVocaloidEn.0.inc"
+		);
+		result.addAllFromText(
+#			include "PhoneticSymbolDictionaryVocaloidEn.1.inc"
+		);
+		result.addAllFromText(
+#			include "PhoneticSymbolDictionaryVocaloidEn.2.inc"
+		);
+		result.addAllFromText(
+#			include "PhoneticSymbolDictionaryVocaloidEn.3.inc"
+		);
+		result.addAllFromText(
+#			include "PhoneticSymbolDictionaryVocaloidEn.4.inc"
+		);
+		result.addAllFromText(
+#			include "PhoneticSymbolDictionaryVocaloidEn.5.inc"
+		);
+		result.addAllFromText(
+#			include "PhoneticSymbolDictionaryVocaloidEn.6.inc"
+		);
+		result.addAllFromText(
+#			include "PhoneticSymbolDictionaryVocaloidEn.7.inc"
+		);
+		result.addAllFromText(
+#			include "PhoneticSymbolDictionaryVocaloidEn.8.inc"
+		);
+		result.addAllFromText(
+#			include "PhoneticSymbolDictionaryVocaloidEn.9.inc"
+		);
+		result.addAllFromText(
+#			include "PhoneticSymbolDictionaryVocaloidEn.10.inc"
+		);
+		result.addAllFromText(
+#			include "PhoneticSymbolDictionaryVocaloidEn.11.inc"
+		);
+		result.addAllFromText(
+#			include "PhoneticSymbolDictionaryVocaloidEn.12.inc"
+		);
+		result.addAllFromText(
+#			include "PhoneticSymbolDictionaryVocaloidEn.13.inc"
+		);
+		result.addAllFromText(
+#			include "PhoneticSymbolDictionaryVocaloidEn.14.inc"
+		);
+		result.addAllFromText(
+#			include "PhoneticSymbolDictionaryVocaloidEn.15.inc"
+		);
+		result.addAllFromText(
+#			include "PhoneticSymbolDictionaryVocaloidEn.16.inc"
+		);
+		result.addAllFromText(
+#			include "PhoneticSymbolDictionaryVocaloidEn.17.inc"
+		);
+		result.addAllFromText(
+#			include "PhoneticSymbolDictionaryVocaloidEn.18.inc"
+		);
+		result.addAllFromText(
+#			include "PhoneticSymbolDictionaryVocaloidEn.19.inc"
+		);
+		result.addAllFromText(
+#			include "PhoneticSymbolDictionaryVocaloidEn.20.inc"
+		);
+		result.addAllFromText(
+#			include "PhoneticSymbolDictionaryVocaloidEn.21.inc"
+		);
+		result.addAllFromText(
+#			include "PhoneticSymbolDictionaryVocaloidEn.22.inc"
+		);
+		result.addAllFromText(
+#			include "PhoneticSymbolDictionaryVocaloidEn.23.inc"
+		);
+		result.addAllFromText(
+#			include "PhoneticSymbolDictionaryVocaloidEn.24.inc"
+		);
+		result.addAllFromText(
+#			include "PhoneticSymbolDictionaryVocaloidEn.25.inc"
+		);
+		result.addAllFromText(
+#			include "PhoneticSymbolDictionaryVocaloidEn.26.inc"
+		);
+		result.addAllFromText(
+#			include "PhoneticSymbolDictionaryVocaloidEn.27.inc"
+		);
+		result.addAllFromText(
+#			include "PhoneticSymbolDictionaryVocaloidEn.28.inc"
 		);
 	}
 	return &result;
@@ -112,14 +201,14 @@ void PhoneticSymbolDictionary::add(std::string const& word, std::string const& s
 	}
 }
 
-void PhoneticSymbolDictionary::init(std::string const& source)
+void PhoneticSymbolDictionary::addAllFromText(std::string const& source)
 {
 	std::string key[2];
 	int index = 0;
 	std::string::size_type offset = 0;
 	size_t const size = source.size();
 	for (size_t i = 0; i < size; ++i) {
-		std::string::size_type next = source.find('\n', offset);
+		auto next = source.find('\n', offset);
 		if (next == std::string::npos) {
 			break;
 		}

@@ -152,7 +152,7 @@ private:
 	 */
 	void add(std::string const& word, std::string const& symbol);
 
-	void init(std::string const& source);
+	void addAllFromText(std::string const& source);
 };
 
 LIBVSQ_END_NAMESPACE
