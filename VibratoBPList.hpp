@@ -85,13 +85,13 @@ public:
 	 * @brief データ点のリストを, 文字列に変換する. 例えば "key1=value1,key2=value2" のように変換される.
 	 * @return 変換後の文字列.
 	 */
-	std::string getData() const;
+	std::string data() const;
 
 	/**
 	 * @brief "key1=value=1,key2=value2" のような文字列から, データ点のリストを設定する.
 	 * @param value データ点の文字列形式.
 	 */
-	void setData(std::string const& value);
+	void data(std::string const& value);
 };
 
 VSQ_END_NAMESPACE

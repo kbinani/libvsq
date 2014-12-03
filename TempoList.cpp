@@ -53,7 +53,7 @@ int TempoList::size() const
 	return _array.size();
 }
 
-Tempo TempoList::get(int index) const
+Tempo const& TempoList::get(int index) const
 {
 	return _array[index];
 }
@@ -63,31 +63,31 @@ void TempoList::set(int index, Tempo const& value)
 	_array[index] = value;
 }
 
-double TempoList::getClockFromSec(double time) const
+double TempoList::tickFromTime(double time) const
 {
 	// timeにおけるテンポを取得
 	int tempo = TempoList::baseTempo;
-	tick_t base_clock = 0;
+	tick_t base_tick = 0;
 	double base_time = 0.0;
 	int c = _array.size();
 	if (c == 0) {
 		tempo = TempoList::baseTempo;
-		base_clock = 0;
+		base_tick = 0;
 		base_time = 0.0;
 	} else if (c == 1) {
 		tempo = _array[0].tempo;
-		base_clock = _array[0].clock;
+		base_tick = _array[0].tick;
 		base_time = _array[0]._time;
 	} else {
 		for (int i = c - 1; i >= 0; i--) {
 			Tempo item = _array[i];
 			if (item._time < time) {
-				return item.clock + (time - item._time) * TempoList::gatetimePerQuater * 1000000.0 / item.tempo;
+				return item.tick + (time - item._time) * TempoList::gatetimePerQuater * 1000000.0 / item.tempo;
 			}
 		}
 	}
 	double dt = time - base_time;
-	return base_clock + dt * TempoList::gatetimePerQuater * 1000000.0 / tempo;
+	return base_tick + dt * TempoList::gatetimePerQuater * 1000000.0 / tempo;
 }
 
 void TempoList::updateTempoInfo()
@@ -98,49 +98,49 @@ void TempoList::updateTempoInfo()
 	}
 	std::stable_sort(_array.begin(), _array.end(), Tempo::compare);
 	Tempo item0 = _array[0];
-	if (item0.clock != 0) {
-		item0._time = TempoList::baseTempo * item0.clock / (TempoList::gatetimePerQuater * 1000000.0);
+	if (item0.tick != 0) {
+		item0._time = TempoList::baseTempo * item0.tick / (TempoList::gatetimePerQuater * 1000000.0);
 	} else {
 		item0._time = 0.0;
 	}
 	double prev_time = item0._time;
-	tick_t prev_clock = item0.clock;
+	tick_t prev_tick = item0.tick;
 	int prev_tempo = item0.tempo;
 	double inv_tpq_sec = 1.0 / (TempoList::gatetimePerQuater * 1000000.0);
 	for (int i = 1; i < c; i++) {
-		_array[i]._time = prev_time + prev_tempo * (_array[i].clock - prev_clock) * inv_tpq_sec;
+		_array[i]._time = prev_time + prev_tempo * (_array[i].tick - prev_tick) * inv_tpq_sec;
 
 		Tempo itemi = _array[i];
 		prev_time = itemi._time;
 		prev_tempo = itemi.tempo;
-		prev_clock = itemi.clock;
+		prev_tick = itemi.tick;
 	}
 }
 
-double TempoList::getSecFromClock(double clock) const
+double TempoList::timeFromTick(double tick) const
 {
 	int c = _array.size();
 	for (int i = c - 1; i >= 0; i--) {
 		Tempo item = _array[i];
-		if (item.clock < clock) {
-			double init = item.getTime();
-			tick_t dclock = clock - item.clock;
-			double sec_per_clock1 = item.tempo * 1e-6 / 480.0;
-			return init + dclock * sec_per_clock1;
+		if (item.tick < tick) {
+			double init = item.time();
+			tick_t dtick = tick - item.tick;
+			double sec_per_tick1 = item.tempo * 1e-6 / 480.0;
+			return init + dtick * sec_per_tick1;
 		}
 	}
 
-	double sec_per_clock = TempoList::baseTempo * 1e-6 / 480.0;
-	return clock * sec_per_clock;
+	double sec_per_tick = TempoList::baseTempo * 1e-6 / 480.0;
+	return tick * sec_per_tick;
 }
 
-int TempoList::getTempoAt(int clock) const
+int TempoList::tempoAt(tick_t tick) const
 {
 	int index = 0;
 	int c = size();
 	for (int i = c - 1; i >= 0; i--) {
 		index = i;
-		if (_array[i].clock <= clock) {
+		if (_array[i].tick <= tick) {
 			break;
 		}
 	}

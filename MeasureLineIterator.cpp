@@ -30,7 +30,7 @@ MeasureLineIterator::MeasureLineIterator(TimesigList const* list, tick_t assistL
 	this->reset(endTick);
 }
 
-bool MeasureLineIterator::hasNext()
+bool MeasureLineIterator::hasNext() const
 {
 	if (tick <= endTick) {
 		return true;
@@ -53,7 +53,7 @@ MeasureLine MeasureLineIterator::next()
 	if (i < list->size()) {
 		currentDenominator = list->get(i).denominator;
 		currentNumerator = list->get(i).numerator;
-		currentTick = list->get(i).getClock();
+		currentTick = list->get(i).tick();
 		int local_bar_count = list->get(i).barCount;
 		int denom = currentDenominator;
 		if (denom <= 0) {
@@ -69,7 +69,7 @@ MeasureLine MeasureLineIterator::next()
 		barCount = local_bar_count - 1;
 		temporaryEndTick = endTick;
 		if (i + 1 < list->size()) {
-			temporaryEndTick = list->get(i + 1).getClock();
+			temporaryEndTick = list->get(i + 1).tick();
 		}
 		i++;
 		tick = currentTick;

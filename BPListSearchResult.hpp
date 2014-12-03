@@ -27,7 +27,7 @@ public:
 	/**
 	 * @brief データ点の Tick 単位の時刻.
 	 */
-	tick_t clock;
+	tick_t tick;
 
 	/**
 	 * @brief データ点のインデックス. 最初のインデックスは 0.
@@ -43,7 +43,7 @@ public:
 	 * @brief 初期化を行う.
 	 */
 	BPListSearchResult()
-		: clock(0)
+		: tick(0)
 		, index(0)
 		, point(0, 0)
 	{}

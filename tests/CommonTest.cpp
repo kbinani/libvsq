@@ -66,8 +66,8 @@ public:
 	void lastPlayMode()
 	{
 		Common common;
-		common.setPlayMode(PlayMode::PLAY_AFTER_SYNTH);
-		common.setPlayMode(PlayMode::OFF);
+		common.playMode(PlayMode::PLAY_AFTER_SYNTH);
+		common.playMode(PlayMode::OFF);
 		CPPUNIT_ASSERT_EQUAL(PlayMode::PLAY_AFTER_SYNTH, common.lastPlayMode());
 	}
 

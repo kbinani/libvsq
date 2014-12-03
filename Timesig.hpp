@@ -45,7 +45,7 @@ protected:
 	/**
 	 * @brief Tick 単位の時刻.
 	 */
-	tick_t clock;
+	tick_t tick_;
 
 public:
 	Timesig();
@@ -62,7 +62,7 @@ public:
 	 * @brief このイベントの tick 単位の時刻を取得する.
 	 * @return tick 単位の時刻.
 	 */
-	tick_t getClock() const;
+	tick_t tick() const;
 
 	/**
 	 * @brief 文字列に変換する.

@@ -50,7 +50,7 @@ public:
 	/**
 	 * @brief Tick 単位の時刻.
 	 */
-	tick_t clock;
+	tick_t tick;
 
 	/**
 	 * @brief MIDI イベントの先頭バイト.
@@ -69,7 +69,7 @@ public:
 	 * @brief MIDI データをストリームに出力する.
 	 * @param stream 出力先のストリーム.
 	 */
-	void writeData(OutputStream* stream) const;
+	void writeData(OutputStream& stream) const;
 
 	/**
 	 * @brief 順序を比較する.
@@ -80,42 +80,42 @@ public:
 
 	/**
 	 * @brief 拍子イベントを作成する.
-	 * @param clock Tick 単位の時刻.
+	 * @param tick Tick 単位の時刻.
 	 * @param numerator 拍子の分子の値.
 	 * @param denominator 表紙の分母の値.
 	 * @return 拍子イベント.
 	 */
-	static MidiEvent generateTimeSigEvent(tick_t clock, int numerator, int denominator);
+	static MidiEvent generateTimeSigEvent(tick_t tick, int numerator, int denominator);
 
 	/**
 	 * @brief テンポイベントを作成する.
-	 * @param clock Tick 単位の時刻.
+	 * @param tick Tick 単位の時刻.
 	 * @param tempo 四分音符のマイクロ秒単位の長さ.
 	 * @return テンポイベント.
 	 */
-	static MidiEvent generateTempoChangeEvent(tick_t clock, int tempo);
+	static MidiEvent generateTempoChangeEvent(tick_t tick, int tempo);
 
 	/**
 	 * @brief 可変長のデルタタイムをストリームに出力する.
 	 * @param stream 出力先のストリーム.
 	 * @param number デルタタイム.
 	 */
-	static void writeDeltaClock(OutputStream* stream, int number);
+	static void writeDeltaTick(OutputStream& stream, int number);
 
 	/**
-	 * @brief ストリームから, delta clock を読み込む.
+	 * @brief ストリームから, デルタタイムを読み込む.
 	 * @param stream 読み込み元のストリーム.
-	 * @return delta clock
+	 * @return デルタタイム.
 	 */
-	static tick_t readDeltaClock(InputStream* stream);
+	static tick_t readDeltaTick(InputStream& stream);
 
 	/**
 	 * @brief ストリームから MIDI イベントを一つ読み込む.
 	 * @param stream 読み込み元のストリーム.
-	 * @param last_clock
+	 * @param last_tick
 	 * @param last_status_byte
 	 */
-	static MidiEvent read(InputStream* stream, tick_t& last_clock, uint8_t& last_status_byte);
+	static MidiEvent read(InputStream& stream, tick_t& last_tick, uint8_t& last_status_byte);
 
 	/**
 	 * @brief 2 つの {@link MidiEvent} を比較する.

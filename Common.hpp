@@ -99,7 +99,7 @@ public:
 	/**
 	 * @brief Set play mode.
 	 */
-	void setPlayMode(PlayMode mode);
+	void playMode(PlayMode mode);
 
 	/**
 	 * @brief Get previous play mode before play mode is set to OFF.

@@ -21,12 +21,12 @@ public:
 		}
 	};
 
-	void writeUnsignedShort(OutputStream* stream, int data)
+	void writeUnsignedShort(OutputStream& stream, int data)
 	{
 		VSQFileWriter::writeUnsignedShort(stream, data);
 	}
 
-	void writeUnsignedInt(OutputStream* stream, int data)
+	void writeUnsignedInt(OutputStream& stream, int data)
 	{
 		VSQFileWriter::writeUnsignedInt(stream, data);
 	}
@@ -46,17 +46,17 @@ public:
 		return VSQFileWriter::getHowManyDigits(number);
 	}
 
-	void printMetaText(const Track* t, TextStream& stream, int eos, tick_t start, bool printPitch, Master* master, Mixer* mixer)
+	void printMetaText(Track const& t, TextStream& stream, int eos, tick_t start, bool printPitch, Master* master, Mixer* mixer)
 	{
 		VSQFileWriter::printMetaText(t, stream, eos, start, printPitch, master, mixer);
 	}
 
-	void writeEvent(const TempEventStub& item, TextStream& stream, EventWriteOption printTargets = EventWriteOption()) const
+	void writeEvent(TempEventStub const& item, TextStream& stream, EventWriteOption printTargets = EventWriteOption()) const
 	{
 		VSQFileWriter::writeEvent(item, stream, printTargets);
 	}
 
-	void writeHandle(const Handle& item, TextStream& stream)
+	void writeHandle(Handle const& item, TextStream& stream)
 	{
 		VSQFileWriter::writeHandle(item, stream);
 	}
@@ -74,15 +74,15 @@ class VSQFileWriterTest : public CppUnit::TestCase
 	{
 		Handle handle(HandleType::LYRIC);
 		Lyric lyric0("あ", "a");
-		lyric0.setConsonantAdjustment("0");
+		lyric0.consonantAdjustment("0");
 		lyric0.lengthRatio = 0.4;
 		lyric0.isProtected = true;
 		Lyric lyric1("は", "h a");
-		lyric1.setConsonantAdjustment("64,0");
+		lyric1.consonantAdjustment("64,0");
 		lyric1.lengthRatio = 0.6;
 		lyric1.isProtected = false;
-		handle.setLyricAt(0, lyric0);
-		handle.addLyric(lyric1);
+		handle.set(0, lyric0);
+		handle.add(lyric1);
 		handle.index = 1;
 		return handle;
 	}
@@ -95,7 +95,7 @@ class VSQFileWriterTest : public CppUnit::TestCase
 		result.original = 4;
 		result.index = 4;
 		result.caption = "Zero Crescendo Curve";
-		result.setLength(960);
+		result.length(960);
 		result.startDyn = 2;
 		result.endDyn = 38;
 		vector<double> dynBPX;
@@ -113,7 +113,7 @@ class VSQFileWriterTest : public CppUnit::TestCase
 		result.ids = "normal-da-yo";
 		result.caption = "キャプションです=あ";
 		result.original = 5;
-		result.setLength(120);
+		result.length(120);
 		result.index = 1;
 
 		result.startDepth = 64;
@@ -148,7 +148,7 @@ class VSQFileWriterTest : public CppUnit::TestCase
 		result.ids = "Miku3=God";
 		result.original = 2;
 		result.caption = "";
-		result.setLength(1);
+		result.length(1);
 		result.language = 1;
 		result.program = 2;
 		result.index = 2;
@@ -163,7 +163,7 @@ class VSQFileWriterTest : public CppUnit::TestCase
 		result.original = 2;
 		result.index = 3;
 		result.caption = "Accent";
-		result.setLength(120);
+		result.length(120);
 		result.duration = 64;
 		result.depth = 63;
 		return result;
@@ -180,17 +180,17 @@ class VSQFileWriterTest : public CppUnit::TestCase
 										   "reso4amp", "reso4bw", "reso4freq"
 										 };
 		for (int i = 0; i < CURVE_COUNT; i++) {
-			BPList* list = sequence.track(0)->curve(curveNames[i]);
+			BPList* list = sequence.track(0).curve(curveNames[i]);
 			list->add(1920, 1 + i);
 		}
 		Event noteEvent(1920, EventType::NOTE);
 		noteEvent.note = 60;
-		noteEvent.setLength(480);
-		sequence.track(0)->events()->add(noteEvent);
+		noteEvent.length(480);
+		sequence.track(0).events().add(noteEvent);
 
 		ByteArrayOutputStream stream;
 		VSQFileWriter writer;
-		writer.write(&sequence, &stream, 500, "Shift_JIS", false);
+		writer.write(sequence, stream, 500, "Shift_JIS", false);
 		string actualString = stream.toString();
 		stream.close();
 
@@ -231,7 +231,7 @@ class VSQFileWriterTest : public CppUnit::TestCase
 		vector<MidiEvent> events = writer.getMidiEventsFromMetaText(&stream, "Shift_JIS");
 		CPPUNIT_ASSERT_EQUAL((size_t)2, events.size());
 
-		CPPUNIT_ASSERT_EQUAL((tick_t)0, events[0].clock);
+		CPPUNIT_ASSERT_EQUAL((tick_t)0, events[0].tick);
 		CPPUNIT_ASSERT_EQUAL(0xFF, events[0].firstByte);
 		CPPUNIT_ASSERT_EQUAL((size_t)128, events[0].data.size());
 		CPPUNIT_ASSERT_EQUAL(0x01, events[0].data[0]);
@@ -241,7 +241,7 @@ class VSQFileWriterTest : public CppUnit::TestCase
 		}
 		CPPUNIT_ASSERT_EQUAL(string("DM:0000:") + StringUtil::repeat("a", 118) + (char)0x82, actual.str());
 
-		CPPUNIT_ASSERT_EQUAL((tick_t)0, events[1].clock);
+		CPPUNIT_ASSERT_EQUAL((tick_t)0, events[1].tick);
 		CPPUNIT_ASSERT_EQUAL(0xFF, events[1].firstByte);
 		CPPUNIT_ASSERT_EQUAL((size_t)73, events[1].data.size());
 		CPPUNIT_ASSERT_EQUAL(0x01, events[1].data[0]);
@@ -343,7 +343,7 @@ class VSQFileWriterTest : public CppUnit::TestCase
 	{
 		ByteArrayOutputStream stream;
 		VSQFileWriterStub writer;
-		writer.writeUnsignedShort(&stream, 0x8421);
+		writer.writeUnsignedShort(stream, 0x8421);
 		string actual = stream.toString();
 		ostringstream expected;
 		expected << (char)0x84 << (char)0x21;
@@ -354,7 +354,7 @@ class VSQFileWriterTest : public CppUnit::TestCase
 	{
 		ByteArrayOutputStream stream;
 		VSQFileWriterStub writer;
-		writer.writeUnsignedInt(&stream, 0x84212184);
+		writer.writeUnsignedInt(stream, 0x84212184);
 		string actual = stream.toString();
 		ostringstream expected;
 		expected << (char)0x84 << (char)0x21 << (char)0x21 << (char)0x84;
@@ -373,7 +373,7 @@ class VSQFileWriterTest : public CppUnit::TestCase
 		singerEvent.singerHandle.caption = "caption for miku";
 		singerEvent.singerHandle.language = 1;
 		singerEvent.singerHandle.program = 2;
-		track.events()->set(0, singerEvent);
+		track.events().set(0, singerEvent);
 
 		Event crescendoEvent(240, EventType::ICON);
 		crescendoEvent.note = 64;
@@ -384,8 +384,8 @@ class VSQFileWriterTest : public CppUnit::TestCase
 		crescendoEvent.iconDynamicsHandle.caption = "caption for crescendo";
 		crescendoEvent.iconDynamicsHandle.startDyn = 4;
 		crescendoEvent.iconDynamicsHandle.endDyn = 7;
-		crescendoEvent.setLength(10);
-		track.events()->add(crescendoEvent, 2);
+		crescendoEvent.length(10);
+		track.events().add(crescendoEvent, 2);
 
 		Event dynaffEvent(480, EventType::ICON);
 		dynaffEvent.note = 65;
@@ -396,8 +396,8 @@ class VSQFileWriterTest : public CppUnit::TestCase
 		dynaffEvent.iconDynamicsHandle.caption = "caption for dynaff";
 		dynaffEvent.iconDynamicsHandle.startDyn = 5;
 		dynaffEvent.iconDynamicsHandle.endDyn = 8;
-		dynaffEvent.setLength(11);
-		track.events()->add(dynaffEvent, 3);
+		dynaffEvent.length(11);
+		track.events().add(dynaffEvent, 3);
 
 		Event decrescendoEvent(720, EventType::ICON);
 		decrescendoEvent.note = 66;
@@ -408,8 +408,8 @@ class VSQFileWriterTest : public CppUnit::TestCase
 		decrescendoEvent.iconDynamicsHandle.caption = "caption for decrescendo";
 		decrescendoEvent.iconDynamicsHandle.startDyn = 6;
 		decrescendoEvent.iconDynamicsHandle.endDyn = 9;
-		decrescendoEvent.setLength(12);
-		track.events()->add(decrescendoEvent, 4);
+		decrescendoEvent.length(12);
+		track.events().add(decrescendoEvent, 4);
 
 		Event singerEvent2(1920, EventType::SINGER);
 		singerEvent2.singerHandle = Handle(HandleType::SINGER);  //h#0004
@@ -419,7 +419,7 @@ class VSQFileWriterTest : public CppUnit::TestCase
 		singerEvent2.singerHandle.caption = "caption for luka";
 		singerEvent2.singerHandle.language = 2;
 		singerEvent2.singerHandle.program = 3;
-		track.events()->add(singerEvent2, 5);
+		track.events().add(singerEvent2, 5);
 
 		Event noteEvent(1920, EventType::NOTE);
 		noteEvent.note = 67;
@@ -429,16 +429,16 @@ class VSQFileWriterTest : public CppUnit::TestCase
 		noteEvent.pmbPortamentoUse = 3;
 		noteEvent.demDecGainRate = 71;
 		noteEvent.demAccent = 72;
-		noteEvent.setLength(480);
+		noteEvent.length(480);
 		noteEvent.lyricHandle = Handle(HandleType::LYRIC);
-		noteEvent.lyricHandle.setLyricAt(0, Lyric("ら", "4 a"));    //h#0005
+		noteEvent.lyricHandle.set(0, Lyric("ら", "4 a"));    //h#0005
 		noteEvent.vibratoHandle = Handle(HandleType::VIBRATO);  //h#0006
 		noteEvent.vibratoDelay = 73;
 		noteEvent.vibratoHandle.iconId = "$04040004";
 		noteEvent.vibratoHandle.ids = "vibrato";
 		noteEvent.vibratoHandle.original = 1;
 		noteEvent.vibratoHandle.caption = "caption for vibrato";
-		noteEvent.vibratoHandle.setLength(407);
+		noteEvent.vibratoHandle.length(407);
 		noteEvent.vibratoHandle.startDepth = 13;
 		noteEvent.vibratoHandle.startRate = 14;
 		noteEvent.noteHeadHandle = Handle(HandleType::NOTE_HEAD);  //h#0007
@@ -446,10 +446,10 @@ class VSQFileWriterTest : public CppUnit::TestCase
 		noteEvent.noteHeadHandle.ids = "attack";
 		noteEvent.noteHeadHandle.original = 15;
 		noteEvent.noteHeadHandle.caption = "caption for attack";
-		noteEvent.noteHeadHandle.setLength(120);
+		noteEvent.noteHeadHandle.length(120);
 		noteEvent.noteHeadHandle.duration = 62;
 		noteEvent.noteHeadHandle.depth = 65;
-		track.events()->add(noteEvent, 6);
+		track.events().add(noteEvent, 6);
 
 		Master master;
 		master.preMeasure = 1;
@@ -461,11 +461,11 @@ class VSQFileWriterTest : public CppUnit::TestCase
 		mixer.outputMode = 4;
 		mixer.slave.push_back(MixerItem(5, 6, 7, 8));
 
-		track.common()->version = "DSB301";
-		track.common()->name = "foo";
-		track.common()->color = "1,2,3";
-		track.common()->dynamicsMode = DynamicsMode::STANDARD;
-		track.common()->setPlayMode(PlayMode::PLAY_WITH_SYNTH);
+		track.common().version = "DSB301";
+		track.common().name = "foo";
+		track.common().color = "1,2,3";
+		track.common().dynamicsMode = DynamicsMode::STANDARD;
+		track.common().playMode(PlayMode::PLAY_WITH_SYNTH);
 
 		vector<string> curves;
 		curves.push_back("pit");
@@ -498,7 +498,7 @@ class VSQFileWriterTest : public CppUnit::TestCase
 
 		TextStream stream;
 		VSQFileWriterStub writer;
-		writer.printMetaText(&track, stream, 2400, 0, false, &master, &mixer);
+		writer.printMetaText(track, stream, 2400, 0, false, &master, &mixer);
 		string expected =
 			"[Common]\n"
 			"Version=DSB301\n"
@@ -671,7 +671,7 @@ class VSQFileWriterTest : public CppUnit::TestCase
 	void testWriteEventNoteWithOption()
 	{
 		VSQFileWriterStub::TempEventStub event(Event(0, EventType::NOTE));
-		event.setLength(2);
+		event.length(2);
 		event.note = 6;
 		event.dynamics = 21;
 		event.pmBendDepth = 4;
@@ -679,11 +679,9 @@ class VSQFileWriterTest : public CppUnit::TestCase
 		event.pmbPortamentoUse = 3;
 		event.demDecGainRate = 7;
 		event.demAccent = 8;
-//        noteEvent.preUtterance = 9;
-//        noteEvent.voiceOverlap = 10;
 		event.vibratoDelay = 13;
 		event.lyricHandle.index = 1;
-		event.clock = 20;
+		event.tick = 20;
 		event.index = 1;
 		EventWriteOption optionAll;
 		optionAll.length = true;
@@ -694,8 +692,6 @@ class VSQFileWriterTest : public CppUnit::TestCase
 		optionAll.pmbPortamentoUse = true;
 		optionAll.demDecGainRate = true;
 		optionAll.demAccent = true;
-		//TODO. optionAll.preUtterance = true;
-		//TODO. optionAll.voiceOverlap = true;
 
 		TextStream stream;
 
@@ -714,8 +710,6 @@ class VSQFileWriterTest : public CppUnit::TestCase
 			"DEMdecGainRate=7\n"
 			"DEMaccent=8\n"
 			"LyricHandle=h#0001\n";
-		//TODO. "PreUtterance=9\n" ..
-		//TODO. "VoiceOverlap=10\n" ..
 		CPPUNIT_ASSERT_EQUAL(expected, stream.toString());
 
 		// handleに全部値が入っている音符イベント
@@ -723,7 +717,7 @@ class VSQFileWriterTest : public CppUnit::TestCase
 		// オプション全指定と, オプションが無い場合の動作が全くおなじになってしまっている.
 		// ustEventをちゃんと処理するようになったら, TODOコメントのところを外すこと
 		event.lyricHandle = Handle(HandleType::LYRIC);
-		event.lyricHandle.setLyricAt(0, Lyric("わ", "w a"));
+		event.lyricHandle.set(0, Lyric("わ", "w a"));
 		event.lyricHandle.index = 11;
 		event.vibratoHandle = Handle(HandleType::VIBRATO);
 		event.vibratoHandle.index = 12;
@@ -742,8 +736,6 @@ class VSQFileWriterTest : public CppUnit::TestCase
 			"PMbPortamentoUse=3\n"
 			"DEMdecGainRate=7\n"
 			"DEMaccent=8\n"
-			//TODO. "PreUtterance=9\n" ..
-			//TODO. "VoiceOverlap=10\n" ..
 			"LyricHandle=h#0011\n"
 			"VibratoHandle=h#0012\n"
 			"VibratoDelay=13\n"
@@ -781,8 +773,6 @@ class VSQFileWriterTest : public CppUnit::TestCase
 		emptyOption.pmBendDepth = false;
 		emptyOption.pmBendLength = false;
 		emptyOption.pmbPortamentoUse = false;
-		emptyOption.preUtterance = false;
-		emptyOption.voiceOverlap = false;
 		writer.writeEvent(event, stream, emptyOption);
 		expected =
 			"[ID#0001]\n"
@@ -800,7 +790,7 @@ class VSQFileWriterTest : public CppUnit::TestCase
 		event.singerHandle = Handle(HandleType::SINGER);
 		event.singerHandle.index = 16;
 		event.index = 16;
-		event.clock = 1;
+		event.tick = 1;
 		event.index = 15;
 		TextStream stream;
 		VSQFileWriterStub writer;
@@ -819,7 +809,7 @@ class VSQFileWriterTest : public CppUnit::TestCase
 		event.index = 17;
 		event.iconDynamicsHandle = Handle(HandleType::DYNAMICS);
 		event.iconDynamicsHandle.index = 18;
-		event.clock = 2;
+		event.tick = 2;
 		event.index = 17;
 		TextStream stream;
 		VSQFileWriterStub writer;

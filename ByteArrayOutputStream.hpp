@@ -78,7 +78,7 @@ public:
 	 * @brief バイト列を文字列に変換する.
 	 * @return 変換された文字列.
 	 */
-	std::string toString();
+	std::string toString() const;
 
 	/**
 	 * @brief 現在のファイルポインタを取得する.

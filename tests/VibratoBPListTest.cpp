@@ -11,7 +11,7 @@ public:
 	{
 		VibratoBPList list = VibratoBPList("2", "1.0,0.0", "128,1");
 		CPPUNIT_ASSERT_EQUAL(2, list.size());
-		CPPUNIT_ASSERT_EQUAL(string("0=1,1=128"), list.getData());
+		CPPUNIT_ASSERT_EQUAL(string("0=1,1=128"), list.data());
 	}
 
 	void testConstructWithArray()
@@ -24,7 +24,7 @@ public:
 		y.push_back(1);
 		VibratoBPList list = VibratoBPList(x, y);
 		CPPUNIT_ASSERT_EQUAL(2, list.size());
-		CPPUNIT_ASSERT_EQUAL(string("0=1,1=128"), list.getData());
+		CPPUNIT_ASSERT_EQUAL(string("0=1,1=128"), list.data());
 	}
 
 	void testGetValueAt()
@@ -64,15 +64,15 @@ public:
 	void testGetData()
 	{
 		VibratoBPList list = VibratoBPList("3", "0.0,0.4,1.0", "1,64,128");
-		CPPUNIT_ASSERT_EQUAL(string("0=1,0.4=64,1=128"), list.getData());
+		CPPUNIT_ASSERT_EQUAL(string("0=1,0.4=64,1=128"), list.data());
 		list = VibratoBPList(vector<double>(), vector<int>());
-		CPPUNIT_ASSERT_EQUAL(string(""), list.getData());
+		CPPUNIT_ASSERT_EQUAL(string(""), list.data());
 	}
 
 	void testSetData()
 	{
 		VibratoBPList list = VibratoBPList(vector<double>(), vector<int>());
-		list.setData("0.4=64,0=1,1=128");
+		list.data("0.4=64,0=1,1=128");
 		CPPUNIT_ASSERT_EQUAL(3, list.size());
 		CPPUNIT_ASSERT_EQUAL(0.0, list.get(0).x);
 		CPPUNIT_ASSERT_EQUAL(1, list.get(0).y);
@@ -92,7 +92,7 @@ public:
 		yList.push_back(128);
 		VibratoBPList list(xList, yList);
 		VibratoBPList copy = list.clone();
-		CPPUNIT_ASSERT_EQUAL(string("0=1,1=128"), copy.getData());
+		CPPUNIT_ASSERT_EQUAL(string("0=1,1=128"), copy.data());
 	}
 
 	CPPUNIT_TEST_SUITE(VibratoBPListTest);

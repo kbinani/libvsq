@@ -76,7 +76,7 @@ public:
 	 * @brief テキストストリームが読み込み可能な状態かどうかを返す.
 	 * @return 読み込み可能であれば <code>true</code> を, そうでなければ <code>false</code> を返す.
 	 */
-	bool ready();
+	bool ready() const;
 
 	/**
 	 * @brief 文字列をストリームに書きこむ.
@@ -99,7 +99,7 @@ public:
 	 * @brief ストリームに書きこまれた文字列を連結し, 返す.
 	 * @return 文字列.
 	 */
-	std::string toString();
+	std::string toString() const;
 
 private:
 	/**

@@ -21,20 +21,20 @@ public:
 		iterator = Event::ListIterator(&list);
 		CPPUNIT_ASSERT(iterator.hasNext());
 		Event* eventA = iterator.next();
-		CPPUNIT_ASSERT_EQUAL((tick_t)480, eventA->clock);
+		CPPUNIT_ASSERT_EQUAL((tick_t)480, eventA->tick);
 		CPPUNIT_ASSERT_EQUAL(2, eventA->id);
-		CPPUNIT_ASSERT_EQUAL(EventType::ICON, eventA->type);
+		CPPUNIT_ASSERT_EQUAL(EventType::ICON, eventA->type());
 		CPPUNIT_ASSERT(iterator.hasNext());
 		iterator.remove();
 		CPPUNIT_ASSERT(iterator.hasNext());
 		Event* eventB = iterator.next();
-		CPPUNIT_ASSERT_EQUAL((tick_t)1920, eventB->clock);
+		CPPUNIT_ASSERT_EQUAL((tick_t)1920, eventB->tick);
 		CPPUNIT_ASSERT_EQUAL(1, eventB->id);
-		CPPUNIT_ASSERT_EQUAL(EventType::NOTE, eventB->type);
+		CPPUNIT_ASSERT_EQUAL(EventType::NOTE, eventB->type());
 		CPPUNIT_ASSERT(false == iterator.hasNext());
 
 		CPPUNIT_ASSERT_EQUAL(1, list.size());
-		CPPUNIT_ASSERT_EQUAL((tick_t)1920, list.get(0)->clock);
+		CPPUNIT_ASSERT_EQUAL((tick_t)1920, list.get(0)->tick);
 		CPPUNIT_ASSERT_EQUAL(1, list.get(0)->id);
 	}
 

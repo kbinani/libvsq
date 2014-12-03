@@ -49,18 +49,18 @@ int EventListIndexIterator::_nextPosition() const
 	for (int i = _pos + 1; i < count; ++i) {
 		const Event* item = _list->get(i);
 		if (_kindSinger) {
-			if (item->type == EventType::SINGER) {
+			if (item->type() == EventType::SINGER) {
 				return i;
 			}
 		}
 		if (_kindNote) {
-			if (item->type == EventType::NOTE) {
+			if (item->type() == EventType::NOTE) {
 				return i;
 			}
 		}
 		if (_kindDynaff || _kindCrescend || _kindDecrescend) {
-			if (item->type == EventType::ICON
-				&& item->iconDynamicsHandle.getHandleType() != HandleType::UNKNOWN) {
+			if (item->type() == EventType::ICON
+				&& item->iconDynamicsHandle.type() != HandleType::UNKNOWN) {
 				if (_kindDynaff) {
 					if (item->iconDynamicsHandle.isDynaffType()) {
 						return i;

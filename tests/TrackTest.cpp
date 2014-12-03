@@ -19,11 +19,11 @@ public:
 	void testConstructNormalTrack()
 	{
 		Track track("DummyTrackName", "DummySingerName");
-		CPPUNIT_ASSERT_EQUAL(string("DummyTrackName"), track.getName());
-		Event::List* events = track.events();
-		CPPUNIT_ASSERT_EQUAL(1, events->size());
-		CPPUNIT_ASSERT_EQUAL(EventType::SINGER, events->get(0)->type);
-		CPPUNIT_ASSERT_EQUAL(string("DummySingerName"), events->get(0)->singerHandle.ids);
+		CPPUNIT_ASSERT_EQUAL(string("DummyTrackName"), track.name());
+		Event::List& events = track.events();
+		CPPUNIT_ASSERT_EQUAL(1, events.size());
+		CPPUNIT_ASSERT_EQUAL(EventType::SINGER, events.get(0)->type());
+		CPPUNIT_ASSERT_EQUAL(string("DummySingerName"), events.get(0)->singerHandle.ids);
 
 		//TODO:
 		/*
@@ -52,97 +52,97 @@ public:
 		        assert_not_nil( track.getCurve( "ope" ) );
 		*/
 
-		CPPUNIT_ASSERT_EQUAL(string("pit"), track.curve("pit")->getName());
-		CPPUNIT_ASSERT_EQUAL(0, track.curve("pit")->getDefault());
-		CPPUNIT_ASSERT_EQUAL(-8192, track.curve("pit")->getMinimum());
-		CPPUNIT_ASSERT_EQUAL(8191, track.curve("pit")->getMaximum());
-		CPPUNIT_ASSERT_EQUAL(string("pbs"), track.curve("pbs")->getName());
-		CPPUNIT_ASSERT_EQUAL(2, track.curve("pbs")->getDefault());
-		CPPUNIT_ASSERT_EQUAL(0, track.curve("pbs")->getMinimum());
-		CPPUNIT_ASSERT_EQUAL(24, track.curve("pbs")->getMaximum());
-		CPPUNIT_ASSERT_EQUAL(string("dyn"), track.curve("dyn")->getName());
-		CPPUNIT_ASSERT_EQUAL(0, track.curve("dyn")->getMinimum());
-		CPPUNIT_ASSERT_EQUAL(127, track.curve("dyn")->getMaximum());
-		CPPUNIT_ASSERT_EQUAL(string("bre"), track.curve("bre")->getName());
-		CPPUNIT_ASSERT_EQUAL(0, track.curve("bre")->getDefault());
-		CPPUNIT_ASSERT_EQUAL(0, track.curve("bre")->getMinimum());
-		CPPUNIT_ASSERT_EQUAL(127, track.curve("bre")->getMaximum());
-		CPPUNIT_ASSERT_EQUAL(string("bri"), track.curve("bri")->getName());
-		CPPUNIT_ASSERT_EQUAL(64, track.curve("bri")->getDefault());
-		CPPUNIT_ASSERT_EQUAL(0, track.curve("bri")->getMinimum());
-		CPPUNIT_ASSERT_EQUAL(127, track.curve("bri")->getMaximum());
-		CPPUNIT_ASSERT_EQUAL(string("cle"), track.curve("cle")->getName());
-		CPPUNIT_ASSERT_EQUAL(0, track.curve("cle")->getDefault());
-		CPPUNIT_ASSERT_EQUAL(0, track.curve("cle")->getMinimum());
-		CPPUNIT_ASSERT_EQUAL(127, track.curve("cle")->getMaximum());
-		CPPUNIT_ASSERT_EQUAL(string("reso1freq"), track.curve("reso1Freq")->getName());
-		CPPUNIT_ASSERT_EQUAL(64, track.curve("reso1Freq")->getDefault());
-		CPPUNIT_ASSERT_EQUAL(0, track.curve("reso1Freq")->getMinimum());
-		CPPUNIT_ASSERT_EQUAL(127, track.curve("reso1Freq")->getMaximum());
-		CPPUNIT_ASSERT_EQUAL(string("reso2freq"), track.curve("reso2Freq")->getName());
-		CPPUNIT_ASSERT_EQUAL(64, track.curve("reso2Freq")->getDefault());
-		CPPUNIT_ASSERT_EQUAL(0, track.curve("reso2Freq")->getMinimum());
-		CPPUNIT_ASSERT_EQUAL(127, track.curve("reso2Freq")->getMaximum());
-		CPPUNIT_ASSERT_EQUAL(string("reso3freq"), track.curve("reso3Freq")->getName());
-		CPPUNIT_ASSERT_EQUAL(64, track.curve("reso3Freq")->getDefault());
-		CPPUNIT_ASSERT_EQUAL(0, track.curve("reso3Freq")->getMinimum());
-		CPPUNIT_ASSERT_EQUAL(127, track.curve("reso3Freq")->getMaximum());
-		CPPUNIT_ASSERT_EQUAL(string("reso4freq"), track.curve("reso4Freq")->getName());
-		CPPUNIT_ASSERT_EQUAL(64, track.curve("reso4Freq")->getDefault());
-		CPPUNIT_ASSERT_EQUAL(0, track.curve("reso4Freq")->getMinimum());
-		CPPUNIT_ASSERT_EQUAL(127, track.curve("reso4Freq")->getMaximum());
-		CPPUNIT_ASSERT_EQUAL(string("reso1bw"), track.curve("reso1BW")->getName());
-		CPPUNIT_ASSERT_EQUAL(64, track.curve("reso1BW")->getDefault());
-		CPPUNIT_ASSERT_EQUAL(0, track.curve("reso1BW")->getMinimum());
-		CPPUNIT_ASSERT_EQUAL(127, track.curve("reso1BW")->getMaximum());
-		CPPUNIT_ASSERT_EQUAL(string("reso2bw"), track.curve("reso2BW")->getName());
-		CPPUNIT_ASSERT_EQUAL(64, track.curve("reso2BW")->getDefault());
-		CPPUNIT_ASSERT_EQUAL(0, track.curve("reso2BW")->getMinimum());
-		CPPUNIT_ASSERT_EQUAL(127, track.curve("reso2BW")->getMaximum());
-		CPPUNIT_ASSERT_EQUAL(string("reso3bw"), track.curve("reso3BW")->getName());
-		CPPUNIT_ASSERT_EQUAL(64, track.curve("reso3BW")->getDefault());
-		CPPUNIT_ASSERT_EQUAL(0, track.curve("reso3BW")->getMinimum());
-		CPPUNIT_ASSERT_EQUAL(127, track.curve("reso3BW")->getMaximum());
-		CPPUNIT_ASSERT_EQUAL(string("reso4bw"), track.curve("reso4BW")->getName());
-		CPPUNIT_ASSERT_EQUAL(64, track.curve("reso4BW")->getDefault());
-		CPPUNIT_ASSERT_EQUAL(0, track.curve("reso4BW")->getMinimum());
-		CPPUNIT_ASSERT_EQUAL(127, track.curve("reso4BW")->getMaximum());
-		CPPUNIT_ASSERT_EQUAL(string("reso1amp"), track.curve("reso1Amp")->getName());
-		CPPUNIT_ASSERT_EQUAL(64, track.curve("reso1Amp")->getDefault());
-		CPPUNIT_ASSERT_EQUAL(0, track.curve("reso1Amp")->getMinimum());
-		CPPUNIT_ASSERT_EQUAL(127, track.curve("reso1Amp")->getMaximum());
-		CPPUNIT_ASSERT_EQUAL(string("reso2amp"), track.curve("reso2Amp")->getName());
-		CPPUNIT_ASSERT_EQUAL(64, track.curve("reso2Amp")->getDefault());
-		CPPUNIT_ASSERT_EQUAL(0, track.curve("reso2Amp")->getMinimum());
-		CPPUNIT_ASSERT_EQUAL(127, track.curve("reso2Amp")->getMaximum());
-		CPPUNIT_ASSERT_EQUAL(string("reso3amp"), track.curve("reso3Amp")->getName());
-		CPPUNIT_ASSERT_EQUAL(64, track.curve("reso3Amp")->getDefault());
-		CPPUNIT_ASSERT_EQUAL(0, track.curve("reso3Amp")->getMinimum());
-		CPPUNIT_ASSERT_EQUAL(127, track.curve("reso3Amp")->getMaximum());
-		CPPUNIT_ASSERT_EQUAL(string("reso4amp"), track.curve("reso4Amp")->getName());
-		CPPUNIT_ASSERT_EQUAL(64, track.curve("reso4Amp")->getDefault());
-		CPPUNIT_ASSERT_EQUAL(0, track.curve("reso4Amp")->getMinimum());
-		CPPUNIT_ASSERT_EQUAL(127, track.curve("reso4Amp")->getMaximum());
-		CPPUNIT_ASSERT_EQUAL(string("harmonics"), track.curve("harmonics")->getName());
-		CPPUNIT_ASSERT_EQUAL(64, track.curve("harmonics")->getDefault());
-		CPPUNIT_ASSERT_EQUAL(0, track.curve("harmonics")->getMinimum());
-		CPPUNIT_ASSERT_EQUAL(127, track.curve("harmonics")->getMaximum());
-		CPPUNIT_ASSERT_EQUAL(string("fx2depth"), track.curve("fx2depth")->getName());
-		CPPUNIT_ASSERT_EQUAL(64, track.curve("fx2depth")->getDefault());
-		CPPUNIT_ASSERT_EQUAL(0, track.curve("fx2depth")->getMinimum());
-		CPPUNIT_ASSERT_EQUAL(127, track.curve("fx2depth")->getMaximum());
-		CPPUNIT_ASSERT_EQUAL(string("gen"), track.curve("gen")->getName());
-		CPPUNIT_ASSERT_EQUAL(64, track.curve("gen")->getDefault());
-		CPPUNIT_ASSERT_EQUAL(0, track.curve("gen")->getMinimum());
-		CPPUNIT_ASSERT_EQUAL(127, track.curve("gen")->getMaximum());
-		CPPUNIT_ASSERT_EQUAL(string("por"), track.curve("por")->getName());
-		CPPUNIT_ASSERT_EQUAL(64, track.curve("por")->getDefault());
-		CPPUNIT_ASSERT_EQUAL(0, track.curve("por")->getMinimum());
-		CPPUNIT_ASSERT_EQUAL(127, track.curve("por")->getMaximum());
-		CPPUNIT_ASSERT_EQUAL(string("ope"), track.curve("ope")->getName());
-		CPPUNIT_ASSERT_EQUAL(127, track.curve("ope")->getDefault());
-		CPPUNIT_ASSERT_EQUAL(0, track.curve("ope")->getMinimum());
-		CPPUNIT_ASSERT_EQUAL(127, track.curve("ope")->getMaximum());
+		CPPUNIT_ASSERT_EQUAL(string("pit"), track.curve("pit")->name());
+		CPPUNIT_ASSERT_EQUAL(0, track.curve("pit")->defaultValue());
+		CPPUNIT_ASSERT_EQUAL(-8192, track.curve("pit")->minimum());
+		CPPUNIT_ASSERT_EQUAL(8191, track.curve("pit")->maximum());
+		CPPUNIT_ASSERT_EQUAL(string("pbs"), track.curve("pbs")->name());
+		CPPUNIT_ASSERT_EQUAL(2, track.curve("pbs")->defaultValue());
+		CPPUNIT_ASSERT_EQUAL(0, track.curve("pbs")->minimum());
+		CPPUNIT_ASSERT_EQUAL(24, track.curve("pbs")->maximum());
+		CPPUNIT_ASSERT_EQUAL(string("dyn"), track.curve("dyn")->name());
+		CPPUNIT_ASSERT_EQUAL(0, track.curve("dyn")->minimum());
+		CPPUNIT_ASSERT_EQUAL(127, track.curve("dyn")->maximum());
+		CPPUNIT_ASSERT_EQUAL(string("bre"), track.curve("bre")->name());
+		CPPUNIT_ASSERT_EQUAL(0, track.curve("bre")->defaultValue());
+		CPPUNIT_ASSERT_EQUAL(0, track.curve("bre")->minimum());
+		CPPUNIT_ASSERT_EQUAL(127, track.curve("bre")->maximum());
+		CPPUNIT_ASSERT_EQUAL(string("bri"), track.curve("bri")->name());
+		CPPUNIT_ASSERT_EQUAL(64, track.curve("bri")->defaultValue());
+		CPPUNIT_ASSERT_EQUAL(0, track.curve("bri")->minimum());
+		CPPUNIT_ASSERT_EQUAL(127, track.curve("bri")->maximum());
+		CPPUNIT_ASSERT_EQUAL(string("cle"), track.curve("cle")->name());
+		CPPUNIT_ASSERT_EQUAL(0, track.curve("cle")->defaultValue());
+		CPPUNIT_ASSERT_EQUAL(0, track.curve("cle")->minimum());
+		CPPUNIT_ASSERT_EQUAL(127, track.curve("cle")->maximum());
+		CPPUNIT_ASSERT_EQUAL(string("reso1freq"), track.curve("reso1Freq")->name());
+		CPPUNIT_ASSERT_EQUAL(64, track.curve("reso1Freq")->defaultValue());
+		CPPUNIT_ASSERT_EQUAL(0, track.curve("reso1Freq")->minimum());
+		CPPUNIT_ASSERT_EQUAL(127, track.curve("reso1Freq")->maximum());
+		CPPUNIT_ASSERT_EQUAL(string("reso2freq"), track.curve("reso2Freq")->name());
+		CPPUNIT_ASSERT_EQUAL(64, track.curve("reso2Freq")->defaultValue());
+		CPPUNIT_ASSERT_EQUAL(0, track.curve("reso2Freq")->minimum());
+		CPPUNIT_ASSERT_EQUAL(127, track.curve("reso2Freq")->maximum());
+		CPPUNIT_ASSERT_EQUAL(string("reso3freq"), track.curve("reso3Freq")->name());
+		CPPUNIT_ASSERT_EQUAL(64, track.curve("reso3Freq")->defaultValue());
+		CPPUNIT_ASSERT_EQUAL(0, track.curve("reso3Freq")->minimum());
+		CPPUNIT_ASSERT_EQUAL(127, track.curve("reso3Freq")->maximum());
+		CPPUNIT_ASSERT_EQUAL(string("reso4freq"), track.curve("reso4Freq")->name());
+		CPPUNIT_ASSERT_EQUAL(64, track.curve("reso4Freq")->defaultValue());
+		CPPUNIT_ASSERT_EQUAL(0, track.curve("reso4Freq")->minimum());
+		CPPUNIT_ASSERT_EQUAL(127, track.curve("reso4Freq")->maximum());
+		CPPUNIT_ASSERT_EQUAL(string("reso1bw"), track.curve("reso1BW")->name());
+		CPPUNIT_ASSERT_EQUAL(64, track.curve("reso1BW")->defaultValue());
+		CPPUNIT_ASSERT_EQUAL(0, track.curve("reso1BW")->minimum());
+		CPPUNIT_ASSERT_EQUAL(127, track.curve("reso1BW")->maximum());
+		CPPUNIT_ASSERT_EQUAL(string("reso2bw"), track.curve("reso2BW")->name());
+		CPPUNIT_ASSERT_EQUAL(64, track.curve("reso2BW")->defaultValue());
+		CPPUNIT_ASSERT_EQUAL(0, track.curve("reso2BW")->minimum());
+		CPPUNIT_ASSERT_EQUAL(127, track.curve("reso2BW")->maximum());
+		CPPUNIT_ASSERT_EQUAL(string("reso3bw"), track.curve("reso3BW")->name());
+		CPPUNIT_ASSERT_EQUAL(64, track.curve("reso3BW")->defaultValue());
+		CPPUNIT_ASSERT_EQUAL(0, track.curve("reso3BW")->minimum());
+		CPPUNIT_ASSERT_EQUAL(127, track.curve("reso3BW")->maximum());
+		CPPUNIT_ASSERT_EQUAL(string("reso4bw"), track.curve("reso4BW")->name());
+		CPPUNIT_ASSERT_EQUAL(64, track.curve("reso4BW")->defaultValue());
+		CPPUNIT_ASSERT_EQUAL(0, track.curve("reso4BW")->minimum());
+		CPPUNIT_ASSERT_EQUAL(127, track.curve("reso4BW")->maximum());
+		CPPUNIT_ASSERT_EQUAL(string("reso1amp"), track.curve("reso1Amp")->name());
+		CPPUNIT_ASSERT_EQUAL(64, track.curve("reso1Amp")->defaultValue());
+		CPPUNIT_ASSERT_EQUAL(0, track.curve("reso1Amp")->minimum());
+		CPPUNIT_ASSERT_EQUAL(127, track.curve("reso1Amp")->maximum());
+		CPPUNIT_ASSERT_EQUAL(string("reso2amp"), track.curve("reso2Amp")->name());
+		CPPUNIT_ASSERT_EQUAL(64, track.curve("reso2Amp")->defaultValue());
+		CPPUNIT_ASSERT_EQUAL(0, track.curve("reso2Amp")->minimum());
+		CPPUNIT_ASSERT_EQUAL(127, track.curve("reso2Amp")->maximum());
+		CPPUNIT_ASSERT_EQUAL(string("reso3amp"), track.curve("reso3Amp")->name());
+		CPPUNIT_ASSERT_EQUAL(64, track.curve("reso3Amp")->defaultValue());
+		CPPUNIT_ASSERT_EQUAL(0, track.curve("reso3Amp")->minimum());
+		CPPUNIT_ASSERT_EQUAL(127, track.curve("reso3Amp")->maximum());
+		CPPUNIT_ASSERT_EQUAL(string("reso4amp"), track.curve("reso4Amp")->name());
+		CPPUNIT_ASSERT_EQUAL(64, track.curve("reso4Amp")->defaultValue());
+		CPPUNIT_ASSERT_EQUAL(0, track.curve("reso4Amp")->minimum());
+		CPPUNIT_ASSERT_EQUAL(127, track.curve("reso4Amp")->maximum());
+		CPPUNIT_ASSERT_EQUAL(string("harmonics"), track.curve("harmonics")->name());
+		CPPUNIT_ASSERT_EQUAL(64, track.curve("harmonics")->defaultValue());
+		CPPUNIT_ASSERT_EQUAL(0, track.curve("harmonics")->minimum());
+		CPPUNIT_ASSERT_EQUAL(127, track.curve("harmonics")->maximum());
+		CPPUNIT_ASSERT_EQUAL(string("fx2depth"), track.curve("fx2depth")->name());
+		CPPUNIT_ASSERT_EQUAL(64, track.curve("fx2depth")->defaultValue());
+		CPPUNIT_ASSERT_EQUAL(0, track.curve("fx2depth")->minimum());
+		CPPUNIT_ASSERT_EQUAL(127, track.curve("fx2depth")->maximum());
+		CPPUNIT_ASSERT_EQUAL(string("gen"), track.curve("gen")->name());
+		CPPUNIT_ASSERT_EQUAL(64, track.curve("gen")->defaultValue());
+		CPPUNIT_ASSERT_EQUAL(0, track.curve("gen")->minimum());
+		CPPUNIT_ASSERT_EQUAL(127, track.curve("gen")->maximum());
+		CPPUNIT_ASSERT_EQUAL(string("por"), track.curve("por")->name());
+		CPPUNIT_ASSERT_EQUAL(64, track.curve("por")->defaultValue());
+		CPPUNIT_ASSERT_EQUAL(0, track.curve("por")->minimum());
+		CPPUNIT_ASSERT_EQUAL(127, track.curve("por")->maximum());
+		CPPUNIT_ASSERT_EQUAL(string("ope"), track.curve("ope")->name());
+		CPPUNIT_ASSERT_EQUAL(127, track.curve("ope")->defaultValue());
+		CPPUNIT_ASSERT_EQUAL(0, track.curve("ope")->minimum());
+		CPPUNIT_ASSERT_EQUAL(127, track.curve("ope")->maximum());
 	}
 
 	void testConstructFromMidiEvents()
@@ -184,9 +184,9 @@ public:
 	void testGetterAndSetterName()
 	{
 		Track track("DummyTrackName", "DummySingerName");
-		CPPUNIT_ASSERT_EQUAL(string("DummyTrackName"), track.getName());
-		track.setName("foo");
-		CPPUNIT_ASSERT_EQUAL(string("foo"), track.getName());
+		CPPUNIT_ASSERT_EQUAL(string("DummyTrackName"), track.name());
+		track.name("foo");
+		CPPUNIT_ASSERT_EQUAL(string("foo"), track.name());
 	}
 
 	/**
@@ -208,39 +208,39 @@ public:
 	void testGetSingerEventAt()
 	{
 		Track track("", "");
-		track.events()->clear();
+		track.events().clear();
 		{
-			const Event* actual = track.getSingerEventAt(0);
+			const Event* actual = track.singerEventAt(0);
 			CPPUNIT_ASSERT(0 == actual);
 		}
 
 		Event singer1(0, EventType::SINGER);
-		track.events()->add(singer1, 1);
+		track.events().add(singer1, 1);
 
 		Event note1(480, EventType::NOTE);
-		track.events()->add(note1, 2);
+		track.events().add(note1, 2);
 
 		Event singer2(480, EventType::SINGER);
-		track.events()->add(singer2, 3);
+		track.events().add(singer2, 3);
 
 		{
-			const Event* actual = track.getSingerEventAt(0);
+			const Event* actual = track.singerEventAt(0);
 			CPPUNIT_ASSERT_EQUAL(1, actual->id);
 		}
 		{
-			const Event* actual = track.getSingerEventAt(479);
+			const Event* actual = track.singerEventAt(479);
 			CPPUNIT_ASSERT_EQUAL(1, actual->id);
 		}
 		{
-			const Event* actual = track.getSingerEventAt(480);
+			const Event* actual = track.singerEventAt(480);
 			CPPUNIT_ASSERT_EQUAL(3, actual->id);
 		}
 		{
-			const Event* actual = track.getSingerEventAt(10000);
+			const Event* actual = track.singerEventAt(10000);
 			CPPUNIT_ASSERT_EQUAL(3, actual->id);
 		}
 		{
-			const Event* actual = track.getSingerEventAt(-100);
+			const Event* actual = track.singerEventAt(-100);
 			CPPUNIT_ASSERT(0 == actual);
 		}
 	}
@@ -258,7 +258,7 @@ public:
 		Track track("DummyTrackName", "DummySingerName");
 		EventListIndexIterator iterator = track.getIndexIterator(EventListIndexIteratorKind::SINGER);
 		CPPUNIT_ASSERT(iterator.hasNext());
-		const Event* event = track.events()->get(iterator.next());
+		const Event* event = track.events().get(iterator.next());
 		CPPUNIT_ASSERT_EQUAL(string("DummySingerName"), event->singerHandle.ids);
 		CPPUNIT_ASSERT(false == iterator.hasNext());
 	}
@@ -270,10 +270,10 @@ public:
 		CPPUNIT_ASSERT(false == iterator.hasNext());
 
 		Event event(480, EventType::NOTE);
-		track.events()->add(event, 10);
+		track.events().add(event, 10);
 		iterator = track.getIndexIterator(EventListIndexIteratorKind::NOTE);
 		CPPUNIT_ASSERT(iterator.hasNext());
-		const Event* obtained = track.events()->get(iterator.next());
+		const Event* obtained = track.events().get(iterator.next());
 		//TODO: Event::equalが実装されたらコメントアウトを元に戻す
 		//CPPUNIT_ASSERT_EQUAL( event, obtained );
 		CPPUNIT_ASSERT_EQUAL(10, obtained->id);
@@ -289,10 +289,10 @@ public:
 		Event event(480, EventType::ICON);
 		event.iconDynamicsHandle = Handle(HandleType::DYNAMICS);
 		event.iconDynamicsHandle.iconId = "$05019999";
-		track.events()->add(event, 10);
+		track.events().add(event, 10);
 		iterator = track.getIndexIterator(EventListIndexIteratorKind::DYNAFF);
 		CPPUNIT_ASSERT(iterator.hasNext());
-		const Event* obtained = track.events()->get(iterator.next());
+		const Event* obtained = track.events().get(iterator.next());
 		//TODO: Event::equalが実装されたらコメントアウトを元に戻す
 		//CPPUNIT_ASSERT_EQUAL( event, obtained );
 		CPPUNIT_ASSERT_EQUAL(10, obtained->id);
@@ -377,20 +377,20 @@ public:
 	{
 		Track track("DummyTrackName", "DummySingerName");
 		Event event(480, EventType::NOTE);
-		track.events()->add(event);
+		track.events().add(event);
 		track.curve("pit")->add(480, 100);
 
 		Track copy = track.clone();
-		CPPUNIT_ASSERT_EQUAL(2, copy.events()->size());
-		CPPUNIT_ASSERT_EQUAL((tick_t)0, copy.events()->get(0)->clock);
-		CPPUNIT_ASSERT_EQUAL(EventType::SINGER, copy.events()->get(0)->type);
-		CPPUNIT_ASSERT_EQUAL(string("DummySingerName"), copy.events()->get(0)->singerHandle.ids);
-		CPPUNIT_ASSERT_EQUAL((tick_t)480, copy.events()->get(1)->clock);
-		CPPUNIT_ASSERT_EQUAL(EventType::NOTE, copy.events()->get(1)->type);
+		CPPUNIT_ASSERT_EQUAL(2, copy.events().size());
+		CPPUNIT_ASSERT_EQUAL((tick_t)0, copy.events().get(0)->tick);
+		CPPUNIT_ASSERT_EQUAL(EventType::SINGER, copy.events().get(0)->type());
+		CPPUNIT_ASSERT_EQUAL(string("DummySingerName"), copy.events().get(0)->singerHandle.ids);
+		CPPUNIT_ASSERT_EQUAL((tick_t)480, copy.events().get(1)->tick);
+		CPPUNIT_ASSERT_EQUAL(EventType::NOTE, copy.events().get(1)->type());
 		CPPUNIT_ASSERT_EQUAL(1, copy.curve("pit")->size());
-		CPPUNIT_ASSERT_EQUAL((tick_t)480, copy.curve("pit")->getKeyClock(0));
+		CPPUNIT_ASSERT_EQUAL((tick_t)480, copy.curve("pit")->keyTickAt(0));
 		CPPUNIT_ASSERT_EQUAL(100, copy.curve("pit")->get(0).value);
-		CPPUNIT_ASSERT_EQUAL(string("DummyTrackName"), copy.getName());
+		CPPUNIT_ASSERT_EQUAL(string("DummyTrackName"), copy.name());
 	}
 
 	/**
@@ -405,7 +405,7 @@ public:
 	{
 		{
 			Track track;
-			track.common()->version = "DSB200";
+			track.common().version = "DSB200";
 			const std::vector<std::string>* list = track.curveNameList();
 			CPPUNIT_ASSERT_EQUAL((size_t)22, list->size());
 			CPPUNIT_ASSERT_EQUAL(string("PIT"), list->at(0));
@@ -434,7 +434,7 @@ public:
 
 		{
 			Track track;
-			track.common()->version = "DSB302";
+			track.common().version = "DSB302";
 			const std::vector<std::string>* list = track.curveNameList();
 			CPPUNIT_ASSERT_EQUAL((size_t)9, list->size());
 			CPPUNIT_ASSERT_EQUAL(string("PIT"), list->at(0));
@@ -450,7 +450,7 @@ public:
 
 		{
 			Track track;
-			track.common()->version = "";
+			track.common().version = "";
 			const std::vector<std::string>* list = track.curveNameList();
 			CPPUNIT_ASSERT_EQUAL((size_t)9, list->size());
 			CPPUNIT_ASSERT_EQUAL(string("PIT"), list->at(0));

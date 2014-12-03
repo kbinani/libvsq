@@ -47,7 +47,7 @@ void ByteArrayOutputStream::write(char const* array, int64_t startIndex, int64_t
 	_length = std::max(_length, _pointer);
 }
 
-std::string ByteArrayOutputStream::toString()
+std::string ByteArrayOutputStream::toString() const
 {
 	std::string result(_array, _length);
 	return result;

@@ -17,7 +17,7 @@ VSQ_BEGIN_NAMESPACE
 
 Sequence::Sequence()
 {
-	init("", 1, 4, 4, baseTempo);
+	init("", 1, 4, 4, _baseTempo);
 }
 
 Sequence::Sequence(std::string const& singer, int preMeasure, int numerator, int denominator, int tempo)
@@ -27,7 +27,7 @@ Sequence::Sequence(std::string const& singer, int preMeasure, int numerator, int
 
 Sequence Sequence::clone() const
 {
-	Sequence ret("Miku", 1, 4, 4, baseTempo);
+	Sequence ret("Miku", 1, 4, 4, _baseTempo);
 	ret._track.clear();
 	for (int i = 0; i < _track.size(); i++) {
 		ret._track.push_back(_track[i].clone());
@@ -43,58 +43,58 @@ Sequence Sequence::clone() const
 		ret.timesigList.push(copy.get(i).clone());
 	}
 
-	ret._totalClocks = _totalClocks;
+	ret._totalTicks = _totalTicks;
 	ret.master = master.clone();
 	ret.mixer = mixer.clone();
 	return ret;
 }
 
-Track const* Sequence::track(int trackIndex) const
+Track const& Sequence::track(int trackIndex) const
 {
-	return &_track[trackIndex];
+	return _track[trackIndex];
 }
 
-Track* Sequence::track(int trackIndex)
+Track& Sequence::track(int trackIndex)
 {
-	return &_track[trackIndex];
+	return _track[trackIndex];
 }
 
-std::vector<Track> const* Sequence::tracks() const
+std::vector<Track> const& Sequence::tracks() const
 {
-	return &_track;
+	return _track;
 }
 
-std::vector<Track>* Sequence::tracks()
+std::vector<Track>& Sequence::tracks()
 {
-	return &_track;
+	return _track;
 }
 
-int Sequence::getBaseTempo() const
+int Sequence::baseTempo() const
 {
-	return Sequence::baseTempo;
+	return _baseTempo;
 }
 
-tick_t Sequence::getTotalClocks() const
+tick_t Sequence::totalTicks() const
 {
-	return _totalClocks;
+	return _totalTicks;
 }
 
-int Sequence::getPreMeasure() const
+int Sequence::preMeasure() const
 {
 	return master.preMeasure;
 }
 
-tick_t Sequence::getPreMeasureClocks() const
+tick_t Sequence::preMeasureTicks() const
 {
-	return _calculatePreMeasureInClock();
+	return _calculatePreMeasureInTick();
 }
 
-tick_t Sequence::getTickPerQuarter() const
+tick_t Sequence::tickPerQuarter() const
 {
 	return _tickPerQuarter;
 }
 
-std::vector<std::string> Sequence::getCurveNameList()
+std::vector<std::string> Sequence::curveNameList()
 {
 	std::vector<std::string> result;
 	result.push_back("VEL");
@@ -110,37 +110,37 @@ std::vector<std::string> Sequence::getCurveNameList()
 	return result;
 }
 
-void Sequence::updateTotalClocks()
+void Sequence::updateTotalTicks()
 {
-	tick_t max = getPreMeasureClocks();
-	std::vector<std::string> curveNameList = getCurveNameList();
+	tick_t max = preMeasureTicks();
+	std::vector<std::string> curveNameList = this->curveNameList();
 	for (int i = 0; i < _track.size(); i++) {
-		Track* track = &(this->_track[i]);
-		int numEvents = track->events()->size();
+		Track& track = _track[i];
+		int numEvents = track.events().size();
 		if (0 < numEvents) {
-			const Event* lastItem = track->events()->get(numEvents - 1);
-			max = std::max(max, lastItem->clock + lastItem->getLength());
+			const Event* lastItem = track.events().get(numEvents - 1);
+			max = std::max(max, lastItem->tick + lastItem->length());
 		}
 		for (int j = 0; j < curveNameList.size(); j++) {
 			std::string vct = curveNameList[j];
-			const BPList* list = track->curve(vct);
+			const BPList* list = track.curve(vct);
 			if (list) {
 				int size = list->size();
 				if (size > 0) {
-					tick_t last_key = list->getKeyClock(size - 1);
+					tick_t last_key = list->keyTickAt(size - 1);
 					max = std::max(max, last_key);
 				}
 			}
 		}
 	}
-	_totalClocks = max;
+	_totalTicks = max;
 }
 
-tick_t Sequence::_calculatePreMeasureInClock() const
+tick_t Sequence::_calculatePreMeasureInTick() const
 {
 	int pre_measure = master.preMeasure;
 	int last_bar_count = timesigList.get(0).barCount;
-	tick_t last_clock = timesigList.get(0).getClock();
+	tick_t last_tick = timesigList.get(0).tick();
 	int last_denominator = timesigList.get(0).denominator;
 	int last_numerator = timesigList.get(0).numerator;
 	for (int i = 1; i < timesigList.size(); i++) {
@@ -148,19 +148,19 @@ tick_t Sequence::_calculatePreMeasureInClock() const
 			break;
 		} else {
 			last_bar_count = timesigList.get(i).barCount;
-			last_clock = timesigList.get(i).getClock();
+			last_tick = timesigList.get(i).tick();
 			last_denominator = timesigList.get(i).denominator;
 			last_numerator = timesigList.get(i).numerator;
 		}
 	}
 
 	int remained = pre_measure - last_bar_count;// プリメジャーの終わりまでの残り小節数
-	return last_clock + (int)::floor(remained * last_numerator * 480 * 4 / (double)last_denominator);
+	return last_tick + (int)::floor(remained * last_numerator * 480 * 4 / (double)last_denominator);
 }
 
 void Sequence::init(std::string const& singer, int preMeasure, int numerator, int denominator, int tempo)
 {
-	_totalClocks = preMeasure * 480 * 4 / denominator * numerator;
+	_totalTicks = preMeasure * 480 * 4 / denominator * numerator;
 	_track.push_back(Track("Voice1", singer));
 	master = Master(preMeasure);
 	mixer = Mixer(0, 0, 0, 0);

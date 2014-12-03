@@ -169,7 +169,7 @@ public:
 	 * @brief articulation の種類を取得する.
 	 * @return articulation の種類.
 	 */
-	ArticulationType getArticulation() const;
+	ArticulationType articulation() const;
 
 	/**
 	 * @brief このハンドルが強弱記号を表すものかどうかを表すブール値を取得する.
@@ -192,51 +192,53 @@ public:
 	/**
 	 * @brief Tick 単位の長さを取得する.
 	 */
-	tick_t getLength() const;
+	tick_t length() const;
 
 	/**
 	 * @brief 長さを設定する.
 	 * @param value Tick単位の長さ.
 	 */
-	void setLength(tick_t value);
+	void length(tick_t value);
 
 	/**
 	 * @brief 指定した位置にある歌詞を取得する.
 	 * @param index 取得する要素のインデックス(最初のインデックスは0).
 	 * @return 歌詞.
 	 */
-	const Lyric getLyricAt(int index) const;
+	Lyric const& get(int index) const;
+
+	Lyric& get(int index);
 
 	/**
 	 * @brief 指定した位置にある歌詞を指定した要素で置き換える.
 	 * @param index 置き換える要素のインデックス(最初のインデックスは0).
 	 * @param value 置き換える要素.
 	 */
-	void setLyricAt(int index, Lyric const& value);
+	void set(int index, Lyric const& value);
 
 	/**
 	 * @brief 歌詞を追加する.
 	 * @param lyric 追加する歌詞.
 	 */
-	void addLyric(Lyric const& lyric);
+	void add(Lyric const& lyric);
 
 	/**
 	 * @brief 歌詞の個数を返す.
 	 * @return 歌詞の個数.
 	 */
-	int getLyricCount() const;
+	int size() const;
 
 	/**
 	 * @brief Display String 値を取得する.
 	 * @return Display String 値.
 	 */
-	std::string getDisplayString() const;
+	std::string displayString() const;
 
 	/**
 	 * @brief ハンドルのタイプを取得する.
 	 * @return ハンドルのタイプ.
 	 */
-	HandleType getHandleType() const;
+	HandleType type() const;
 
 	/**
 	 * @brief コピーを作成する.

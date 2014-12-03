@@ -19,13 +19,13 @@
 
 VSQ_BEGIN_NAMESPACE
 
-BPList::KeyClockIterator::KeyClockIterator(BPList* list)
+BPList::KeyTickIterator::KeyTickIterator(BPList* list)
 {
 	_list = list;
 	_pos = -1;
 }
 
-bool BPList::KeyClockIterator::hasNext()
+bool BPList::KeyTickIterator::hasNext()
 {
 	if (_list) {
 		return (_pos + 1 < _list->size());
@@ -34,17 +34,17 @@ bool BPList::KeyClockIterator::hasNext()
 	}
 }
 
-tick_t BPList::KeyClockIterator::next()
+tick_t BPList::KeyTickIterator::next()
 {
 	_pos++;
-	return _list->getKeyClock(_pos);
+	return _list->keyTickAt(_pos);
 }
 
-void BPList::KeyClockIterator::remove()
+void BPList::KeyTickIterator::remove()
 {
 	if (0 <= _pos && _pos < _list->size()) {
 		for (int i = _pos; i < _list->size() - 1; i++) {
-			_list->_clocks[i] = _list->_clocks[i + 1];
+			_list->_ticks[i] = _list->_ticks[i + 1];
 			_list->_items[i].value = _list->_items[i + 1].value;
 			_list->_items[i].id = _list->_items[i + 1].id;
 		}
@@ -67,12 +67,12 @@ BPList::BPList(std::string const& name, int defaultValue, int minimum, int maxim
 	_maxId = 0;
 }
 
-std::string BPList::getName() const
+std::string BPList::name() const
 {
 	return _name;
 }
 
-void BPList::setName(std::string const& value)
+void BPList::name(std::string const& value)
 {
 	_name = value;
 }
@@ -82,12 +82,12 @@ int BPList::getMaxId() const
 	return _maxId;
 }
 
-int BPList::getDefault() const
+int BPList::defaultValue() const
 {
 	return _defaultValue;
 }
 
-void BPList::setDefault(int value)
+void BPList::defaultValue(int value)
 {
 	_defaultValue = value;
 }
@@ -101,19 +101,19 @@ void BPList::renumberIds()
 	}
 }
 
-std::string BPList::getData() const
+std::string BPList::data() const
 {
 	std::ostringstream ret;
 	for (int i = 0; i < _length; i++) {
 		if (0 < i) {
 			ret << ",";
 		}
-		ret << _clocks[i] << "=" << _items[i].value;
+		ret << _ticks[i] << "=" << _items[i].value;
 	}
 	return ret.str();
 }
 
-void BPList::setData(std::string const& value)
+void BPList::data(std::string const& value)
 {
 	_length = 0;
 	_maxId = 0;
@@ -123,10 +123,10 @@ void BPList::setData(std::string const& value)
 		if (spl2.size() < 2) {
 			continue;
 		}
-		tick_t clock;
+		tick_t tick;
 		int value;
 		try {
-			clock = StringUtil::parseInt<tick_t>(spl2[0]);
+			tick = StringUtil::parseInt<tick_t>(spl2[0]);
 			value = StringUtil::parseInt<int>(spl2[1]);
 		} catch (StringUtil::IntegerParseException&) {
 			continue;
@@ -138,7 +138,7 @@ void BPList::setData(std::string const& value)
 			value = _maxValue;
 		}
 		_ensureBufferLength(_length + 1);
-		_clocks[_length] = clock;
+		_ticks[_length] = tick;
 		_items[_length] = BP(value, _maxId + 1);
 		_maxId++;
 		_length++;
@@ -150,7 +150,7 @@ BPList BPList::clone() const
 	BPList res(_name, _defaultValue, _minValue, _maxValue);
 	res._ensureBufferLength(_length);
 	for (int i = 0; i < _length; i++) {
-		res.addWithoutSort(_clocks[i], _items[i].value);
+		res.addWithoutSort(_ticks[i], _items[i].value);
 		res._items[i].id = _items[i].id;
 	}
 	res._length = _length;
@@ -158,30 +158,30 @@ BPList BPList::clone() const
 	return res;
 }
 
-int BPList::getMaximum() const
+int BPList::maximum() const
 {
 	return _maxValue;
 }
 
-void BPList::setMaximum(int value)
+void BPList::maximum(int value)
 {
 	_maxValue = value;
 }
 
-int BPList::getMinimum() const
+int BPList::minimum() const
 {
 	return _minValue;
 }
 
-void BPList::setMinimum(int value)
+void BPList::minimum(int value)
 {
 	_minValue = value;
 }
 
-void BPList::remove(tick_t clock)
+void BPList::remove(tick_t tick)
 {
 	_ensureBufferLength(_length);
-	int index = _find(clock);
+	int index = _find(tick);
 	removeElementAt(index);
 }
 
@@ -189,7 +189,7 @@ void BPList::removeElementAt(int index)
 {
 	if (0 <= index && index < _length) {
 		for (int i = index; i < _length - 1; i++) {
-			_clocks[i] = _clocks[i + 1];
+			_ticks[i] = _ticks[i + 1];
 			_items[i].value = _items[i + 1].value;
 			_items[i].id = _items[i + 1].id;
 		}
@@ -197,40 +197,40 @@ void BPList::removeElementAt(int index)
 	}
 }
 
-bool BPList::isContainsKey(tick_t clock) const
+bool BPList::isContainsKey(tick_t tick) const
 {
-	return (_find(clock) >= 0);
+	return (_find(tick) >= 0);
 }
 
-void BPList::move(tick_t clock, tick_t new_clock, int new_value)
+void BPList::move(tick_t tick, tick_t newTick, int newValue)
 {
 	_ensureBufferLength(_length);
-	int index = _find(clock);
+	int index = _find(tick);
 	if (index < 0) {
 		return;
 	}
 	BP item = _items[index];
 	for (int i = index; i < _length - 1; i++) {
-		_clocks[i] = _clocks[i + 1];
+		_ticks[i] = _ticks[i + 1];
 		_items[i].value = _items[i + 1].value;
 		_items[i].id = _items[i + 1].id;
 	}
 	_length--;
-	int index_new = _find(new_clock);
+	int index_new = _find(newTick);
 	if (index_new >= 0) {
-		_items[index_new].value = new_value;
+		_items[index_new].value = newValue;
 		_items[index_new].id = item.id;
 	} else {
 		_length++;
 		_ensureBufferLength(_length);
-		_clocks[_length - 1] = new_clock;
-		std::stable_sort(_clocks.begin(), _clocks.begin() + _length);
-		index_new = _find(new_clock);
+		_ticks[_length - 1] = newTick;
+		std::stable_sort(_ticks.begin(), _ticks.begin() + _length);
+		index_new = _find(newTick);
 		for (int i = _length - 1; i >= index_new + 1; i--) {
 			_items[i].value = _items[i - 1].value;
 			_items[i].id = _items[i - 1].id;
 		}
-		_items[index_new].value = new_value;
+		_items[index_new].value = newValue;
 		_items[index_new].id = item.id;
 	}
 }
@@ -240,19 +240,14 @@ void BPList::clear()
 	_length = 0;
 }
 
-int BPList::getValue(int index) const
-{
-	return _items[index].value;
-}
-
 BP BPList::get(int index) const
 {
 	return _items[index];
 }
 
-tick_t BPList::getKeyClock(int index) const
+tick_t BPList::keyTickAt(int index) const
 {
-	return _clocks[index];
+	return _ticks[index];
 }
 
 int BPList::findValueFromId(int id) const
@@ -272,13 +267,13 @@ BPListSearchResult BPList::findElement(int id) const
 	for (int i = 0; i < _length; i++) {
 		BP item = _items[i];
 		if (item.id == id) {
-			context.clock = _clocks[i];
+			context.tick = _ticks[i];
 			context.index = i;
 			context.point = item;
 			return context;
 		}
 	}
-	context.clock = -1;
+	context.tick = -1;
 	context.index = -1;
 	context.point = BP(_defaultValue, -1);
 	return context;
@@ -294,21 +289,21 @@ void BPList::setValueForId(int id, int value)
 	}
 }
 
-void BPList::print(TextStream& stream, tick_t startClock, std::string const& header) const
+void BPList::print(TextStream& stream, tick_t startTick, std::string const& header) const
 {
 	stream.writeLine(header);
 	int lastvalue = _defaultValue;
 	int value_at_start_written = false;
 	for (int i = 0; i < _length; i++) {
-		tick_t key = _clocks[i];
-		if (startClock == key) {
+		tick_t key = _ticks[i];
+		if (startTick == key) {
 			stream.write(StringUtil::toString(key, "%d"));
 			stream.write("=");
 			stream.writeLine(StringUtil::toString(_items[i].value, "%d"));
 			value_at_start_written = true;
-		} else if (startClock < key) {
+		} else if (startTick < key) {
 			if ((!value_at_start_written) && (lastvalue != _defaultValue)) {
-				stream.write(StringUtil::toString(startClock, "%ld"));
+				stream.write(StringUtil::toString(startTick, "%ld"));
 				stream.write("=");
 				stream.writeLine(StringUtil::toString(lastvalue, "%d"));
 				value_at_start_written = true;
@@ -322,7 +317,7 @@ void BPList::print(TextStream& stream, tick_t startClock, std::string const& hea
 		}
 	}
 	if ((!value_at_start_written) && (lastvalue != _defaultValue)) {
-		stream.write(StringUtil::toString(startClock, "%ld"));
+		stream.write(StringUtil::toString(startTick, "%ld"));
 		stream.write("=");
 		stream.writeLine(StringUtil::toString(lastvalue, "%d"));
 	}
@@ -330,26 +325,26 @@ void BPList::print(TextStream& stream, tick_t startClock, std::string const& hea
 
 std::string BPList::appendFromText(TextStream& reader)
 {
-	tick_t clock = 0;
+	tick_t tick = 0;
 	int value = 0;
 	int minus = 1;
-	int mode = 0; // 0: clockを読んでいる, 1: valueを読んでいる
+	int mode = 0; // 0: tickを読んでいる, 1: valueを読んでいる
 	while (reader.ready()) {
 		std::string ch = reader.get();
 		if (ch == "\n") {
 			if (mode == 1) {
-				addWithoutSort(clock, value * minus);
+				addWithoutSort(tick, value * minus);
 				mode = 0;
-				clock = 0;
+				tick = 0;
 				value = 0;
 				minus = 1;
 			}
 		} else {
 			if (ch == "[") {
 				if (mode == 1) {
-					addWithoutSort(clock, value * minus);
+					addWithoutSort(tick, value * minus);
 					mode = 0;
-					clock = 0;
+					tick = 0;
 					value = 0;
 					minus = 1;
 				}
@@ -385,7 +380,7 @@ std::string BPList::appendFromText(TextStream& reader)
 				}
 				if (num >= 0) {
 					if (mode == 0) {
-						clock = clock * 10 + num;
+						tick = tick * 10 + num;
 					} else {
 						value = value * 10 + num;
 					}
@@ -401,24 +396,24 @@ int BPList::size() const
 	return _length;
 }
 
-BPList::KeyClockIterator BPList::keyClockIterator()
+BPList::KeyTickIterator BPList::keyTickIterator()
 {
-	return KeyClockIterator(this);
+	return KeyTickIterator(this);
 }
 
-int BPList::add(tick_t clock, int value)
+int BPList::add(tick_t tick, int value)
 {
 	_ensureBufferLength(_length);
-	int index = _find(clock);
+	int index = _find(tick);
 	if (index >= 0) {
 		_items[index].value = value;
 		return _items[index].id;
 	} else {
 		_length++;
 		_ensureBufferLength(_length);
-		_clocks[_length - 1] = clock;
-		std::stable_sort(_clocks.begin(), _clocks.begin() + _length);
-		index = _find(clock);
+		_ticks[_length - 1] = tick;
+		std::stable_sort(_ticks.begin(), _ticks.begin() + _length);
+		index = _find(tick);
 		_maxId++;
 		for (int i = _length - 1; i >= index + 1; i--) {
 			_items[i].value = _items[i - 1].value;
@@ -430,19 +425,19 @@ int BPList::add(tick_t clock, int value)
 	}
 }
 
-int BPList::addWithId(tick_t clock, int value, int id)
+int BPList::addWithId(tick_t tick, int value, int id)
 {
 	_ensureBufferLength(_length);
-	int index = _find(clock);
+	int index = _find(tick);
 	if (index >= 0) {
 		_items[index].value = value;
 		_items[index].id = id;
 	} else {
 		_length++;
 		_ensureBufferLength(_length);
-		_clocks[_length - 1] = clock;
-		std::stable_sort(_clocks.begin(), _clocks.begin() + _length);
-		index = _find(clock);
+		_ticks[_length - 1] = tick;
+		std::stable_sort(_ticks.begin(), _ticks.begin() + _length);
+		index = _find(tick);
 		for (int i = _length - 1; i >= index + 1; i--) {
 			_items[i].value = _items[i - 1].value;
 			_items[i].id = _items[i - 1].id;
@@ -461,7 +456,7 @@ void BPList::removeWithId(int id)
 			for (int j = i; j < _length - 1; j++) {
 				_items[j].value = _items[j + 1].value;
 				_items[j].id = _items[j + 1].id;
-				_clocks[j] = _clocks[j + 1];
+				_ticks[j] = _ticks[j + 1];
 			}
 			_length--;
 			break;
@@ -469,9 +464,9 @@ void BPList::removeWithId(int id)
 	}
 }
 
-int BPList::getValueAt(tick_t clock) const
+int BPList::getValueAt(tick_t tick) const
 {
-	int index = _find(clock);
+	int index = _find(tick);
 	if (index >= 0) {
 		return _items[index].value;
 	} else {
@@ -480,8 +475,8 @@ int BPList::getValueAt(tick_t clock) const
 		} else {
 			int draft = -1;
 			for (int i = 0; i < _length; i++) {
-				int c = _clocks[i];
-				if (clock < c) {
+				int c = _ticks[i];
+				if (tick < c) {
 					break;
 				}
 				draft = i;
@@ -495,32 +490,32 @@ int BPList::getValueAt(tick_t clock) const
 	}
 }
 
-int BPList::getValueAt(tick_t clock, int* index) const
+int BPList::getValueAt(tick_t tick, int& index) const
 {
 	if (_length == 0) {
 		return _defaultValue;
 	} else {
-		if (*index < 0 || _length <= *index) {
-			*index = 0;
+		if (index < 0 || _length <= index) {
+			index = 0;
 		}
-		if (0 <= *index && *index < _length) {
-			if (clock < _clocks[*index]) {
-				*index = 0;
+		if (0 <= index && index < _length) {
+			if (tick < _ticks[index]) {
+				index = 0;
 			}
 		}
-		for (int i = *index; i < _length; i++) {
-			tick_t keyclock = _clocks[i];
-			if (clock < keyclock) {
+		for (int i = index; i < _length; i++) {
+			tick_t keyTick = _ticks[i];
+			if (tick < keyTick) {
 				if (1 <= i) {
-					*index = i - 1;
+					index = i - 1;
 					return _items[i - 1].value;
 				} else {
-					*index = 0;
+					index = 0;
 					return _defaultValue;
 				}
 			}
 		}
-		*index = _length - 1;
+		index = _length - 1;
 		return _items[_length - 1].value;
 	}
 }
@@ -537,20 +532,20 @@ void BPList::_init()
 
 void BPList::_ensureBufferLength(int length)
 {
-	if (length > _clocks.size()) {
+	if (length > _ticks.size()) {
 		int newLength = length;
-		if (_clocks.size() <= 0) {
+		if (_ticks.size() <= 0) {
 			newLength = (int)::floor(length * 1.2);
 		} else {
-			int order = length / _clocks.size();
+			int order = length / _ticks.size();
 			if (order <= 1) {
 				order = 2;
 			}
-			newLength = _clocks.size() * order;
+			newLength = _ticks.size() * order;
 		}
-		int delta = newLength - _clocks.size();
+		int delta = newLength - _ticks.size();
 		for (int i = 0; i < delta; i++) {
-			_clocks.push_back(0);
+			_ticks.push_back(0);
 			_items.push_back(BP(0, 0));
 		}
 	}
@@ -559,17 +554,17 @@ void BPList::_ensureBufferLength(int length)
 int BPList::_find(tick_t value) const
 {
 	for (int i = 0; i < _length; i++) {
-		if (_clocks[i] == value) {
+		if (_ticks[i] == value) {
 			return i;
 		}
 	}
 	return -1;
 }
 
-void BPList::addWithoutSort(tick_t clock, int value)
+void BPList::addWithoutSort(tick_t tick, int value)
 {
 	_ensureBufferLength(_length + 1);
-	_clocks[_length] = clock;
+	_ticks[_length] = tick;
 	_maxId++;
 	_items[_length].value = value;
 	_items[_length].id = _maxId;

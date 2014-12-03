@@ -50,16 +50,16 @@ private:
 		virtual ~NrpnEventProvider()
 		{}
 
-		virtual NrpnEvent getDelayNrpnEvent(tick_t actualClock, int delay) const
+		virtual NrpnEvent getDelayNrpnEvent(tick_t actualTick, int delay) const
 		{
 			int delayMsb, delayLsb;
 			VocaloidMidiEventListFactory::_getMsbAndLsb(delay, &delayMsb, &delayLsb);
-			return NrpnEvent(actualClock, delayNrpn, delayMsb, delayLsb);
+			return NrpnEvent(actualTick, delayNrpn, delayMsb, delayLsb);
 		}
 
-		virtual NrpnEvent getNrpnEvent(tick_t actualClock, int value) const
+		virtual NrpnEvent getNrpnEvent(tick_t actualTick, int value) const
 		{
-			return NrpnEvent(actualClock, nrpn, value);
+			return NrpnEvent(actualTick, nrpn, value);
 		}
 	};
 
@@ -73,12 +73,12 @@ private:
 			: NrpnEventProvider(MidiParameterType::PB_DELAY, MidiParameterType::PB_PITCH_BEND)
 		{}
 
-		NrpnEvent getNrpnEvent(tick_t actualClock, int value) const override
+		NrpnEvent getNrpnEvent(tick_t actualTick, int value) const override
 		{
 			int actualValue = value + 0x2000;
 			int msb, lsb;
 			VocaloidMidiEventListFactory::_getMsbAndLsb(actualValue, &msb, &lsb);
-			return NrpnEvent(actualClock, nrpn, msb, lsb);
+			return NrpnEvent(actualTick, nrpn, msb, lsb);
 		}
 	};
 
@@ -92,9 +92,9 @@ private:
 			: NrpnEventProvider(MidiParameterType::CC_PBS_DELAY, MidiParameterType::CC_PBS_PITCH_BEND_SENSITIVITY)
 		{}
 
-		NrpnEvent getNrpnEvent(tick_t actualClock, int value) const override
+		NrpnEvent getNrpnEvent(tick_t actualTick, int value) const override
 		{
-			return NrpnEvent(actualClock, nrpn, value, 0x00);
+			return NrpnEvent(actualTick, nrpn, value, 0x00);
 		}
 	};
 
@@ -103,26 +103,26 @@ public:
 	 * @brief Generate a list of VOCALOID MIDI event from a specified track.
 	 * @param target An instance of Track.
 	 * @param tempoList Tempo information.
-	 * @param totalClocks Length of the sequence (in tick unit).
-	 * @param preMeasureClock Length of pre-measure (in tick unit).
+	 * @param totalTicks Length of the sequence (in tick unit).
+	 * @param preMeasureTicks Length of pre-measure (in tick unit).
 	 * @param msPreSend Length of pre-send time in milli seconds.
 	 * @return A list of VOCALOID MIDI event.
 	 */
 	static std::vector<MidiEvent> generateMidiEventList(
-		Track const* target, TempoList const* tempoList, tick_t totalClocks, tick_t preMeasureClock, int msPreSend);
+		Track const& target, TempoList const& tempoList, tick_t totalTicks, tick_t preMeasureTicks, int msPreSend);
 
 protected:
 	/**
 	 * @brief Generate a list of NrpnEvent from a specified track.
 	 * @param track An instance of Track.
 	 * @param tempoList Tempo information.
-	 * @param totalClocks Length of the sequence (in tick unit).
-	 * @param preMeasureClock Length of pre-measure (in tick unit).
+	 * @param totalTicks Length of the sequence (in tick unit).
+	 * @param preMeasureTicks Length of pre-measure (in tick unit).
 	 * @param msPreSend Length of pre-send time in milli seconds.
 	 * @return A list of NrpnEvent.
 	 */
 	static std::vector<NrpnEvent> generateNRPN(
-		Track const* target, TempoList const* tempoList, tick_t totalClocks, tick_t preMeasureClock, int msPreSend);
+		Track const& target, TempoList const& tempoList, tick_t totalTicks, tick_t preMeasureTicks, int msPreSend);
 
 	/**
 	 * @brief Generate a list of Expression(DYN) NrpnEvent from a specified track.
@@ -131,7 +131,7 @@ protected:
 	 * @param msPreSend Length of pre-send time in milli seconds.
 	 * @return A list of NrpnEvent.
 	 */
-	static std::vector<NrpnEvent> generateExpressionNRPN(Track const* track, TempoList const* tempoList, int preSendMilliseconds);
+	static std::vector<NrpnEvent> generateExpressionNRPN(Track const& track, TempoList const& tempoList, int preSendMilliseconds);
 
 	/**
 	 * @brief Generate prefix NrpnEvent for track.
@@ -148,7 +148,7 @@ protected:
 	 * @param preSendMilliseconds Length of pre-send time in milli seconds.
 	 * @return A list of NrpnEvent.
 	 */
-	static std::vector<NrpnEvent> generateSingerNRPN(TempoList const* tempoList, Event const* singerEvent, int preSendMilliseconds);
+	static std::vector<NrpnEvent> generateSingerNRPN(TempoList const& tempoList, Event const& singerEvent, int preSendMilliseconds);
 
 	/**
 	 * @brief Generate NRPN from note events in the track.
@@ -165,7 +165,7 @@ protected:
 	 * @param [out] delay Delay time of the note item.
 	 * @return Generated NRPN.
 	 */
-	static NrpnEvent generateNoteNRPN(Track const* track, TempoList const* tempoList, Event const* noteEvent, int msPreSend, int noteLocation, int* lastDelay, int* delay);
+	static NrpnEvent generateNoteNRPN(Track const& track, TempoList const& tempoList, Event const& noteEvent, int msPreSend, int noteLocation, int* lastDelay, int* delay);
 
 	/**
 	 * @brief 指定したシーケンスの指定したトラックから, PitchBend の NRPN リストを作成する.
@@ -174,7 +174,7 @@ protected:
 	 * @param msPreSend ミリ秒単位のプリセンド時間.
 	 * @return NrpnEvent の配列.
 	 */
-	static std::vector<NrpnEvent> generatePitchBendNRPN(Track const* track, TempoList const* tempoList, int msPreSend);
+	static std::vector<NrpnEvent> generatePitchBendNRPN(Track const& track, TempoList const& tempoList, int msPreSend);
 
 	/**
 	 * @brief 指定したシーケンスの指定したトラックから, PitchBendSensitivity の NRPN リストを作成する.
@@ -183,7 +183,7 @@ protected:
 	 * @param msPreSend ミリ秒単位のプリセンド時間.
 	 * @return NrpnEvent の配列.
 	 */
-	static std::vector<NrpnEvent> generatePitchBendSensitivityNRPN(Track const* track, TempoList const* tempoList, int msPreSend);
+	static std::vector<NrpnEvent> generatePitchBendSensitivityNRPN(Track const& track, TempoList const& tempoList, int msPreSend);
 
 	/**
 	 * @brief トラックの音符イベントから, ビブラート出力用の NRPN のリストを作成する.
@@ -192,7 +192,7 @@ protected:
 	 * @param msPreSend ミリ秒単位のプリセンド時間.
 	 * @return NrpnEvent の配列.
 	 */
-	static std::vector<NrpnEvent> generateVibratoNRPN(TempoList const* tempoList, Event const* noteEvent, int msPreSend);
+	static std::vector<NrpnEvent> generateVibratoNRPN(TempoList const& tempoList, Event const& noteEvent, int msPreSend);
 
 	/**
 	 * @brief 指定したシーケンスの指定したトラックから, VoiceChangeParameter の NRPN リストを作成する.
@@ -201,9 +201,9 @@ protected:
 	 * @param msPreSend ミリ秒単位のプリセンド時間.
 	 * @return NrpnEvent の配列.
 	 */
-	static std::vector<NrpnEvent> generateVoiceChangeParameterNRPN(Track const* track, TempoList const* tempoList, int msPreSend, tick_t premeasure_clock);
+	static std::vector<NrpnEvent> generateVoiceChangeParameterNRPN(Track const& track, TempoList const& tempoList, int msPreSend, tick_t preMeasureTicks);
 
-	static std::vector<NrpnEvent> generateFx2DepthNRPN(Track const* track, TempoList const* tempoList, int preSendMilliseconds);
+	static std::vector<NrpnEvent> generateFx2DepthNRPN(Track const& track, TempoList const& tempoList, int preSendMilliseconds);
 
 	/**
 	 * @brief Voice Change Parameter の NRPN を追加する.
@@ -214,17 +214,17 @@ protected:
 	 * @param lastDelay 直前の delay 値(ミリ秒単位).
 	 * @return delay 値(ミリ秒単位).
 	 */
-	static int addVoiceChangeParameters(std::vector<NrpnEvent>& dest, BPList const* list, TempoList const* tempoList, int msPreSend, int lastDelay);
+	static int addVoiceChangeParameters(std::vector<NrpnEvent>& dest, BPList const& list, TempoList const& tempoList, int msPreSend, int lastDelay);
 
 	/**
 	 * @brief 指定した時刻における, プリセンド込の時刻と, ディレイを取得する.
 	 * @param tempoList テンポ情報.
-	 * @param clock Tick 単位の時刻.
+	 * @param tick Tick 単位の時刻.
 	 * @param msPreSend ミリ秒単位のプリセンド時間.
-	 * @param[out] actualClock プリセンド分のクロックを引いた Tick 単位の時刻.
+	 * @param[out] actualTick プリセンド分のクロックを引いた Tick 単位の時刻.
 	 * @param[out] delay ミリ秒単位のプリセンド時間.
 	 */
-	static void _getActualClockAndDelay(TempoList const* tempoList, tick_t clock, int msPreSend, tick_t* actualClock, int* delay);
+	static void _getActualTickAndDelay(TempoList const& tempoList, tick_t tick, int msPreSend, tick_t* actualTick, int* delay);
 
 	/**
 	 * @brief DATA の値を MSB と LSB に分解する.
@@ -246,8 +246,8 @@ private:
 	 */
 	static void generateNRPNByBPList(
 		std::vector<NrpnEvent>& result,
-		TempoList const* tempoList, int preSendMilliseconds,
-		BPList const* list, NrpnEventProvider const* provider
+		TempoList const& tempoList, int preSendMilliseconds,
+		BPList const& list, NrpnEventProvider const& provider
 	);
 };
 

@@ -37,7 +37,7 @@ Track& Track::operator = (Track const& value)
 	return *this;
 }
 
-std::string Track::getName() const
+std::string Track::name() const
 {
 	//if( common == nil ){
 	//    return "Master Track";
@@ -46,7 +46,7 @@ std::string Track::getName() const
 	//}
 }
 
-void Track::setName(std::string const& value)
+void Track::name(std::string const& value)
 {
 	_common.name = value;
 }
@@ -258,15 +258,15 @@ EventListIndexIterator Track::getIndexIterator(EventListIndexIteratorKind iterat
 	}
 	*/
 
-Event const* Track::getSingerEventAt(tick_t clock) const
+Event const* Track::singerEventAt(tick_t tick) const
 {
-	const Event* last = 0;
-	const Event::List* events = this->events();
+	Event const* last = nullptr;
+	Event::List const& events = this->events();
 	EventListIndexIterator itr = getIndexIterator(EventListIndexIteratorKind::SINGER);
 	while (itr.hasNext()) {
 		int index = itr.next();
-		const Event* item = events->get(index);
-		if (clock < item->clock) {
+		const Event* item = events.get(index);
+		if (tick < item->tick) {
 			return last;
 		}
 		last = item;
@@ -340,7 +340,7 @@ BPList const* Track::curve(std::string const& curveName) const
 	std::map<std::string, BPList*>::const_iterator index
 		= curveNameMap.find(search);
 	if (index == curveNameMap.end()) {
-		return 0;
+		return nullptr;
 	} else {
 		return index->second;
 	}
@@ -352,7 +352,7 @@ BPList* Track::curve(std::string const& curveName)
 	std::map<std::string, BPList*>::const_iterator index
 		= curveNameMap.find(search);
 	if (index == curveNameMap.end()) {
-		return 0;
+		return nullptr;
 	} else {
 		return index->second;
 	}
@@ -436,24 +436,24 @@ Track Track::clone() const
 	}
 	*/
 
-Event::List* Track::events()
+Event::List& Track::events()
 {
-	return &_events;
+	return _events;
 }
 
-Event::List const* Track::events() const
+Event::List const& Track::events() const
 {
-	return &_events;
+	return _events;
 }
 
-Common* Track::common()
+Common& Track::common()
 {
-	return &_common;
+	return _common;
 }
 
-Common const* Track::common() const
+Common const& Track::common() const
 {
-	return &_common;
+	return _common;
 }
 
 std::vector<std::string> const* Track::curveNameList() const
@@ -492,7 +492,7 @@ std::vector<std::string> const* Track::curveNameList() const
 		addCurveNameTo(vocaloid1, vocaloid2, "OPE", false, true);
 	}
 
-	if (common()->version.substr(0, 4) == "DSB2") {
+	if (common().version.substr(0, 4) == "DSB2") {
 		return &vocaloid1;
 	} else {
 		return &vocaloid2;
@@ -564,7 +564,7 @@ void Track::_initCor(std::string const& name, std::string const& singer)
 	ish.iconId = "$07010000";
 	ish.ids = singer;
 	ish.original = 0;
-	ish.setLength(1);
+	ish.length(1);
 	ish.language = 0;
 	ish.program = 0;
 	event.singerHandle = ish;
@@ -573,7 +573,7 @@ void Track::_initCor(std::string const& name, std::string const& singer)
 
 void Track::deepCopy(Track* destination) const
 {
-	destination->setName(getName());
+	destination->name(name());
 
 	destination->_common = _common.clone();
 	destination->_events.clear();

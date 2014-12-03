@@ -64,7 +64,7 @@ private:
 	/**
 	 * @brief テンポが省略された際の, 基準となるテンポ値.
 	 */
-	static const int baseTempo = 500000;
+	static const int _baseTempo = 500000;
 
 	/**
 	 * @brief 四分音符 1 個あたりの Tick 数.
@@ -74,7 +74,7 @@ private:
 	/**
 	 * @brief Tick 単位の曲の長さ.
 	 */
-	tick_t _totalClocks;
+	tick_t _totalTicks;
 
 public:
 	/**
@@ -101,65 +101,65 @@ public:
 	/**
 	 * @brief Get an instance of Track.
 	 */
-	Track const* track(int trackIndex) const;
+	Track const& track(int trackIndex) const;
 
 	/**
 	 * @brief Get an instance of Track.
 	 */
-	Track* track(int trackIndex);
+	Track& track(int trackIndex);
 
-	std::vector<Track> const* tracks() const;
+	std::vector<Track> const& tracks() const;
 
-	std::vector<Track>* tracks();
+	std::vector<Track>& tracks();
 
 	/**
 	 * @brief テンポが一つも指定されていない場合の, 基本テンポ値を取得する.
 	 * @return (int) テンポ値. 四分音符の長さのマイクロ秒単位の長さ.
 	 */
-	int getBaseTempo() const;
+	int baseTempo() const;
 
 	/**
 	 * @brief Tick 単位の曲の長さを取得する.
-	 * シーケンスに変更を加えた場合, <code><a href="#updateTotalClocks">updateTotalClocks</a></code> を呼んでからこのメソッドを呼ぶこと.
+	 * シーケンスに変更を加えた場合, <code><a href="#updateTotalTicks">updateTotalTicks</a></code> を呼んでからこのメソッドを呼ぶこと.
 	 * @return Tick 単位の曲の長さ.
 	 */
-	tick_t getTotalClocks() const;
+	tick_t totalTicks() const;
 
 	/**
 	 * @brief プリメジャー値を取得する
 	 * @return 小節単位のプリメジャー長さ.
 	 */
-	int getPreMeasure() const;
+	int preMeasure() const;
 
 	/**
 	 * @brief Tick 単位のプリメジャー部分の長さを取得する.
 	 * @return Tick 単位のプリメジャー長さ.
 	 */
-	tick_t getPreMeasureClocks() const;
+	tick_t preMeasureTicks() const;
 
 	/**
 	 * @brief 四分音符あたりの Tick 数を取得する.
 	 * @return 四分音符一つあたりの Tick 数.
 	 */
-	tick_t getTickPerQuarter() const;
+	tick_t tickPerQuarter() const;
 
 	/**
 	 * @brief カーブ名のリストを取得する.
 	 * @return カーブ名のリスト.
 	 */
-	static std::vector<std::string> getCurveNameList();
+	static std::vector<std::string> curveNameList();
 
 	/**
-	 * @brief totalClock の値を更新する.
+	 * @brief totalTick の値を更新する.
 	 */
-	void updateTotalClocks();
+	void updateTotalTicks();
 
 private:
 	/**
 	 * @brief プリメジャーの Tick 単位の長さを計算する.
 	 * @return Tick 単位のプリメジャー長さ.
 	 */
-	tick_t _calculatePreMeasureInClock() const;
+	tick_t _calculatePreMeasureInTick() const;
 
 	/**
 	 * @brief 初期化を行う.

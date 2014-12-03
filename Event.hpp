@@ -18,6 +18,7 @@
 #include "./Handle.hpp"
 #include <vector>
 #include <string>
+#include <memory>
 
 VSQ_BEGIN_NAMESPACE
 
@@ -44,7 +45,7 @@ public:
 		/**
 		 * @brief イベントのリスト.
 		 */
-		std::vector<Event*> _events;
+		std::vector<std::unique_ptr<Event>> _events;
 
 		/**
 		 * @brief イベントの ID のリスト.
@@ -248,13 +249,7 @@ public:
 	/**
 	 * @brief Tick 単位の時刻.
 	 */
-	tick_t clock;
-
-	/**
-	 * @brief イベントの種類.
-	 * @todo private|protected にするべきでは.
-	 */
-	EventType type;
+	tick_t tick;
 
 	/**
 	 * @brief 歌手ハンドル.
@@ -309,7 +304,7 @@ public:
 	/**
 	 * @brief イベント先頭から測った, ビブラートの開始位置(Tick 単位).
 	 */
-	int vibratoDelay ;
+	int vibratoDelay;
 
 	/**
 	 * @brief アタックハンドル.
@@ -338,6 +333,11 @@ protected:
 
 private:
 	/**
+	 * @brief イベントの種類.
+	 */
+	EventType _type;
+
+	/**
 	 * @brief Tick 単位のイベント長さ.
 	 */
 	tick_t _length;
@@ -350,16 +350,11 @@ public:
 	explicit Event(std::string const& line);
 
 	/**
-	 * @brief 初期化を行う. この初期化メソッドは末尾のイベントリストを表すインスタンスを初期化する.
-	 */
-	Event();
-
-	/**
 	 * @brief 初期化を行う.
-	 * @param clock Tick 単位の時刻.
+	 * @param tick Tick 単位の時刻.
 	 * @param eventType イベントの種類.
 	 */
-	Event(tick_t clock, EventType eventType);
+	Event(tick_t tick, EventType eventType);
 
 	virtual ~Event()
 	{}
@@ -368,13 +363,18 @@ public:
 	 * @brief 長さを取得する.
 	 * @return 長さ.
 	 */
-	tick_t getLength() const;
+	tick_t length() const;
 
 	/**
 	 * @brief 長さを設定する.
 	 * @param value 長さ.
 	 */
-	void setLength(tick_t value);
+	void length(tick_t value);
+
+	/**
+	 * @brief イベントの種類を返す.
+	 */
+	EventType type() const;
 
 	/**
 	 * @brief コピーを作成する.
@@ -393,7 +393,7 @@ public:
 	 * @param item 比較対象のアイテム.
 	 * @return このインスタンスが比較対象よりも小さい場合は負の整数, 等しい場合は 0, 大きい場合は正の整数を返す.
 	 */
-	int compareTo(const Event& item) const;
+	int compareTo(Event const& item) const;
 
 	/**
 	 * @brief 2 つの {@link Event} を比較する.
@@ -424,7 +424,15 @@ public:
 	bool equals(Event const& other) const;
 	 */
 
+protected:
+	void type(EventType type);
+
 private:
+	/**
+	 * @brief 初期化を行う. この初期化メソッドは末尾のイベントリストを表すインスタンスを初期化する.
+	 */
+	Event();
+
 	void init();
 };
 

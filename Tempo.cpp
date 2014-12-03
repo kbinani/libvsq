@@ -19,20 +19,20 @@ VSQ_BEGIN_NAMESPACE
 std::string Tempo::toString() const
 {
 	std::ostringstream oss;
-	oss << "{Clock=" << clock << ", Tempo=" << tempo << ", Time=" << _time << "}";
+	oss << "{Tick=" << tick << ", Tempo=" << tempo << ", Time=" << _time << "}";
 	return oss.str();
 }
 
-Tempo::Tempo(tick_t clock, int tempo)
+Tempo::Tempo(tick_t tick, int tempo)
 {
-	this->clock = clock;
+	this->tick = tick;
 	this->tempo = tempo;
 	_time = 0.0;
 }
 
 Tempo::Tempo()
 {
-	clock = 0;
+	tick = 0;
 	tempo = 0;
 	_time = 0.0;
 }
@@ -44,14 +44,14 @@ int Tempo::compareTo(Tempo const& entry) const
 
 bool Tempo::equals(Tempo const& entry) const
 {
-	if (clock == entry.clock) {
+	if (tick == entry.tick) {
 		return true;
 	} else {
 		return false;
 	}
 }
 
-double Tempo::getTime() const
+double Tempo::time() const
 {
 	return _time;
 }
@@ -59,7 +59,7 @@ double Tempo::getTime() const
 Tempo Tempo::clone() const
 {
 	Tempo result;
-	result.clock = clock;
+	result.tick = tick;
 	result.tempo = tempo;
 	result._time = _time;
 	return result;
@@ -72,7 +72,7 @@ bool Tempo::compare(Tempo const& a, Tempo const& b)
 
 int Tempo::compareCore(Tempo const& a, Tempo const& b)
 {
-	return (int)(a.clock - b.clock);
+	return (int)(a.tick - b.tick);
 }
 
 VSQ_END_NAMESPACE

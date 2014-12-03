@@ -54,6 +54,7 @@ protected:
 
 	class TentativeEvent : public Event
 	{
+		typedef Event base_type;
 	public:
 		int singerHandleIndex;
 		int lyricHandleIndex;
@@ -64,6 +65,11 @@ protected:
 		void setEOS(bool value)
 		{
 			isEos = value;
+		}
+
+		void setType(EventType type)
+		{
+			base_type::type(type);
 		}
 	};
 
@@ -92,7 +98,7 @@ public:
 	 * @param encoding メタテキストのテキストエンコーディング(無視される. 現在はShift_JIS固定).
 	 * @todo メタテキストに記録されず, NRPNにのみ出力される値がなんらかあったはずなので, それの読み込みもサポートするかどうか検討すること.
 	 */
-	void read(Sequence& sequence, InputStream* stream, std::string const& encoding);
+	void read(Sequence& sequence, InputStream& stream, std::string const& encoding);
 
 protected:
 	/**

@@ -13,7 +13,7 @@ public:
 		Lyric lyric = Lyric(line);
 		CPPUNIT_ASSERT(false == lyric.isProtected);
 		CPPUNIT_ASSERT_EQUAL(string("あ"), lyric.phrase);
-		CPPUNIT_ASSERT_EQUAL(string("a"), lyric.getPhoneticSymbol());
+		CPPUNIT_ASSERT_EQUAL(string("a"), lyric.phoneticSymbol());
 		CPPUNIT_ASSERT_EQUAL(0.4, lyric.lengthRatio);
 
 		line = "あ\"\",a,1.0,0,0";
@@ -24,7 +24,7 @@ public:
 		lyric = Lyric(line);
 		CPPUNIT_ASSERT_EQUAL(string("は"), lyric.phrase);
 		CPPUNIT_ASSERT(lyric.isProtected);
-		vector<string> symbols = lyric.getPhoneticSymbolList();
+		vector<string> symbols = lyric.phoneticSymbolList();
 		CPPUNIT_ASSERT_EQUAL(2, (int)symbols.size());
 		CPPUNIT_ASSERT_EQUAL(string("h"), symbols[0]);
 		CPPUNIT_ASSERT_EQUAL(string("a"), symbols[1]);
@@ -32,29 +32,29 @@ public:
 		line = "\"a\",\"b\",1,0,0";
 		lyric = Lyric(line);
 		CPPUNIT_ASSERT_EQUAL(string("a"), lyric.phrase);
-		CPPUNIT_ASSERT_EQUAL(string("b"), lyric.getPhoneticSymbol());
+		CPPUNIT_ASSERT_EQUAL(string("b"), lyric.phoneticSymbol());
 	}
 
 	void testConstructWithPhrase()
 	{
 		Lyric lyric = Lyric("は", "h a");
 		CPPUNIT_ASSERT_EQUAL(string("は"), lyric.phrase);
-		CPPUNIT_ASSERT_EQUAL(string("h a"), lyric.getPhoneticSymbol());
-		CPPUNIT_ASSERT_EQUAL(string("64,0"), lyric.getConsonantAdjustment());
+		CPPUNIT_ASSERT_EQUAL(string("h a"), lyric.phoneticSymbol());
+		CPPUNIT_ASSERT_EQUAL(string("64,0"), lyric.consonantAdjustment());
 		CPPUNIT_ASSERT(false == lyric.isProtected);
 	}
 
 	void testGetPhoneticSymbol()
 	{
 		Lyric lyric = Lyric("は,h a,1.0,64,0,0");
-		string actual = lyric.getPhoneticSymbol();
+		string actual = lyric.phoneticSymbol();
 		CPPUNIT_ASSERT_EQUAL(string("h a"), actual);
 	}
 
 	void testGetPhoneticSymbolList()
 	{
 		Lyric lyric = Lyric("は,h a,1.0,64,0,0");
-		vector<string> actual = lyric.getPhoneticSymbolList();
+		vector<string> actual = lyric.phoneticSymbolList();
 		CPPUNIT_ASSERT_EQUAL((vector<string>::size_type)2, actual.size());
 		CPPUNIT_ASSERT_EQUAL(string("h"), actual[0]);
 		CPPUNIT_ASSERT_EQUAL(string("a"), actual[1]);
@@ -63,8 +63,8 @@ public:
 	void testSetPhoneticSymbol()
 	{
 		Lyric lyric = Lyric("あ,a,1.0,0,0");
-		lyric.setPhoneticSymbol("h a");
-		vector<string> actual = lyric.getPhoneticSymbolList();
+		lyric.phoneticSymbol("h a");
+		vector<string> actual = lyric.phoneticSymbolList();
 		CPPUNIT_ASSERT_EQUAL(2, (int)actual.size());
 		CPPUNIT_ASSERT_EQUAL(string("h"), actual[0]);
 		CPPUNIT_ASSERT_EQUAL(string("a"), actual[1]);
@@ -73,7 +73,7 @@ public:
 	void testGetConsonantAdjustmentList()
 	{
 		Lyric lyric = Lyric("は,h a,1,64,0,0");
-		const vector<int> actual = lyric.getConsonantAdjustmentList();
+		const vector<int> actual = lyric.consonantAdjustmentList();
 		CPPUNIT_ASSERT_EQUAL(2, (int)actual.size());
 		CPPUNIT_ASSERT_EQUAL(64, actual[0]);
 		CPPUNIT_ASSERT_EQUAL(0, actual[1]);
@@ -82,13 +82,13 @@ public:
 	void testGetConsonantAdjustmentListWithNil()
 	{
 		Lyric lyric = Lyric("は,h a,1,32,16,0");
-		vector<int> actual = lyric.getConsonantAdjustmentList();
+		vector<int> actual = lyric.consonantAdjustmentList();
 		CPPUNIT_ASSERT_EQUAL(2, (int)actual.size());
 		CPPUNIT_ASSERT_EQUAL(32, actual[0]);
 		CPPUNIT_ASSERT_EQUAL(16, actual[1]);
 
-		lyric._consonantAdjustment.clear();
-		actual = lyric.getConsonantAdjustmentList();
+		lyric.consonantAdjustmentList(std::vector<int>());
+		actual = lyric.consonantAdjustmentList();
 		CPPUNIT_ASSERT_EQUAL(2, (int)actual.size());
 		CPPUNIT_ASSERT_EQUAL(64, actual[0]);
 		CPPUNIT_ASSERT_EQUAL(0, actual[1]);
@@ -97,15 +97,15 @@ public:
 	void testGetConsonantAdjustment()
 	{
 		Lyric lyric = Lyric("は,h a,1,64,0,0");
-		string actual = lyric.getConsonantAdjustment();
+		string actual = lyric.consonantAdjustment();
 		CPPUNIT_ASSERT_EQUAL(string("64,0"), actual);
 	}
 
 	void testSetConsonantAdjustment()
 	{
 		Lyric lyric = Lyric("は,h a,1,64,0,0");
-		lyric.setConsonantAdjustment("61,0");
-		CPPUNIT_ASSERT_EQUAL(string("61,0"), lyric.getConsonantAdjustment());
+		lyric.consonantAdjustment("61,0");
+		CPPUNIT_ASSERT_EQUAL(string("61,0"), lyric.consonantAdjustment());
 	}
 
 	void testToString()

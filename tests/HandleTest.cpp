@@ -10,13 +10,13 @@ public:
 	void testConstructIconDynamicsHandle()
 	{
 		Handle handle(HandleType::DYNAMICS);
-		CPPUNIT_ASSERT_EQUAL(ArticulationType::DYNAFF, handle.getArticulation());
+		CPPUNIT_ASSERT_EQUAL(ArticulationType::DYNAFF, handle.articulation());
 	}
 
 	void testConstructNoteHeadHandle()
 	{
 		Handle handle(HandleType::NOTE_HEAD);
-		CPPUNIT_ASSERT_EQUAL(ArticulationType::NOTE_ATTACK, handle.getArticulation());
+		CPPUNIT_ASSERT_EQUAL(ArticulationType::NOTE_ATTACK, handle.articulation());
 	}
 
 	void testIsDynaffType()
@@ -56,9 +56,9 @@ public:
 	{
 		Handle handle(HandleType::VIBRATO);
 		tick_t expected = 847;
-		CPPUNIT_ASSERT(expected != handle.getLength());
-		handle.setLength(expected);
-		CPPUNIT_ASSERT_EQUAL(expected, handle.getLength());
+		CPPUNIT_ASSERT(expected != handle.length());
+		handle.length(expected);
+		CPPUNIT_ASSERT_EQUAL(expected, handle.length());
 	}
 
 	void testGetHandleIndexFromString()
@@ -71,17 +71,17 @@ public:
 		Handle handle(HandleType::NOTE_HEAD);
 		handle.ids = "goo";
 		handle.caption = "gle";
-		CPPUNIT_ASSERT_EQUAL(string("google"), handle.getDisplayString());
+		CPPUNIT_ASSERT_EQUAL(string("google"), handle.displayString());
 	}
 
 	void testGetterAndSetterLyric()
 	{
 		Handle handle(HandleType::LYRIC);
-		handle.setLyricAt(0, Lyric("は", "h a"));
+		handle.set(0, Lyric("は", "h a"));
 		Lyric lyric("ら", "4 a");
-		handle.setLyricAt(1, lyric);
-		CPPUNIT_ASSERT_EQUAL(2, handle.getLyricCount());
-		CPPUNIT_ASSERT(handle.getLyricAt(1).equals(lyric));
+		handle.set(1, lyric);
+		CPPUNIT_ASSERT_EQUAL(2, handle.size());
+		CPPUNIT_ASSERT(handle.get(1).equals(lyric));
 	}
 
 	void testCloneIconDynamicsHandle()
@@ -93,7 +93,7 @@ public:
 		handle.caption = "bar";
 		handle.startDyn = 2;
 		handle.endDyn = 3;
-		handle.setLength(4);
+		handle.length(4);
 		Handle copy = handle.clone();
 		CPPUNIT_ASSERT_EQUAL(string("$05010000"), copy.iconId);
 		CPPUNIT_ASSERT_EQUAL(string("foo"), copy.ids);
@@ -101,23 +101,23 @@ public:
 		CPPUNIT_ASSERT_EQUAL(string("bar"), copy.caption);
 		CPPUNIT_ASSERT_EQUAL(2, copy.startDyn);
 		CPPUNIT_ASSERT_EQUAL(3, copy.endDyn);
-		CPPUNIT_ASSERT_EQUAL((tick_t)4, copy.getLength());
+		CPPUNIT_ASSERT_EQUAL((tick_t)4, copy.length());
 		CPPUNIT_ASSERT_EQUAL(0, copy.dynBP.size());
 
 		handle.dynBP = VibratoBPList("2", "0.0,1.0", "1,64");
 		copy = handle.clone();
-		CPPUNIT_ASSERT_EQUAL(string("0=1,1=64"), copy.dynBP.getData());
+		CPPUNIT_ASSERT_EQUAL(string("0=1,1=64"), copy.dynBP.data());
 	}
 
 	void testCloneLyricHandle()
 	{
 		Handle handle(HandleType::LYRIC);
-		handle.setLyricAt(0, Lyric("ら", "4 a"));
+		handle.set(0, Lyric("ら", "4 a"));
 		handle.index = 10;
 		Handle copy = handle.clone();
 		CPPUNIT_ASSERT_EQUAL(handle.index, copy.index);
-		Lyric original = handle.getLyricAt(0);
-		Lyric copied = copy.getLyricAt(0);
+		Lyric original = handle.get(0);
+		Lyric copied = copy.get(0);
 		CPPUNIT_ASSERT(original.equals(copied));
 	}
 
@@ -129,7 +129,7 @@ public:
 		handle.ids = "dwango";
 		handle.original = 2;
 		handle.caption = "niwango";
-		handle.setLength(3);
+		handle.length(3);
 		handle.duration = 4;
 		handle.depth = 5;
 
@@ -139,7 +139,7 @@ public:
 		CPPUNIT_ASSERT_EQUAL(string("dwango"), copy.ids);
 		CPPUNIT_ASSERT_EQUAL(2, copy.original);
 		CPPUNIT_ASSERT_EQUAL(string("niwango"), copy.caption);
-		CPPUNIT_ASSERT_EQUAL((tick_t)3, copy.getLength());
+		CPPUNIT_ASSERT_EQUAL((tick_t)3, copy.length());
 		CPPUNIT_ASSERT_EQUAL(4, copy.duration);
 		CPPUNIT_ASSERT_EQUAL(5, copy.depth);
 	}
@@ -152,7 +152,7 @@ public:
 		handle.ids = "baka";
 		handle.original = 2;
 		handle.caption = "aho";
-		handle.setLength(3);
+		handle.length(3);
 		handle.startDepth = 4;
 		handle.depthBP = VibratoBPList("2", "0.0,1.0", "32,56");
 		handle.startRate = 5;
@@ -163,11 +163,11 @@ public:
 		CPPUNIT_ASSERT_EQUAL(string("baka"), copy.ids);
 		CPPUNIT_ASSERT_EQUAL(2, copy.original);
 		CPPUNIT_ASSERT_EQUAL(string("aho"), copy.caption);
-		CPPUNIT_ASSERT_EQUAL((tick_t)3, copy.getLength());
+		CPPUNIT_ASSERT_EQUAL((tick_t)3, copy.length());
 		CPPUNIT_ASSERT_EQUAL(4, copy.startDepth);
-		CPPUNIT_ASSERT_EQUAL(string("0=32,1=56"), copy.depthBP.getData());
+		CPPUNIT_ASSERT_EQUAL(string("0=32,1=56"), copy.depthBP.data());
 		CPPUNIT_ASSERT_EQUAL(5, copy.startRate);
-		CPPUNIT_ASSERT_EQUAL(string("0=64,1=128"), copy.rateBP.getData());
+		CPPUNIT_ASSERT_EQUAL(string("0=64,1=128"), copy.rateBP.data());
 	}
 
 	void testCloneSingerHandle()
@@ -177,7 +177,7 @@ public:
 		handle.iconId = "$07010001";
 		handle.ids = "foo";
 		handle.index = 1;
-		handle.setLength(2);
+		handle.length(2);
 		handle.original = 3;
 		handle.program = 4;
 		handle.language = 5;
@@ -188,7 +188,7 @@ public:
 		CPPUNIT_ASSERT_EQUAL(handle.ids, copy.ids);
 		CPPUNIT_ASSERT_EQUAL(handle.index, copy.index);
 		CPPUNIT_ASSERT_EQUAL(handle.language, copy.language);
-		CPPUNIT_ASSERT_EQUAL(handle.getLength(), copy.getLength());
+		CPPUNIT_ASSERT_EQUAL(handle.length(), copy.length());
 		CPPUNIT_ASSERT_EQUAL(handle.original, copy.original);
 		CPPUNIT_ASSERT_EQUAL(handle.program, copy.program);
 	}
@@ -196,11 +196,11 @@ public:
 	void testAddLyric()
 	{
 		Handle handle(HandleType::LYRIC);
-		handle.addLyric(Lyric("ら", "4 a"));
+		handle.add(Lyric("ら", "4 a"));
 
-		CPPUNIT_ASSERT_EQUAL(1, handle.getLyricCount());
-		CPPUNIT_ASSERT_EQUAL(string("ら"), handle.getLyricAt(0).phrase);
-		CPPUNIT_ASSERT_EQUAL(string("4 a"), handle.getLyricAt(0).getPhoneticSymbol());
+		CPPUNIT_ASSERT_EQUAL(1, handle.size());
+		CPPUNIT_ASSERT_EQUAL(string("ら"), handle.get(0).phrase);
+		CPPUNIT_ASSERT_EQUAL(string("4 a"), handle.get(0).phoneticSymbol());
 	}
 
 	CPPUNIT_TEST_SUITE(HandleTest);

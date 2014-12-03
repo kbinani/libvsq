@@ -10,7 +10,7 @@ public:
 	void testConstruct()
 	{
 		BPListSearchResult result;
-		CPPUNIT_ASSERT_EQUAL((tick_t)0, result.clock);
+		CPPUNIT_ASSERT_EQUAL((tick_t)0, result.tick);
 		CPPUNIT_ASSERT_EQUAL(0, result.index);
 	}
 

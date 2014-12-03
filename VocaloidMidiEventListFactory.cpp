@@ -21,32 +21,32 @@
 VSQ_BEGIN_NAMESPACE
 
 std::vector<MidiEvent> VocaloidMidiEventListFactory::generateMidiEventList(
-	Track const* target, TempoList const* tempoList, tick_t totalClocks, tick_t preMeasureClock, int msPreSend)
+	Track const& target, TempoList const& tempoList, tick_t totalTicks, tick_t preMeasureTick, int msPreSend)
 {
-	std::vector<NrpnEvent> nrpnEventList = generateNRPN(target, tempoList, totalClocks, preMeasureClock, msPreSend);
+	std::vector<NrpnEvent> nrpnEventList = generateNRPN(target, tempoList, totalTicks, preMeasureTick, msPreSend);
 	return NrpnEvent::convert(nrpnEventList);
 }
 
 std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateNRPN(
-	Track const* target, TempoList const* tempoList, tick_t totalClocks, tick_t preMeasureClock, int msPreSend)
+	Track const& target, TempoList const& tempoList, tick_t totalTicks, tick_t preMeasureTick, int msPreSend)
 {
 	std::vector<NrpnEvent> list;
 
-	std::string version = target->common()->version;
-	Event::List const* events = target->events();
+	std::string version = target.common().version;
+	Event::List const& events = target.events();
 
-	int count = events->size();
+	int count = events.size();
 	int note_start = 0;
 	int note_end = count - 1;
 	for (int i = 0; i < count; i++) {
-		if (0 <= events->get(i)->clock) {
+		if (0 <= events.get(i)->tick) {
 			note_start = i;
 			break;
 		}
 		note_start = i;
 	}
 	for (int i = count - 1; i >= 0; i--) {
-		if (events->get(i)->clock <= totalClocks) {
+		if (events.get(i)->tick <= totalTicks) {
 			note_end = i;
 			break;
 		}
@@ -55,14 +55,14 @@ std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateNRPN(
 	// determine first singer
 	int singer_event = -1;
 	for (int i = note_start; i >= 0; i--) {
-		if (events->get(i)->type == EventType::SINGER) {
+		if (events.get(i)->type() == EventType::SINGER) {
 			singer_event = i;
 			break;
 		}
 	}
 	if (singer_event >= 0) {
 		// first singer was found
-		std::vector<NrpnEvent> singerNrpnList = generateSingerNRPN(tempoList, events->get(singer_event), 0);
+		std::vector<NrpnEvent> singerNrpnList = generateSingerNRPN(tempoList, *events.get(singer_event), 0);
 		list.insert(list.end(), singerNrpnList.begin(), singerNrpnList.end());
 	} else {
 		// first singer was not found. may be rate-case
@@ -70,7 +70,7 @@ std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateNRPN(
 		list.push_back(NrpnEvent(0, MidiParameterType::PC_VOICE_TYPE, 0x0));
 	}
 
-	std::vector<NrpnEvent> voiceChangeParameterNrpn = generateVoiceChangeParameterNRPN(target, tempoList, msPreSend, preMeasureClock);
+	std::vector<NrpnEvent> voiceChangeParameterNrpn = generateVoiceChangeParameterNRPN(target, tempoList, msPreSend, preMeasureTick);
 	list.insert(list.end(), voiceChangeParameterNrpn.begin(), voiceChangeParameterNrpn.end());
 	if (version.substr(0, 4) == "DSB2") {
 		std::vector<NrpnEvent> fx2DepthNrpn = generateFx2DepthNRPN(target, tempoList, msPreSend);
@@ -78,19 +78,19 @@ std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateNRPN(
 	}
 
 	int ms_presend = msPreSend;
-	if (target->curve("dyn")->size() > 0) {
+	if (target.curve("dyn")->size() > 0) {
 		std::vector<NrpnEvent> listdyn = generateExpressionNRPN(target, tempoList, ms_presend);
 		if (! listdyn.empty()) {
 			list.insert(list.end(), listdyn.begin(), listdyn.end());
 		}
 	}
-	if (target->curve("pbs")->size() > 0) {
+	if (target.curve("pbs")->size() > 0) {
 		std::vector<NrpnEvent> listpbs = generatePitchBendSensitivityNRPN(target, tempoList, ms_presend);
 		if (! listpbs.empty()) {
 			list.insert(list.end(), listpbs.begin(), listpbs.end());
 		}
 	}
-	if (target->curve("pit")->size() > 0) {
+	if (target.curve("pit")->size() > 0) {
 		std::vector<NrpnEvent> listpit = generatePitchBendNRPN(target, tempoList, ms_presend);
 		if (! listpit.empty()) {
 			list.insert(list.end(), listpit.begin(), listpit.end());
@@ -100,39 +100,39 @@ std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateNRPN(
 	int lastDelay = 0;
 	int last_note_end = 0;
 	for (int i = note_start; i <= note_end; i++) {
-		const Event* item = events->get(i);
-		if (item->type == EventType::NOTE) {
+		const Event* item = events.get(i);
+		if (item->type() == EventType::NOTE) {
 			int note_loc = 0x03;
-			if (item->clock == last_note_end) {
+			if (item->tick == last_note_end) {
 				note_loc = note_loc - 0x02;
 			}
 
 			// find next note event
-			tick_t nextclock = item->clock + item->getLength() + 1;
-			int event_count = events->size();
+			tick_t nexttick = item->tick + item->length() + 1;
+			int event_count = events.size();
 			for (int j = i + 1; j < event_count; j++) {
-				const Event* itemj = events->get(j);
-				if (itemj->type == EventType::NOTE) {
-					nextclock = itemj->clock;
+				const Event* itemj = events.get(j);
+				if (itemj->type() == EventType::NOTE) {
+					nexttick = itemj->tick;
 					break;
 				}
 			}
-			if (item->clock + item->getLength() == nextclock) {
+			if (item->tick + item->length() == nexttick) {
 				note_loc = note_loc - 0x01;
 			}
 
 			int delay;
 			NrpnEvent noteNrpn =
-				generateNoteNRPN(target, tempoList, item, msPreSend, note_loc, &lastDelay, &delay);
+				generateNoteNRPN(target, tempoList, *item, msPreSend, note_loc, &lastDelay, &delay);
 			lastDelay = delay;
 
 			list.push_back(noteNrpn);
-			std::vector<NrpnEvent> vibratoNrpn = generateVibratoNRPN(tempoList, item, msPreSend);
+			std::vector<NrpnEvent> vibratoNrpn = generateVibratoNRPN(tempoList, *item, msPreSend);
 			list.insert(list.end(), vibratoNrpn.begin(), vibratoNrpn.end());
-			last_note_end = item->clock + item->getLength();
-		} else if (item->type == EventType::SINGER) {
+			last_note_end = item->tick + item->length();
+		} else if (item->type() == EventType::SINGER) {
 			if (i > note_start && i != singer_event) {
-				std::vector<NrpnEvent> singerNrpn = generateSingerNRPN(tempoList, item, msPreSend);
+				std::vector<NrpnEvent> singerNrpn = generateSingerNRPN(tempoList, *item, msPreSend);
 				list.insert(list.end(), singerNrpn.begin(), singerNrpn.end());
 			}
 		}
@@ -147,12 +147,12 @@ std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateNRPN(
 	return merged;
 }
 
-std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateExpressionNRPN(Track const* track, TempoList const* tempoList, int preSendMilliseconds)
+std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateExpressionNRPN(Track const& track, TempoList const& tempoList, int preSendMilliseconds)
 {
 	std::vector<NrpnEvent> ret;
-	BPList const* dyn = track->curve("DYN");
+	BPList const* dyn = track.curve("DYN");
 	NrpnEventProvider* provider = new NrpnEventProvider(MidiParameterType::CC_E_DELAY, MidiParameterType::CC_E_EXPRESSION);
-	generateNRPNByBPList(ret, tempoList, preSendMilliseconds, dyn, provider);
+	generateNRPNByBPList(ret, tempoList, preSendMilliseconds, *dyn, *provider);
 	delete provider;
 	return ret;
 }
@@ -165,26 +165,26 @@ NrpnEvent VocaloidMidiEventListFactory::generateHeaderNRPN()
 	return ret;
 }
 
-std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateSingerNRPN(TempoList const* tempoList, Event const* singerEvent, int preSendMilliseconds)
+std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateSingerNRPN(TempoList const& tempoList, Event const& singerEvent, int preSendMilliseconds)
 {
-	tick_t clock = singerEvent->clock;
+	tick_t tick = singerEvent.tick;
 	Handle singer_handle;
 
-	double clock_msec = tempoList->getSecFromClock(clock) * 1000.0;
+	double tick_msec = tempoList.timeFromTick(tick) * 1000.0;
 
-	double msEnd = tempoList->getSecFromClock(singerEvent->clock + singerEvent->getLength()) * 1000.0;
-	int duration = (int)::floor(::ceil(msEnd - clock_msec));
+	double msEnd = tempoList.timeFromTick(singerEvent.tick + singerEvent.length()) * 1000.0;
+	int duration = (int)::floor(::ceil(msEnd - tick_msec));
 
 	int duration0, duration1;
 	_getMsbAndLsb(duration, &duration0, &duration1);
 
-	tick_t actualClock;
+	tick_t actualTick;
 	int delay;
-	_getActualClockAndDelay(tempoList, clock, preSendMilliseconds, &actualClock, &delay);
+	_getActualTickAndDelay(tempoList, tick, preSendMilliseconds, &actualTick, &delay);
 	int delayMsb, delayLsb;
 	_getMsbAndLsb(delay, &delayMsb, &delayLsb);
 
-	NrpnEvent add(actualClock, MidiParameterType::CC_BS_VERSION_AND_DEVICE, 0x00, 0x00);
+	NrpnEvent add(actualTick, MidiParameterType::CC_BS_VERSION_AND_DEVICE, 0x00, 0x00);
 	add.append(MidiParameterType::CC_BS_DELAY, delayMsb, delayLsb, true);
 	add.append(MidiParameterType::CC_BS_LANGUAGE_TYPE, singer_handle.language, true);
 	add.append(MidiParameterType::PC_VOICE_TYPE, singer_handle.program);
@@ -194,20 +194,20 @@ std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateSingerNRPN(TempoLis
 	return ret;
 }
 
-NrpnEvent VocaloidMidiEventListFactory::generateNoteNRPN(Track const* track, TempoList const* tempoList, Event const* noteEvent, int msPreSend, int noteLocation, int* lastDelay, int* delay)
+NrpnEvent VocaloidMidiEventListFactory::generateNoteNRPN(Track const& track, TempoList const& tempoList, Event const& noteEvent, int msPreSend, int noteLocation, int* lastDelay, int* delay)
 {
-	tick_t clock = noteEvent->clock;
+	tick_t tick = noteEvent.tick;
 	NrpnEvent add(0, MidiParameterType::CC_BS_DELAY, 0, 0);
 
-	tick_t actualClock;
-	_getActualClockAndDelay(tempoList, clock, msPreSend, &actualClock, delay);
+	tick_t actualTick;
+	_getActualTickAndDelay(tempoList, tick, msPreSend, &actualTick, delay);
 
 	// take care, lastDelay and delay are both pointer
 	bool addInitialized = false;
 	int lastDelayValue;
 	if (0 == lastDelay) {
 		add = NrpnEvent(
-				  actualClock,
+				  actualTick,
 				  MidiParameterType::CVM_NM_VERSION_AND_DEVICE,
 				  0x00, 0x00
 			  );
@@ -222,7 +222,7 @@ NrpnEvent VocaloidMidiEventListFactory::generateNoteNRPN(Track const* track, Tem
 		_getMsbAndLsb(*delay, &delayMsb, &delayLsb);
 		if (false == addInitialized) {
 			//TODO: In this case, CVM_NM_VERSION_AND_DEVICE is omitted. Farther verification is required.
-			add = NrpnEvent(actualClock, MidiParameterType::CVM_NM_DELAY, delayMsb, delayLsb);
+			add = NrpnEvent(actualTick, MidiParameterType::CVM_NM_DELAY, delayMsb, delayLsb);
 			addInitialized = true;
 		} else {
 			add.append(MidiParameterType::CVM_NM_DELAY, delayMsb, delayLsb, true);
@@ -230,18 +230,18 @@ NrpnEvent VocaloidMidiEventListFactory::generateNoteNRPN(Track const* track, Tem
 	}
 
 	if (false == addInitialized) {
-		add = NrpnEvent(actualClock, MidiParameterType::CVM_NM_NOTE_NUMBER, noteEvent->note);
+		add = NrpnEvent(actualTick, MidiParameterType::CVM_NM_NOTE_NUMBER, noteEvent.note);
 	} else {
-		add.append(MidiParameterType::CVM_NM_NOTE_NUMBER, noteEvent->note, true);
+		add.append(MidiParameterType::CVM_NM_NOTE_NUMBER, noteEvent.note, true);
 	}
 
 	// Velocity
-	add.append(MidiParameterType::CVM_NM_VELOCITY, noteEvent->dynamics, true);
+	add.append(MidiParameterType::CVM_NM_VELOCITY, noteEvent.dynamics, true);
 
 	// Note Duration
-	double msEnd = tempoList->getSecFromClock(clock + noteEvent->getLength()) * 1000.0;
-	double clock_msec = tempoList->getSecFromClock(clock) * 1000.0;
-	int duration = (int)::floor(msEnd - clock_msec);
+	double msEnd = tempoList.timeFromTick(tick + noteEvent.length()) * 1000.0;
+	double tick_msec = tempoList.timeFromTick(tick) * 1000.0;
+	int duration = (int)::floor(msEnd - tick_msec);
 	int duration0, duration1;
 	_getMsbAndLsb(duration, &duration0, &duration1);
 	add.append(MidiParameterType::CVM_NM_NOTE_DURATION, duration0, duration1, true);
@@ -249,20 +249,20 @@ NrpnEvent VocaloidMidiEventListFactory::generateNoteNRPN(Track const* track, Tem
 	// Note Location
 	add.append(MidiParameterType::CVM_NM_NOTE_LOCATION, noteLocation, true);
 
-	if (noteEvent->vibratoHandle.getHandleType() != HandleType::UNKNOWN) {
+	if (noteEvent.vibratoHandle.type() != HandleType::UNKNOWN) {
 		add.append(MidiParameterType::CVM_NM_INDEX_OF_VIBRATO_DB, 0x00, 0x00, true);
-		std::string icon_id = noteEvent->vibratoHandle.iconId;
+		std::string icon_id = noteEvent.vibratoHandle.iconId;
 		std::string num = icon_id.substr(icon_id.length() - 3);
 		int vibrato_type = StringUtil::parseInt<int>(num, 16);
-		int note_length = noteEvent->getLength();
-		int vibrato_delay = noteEvent->vibratoDelay;
+		int note_length = noteEvent.length();
+		int vibrato_delay = noteEvent.vibratoDelay;
 		int bVibratoDuration = (int)::floor((note_length - vibrato_delay) / (double)note_length * 127.0);
 		int bVibratoDelay = 0x7f - bVibratoDuration;
 		add.append(MidiParameterType::CVM_NM_VIBRATO_CONFIG, vibrato_type, bVibratoDuration, true);
 		add.append(MidiParameterType::CVM_NM_VIBRATO_DELAY, bVibratoDelay, true);
 	}
 
-	std::vector<std::string> spl = noteEvent->lyricHandle.getLyricAt(0).getPhoneticSymbolList();
+	std::vector<std::string> spl = noteEvent.lyricHandle.get(0).phoneticSymbolList();
 	std::ostringstream os;
 	for (int j = 0; j < spl.size(); j++) {
 		os << spl[j];
@@ -273,14 +273,14 @@ NrpnEvent VocaloidMidiEventListFactory::generateNoteNRPN(Track const* track, Tem
 		symbols.push_back(s.substr(i, 1));
 	}
 
-	std::string renderer = track->common()->version;
+	std::string renderer = track.common().version;
 	if (renderer.substr(0, 4) == std::string("DSB2")) {
 		add.append((MidiParameterType)0x5011, 0x01, true);  //TODO: Meaning of (byte)0x5011 is unknown.
 	}
 
 	add.append(MidiParameterType::CVM_NM_PHONETIC_SYMBOL_BYTES, symbols.size(), true);  // (byte)0x12(Number of phonetic symbols in bytes)
 	int count = -1;
-	std::vector<int> consonantAdjustment = noteEvent->lyricHandle.getLyricAt(0).getConsonantAdjustmentList();
+	std::vector<int> consonantAdjustment = noteEvent.lyricHandle.get(0).consonantAdjustmentList();
 	for (int j = 0; j < spl.size(); j++) {
 		std::string chars = spl[j];
 		for (int k = 0; k < chars.length(); k++) {
@@ -296,111 +296,111 @@ NrpnEvent VocaloidMidiEventListFactory::generateNoteNRPN(Track const* track, Tem
 		add.append(MidiParameterType::CVM_NM_PHONETIC_SYMBOL_CONTINUATION, 0x7f, true);   // End of phonetic symbols
 	}
 	if (renderer.substr(0, 4) == std::string("DSB3")) {
-		int v1mean = (int)::floor(noteEvent->pmBendDepth * 60 / 100);
+		int v1mean = (int)::floor(noteEvent.pmBendDepth * 60 / 100);
 		if (v1mean < 0) {
 			v1mean = 0;
 		}
 		if (60 < v1mean) {
 			v1mean = 60;
 		}
-		int d1mean = (int)::floor(0.3196 * noteEvent->pmBendLength + 8.0);
-		int d2mean = (int)::floor(0.92 * noteEvent->pmBendLength + 28.0);
+		int d1mean = (int)::floor(0.3196 * noteEvent.pmBendLength + 8.0);
+		int d2mean = (int)::floor(0.92 * noteEvent.pmBendLength + 28.0);
 		add.append(MidiParameterType::CVM_NM_V1MEAN, v1mean, true);  // (byte)0x50(v1mean)
 		add.append(MidiParameterType::CVM_NM_D1MEAN, d1mean, true);  // (byte)0x51(d1mean)
 		add.append(MidiParameterType::CVM_NM_D1MEAN_FIRST_NOTE, 0x14, true);  // (byte)0x52(d1meanFirstNote)
 		add.append(MidiParameterType::CVM_NM_D2MEAN, d2mean, true);  // (byte)0x53(d2mean)
-		add.append(MidiParameterType::CVM_NM_D4MEAN, noteEvent->d4mean, true);  // (byte)0x54(d4mean)
-		add.append(MidiParameterType::CVM_NM_PMEAN_ONSET_FIRST_NOTE, noteEvent->pMeanOnsetFirstNote, true);   // 055(pMeanOnsetFirstNote)
-		add.append(MidiParameterType::CVM_NM_VMEAN_NOTE_TRNSITION, noteEvent->vMeanNoteTransition, true);   // (byte)0x56(vMeanNoteTransition)
-		add.append(MidiParameterType::CVM_NM_PMEAN_ENDING_NOTE, noteEvent->pMeanEndingNote, true);  // (byte)0x57(pMeanEndingNote)
-		add.append(MidiParameterType::CVM_NM_ADD_PORTAMENTO, noteEvent->pmbPortamentoUse, true);  // (byte)0x58(AddScoopToUpInternals&AddPortamentoToDownIntervals)
-		int decay = (int)::floor(noteEvent->demDecGainRate / 100.0 * 0x64);
+		add.append(MidiParameterType::CVM_NM_D4MEAN, noteEvent.d4mean, true);  // (byte)0x54(d4mean)
+		add.append(MidiParameterType::CVM_NM_PMEAN_ONSET_FIRST_NOTE, noteEvent.pMeanOnsetFirstNote, true);   // 055(pMeanOnsetFirstNote)
+		add.append(MidiParameterType::CVM_NM_VMEAN_NOTE_TRNSITION, noteEvent.vMeanNoteTransition, true);   // (byte)0x56(vMeanNoteTransition)
+		add.append(MidiParameterType::CVM_NM_PMEAN_ENDING_NOTE, noteEvent.pMeanEndingNote, true);  // (byte)0x57(pMeanEndingNote)
+		add.append(MidiParameterType::CVM_NM_ADD_PORTAMENTO, noteEvent.pmbPortamentoUse, true);  // (byte)0x58(AddScoopToUpInternals&AddPortamentoToDownIntervals)
+		int decay = (int)::floor(noteEvent.demDecGainRate / 100.0 * 0x64);
 		add.append(MidiParameterType::CVM_NM_CHANGE_AFTER_PEAK, decay, true);  // (byte)0x59(changeAfterPeak)
-		int accent = (int)::floor(0x64 * noteEvent->demAccent / 100.0);
+		int accent = (int)::floor(0x64 * noteEvent.demAccent / 100.0);
 		add.append(MidiParameterType::CVM_NM_ACCENT, accent, true);  // (byte)0x5a(Accent)
 	}
 	add.append(MidiParameterType::CVM_NM_NOTE_MESSAGE_CONTINUATION, 0x7f, true);  // (byte)0x7f(Note message continuation)
 	return add;
 }
 
-std::vector<NrpnEvent> VocaloidMidiEventListFactory::generatePitchBendNRPN(Track const* track, TempoList const* tempoList, int msPreSend)
+std::vector<NrpnEvent> VocaloidMidiEventListFactory::generatePitchBendNRPN(Track const& track, TempoList const& tempoList, int msPreSend)
 {
 	std::vector<NrpnEvent> ret;
-	BPList const* pit = track->curve("PIT");
+	BPList const* pit = track.curve("PIT");
 	PitchBendNrpnEventProvider* provider = new PitchBendNrpnEventProvider();
-	generateNRPNByBPList(ret, tempoList, msPreSend, pit, provider);
+	generateNRPNByBPList(ret, tempoList, msPreSend, *pit, *provider);
 	delete provider;
 	return ret;
 }
 
-std::vector<NrpnEvent> VocaloidMidiEventListFactory::generatePitchBendSensitivityNRPN(Track const* track, TempoList const* tempoList, int msPreSend)
+std::vector<NrpnEvent> VocaloidMidiEventListFactory::generatePitchBendSensitivityNRPN(Track const& track, TempoList const& tempoList, int msPreSend)
 {
 	std::vector<NrpnEvent> ret;
-	BPList const* pbs = track->curve("PBS");
+	BPList const* pbs = track.curve("PBS");
 	PitchBendSensitivityNrpnEventProvider* provider = new PitchBendSensitivityNrpnEventProvider();
-	generateNRPNByBPList(ret, tempoList, msPreSend, pbs, provider);
+	generateNRPNByBPList(ret, tempoList, msPreSend, *pbs, *provider);
 	delete provider;
 	return ret;
 }
 
-std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateVibratoNRPN(TempoList const* tempoList, Event const* noteEvent, int msPreSend)
+std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateVibratoNRPN(TempoList const& tempoList, Event const& noteEvent, int msPreSend)
 {
 	std::vector<NrpnEvent> ret;
-	if (noteEvent->vibratoHandle.getHandleType() != HandleType::UNKNOWN) {
-		tick_t vclock = noteEvent->clock + noteEvent->vibratoDelay;
-		tick_t actualClock;
+	if (noteEvent.vibratoHandle.type() != HandleType::UNKNOWN) {
+		tick_t vtick = noteEvent.tick + noteEvent.vibratoDelay;
+		tick_t actualTick;
 		int delay;
-		_getActualClockAndDelay(tempoList, vclock, msPreSend, &actualClock, &delay);
+		_getActualTickAndDelay(tempoList, vtick, msPreSend, &actualTick, &delay);
 		int delayMsb, delayLsb;
 		_getMsbAndLsb(delay, &delayMsb, &delayLsb);
-		NrpnEvent add2(actualClock, MidiParameterType::CC_VD_VERSION_AND_DEVICE, 0x00, 0x00);
+		NrpnEvent add2(actualTick, MidiParameterType::CC_VD_VERSION_AND_DEVICE, 0x00, 0x00);
 		add2.append(MidiParameterType::CC_VR_VERSION_AND_DEVICE, 0x00, 0x00);
 		add2.append(MidiParameterType::CC_VD_DELAY, delayMsb, delayLsb);
 		add2.append(MidiParameterType::CC_VR_DELAY, delayMsb, delayLsb);
 		// CC_VD_VIBRATO_DEPTH, CC_VR_VIBRATO_RATE では, NRPN の MSB を省略してはいけない
-		add2.append(MidiParameterType::CC_VD_VIBRATO_DEPTH, noteEvent->vibratoHandle.startDepth);
-		add2.append(MidiParameterType::CC_VR_VIBRATO_RATE, noteEvent->vibratoHandle.startRate);
+		add2.append(MidiParameterType::CC_VD_VIBRATO_DEPTH, noteEvent.vibratoHandle.startDepth);
+		add2.append(MidiParameterType::CC_VR_VIBRATO_RATE, noteEvent.vibratoHandle.startRate);
 		ret.push_back(add2);
-		tick_t vlength = noteEvent->getLength() - noteEvent->vibratoDelay;
+		tick_t vlength = noteEvent.length() - noteEvent.vibratoDelay;
 
-		VibratoBPList depthBP = noteEvent->vibratoHandle.depthBP;
+		VibratoBPList depthBP = noteEvent.vibratoHandle.depthBP;
 		int count = depthBP.size();
 		if (count > 0) {
 			int lastDelay = 0;
 			for (int i = 0; i < count; i++) {
 				VibratoBP itemi = depthBP.get(i);
 				double percent = itemi.x;
-				tick_t cl = vclock + (tick_t) ::floor(percent * vlength);
-				_getActualClockAndDelay(tempoList, cl, msPreSend, &actualClock, &delay);
+				tick_t cl = vtick + (tick_t) ::floor(percent * vlength);
+				_getActualTickAndDelay(tempoList, cl, msPreSend, &actualTick, &delay);
 				NrpnEvent nrpnEvent(0, MidiParameterType::CC_BS_DELAY, 0);
 				if (lastDelay != delay) {
 					_getMsbAndLsb(delay, &delayMsb, &delayLsb);
-					nrpnEvent = NrpnEvent(actualClock, MidiParameterType::CC_VD_DELAY, delayMsb, delayLsb);
+					nrpnEvent = NrpnEvent(actualTick, MidiParameterType::CC_VD_DELAY, delayMsb, delayLsb);
 					nrpnEvent.append(MidiParameterType::CC_VD_VIBRATO_DEPTH, itemi.y);
 				} else {
-					nrpnEvent = NrpnEvent(actualClock, MidiParameterType::CC_VD_VIBRATO_DEPTH, itemi.y);
+					nrpnEvent = NrpnEvent(actualTick, MidiParameterType::CC_VD_VIBRATO_DEPTH, itemi.y);
 				}
 				lastDelay = delay;
 				ret.push_back(nrpnEvent);
 			}
 		}
 
-		VibratoBPList rateBP = noteEvent->vibratoHandle.rateBP;
+		VibratoBPList rateBP = noteEvent.vibratoHandle.rateBP;
 		count = rateBP.size();
 		if (count > 0) {
 			int lastDelay = 0;
 			for (int i = 0; i < count; i++) {
 				VibratoBP itemi = rateBP.get(i);
 				double percent = itemi.x;
-				tick_t cl = vclock + (tick_t)::floor(percent * vlength);
-				_getActualClockAndDelay(tempoList, cl, msPreSend, &actualClock, &delay);
+				tick_t cl = vtick + (tick_t)::floor(percent * vlength);
+				_getActualTickAndDelay(tempoList, cl, msPreSend, &actualTick, &delay);
 				NrpnEvent nrpnEvent(0, MidiParameterType::CC_BS_DELAY, 0);
 				if (lastDelay != delay) {
 					_getMsbAndLsb(delay, &delayMsb, &delayLsb);
-					nrpnEvent = NrpnEvent(actualClock, MidiParameterType::CC_VR_DELAY, delayMsb, delayLsb);
+					nrpnEvent = NrpnEvent(actualTick, MidiParameterType::CC_VR_DELAY, delayMsb, delayLsb);
 					nrpnEvent.append(MidiParameterType::CC_VR_VIBRATO_RATE, itemi.y);
 				} else {
-					nrpnEvent = NrpnEvent(actualClock, MidiParameterType::CC_VR_VIBRATO_RATE, itemi.y);
+					nrpnEvent = NrpnEvent(actualTick, MidiParameterType::CC_VR_VIBRATO_RATE, itemi.y);
 				}
 				lastDelay = delay;
 				ret.push_back(nrpnEvent);
@@ -411,9 +411,9 @@ std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateVibratoNRPN(TempoLi
 	return ret;
 }
 
-std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateVoiceChangeParameterNRPN(Track const* track, TempoList const* tempoList, int msPreSend, tick_t premeasure_clock)
+std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateVoiceChangeParameterNRPN(Track const& track, TempoList const& tempoList, int msPreSend, tick_t premeasure_tick)
 {
-	std::string renderer = track->common()->version;
+	std::string renderer = track.common().version;
 	std::vector<NrpnEvent> res;
 
 	std::vector<std::string> curves;
@@ -453,44 +453,44 @@ std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateVoiceChangeParamete
 
 	int lastDelay = 0;
 	for (int i = 0; i < curves.size(); i++) {
-		BPList const* list = track->curve(curves[i]);
+		BPList const* list = track.curve(curves[i]);
 		if (list->size() > 0) {
-			lastDelay = addVoiceChangeParameters(res, list, tempoList, msPreSend, lastDelay);
+			lastDelay = addVoiceChangeParameters(res, *list, tempoList, msPreSend, lastDelay);
 		}
 	}
 	std::stable_sort(res.begin(), res.end(), NrpnEvent::compare);
 	return res;
 }
 
-std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateFx2DepthNRPN(Track const* track, TempoList const* tempoList, int preSendMilliseconds)
+std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateFx2DepthNRPN(Track const& track, TempoList const& tempoList, int preSendMilliseconds)
 {
 	std::vector<NrpnEvent> ret;
-	BPList const* fx2depth = track->curve("fx2depth");
+	BPList const* fx2depth = track.curve("fx2depth");
 	NrpnEventProvider* provider = new NrpnEventProvider(MidiParameterType::CC_FX2_DELAY, MidiParameterType::CC_FX2_EFFECT2_DEPTH);
-	generateNRPNByBPList(ret, tempoList, preSendMilliseconds, fx2depth, provider);
+	generateNRPNByBPList(ret, tempoList, preSendMilliseconds, *fx2depth, *provider);
 	delete provider;
 	return ret;
 }
 
-int VocaloidMidiEventListFactory::addVoiceChangeParameters(std::vector<NrpnEvent>& dest, BPList const* list, TempoList const* tempoList, int msPreSend, int lastDelay)
+int VocaloidMidiEventListFactory::addVoiceChangeParameters(std::vector<NrpnEvent>& dest, BPList const& list, TempoList const& tempoList, int msPreSend, int lastDelay)
 {
-	int id = MidiParameterTypeUtil::getVoiceChangeParameterId(list->getName());
-	for (int j = 0; j < list->size(); j++) {
-		tick_t clock = list->getKeyClock(j);
-		int value = list->getValue(j);
-		tick_t actualClock;
+	int id = MidiParameterTypeUtil::getVoiceChangeParameterId(list.name());
+	for (int j = 0; j < list.size(); j++) {
+		tick_t tick = list.keyTickAt(j);
+		int value = list.get(j).value;
+		tick_t actualTick;
 		int delay;
-		_getActualClockAndDelay(tempoList, clock, msPreSend, &actualClock, &delay);
+		_getActualTickAndDelay(tempoList, tick, msPreSend, &actualTick, &delay);
 
-		if (actualClock >= 0) {
+		if (actualTick >= 0) {
 			if (lastDelay != delay) {
 				int delayMsb, delayLsb;
 				_getMsbAndLsb(delay, &delayMsb, &delayLsb);
-				dest.emplace_back(actualClock, MidiParameterType::VCP_DELAY, delayMsb, delayLsb);
+				dest.emplace_back(actualTick, MidiParameterType::VCP_DELAY, delayMsb, delayLsb);
 				lastDelay = delay;
 			}
 
-			NrpnEvent add(actualClock, MidiParameterType::VCP_VOICE_CHANGE_PARAMETER_ID, id);
+			NrpnEvent add(actualTick, MidiParameterType::VCP_VOICE_CHANGE_PARAMETER_ID, id);
 			add.append(MidiParameterType::VCP_VOICE_CHANGE_PARAMETER, value, true);
 			dest.push_back(add);
 		}
@@ -498,17 +498,17 @@ int VocaloidMidiEventListFactory::addVoiceChangeParameters(std::vector<NrpnEvent
 	return lastDelay;
 }
 
-void VocaloidMidiEventListFactory::_getActualClockAndDelay(TempoList const* tempoList, tick_t clock, int msPreSend, tick_t* actualClock, int* delay)
+void VocaloidMidiEventListFactory::_getActualTickAndDelay(TempoList const& tempoList, tick_t tick, int msPreSend, tick_t* actualTick, int* delay)
 {
-	double clock_msec = tempoList->getSecFromClock(clock) * 1000.0;
+	double tick_msec = tempoList.timeFromTick(tick) * 1000.0;
 
-	if (clock_msec - msPreSend <= 0) {
-		*actualClock = 0;
+	if (tick_msec - msPreSend <= 0) {
+		*actualTick = 0;
 	} else {
-		double draft_clock_sec = (clock_msec - msPreSend) / 1000.0;
-		*actualClock = (tick_t)::floor(tempoList->getClockFromSec(draft_clock_sec));
+		double draft_tick_sec = (tick_msec - msPreSend) / 1000.0;
+		*actualTick = (tick_t)::floor(tempoList.tickFromTime(draft_tick_sec));
 	}
-	*delay = (int)::floor(clock_msec - tempoList->getSecFromClock((double) * actualClock) * 1000.0);
+	*delay = (int)::floor(tick_msec - tempoList.timeFromTick((double) * actualTick) * 1000.0);
 }
 
 void VocaloidMidiEventListFactory::_getMsbAndLsb(int value, int* msb, int* lsb)
@@ -524,21 +524,21 @@ void VocaloidMidiEventListFactory::_getMsbAndLsb(int value, int* msb, int* lsb)
 
 void VocaloidMidiEventListFactory::generateNRPNByBPList(
 	std::vector<NrpnEvent>& result,
-	TempoList const* tempoList, int preSendMilliseconds,
-	BPList const* list, NrpnEventProvider const* provider
+	TempoList const& tempoList, int preSendMilliseconds,
+	BPList const& list, NrpnEventProvider const& provider
 )
 {
-	size_t count = list->size();
+	size_t count = list.size();
 	int lastDelay = 0;
 	for (int i = 0; i < count; i++) {
-		tick_t clock = list->getKeyClock(i);
-		tick_t actualClock;
+		tick_t tick = list.keyTickAt(i);
+		tick_t actualTick;
 		int delay;
-		_getActualClockAndDelay(tempoList, clock, preSendMilliseconds, &actualClock, &delay);
-		if (actualClock >= 0) {
-			NrpnEvent add = provider->getNrpnEvent(actualClock, list->getValue(i));
+		_getActualTickAndDelay(tempoList, tick, preSendMilliseconds, &actualTick, &delay);
+		if (actualTick >= 0) {
+			NrpnEvent add = provider.getNrpnEvent(actualTick, list.get(i).value);
 			if (lastDelay != delay) {
-				NrpnEvent delayNrpn = provider->getDelayNrpnEvent(actualClock, delay);
+				NrpnEvent delayNrpn = provider.getDelayNrpnEvent(actualTick, delay);
 				if (add.hasLSB) {
 					delayNrpn.append(add.nrpn, add.dataLSB, add.dataLSB, add.isMSBOmittingRequired);
 				} else {

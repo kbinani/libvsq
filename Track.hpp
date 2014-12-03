@@ -31,7 +31,6 @@ class Track
 protected:
 	/**
 	 * @brief トラック名などの情報.
-	 * @todo Rename to _common.
 	 */
 	Common _common;
 
@@ -146,13 +145,13 @@ public:
 	 * @brief トラックの名前を取得する.
 	 * @return トラック名.
 	 */
-	std::string getName() const;
+	std::string name() const;
 
 	/**
 	 * @brief トラックの名前を設定する.
 	 * @param value トラック名.
 	 */
-	void setName(std::string const& value);
+	void name(std::string const& value);
 
 	/**
 	 * @brief 指定された種類のイベントのインデクスを順に返す反復子を取得する.
@@ -163,11 +162,11 @@ public:
 
 	/**
 	 * @brief 指定したゲートタイムにおいて, 歌唱を担当している歌手の歌手変更イベントを取得する.
-	 * @param clock ゲートタイム.
+	 * @param tick ゲートタイム.
 	 * @return 歌手イベント. 存在しなければ null を返す.
 	 * @todo Change to const method.
 	 */
-	Event const* getSingerEventAt(tick_t clock) const;
+	Event const* singerEventAt(tick_t tick) const;
 
 	BPList const* curve(std::string const& curveName) const;
 
@@ -188,19 +187,19 @@ public:
 	 * @brief イベントリストを取得する.
 	 * @return イベントリストのポインタ.
 	 */
-	Event::List* events();
+	Event::List& events();
 
-	Event::List const* events() const;
-
-	/**
-	 * @brief Get an instance of Common.
-	 */
-	Common* common();
+	Event::List const& events() const;
 
 	/**
 	 * @brief Get an instance of Common.
 	 */
-	Common const* common() const;
+	Common& common();
+
+	/**
+	 * @brief Get an instance of Common.
+	 */
+	Common const& common() const;
 
 	/**
 	 * @brief Get a list of curve name for this track.

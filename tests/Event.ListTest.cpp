@@ -7,11 +7,11 @@ using namespace vsq;
 class EventListStub : public Event::List
 {
 public:
-	void pushBackWithoutSort(const Event& item, int id)
+	void pushBackWithoutSort(Event const& item, int id)
 	{
-		Event* add = new Event();
+		auto add = std::unique_ptr<Event>(new Event(item));
 		*add = item;
-		_events.push_back(add);
+		_events.push_back(std::move(add));
 		_ids.push_back(id);
 	}
 };
@@ -33,7 +33,7 @@ public:
 		list.add(a, 0);
 		list.add(b, 1);
 
-		// aのほうがclockが大きいので, 後ろに並び替えられる
+		// aのほうがtickが大きいので, 後ろに並び替えられる
 		CPPUNIT_ASSERT_EQUAL(0, list.findIndexFromId(1));
 		CPPUNIT_ASSERT_EQUAL(1, list.findIndexFromId(0));
 	}
@@ -46,8 +46,8 @@ public:
 		list.add(a, 0);
 		list.add(b, 1);
 
-		CPPUNIT_ASSERT_EQUAL(EventType::NOTE, list.findFromId(0)->type);
-		CPPUNIT_ASSERT_EQUAL(EventType::SINGER, list.findFromId(1)->type);
+		CPPUNIT_ASSERT_EQUAL(EventType::NOTE, list.findFromId(0)->type());
+		CPPUNIT_ASSERT_EQUAL(EventType::SINGER, list.findFromId(1)->type());
 		CPPUNIT_ASSERT(NULL == list.findFromId(1000));
 	}
 
@@ -87,8 +87,8 @@ public:
 
 		list.sort();
 
-		CPPUNIT_ASSERT_EQUAL((tick_t)0, list.get(0)->clock);
-		CPPUNIT_ASSERT_EQUAL((tick_t)480, list.get(1)->clock);
+		CPPUNIT_ASSERT_EQUAL((tick_t)0, list.get(0)->tick);
+		CPPUNIT_ASSERT_EQUAL((tick_t)480, list.get(1)->tick);
 		CPPUNIT_ASSERT_EQUAL(0, list.findIndexFromId(20));
 		CPPUNIT_ASSERT_EQUAL(1, list.findIndexFromId(14));
 	}
@@ -117,7 +117,7 @@ public:
 		int idOfA = list.add(a);
 		int idOfB = list.add(b);
 
-		// bよりaのほうがclockが大きいので, 並べ替えが起きるはず
+		// bよりaのほうがtickが大きいので, 並べ替えが起きるはず
 		CPPUNIT_ASSERT_EQUAL(idOfB, list.get(0)->id);
 		CPPUNIT_ASSERT_EQUAL(idOfA, list.get(1)->id);
 		CPPUNIT_ASSERT(idOfA != idOfB);
@@ -178,7 +178,7 @@ public:
 
 		CPPUNIT_ASSERT_EQUAL(100, list.get(0)->id);
 		CPPUNIT_ASSERT_EQUAL(2, list.get(1)->id);
-		CPPUNIT_ASSERT_EQUAL((tick_t)480, list.get(1)->clock);
+		CPPUNIT_ASSERT_EQUAL((tick_t)480, list.get(1)->tick);
 	}
 
 	void testIterator()
@@ -198,9 +198,9 @@ public:
 
 		iterator = list.iterator();
 		CPPUNIT_ASSERT(iterator.hasNext());
-		CPPUNIT_ASSERT_EQUAL((tick_t)0, iterator.next()->clock);
+		CPPUNIT_ASSERT_EQUAL((tick_t)0, iterator.next()->tick);
 		CPPUNIT_ASSERT(iterator.hasNext());
-		CPPUNIT_ASSERT_EQUAL((tick_t)240, iterator.next()->clock);
+		CPPUNIT_ASSERT_EQUAL((tick_t)240, iterator.next()->tick);
 		CPPUNIT_ASSERT(false == iterator.hasNext());
 	}
 

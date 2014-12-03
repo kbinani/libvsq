@@ -13,12 +13,12 @@ public:
 	 */
 	void isEqualToDefaultSequence(const Sequence& sequence)
 	{
-		CPPUNIT_ASSERT_EQUAL((tick_t)(1 * 480 * 4 / 4 * 4), sequence.getTotalClocks());
+		CPPUNIT_ASSERT_EQUAL((tick_t)(1 * 480 * 4 / 4 * 4), sequence.totalTicks());
 
 		// track
-		CPPUNIT_ASSERT_EQUAL((size_t)1, sequence.tracks()->size());
+		CPPUNIT_ASSERT_EQUAL((size_t)1, sequence.tracks().size());
 		// 第1トラック
-		const Track* track1 = sequence.track(0);
+		Track const& track1 = sequence.track(0);
 		/*assert_not_nil( track1.common );
 		assert_not_nil( track1:getCurve( "pit" ) );
 		assert_not_nil( track1:getCurve( "pbs" ) );
@@ -45,9 +45,9 @@ public:
 		assert_not_nil( track1:getCurve( "ope" ) );
 		assert_not_nil( track1:getCurve( "pitch" ) );
 		assert_not_nil( track1.events );*/
-		CPPUNIT_ASSERT_EQUAL(1, track1->events()->size());
-		CPPUNIT_ASSERT_EQUAL((tick_t)0, track1->events()->get(0)->clock);
-		CPPUNIT_ASSERT_EQUAL(EventType::SINGER, track1->events()->get(0)->type);
+		CPPUNIT_ASSERT_EQUAL(1, track1.events().size());
+		CPPUNIT_ASSERT_EQUAL((tick_t)0, track1.events().get(0)->tick);
+		CPPUNIT_ASSERT_EQUAL(EventType::SINGER, track1.events().get(0)->type());
 
 		// master
 		CPPUNIT_ASSERT_EQUAL(1, sequence.master.preMeasure);
@@ -66,16 +66,16 @@ public:
 
 		// timesigTable
 		CPPUNIT_ASSERT_EQUAL(1, sequence.timesigList.size());
-		CPPUNIT_ASSERT_EQUAL((tick_t)0, sequence.timesigList.get(0).getClock());
+		CPPUNIT_ASSERT_EQUAL((tick_t)0, sequence.timesigList.get(0).tick());
 		CPPUNIT_ASSERT_EQUAL(4, sequence.timesigList.get(0).denominator);
 		CPPUNIT_ASSERT_EQUAL(4, sequence.timesigList.get(0).numerator);
 		CPPUNIT_ASSERT_EQUAL(0, sequence.timesigList.get(0).barCount);
 
 		// tempoTable
 		CPPUNIT_ASSERT_EQUAL(1, sequence.tempoList.size());
-		CPPUNIT_ASSERT_EQUAL((tick_t)0, sequence.tempoList.get(0).clock);
+		CPPUNIT_ASSERT_EQUAL((tick_t)0, sequence.tempoList.get(0).tick);
 		CPPUNIT_ASSERT_EQUAL(500000, sequence.tempoList.get(0).tempo);
-		CPPUNIT_ASSERT_EQUAL(0.0, sequence.tempoList.get(0).getTime());
+		CPPUNIT_ASSERT_EQUAL(0.0, sequence.tempoList.get(0).time());
 	}
 
 	void testConstruct()
@@ -94,38 +94,38 @@ public:
 	void testGetBaseTempo()
 	{
 		Sequence sequence("Miku", 1, 4, 4, 500000);
-		CPPUNIT_ASSERT_EQUAL(500000, sequence.getBaseTempo());
+		CPPUNIT_ASSERT_EQUAL(500000, sequence.baseTempo());
 	}
 
 	void testGetPreMeasure()
 	{
 		int preMeasure = 1;
 		Sequence sequence("Miku", preMeasure, 4, 4, 500000);
-		CPPUNIT_ASSERT_EQUAL(preMeasure, sequence.getPreMeasure());
+		CPPUNIT_ASSERT_EQUAL(preMeasure, sequence.preMeasure());
 	}
 
-	void testGetPreMeasureClocks()
+	void testGetPreMeasureTicks()
 	{
 		Sequence sequence("Miku", 1, 4, 4, 500000);
-		CPPUNIT_ASSERT_EQUAL((tick_t)1920, sequence.getPreMeasureClocks());
+		CPPUNIT_ASSERT_EQUAL((tick_t)1920, sequence.preMeasureTicks());
 	}
 
 	void testGetTickPerQuarter()
 	{
 		Sequence sequence("Miku", 1, 4, 4, 500000);
-		CPPUNIT_ASSERT_EQUAL((tick_t)480, sequence.getTickPerQuarter());
+		CPPUNIT_ASSERT_EQUAL((tick_t)480, sequence.tickPerQuarter());
 	}
 
-	void testUpdateTotalClocks()
+	void testUpdateTotalTicks()
 	{
 		Sequence sequence("Miku", 1, 4, 4, 500000);
-		CPPUNIT_ASSERT_EQUAL((tick_t)(1 * 480 * 4 / 4 * 4), sequence.getTotalClocks());
+		CPPUNIT_ASSERT_EQUAL((tick_t)(1 * 480 * 4 / 4 * 4), sequence.totalTicks());
 		Event note(1920, EventType::NOTE);
-		note.setLength(480);
+		note.length(480);
 		note.note = 60;
-		sequence.track(0)->events()->add(note);
-		sequence.updateTotalClocks();
-		CPPUNIT_ASSERT_EQUAL((tick_t)2400, sequence.getTotalClocks());
+		sequence.track(0).events().add(note);
+		sequence.updateTotalTicks();
+		CPPUNIT_ASSERT_EQUAL((tick_t)2400, sequence.totalTicks());
 	}
 
 	void testGetMaximumNoteLengthAt()
@@ -154,9 +154,9 @@ public:
 	CPPUNIT_TEST(testClone);
 	CPPUNIT_TEST(testGetBaseTempo);
 	CPPUNIT_TEST(testGetPreMeasure);
-	CPPUNIT_TEST(testGetPreMeasureClocks);
+	CPPUNIT_TEST(testGetPreMeasureTicks);
 	CPPUNIT_TEST(testGetTickPerQuarter);
-	CPPUNIT_TEST(testUpdateTotalClocks);
+	CPPUNIT_TEST(testUpdateTotalTicks);
 	CPPUNIT_TEST(testGetMaximumNoteLengthAt);
 	CPPUNIT_TEST(testGenerateNRPNAll);
 	CPPUNIT_TEST(testGenerateNRPNPartial);

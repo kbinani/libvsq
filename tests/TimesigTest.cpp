@@ -12,9 +12,9 @@ public:
 	{
 	}
 
-	void setClock(tick_t clock)
+	void setTick(tick_t tick)
 	{
-		this->clock = clock;
+		this->tick_ = tick;
 	}
 };
 
@@ -37,7 +37,7 @@ public:
 	void testToString()
 	{
 		Timesig item(3, 4, 1);
-		string expected = "{Clock=0, Numerator=3, Denominator=4, BarCount=1}";
+		string expected = "{Tick=0, Numerator=3, Denominator=4, BarCount=1}";
 		CPPUNIT_ASSERT_EQUAL(expected, item.toString());
 	}
 
@@ -53,12 +53,12 @@ public:
 	void testClone()
 	{
 		TimesigStub a(Timesig(3, 4, 1));
-		a.setClock(10);
+		a.setTick(10);
 		Timesig b = a.clone();
 		CPPUNIT_ASSERT_EQUAL(3, b.numerator);
 		CPPUNIT_ASSERT_EQUAL(4, b.denominator);
 		CPPUNIT_ASSERT_EQUAL(1, b.barCount);
-		CPPUNIT_ASSERT_EQUAL((tick_t)10, b.getClock());
+		CPPUNIT_ASSERT_EQUAL((tick_t)10, b.tick());
 	}
 
 	CPPUNIT_TEST_SUITE(TimesigTest);

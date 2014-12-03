@@ -31,7 +31,7 @@ Handle::Handle(HandleType type)
 	}
 }
 
-ArticulationType Handle::getArticulation() const
+ArticulationType Handle::articulation() const
 {
 	return _articulation;
 }
@@ -51,22 +51,27 @@ bool Handle::isDecrescendType() const
 	return iconId.find(Handle::getIconIdPrefixDecrescend()) == 0;
 }
 
-tick_t Handle::getLength() const
+tick_t Handle::length() const
 {
 	return _length;
 }
 
-void Handle::setLength(tick_t value)
+void Handle::length(tick_t value)
 {
 	_length = value;
 }
 
-const Lyric Handle::getLyricAt(int index) const
+Lyric const& Handle::get(int index) const
 {
 	return _lyrics[index];
 }
 
-void Handle::setLyricAt(int index, Lyric const& value)
+Lyric& Handle::get(int index)
+{
+	return _lyrics[index];
+}
+
+void Handle::set(int index, Lyric const& value)
 {
 	if (_lyrics.size() < index + 1) {
 		int remain = index + 1 - _lyrics.size();
@@ -77,22 +82,22 @@ void Handle::setLyricAt(int index, Lyric const& value)
 	_lyrics[index] = value;
 }
 
-void Handle::addLyric(Lyric const& lyric)
+void Handle::add(Lyric const& lyric)
 {
 	_lyrics.push_back(lyric);
 }
 
-int Handle::getLyricCount() const
+int Handle::size() const
 {
 	return _lyrics.size();
 }
 
-std::string Handle::getDisplayString() const
+std::string Handle::displayString() const
 {
 	return ids + caption;
 }
 
-HandleType Handle::getHandleType() const
+HandleType Handle::type() const
 {
 	return _type;
 }
@@ -110,7 +115,7 @@ Handle Handle::clone() const
 		//if( 0 != _dynBP ){
 		ret.dynBP = dynBP.clone();
 		//}
-		ret.setLength(getLength());
+		ret.length(length());
 		return ret;
 	} else if (_type == HandleType::LYRIC) {
 		Handle result(HandleType::LYRIC);
@@ -127,7 +132,7 @@ Handle Handle::clone() const
 		result.ids = ids;
 		result.original = original;
 		result.caption = caption;
-		result.setLength(getLength());
+		result.length(length());
 		result.duration = duration;
 		result.depth = depth;
 		return result;
@@ -138,7 +143,7 @@ Handle Handle::clone() const
 		ret.ids = ids;
 		ret.index = index;
 		ret.language = language;
-		ret.setLength(_length);
+		ret.length(_length);
 		ret.original = original;
 		ret.program = program;
 		return ret;
@@ -149,7 +154,7 @@ Handle Handle::clone() const
 		result.ids = ids;
 		result.original = original;
 		result.caption = caption;
-		result.setLength(getLength());
+		result.length(length());
 		result.startDepth = startDepth;
 		//if( 0 != _depthBP ){
 		result.depthBP = depthBP.clone();

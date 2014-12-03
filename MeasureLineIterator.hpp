@@ -30,9 +30,9 @@ private:
 	/**
 	 * @brief 補助線の間隔として利用可能な最小時間(tick単位).
 	 */
-	const static tick_t MIN_ASSIST_LINE_STEP = 15;
+	static tick_t const MIN_ASSIST_LINE_STEP = 15;
 
-	const TimesigList* list;
+	TimesigList const* list;
 	tick_t endTick;
 	int i;
 	tick_t tick;
@@ -60,7 +60,7 @@ public:
 	 * @brief 次の小節線が取得可能かどうかを取得する.
 	 * @return 取得可能であれば true を返す.
 	 */
-	bool hasNext();
+	bool hasNext() const;
 
 	/**
 	 * @brief 次の小節線を取得する.

@@ -21,7 +21,7 @@
 
 VSQ_BEGIN_NAMESPACE
 
-void VSQFileReader::read(Sequence& sequence, InputStream* stream, std::string const& encoding)
+void VSQFileReader::read(Sequence& sequence, InputStream& stream, std::string const& encoding)
 {
 	std::vector<std::vector<MidiEvent> > events;
 	SMFReader reader;
@@ -29,7 +29,7 @@ void VSQFileReader::read(Sequence& sequence, InputStream* stream, std::string co
 	reader.read(stream, events, format, timeFormat);
 
 	int num_track = events.size();
-	sequence.tracks()->clear();
+	sequence.tracks().clear();
 	for (int i = 1; i < num_track; i++) {
 		TextStream textStream;
 		std::string trackName;
@@ -44,8 +44,8 @@ void VSQFileReader::read(Sequence& sequence, InputStream* stream, std::string co
 		} else {
 			track = getTrackByTextStream(textStream);
 		}
-		track.setName(trackName);
-		sequence.tracks()->push_back(track);
+		track.name(trackName);
+		sequence.tracks().push_back(track);
 	}
 
 	parseTempoList(events[0], sequence.tempoList);
@@ -53,19 +53,19 @@ void VSQFileReader::read(Sequence& sequence, InputStream* stream, std::string co
 
 	// 曲の長さを計算
 	sequence.tempoList.updateTempoInfo();
-	sequence.updateTotalClocks();
+	sequence.updateTotalTicks();
 }
 
 VSQFileReader::TentativeEvent
 VSQFileReader::parseEvent(TextStream& stream, std::string& lastLine)
 {
 	TentativeEvent result;
-	result.type = EventType::UNKNOWN;
+	result.setType(EventType::UNKNOWN);
 	result.singerHandleIndex = -2;
 	result.lyricHandleIndex = -1;
 	result.vibratoHandleIndex = -1;
 	result.noteHeadHandleIndex = -1;
-	result.setLength(0);
+	result.length(0);
 	result.note = 0;
 	result.dynamics = 64;
 	result.pmBendDepth = 8;
@@ -81,16 +81,16 @@ VSQFileReader::parseEvent(TextStream& stream, std::string& lastLine)
 		std::string search = parameters[0];
 		if (search == "Type") {
 			if (parameters[1] == "Anote") {
-				result.type = EventType::NOTE;
+				result.setType(EventType::NOTE);
 			} else if (parameters[1] == "Singer") {
-				result.type = EventType::SINGER;
+				result.setType(EventType::SINGER);
 			} else if (parameters[1] == "Aicon") {
-				result.type = EventType::ICON;
+				result.setType(EventType::ICON);
 			} else {
-				result.type = EventType::UNKNOWN;
+				result.setType(EventType::UNKNOWN);
 			}
 		} else if (search == "Length") {
-			result.setLength(StringUtil::parseInt<tick_t>(parameters[1]));
+			result.length(StringUtil::parseInt<tick_t>(parameters[1]));
 		} else if (search == "Note#") {
 			result.note = StringUtil::parseInt<int>(parameters[1]);
 		} else if (search == "Dynamics") {
@@ -134,10 +134,10 @@ Handle VSQFileReader::parseHandle(TextStream& stream, int index, std::string& la
 	result.iconId = "";
 	result.ids = "normal";
 	result.setLyrics(std::vector<Lyric>());
-	result.addLyric(Lyric(""));
+	result.add(Lyric(""));
 	result.original = 0;
 	result.caption = "";
-	result.setLength(0);
+	result.length(0);
 	result.startDepth = 0;
 	result.startRate = 0;
 	result.language = 0;
@@ -182,7 +182,7 @@ Handle VSQFileReader::parseHandle(TextStream& stream, int index, std::string& la
 				result.caption = result.caption + "=" + parameters[i];
 			}
 		} else if (search == "Length") {
-			result.setLength(StringUtil::parseInt<tick_t>(parameters[1]));
+			result.length(StringUtil::parseInt<tick_t>(parameters[1]));
 		} else if (search == "StartDepth") {
 			result.startDepth = StringUtil::parseInt<int>(parameters[1]);
 		} else if (search == "DepthBPNum") {
@@ -221,13 +221,13 @@ Handle VSQFileReader::parseHandle(TextStream& stream, int index, std::string& la
 			int index = StringUtil::parseInt<int>(search.substr(1, 1));
 			Lyric lyric(parameters[1]);
 			result.setHandleType(HandleType::LYRIC);
-			if (result.getLyricCount() <= index + 1) {
-				int amount = index + 1 - result.getLyricCount();
+			if (result.size() <= index + 1) {
+				int amount = index + 1 - result.size();
 				for (int i = 0; i < amount; i++) {
-					result.addLyric(Lyric("", ""));
+					result.add(Lyric("", ""));
 				}
 			}
-			result.setLyricAt(index, lyric);
+			result.set(index, lyric);
 		}
 		if (! stream.ready()) {
 			break;
@@ -236,7 +236,7 @@ Handle VSQFileReader::parseHandle(TextStream& stream, int index, std::string& la
 	}
 
 	// parse RateBPX and RateBPY
-	if (result.getHandleType() == HandleType::VIBRATO) {
+	if (result.type() == HandleType::VIBRATO) {
 		if (tmpRateBPNum != "") {
 			result.rateBP = VibratoBPList(tmpRateBPNum, tmpRateBPX, tmpRateBPY);
 		} else {
@@ -277,20 +277,20 @@ void VSQFileReader::parseTimesigList(std::vector<MidiEvent> const& midiEventList
 				dnominator = dnominator * 2;
 			}
 			if (count == 0) {
-				if (midiEventList[j].clock == 0) {
+				if (midiEventList[j].tick == 0) {
 					timesigList.push(Timesig(numerator, dnominator, 0));
 				} else {
 					timesigList.push(Timesig(4, 4, 0));
-					timesigList.push(Timesig(numerator, dnominator, (int)midiEventList[j].clock / (480 * 4)));
+					timesigList.push(Timesig(numerator, dnominator, (int)midiEventList[j].tick / (480 * 4)));
 					count++;
 				}
 			} else {
 				int lastNumerator = timesigList.get(count - 1).numerator;
 				int lastDenominator = timesigList.get(count - 1).denominator;
-				tick_t clock = timesigList.get(count - 1).getClock();
+				tick_t tick = timesigList.get(count - 1).tick();
 				int barCount = timesigList.get(count - 1).barCount;
 				int dif = 480 * 4 / lastDenominator * lastNumerator;//1小節が何クロックか？
-				barCount += ((int)midiEventList[j].clock - clock) / dif;
+				barCount += ((int)midiEventList[j].tick - tick) / dif;
 				timesigList.push(Timesig(numerator, dnominator, barCount));
 			}
 		}
@@ -307,12 +307,12 @@ void VSQFileReader::parseTempoList(std::vector<MidiEvent> const& midiEventList, 
 		MidiEvent item = midiEventList[j];
 		if (item.firstByte == 0xff && item.data.size() >= 4 && item.data[0] == 0x51) {
 			count++;
-			if (count == 0 && item.clock != 0) {
+			if (count == 0 && item.tick != 0) {
 				tempoList.push(Tempo(0, lastTempo));
 			}
 			int currentTempo = item.data[1] << 16 | item.data[2] << 8 | item.data[3];
-			tick_t currentClock = midiEventList[j].clock;
-			tempoList.push(Tempo(currentClock, currentTempo));
+			tick_t currentTick = midiEventList[j].tick;
+			tempoList.push(Tempo(currentTick, currentTempo));
 			lastTempo = currentTempo;
 		}
 	}
@@ -392,7 +392,7 @@ void VSQFileReader::getMetatextByMidiEventList(std::vector<MidiEvent> const& mid
 
 Track VSQFileReader::getTrackByTextStream(TextStream& stream, Master* master, Mixer* mixer)
 {
-	std::map<int, tick_t> eventClockMap;
+	std::map<int, tick_t> eventTickMap;
 	std::map<int, TentativeEvent*> eventIdMap;
 	std::map<int, Handle> handleIdMap;
 	std::vector<Event*> temporaryEventList;
@@ -422,16 +422,16 @@ Track VSQFileReader::getTrackByTextStream(TextStream& stream, Master* master, Mi
 			lastLine = stream.readLine();
 			while (lastLine.find("[") != 0) {
 				std::vector<std::string> parameters = StringUtil::explode("=", lastLine);
-				tick_t clock = StringUtil::parseInt<tick_t>(parameters[0]);
+				tick_t tick = StringUtil::parseInt<tick_t>(parameters[0]);
 				if (parameters[1] != "EOS") {
 					std::vector<std::string> idList = StringUtil::explode(",", parameters[1]);
 					for (int i = 0; i < idList.size(); i++) {
 						std::vector<std::string> idParameters = StringUtil::explode("#", idList[i]);
 						int id = StringUtil::parseInt<int>(idParameters[1]);
-						eventClockMap.insert(std::make_pair(id, clock));
+						eventTickMap.insert(std::make_pair(id, tick));
 					}
 				} else {
-					eventClockMap.insert(std::make_pair(-1, clock));
+					eventTickMap.insert(std::make_pair(-1, tick));
 				}
 				if (! stream.ready()) {
 					break;
@@ -464,9 +464,9 @@ Track VSQFileReader::getTrackByTextStream(TextStream& stream, Master* master, Mi
 	for (std::map<int, TentativeEvent*>::iterator i = eventIdMap.begin(); i != eventIdMap.end(); ++i) {
 		TentativeEvent* id = i->second;
 		if (handleIdMap.find(id->singerHandleIndex) != handleIdMap.end()) {
-			if (id->type == EventType::SINGER) {
+			if (id->type() == EventType::SINGER) {
 				id->singerHandle = handleIdMap[id->singerHandleIndex];
-			} else if (id->type == EventType::ICON) {
+			} else if (id->type() == EventType::ICON) {
 				id->iconDynamicsHandle = handleIdMap[id->singerHandleIndex];
 			}
 		}
@@ -482,20 +482,20 @@ Track VSQFileReader::getTrackByTextStream(TextStream& stream, Master* master, Mi
 	}
 
 	// idをeventListに埋め込み
-	Event::List* events = result.events();
-	events->clear();
+	Event::List& events = result.events();
+	events.clear();
 	int count = 0;
-	for (std::map<int, tick_t>::iterator i = eventClockMap.begin(); i != eventClockMap.end(); ++i) {
+	for (std::map<int, tick_t>::iterator i = eventTickMap.begin(); i != eventTickMap.end(); ++i) {
 		int id = i->first;
-		tick_t clock = i->second;
+		tick_t tick = i->second;
 		if (eventIdMap.find(id) != eventIdMap.end()) {
 			count++;
 			Event item = *eventIdMap[id];
-			item.clock = clock;
-			events->add(item, count);
+			item.tick = tick;
+			events.add(item, count);
 		}
 	}
-	events->sort();
+	events.sort();
 
 	for (std::vector<Event*>::iterator i = temporaryEventList.begin(); i != temporaryEventList.end(); ++i) {
 		delete(*i);

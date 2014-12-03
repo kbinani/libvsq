@@ -80,7 +80,7 @@ public:
 	 * @param index インデックス(最初のインデックスは0).
 	 * @return テンポ変更情報.
 	 */
-	Tempo get(int index) const;
+	Tempo const& get(int index) const;
 
 	/**
 	 * @brief 指定したインデックスのテンポ変更情報を設定する.
@@ -94,7 +94,7 @@ public:
 	 * @param time 秒単位の時刻.
 	 * @return Tick 単位の時刻.
 	 */
-	double getClockFromSec(double time) const;
+	double tickFromTime(double time) const;
 
 	/**
 	 * @brief リスト内のテンポ変更情報の秒単位の時刻部分を更新する.
@@ -103,18 +103,17 @@ public:
 
 	/**
 	 * @brief 時刻の単位を, Tick 単位から秒単位に変換する.
-	 * @param clock Tick 単位の時刻.
+	 * @param tick Tick 単位の時刻.
 	 * @return 秒単位の時刻.
 	 */
-	double getSecFromClock(double clock) const;
+	double timeFromTick(double tick) const;
 
 	/**
 	 * @brief 指定した時刻におけるテンポを取得する.
-	 * @param clock Tick 単位の時刻.
+	 * @param tick Tick 単位の時刻.
 	 * @return テンポ値. 四分音符の長さをマイクロ秒単位で表した値.
-	 * @todo clock の型をtick_tに修正.
 	 */
-	int getTempoAt(int clock) const;
+	int tempoAt(tick_t tick) const;
 
 	/**
 	 * @brief リストをクリアする.

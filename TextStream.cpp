@@ -62,7 +62,7 @@ std::string TextStream::readLine()
 	return sb.str();
 }
 
-bool TextStream::ready()
+bool TextStream::ready() const
 {
 	if (0 <= _position + 1 && _position + 1 < _length) {
 		return true;
@@ -108,7 +108,7 @@ void TextStream::close()
 	_length = 0;
 }
 
-std::string TextStream::toString()
+std::string TextStream::toString() const
 {
 	std::string ret;
 	if (_array) {

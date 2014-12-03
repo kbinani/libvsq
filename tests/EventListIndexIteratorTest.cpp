@@ -38,7 +38,7 @@ public:
 		CPPUNIT_ASSERT_EQUAL(4, noteIterator.next());
 		CPPUNIT_ASSERT_EQUAL(false, noteIterator.hasNext());
 		const Event* event = list.get(4);
-		CPPUNIT_ASSERT_EQUAL((tick_t)1920, event->clock);
+		CPPUNIT_ASSERT_EQUAL((tick_t)1920, event->tick);
 		CPPUNIT_ASSERT_EQUAL(5, event->id);
 
 		// 歌手変更イベントのみのイテレータ
@@ -47,7 +47,7 @@ public:
 		CPPUNIT_ASSERT_EQUAL(0, singerIterator.next());
 		CPPUNIT_ASSERT_EQUAL(false, singerIterator.hasNext());
 		event = list.get(0);
-		CPPUNIT_ASSERT_EQUAL((tick_t)0, event->clock);
+		CPPUNIT_ASSERT_EQUAL((tick_t)0, event->tick);
 		CPPUNIT_ASSERT_EQUAL(1, event->id);
 
 		// 強弱記号のみのイテレータ
@@ -56,7 +56,7 @@ public:
 		CPPUNIT_ASSERT_EQUAL(2, dynaffIterator.next());
 		CPPUNIT_ASSERT_EQUAL(false, dynaffIterator.hasNext());
 		event = list.get(2);
-		CPPUNIT_ASSERT_EQUAL((tick_t)480, event->clock);
+		CPPUNIT_ASSERT_EQUAL((tick_t)480, event->tick);
 		CPPUNIT_ASSERT_EQUAL(3, event->id);
 
 		// クレッシェンドのみのイテレータ
@@ -65,7 +65,7 @@ public:
 		CPPUNIT_ASSERT_EQUAL(1, crescendoIterator.next());
 		CPPUNIT_ASSERT_EQUAL(false, crescendoIterator.hasNext());
 		event = list.get(1);
-		CPPUNIT_ASSERT_EQUAL((tick_t)240, event->clock);
+		CPPUNIT_ASSERT_EQUAL((tick_t)240, event->tick);
 		CPPUNIT_ASSERT_EQUAL(2, event->id);
 
 		EventListIndexIterator decrescendoIterator(&list, EventListIndexIteratorKind::DECRESCENDO);
@@ -73,34 +73,34 @@ public:
 		CPPUNIT_ASSERT_EQUAL(3, decrescendoIterator.next());
 		CPPUNIT_ASSERT_EQUAL(false, decrescendoIterator.hasNext());
 		event = list.get(3);
-		CPPUNIT_ASSERT_EQUAL((tick_t)720, event->clock);
+		CPPUNIT_ASSERT_EQUAL((tick_t)720, event->tick);
 		CPPUNIT_ASSERT_EQUAL(4, event->id);
 
 		EventListIndexIteratorKind kindAll = EventListIndexIteratorKind::ALL;
 		EventListIndexIterator iteratorAll(&list, kindAll);
 		CPPUNIT_ASSERT(iteratorAll.hasNext());
 		CPPUNIT_ASSERT_EQUAL(0, iteratorAll.next());
-		CPPUNIT_ASSERT_EQUAL((tick_t)0, list.get(0)->clock);
+		CPPUNIT_ASSERT_EQUAL((tick_t)0, list.get(0)->tick);
 		CPPUNIT_ASSERT_EQUAL(1, list.get(0)->id);
 
 		CPPUNIT_ASSERT(iteratorAll.hasNext());
 		CPPUNIT_ASSERT_EQUAL(1, iteratorAll.next());
-		CPPUNIT_ASSERT_EQUAL((tick_t)240, list.get(1)->clock);
+		CPPUNIT_ASSERT_EQUAL((tick_t)240, list.get(1)->tick);
 		CPPUNIT_ASSERT_EQUAL(2, list.get(1)->id);
 
 		CPPUNIT_ASSERT(iteratorAll.hasNext());
 		CPPUNIT_ASSERT_EQUAL(2, iteratorAll.next());
-		CPPUNIT_ASSERT_EQUAL((tick_t)480, list.get(2)->clock);
+		CPPUNIT_ASSERT_EQUAL((tick_t)480, list.get(2)->tick);
 		CPPUNIT_ASSERT_EQUAL(3, list.get(2)->id);
 
 		CPPUNIT_ASSERT(iteratorAll.hasNext());
 		CPPUNIT_ASSERT_EQUAL(3, iteratorAll.next());
-		CPPUNIT_ASSERT_EQUAL((tick_t)720, list.get(3)->clock);
+		CPPUNIT_ASSERT_EQUAL((tick_t)720, list.get(3)->tick);
 		CPPUNIT_ASSERT_EQUAL(4, list.get(3)->id);
 
 		CPPUNIT_ASSERT(iteratorAll.hasNext());
 		CPPUNIT_ASSERT_EQUAL(4, iteratorAll.next());
-		CPPUNIT_ASSERT_EQUAL((tick_t)1920, list.get(4)->clock);
+		CPPUNIT_ASSERT_EQUAL((tick_t)1920, list.get(4)->tick);
 		CPPUNIT_ASSERT_EQUAL(5, list.get(4)->id);
 
 		CPPUNIT_ASSERT_EQUAL(false, iteratorAll.hasNext());

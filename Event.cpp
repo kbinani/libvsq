@@ -39,7 +39,7 @@ int Event::List::findIndexFromId(int internalId) const
 {
 	int c = _events.size();
 	for (int i = 0; i < c; i++) {
-		const Event* item = _events[i];
+		auto const& item = _events[i];
 		if (item->id == internalId) {
 			return i;
 		}
@@ -51,7 +51,7 @@ Event const* Event::List::findFromId(int internalId) const
 {
 	int index = findIndexFromId(internalId);
 	if (0 <= index && index < _events.size()) {
-		return _events[index];
+		return _events[index].get();
 	} else {
 		return 0;
 	}
@@ -61,7 +61,7 @@ void Event::List::setForId(int internalId, Event const& value)
 {
 	int c = _events.size();
 	for (int i = 0; i < c; i++) {
-		Event* item = _events[i];
+		auto const& item = _events[i];
 		if (item->id == internalId) {
 			*item = value;
 			item->id = internalId;
@@ -72,17 +72,14 @@ void Event::List::setForId(int internalId, Event const& value)
 
 void Event::List::sort()
 {
-	std::stable_sort(_events.begin(), _events.end(), Event::comp);
+	std::stable_sort(_events.begin(), _events.end(), [](std::unique_ptr<Event> const & a, std::unique_ptr<Event> const & b) {
+		return Event::comp(a.get(), b.get());
+	});
 	updateIdList();
 }
 
 void Event::List::clear()
 {
-	std::vector<Event*>::iterator i = _events.begin();
-	for (; i != _events.end(); ++i) {
-		Event* item = *i;
-		delete item;
-	}
 	_events.clear();
 	_ids.clear();
 }
@@ -103,7 +100,9 @@ int Event::List::add(Event const& item)
 {
 	int id = _getNextId(0);
 	_addCor(item, id);
-	std::stable_sort(_events.begin(), _events.end(), Event::comp);
+	std::stable_sort(_events.begin(), _events.end(), [](std::unique_ptr<Event> const & a, std::unique_ptr<Event> const & b) {
+		return Event::comp(a.get(), b.get());
+	});
 	int count = _events.size();
 	for (int i = 0; i < count; i++) {
 		_ids[i] = _events[i]->id;
@@ -114,7 +113,9 @@ int Event::List::add(Event const& item)
 int Event::List::add(Event const& item, int internalId)
 {
 	_addCor(item, internalId);
-	std::stable_sort(_events.begin(), _events.end(), Event::comp);
+	std::stable_sort(_events.begin(), _events.end(), [](std::unique_ptr<Event> const & a, std::unique_ptr<Event> const & b) {
+		return Event::comp(a.get(), b.get());
+	});
 	return internalId;
 }
 
@@ -122,19 +123,8 @@ void Event::List::removeAt(int index)
 {
 	updateIdList();
 
-	{
-		std::vector<Event*>::iterator i = _events.begin();
-		std::advance(i, index);
-		Event* item = *i;
-		delete item;
-		_events.erase(i);
-	}
-
-	{
-		std::vector<int>::iterator i = _ids.begin();
-		std::advance(i, index);
-		_ids.erase(i);
-	}
+	_events.erase(_events.begin() + index);
+	_ids.erase(_ids.begin() + index);
 }
 
 int Event::List::size() const
@@ -144,7 +134,7 @@ int Event::List::size() const
 
 Event const* Event::List::get(int index) const
 {
-	return _events[index];
+	return _events[index].get();
 }
 
 void Event::List::set(int index, Event const& value)
@@ -168,11 +158,11 @@ void Event::List::updateIdList()
 void Event::List::_addCor(Event const& item, int internalId)
 {
 	updateIdList();
-	Event* add = new Event();
+	auto add = std::unique_ptr<Event>(new Event);
 	*add = item;
 	add->id = internalId;
 
-	_events.push_back(add);
+	_events.push_back(std::move(add));
 	_ids.push_back(internalId);
 }
 
@@ -190,17 +180,15 @@ void Event::List::copy(List const& list)
 {
 	_events.clear();
 	_ids.clear();
-	std::vector<Event*>::const_iterator i = list._events.begin();
-	for (; i != list._events.end(); ++i) {
-		_addCor(**i, (*i)->id);
+	for (auto const& item : list._events) {
+		_addCor(*item, item->id);
 	}
 }
 
 Event::ListConstIterator::ListConstIterator(List const* list) :
 	_list(list),
 	_pos(-1)
-{
-}
+{}
 
 bool Event::ListConstIterator::hasNext()
 {
@@ -213,7 +201,7 @@ bool Event::ListConstIterator::hasNext()
 Event* Event::ListConstIterator::next()
 {
 	_pos++;
-	return _list->_events[_pos];
+	return _list->_events[_pos].get();
 }
 
 Event::ListIterator::ListIterator(List* list)
@@ -235,49 +223,59 @@ Event::Event(std::string const& line) :
 {
 	init();
 	std::vector<std::string> spl = StringUtil::explode("=", line);
-	clock = StringUtil::parseInt<tick_t>(spl[0]);
+	tick = StringUtil::parseInt<tick_t>(spl[0]);
 	isEos = (spl[1] == "EOS");
 }
 
 Event::Event()
 {
 	init();
-	clock = 0;
+	tick = 0;
 	isEos = true;
 	id = 0;
 }
 
-Event::Event(tick_t clock, EventType eventType)
+Event::Event(tick_t tick, EventType eventType)
 {
 	init();
-	this->clock = clock;
-	this->type = eventType;
+	this->tick = tick;
+	this->_type = eventType;
 	if (eventType == EventType::SINGER) {
 		singerHandle = Handle(HandleType::SINGER);
 	} else if (eventType == EventType::NOTE) {
 		lyricHandle = Handle(HandleType::LYRIC);
-		lyricHandle.setLyricAt(0, Lyric("a", "a"));
+		lyricHandle.set(0, Lyric("a", "a"));
 	}
 	id = 0;
 }
 
-tick_t Event::getLength() const
+tick_t Event::length() const
 {
 	return _length;
 }
 
-void Event::setLength(tick_t value)
+void Event::length(tick_t value)
 {
 	_length = value;
 }
 
+EventType Event::type() const
+{
+	return _type;
+}
+
+void Event::type(EventType type)
+{
+	_type = type;
+}
+
 Event Event::clone() const
 {
-	Event result(clock, type);
+	Event result(tick, type());
 
-	result.type = type;
+	result._type = type();
 	result.singerHandle = singerHandle.clone();
-	result.setLength(getLength());
+	result.length(length());
 	result.note = note;
 	result.dynamics = dynamics;
 	result.pmBendDepth = pmBendDepth;
@@ -308,9 +306,9 @@ bool Event::isEOS() const
 
 int Event::compareTo(Event const& item) const
 {
-	tick_t ret = clock - item.clock;
+	tick_t ret = tick - item.tick;
 	if (ret == 0) {
-		return static_cast<int>(type) - static_cast<int>(item.type);
+		return static_cast<int>(type()) - static_cast<int>(item.type());
 	} else {
 		return (int)ret;
 	}
@@ -337,7 +335,7 @@ Event Event::getEOS()
 	-- @todo 実装できたら, TrackTest::testGetIndexIteratorNote, testGetIndexIteratorDynamics
 			 の中のequals使うassertionを復活させること
 	function this:equals( item )
-		if( self.clock ~= item.clock )then
+		if( self.tick ~= item.tick )then
 			return false;
 		end
 		if( self.type ~= item.type )then
@@ -516,9 +514,9 @@ void Event::init()
 {
 	tag = "";
 	id = -1;
-	clock = 0;
+	tick = 0;
 	isEos = false;
-	type = EventType::NOTE;
+	_type = EventType::NOTE;
 	_length = 0;
 	note = 0;
 	dynamics = 0;

@@ -29,7 +29,7 @@ public:
 	/**
 	 * @brief Tick 単位の時刻.
 	 */
-	tick_t clock;
+	tick_t tick;
 
 	/**
 	 * @brief NRPN の値.
@@ -65,26 +65,26 @@ protected:
 public:
 	/**
 	 * @brief 時刻, NRPN, DATA MSB を指定し, 初期化を行う.
-	 * @param clock Tick 単位の時刻.
+	 * @param tick Tick 単位の時刻.
 	 * @param nrpn NRPN.
 	 * @param dataMsb DATA MSB.
 	 */
-	NrpnEvent(tick_t clock, MidiParameterType nrpn, int dataMsb);
+	NrpnEvent(tick_t tick, MidiParameterType nrpn, int dataMsb);
 
 	/**
 	 * @brief 時刻, NRPN, DATA MSB, DATA LSB を指定し, 初期化を行う.
-	 * @param clock Tick 単位の時刻.
+	 * @param tick Tick 単位の時刻.
 	 * @param nrpn NRPN.
 	 * @param dataMsb DATA MSB.
 	 * @param dataLsb DATA LSB.
 	 */
-	NrpnEvent(tick_t clock, MidiParameterType nrpn, int dataMsb, int dataLsb);
+	NrpnEvent(tick_t tick, MidiParameterType nrpn, int dataMsb, int dataLsb);
 
 	/**
 	 * @brief 親子関係によって入れ子になっている NRPN イベントを展開し, 配列に変換する.
 	 * @return 展開後の NRPN イベントの配列.
 	 */
-	std::vector<NrpnEvent> expand();
+	std::vector<NrpnEvent> expand() const;
 
 	/**
 	 * @brief 順序を比較する.

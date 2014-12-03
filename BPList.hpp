@@ -31,7 +31,7 @@ public:
 	/**
 	 * @brief コントロールカーブのデータ点の Tick 単位の時刻を順に返す反復子.
 	 */
-	class KeyClockIterator
+	class KeyTickIterator
 	{
 	private:
 		/**
@@ -49,7 +49,7 @@ public:
 		 * @brief 初期化を行う.
 		 * @param list 反復子の元になるリスト.
 		 */
-		explicit KeyClockIterator(BPList* list = NULL);
+		explicit KeyTickIterator(BPList* list = NULL);
 
 		/**
 		 * @brief 反復子が次の要素を持つ場合に <code>true</code> を返す.
@@ -75,7 +75,7 @@ private:
 	/**
 	 * @brief Tick 単位の時刻を格納したリスト.
 	 */
-	std::vector<tick_t> _clocks;
+	std::vector<tick_t> _ticks;
 
 	/**
 	 * @brief データ点の値と id のセットを格納した {@link BP} のリスト.
@@ -128,13 +128,13 @@ public:
 	 * @brief コントロールカーブの名前を取得する.
 	 * @return コントロールカーブの名前.
 	 */
-	std::string getName() const;
+	std::string name() const;
 
 	/**
 	 * @brief コントロールカーブの名前を設定する.
 	 * @param value コントロールカーブの名前.
 	 */
-	void setName(std::string const& value);
+	void name(std::string const& value);
 
 	/**
 	 * @brief このリスト内で使用されている ID の最大値を取得する.
@@ -146,13 +146,13 @@ public:
 	 * @brief コントロールカーブのデフォルト値を取得する.
 	 * @return コントロールカーブのデフォルト値.
 	 */
-	int getDefault() const;
+	int defaultValue() const;
 
 	/**
 	 * @brief コントロールカーブのデフォルト値を設定する.
 	 * @param value コントロールカーブのデフォルト値.
 	 */
-	void setDefault(int value);
+	void defaultValue(int value);
 
 	/**
 	 * @brief データ点の ID を一度クリアし, 新たに番号付けを行う.
@@ -160,9 +160,9 @@ public:
 	 */
 	void renumberIds();
 
-	std::string getData() const;
+	std::string data() const;
 
-	void setData(std::string const& value);
+	void data(std::string const& value);
 
 	/**
 	 * @brief コピーを作成する.
@@ -174,59 +174,29 @@ public:
 	 * @brief コントロールカーブの最大値を取得する.
 	 * @return コントロールカーブの最大値.
 	 */
-	int getMaximum() const;
+	int maximum() const;
 
 	/**
 	 * @brief コントロールカーブの最大値を設定する.
 	 * @param value コントロールカーブの最大値.
 	 */
-	void setMaximum(int value);
+	void maximum(int value);
 
 	/**
 	 * @brief コントロールカーブの最小値を取得する.
 	 * @return コントロールカーブの最小値.
 	 */
-	int getMinimum() const;
+	int minimum() const;
 
 	/**
 	 * @brief コントロールカーブの最小値を設定する.
 	 * @param value コントロールカーブの最小値.
 	 */
-	void setMinimum(int value);
+	void minimum(int value);
 
-	void remove(tick_t clock);
+	void remove(tick_t tick);
 
 	void removeElementAt(int index);
-
-	/**
-	 * @brief 指定された時刻にデータ点が存在するかどうかを調べる.
-	 * @param clock Tick 単位の時刻.
-	 * @return データ点が存在すれば <code>ture</code> を, そうでなければ <code>false</code> を返す.
-	 */
-	bool isContainsKey(tick_t clock) const;
-
-	/**
-	 * @brief 時刻 @a clock のデータを時刻 @a new_clock に移動する.
-	 * 時刻 @a clock にデータがなければ何もしない.
-	 * 時刻 @a new_clock に既にデータがある場合, 既存のデータは削除される.
-	 *
-	 * @param clock (int)
-	 * @param new_clock (int)
-	 * @param new_value (int)
-	 */
-	void move(tick_t clock, tick_t new_clock, int new_value);
-
-	/**
-	 * @brief 全てのデータ点を削除する.
-	 */
-	void clear();
-
-	/**
-	 * @brief データ点の値を取得する.
-	 * @param index 取得するデータ点のインデックス(最初のインデックスは0).
-	 * @return データ点の値.
-	 */
-	int getValue(int index) const;
 
 	/**
 	 * @brief データ点を取得する.
@@ -240,7 +210,30 @@ public:
 	 * @param index 取得するデータ点のインデックス(最初のインデックスは0).
 	 * @return データ点の Tick 単位の時刻.
 	 */
-	tick_t getKeyClock(int index) const;
+	tick_t keyTickAt(int index) const;
+
+	/**
+	 * @brief 指定された時刻にデータ点が存在するかどうかを調べる.
+	 * @param tick Tick 単位の時刻.
+	 * @return データ点が存在すれば <code>ture</code> を, そうでなければ <code>false</code> を返す.
+	 */
+	bool isContainsKey(tick_t tick) const;
+
+	/**
+	 * @brief 時刻 @a tick のデータを時刻 @a new_tick に移動する.
+	 * 時刻 @a tick にデータがなければ何もしない.
+	 * 時刻 @a new_tick に既にデータがある場合, 既存のデータは削除される.
+	 *
+	 * @param tick (int)
+	 * @param new_tick (int)
+	 * @param new_value (int)
+	 */
+	void move(tick_t tick, tick_t new_tick, int new_value);
+
+	/**
+	 * @brief 全てのデータ点を削除する.
+	 */
+	void clear();
 
 	/**
 	 * @brief ID を基にデータ点の値を取得する.
@@ -266,10 +259,10 @@ public:
 	/**
 	 * @brief コントロールカーブをテキストストリームに出力する.
 	 * @param stream 出力先のストリーム.
-	 * @param startClock Tick 単位の出力開始時刻.
+	 * @param startTick Tick 単位の出力開始時刻.
 	 * @param header 最初に出力するヘッダー文字列.
 	 */
-	void print(TextStream& stream, tick_t startClock, std::string const& header) const;
+	void print(TextStream& stream, tick_t startTick, std::string const& header) const;
 
 	/**
 	 * @brief テキストファイルからデータ点を読込み, 現在のリストに追加する.
@@ -288,41 +281,41 @@ public:
 	 * @brief データ点の Tick 単位の時刻を昇順に返す反復子を取得する.
 	 * @return 反復子のインスタンス.
 	 */
-	KeyClockIterator keyClockIterator();
+	KeyTickIterator keyTickIterator();
 
 	/**
 	 * @brief データ点を追加する. 指定された時刻に既にデータ点がある場合, データ点の値を上書きする.
-	 * @param clock データ点を追加する Tick 単位の時刻.
+	 * @param tick データ点を追加する Tick 単位の時刻.
 	 * @param value データ点の値.
 	 * @return データ点の ID.
 	 */
-	int add(tick_t clock, int value);
+	int add(tick_t tick, int value);
 
 	/**
 	 * @brief データ点を, ID 指定したうえで追加する. 指定された時刻に既にデータ点がある場合, データ点の値を上書きする.
-	 * @param clock データ点を追加する Tick 単位の時刻.
+	 * @param tick データ点を追加する Tick 単位の時刻.
 	 * @param value データ点の値.
 	 * @param id データ点の ID.
 	 * @return データ点の ID.
 	 */
-	int addWithId(tick_t clock, int value, int id);
+	int addWithId(tick_t tick, int value, int id);
 
 	void removeWithId(int id);
 
 	/**
 	 * @brief 指定された Tick 単位の時刻における, コントロールパラメータの値を取得する.
-	 * @param clock 値を取得する Tick 単位の時刻.
+	 * @param tick 値を取得する Tick 単位の時刻.
 	 * @return コントロールパラメータの値.
 	 */
-	int getValueAt(tick_t clock) const;
+	int getValueAt(tick_t tick) const;
 
 	/**
 	 * @brief 指定された Tick 単位の時刻における, コントロールパラメータの値を取得する.
-	 * @param clock 値を取得する Tick 単位の時刻.
-	 * @param index 値の取得に使用したインデックス(最初のインデックスは0).
+	 * @param tick 値を取得する Tick 単位の時刻.
+	 * @param[inout] index 値の取得に使用したインデックス(最初のインデックスは0).
 	 * @return コントロールパラメータの値.
 	 */
-	int getValueAt(tick_t clock, int* index) const;
+	int getValueAt(tick_t tick, int& index) const;
 
 private:
 	void _init();
@@ -342,10 +335,10 @@ private:
 
 	/**
 	 * @brief 並べ替え, 既存の値との重複チェックを行わず, リストの末尾にデータ点を追加する.
-	 * @param clock Tick 単位の時刻.
+	 * @param tick Tick 単位の時刻.
 	 * @param value データ点の値.
 	 */
-	void addWithoutSort(tick_t clock, int value);
+	void addWithoutSort(tick_t tick, int value);
 };
 
 VSQ_END_NAMESPACE

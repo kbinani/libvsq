@@ -24,19 +24,19 @@ public:
 	void testConstructor()
 	{
 		Tempo entry = Tempo();
-		CPPUNIT_ASSERT_EQUAL((tick_t)0, entry.clock);
+		CPPUNIT_ASSERT_EQUAL((tick_t)0, entry.tick);
 		CPPUNIT_ASSERT_EQUAL(0, entry.tempo);
-		CPPUNIT_ASSERT_EQUAL(0.0, entry.getTime());
+		CPPUNIT_ASSERT_EQUAL(0.0, entry.time());
 
 		entry = Tempo(480, 500000);
-		CPPUNIT_ASSERT_EQUAL((tick_t)480, entry.clock);
+		CPPUNIT_ASSERT_EQUAL((tick_t)480, entry.tick);
 		CPPUNIT_ASSERT_EQUAL(500000, entry.tempo);
 	}
 
 	void testToString()
 	{
 		Tempo entry = Tempo(480, 500000);
-		CPPUNIT_ASSERT_EQUAL(string("{Clock=480, Tempo=500000, Time=0}"), entry.toString());
+		CPPUNIT_ASSERT_EQUAL(string("{Tick=480, Tempo=500000, Time=0}"), entry.toString());
 	}
 
 	void testCompareTo()
@@ -58,7 +58,7 @@ public:
 		// クロックは同じだがtimeが違う
 		b.setTime(1);
 		CPPUNIT_ASSERT(a.equals(b));
-		b.clock = 1;
+		b.tick = 1;
 		b.setTime(0.5);
 		CPPUNIT_ASSERT(false == a.equals(b));
 	}
@@ -76,9 +76,9 @@ public:
 	{
 		Tempo a(1920, 500000);
 		Tempo b = a;
-		CPPUNIT_ASSERT_EQUAL((tick_t)1920, b.clock);
+		CPPUNIT_ASSERT_EQUAL((tick_t)1920, b.tick);
 		CPPUNIT_ASSERT_EQUAL(500000, b.tempo);
-		CPPUNIT_ASSERT_EQUAL(0.0, b.getTime());
+		CPPUNIT_ASSERT_EQUAL(0.0, b.time());
 	}
 
 	CPPUNIT_TEST_SUITE(TempoTest);

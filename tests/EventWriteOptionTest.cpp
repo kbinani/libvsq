@@ -18,8 +18,6 @@ public:
 		CPPUNIT_ASSERT(option.pmbPortamentoUse);
 		CPPUNIT_ASSERT(option.demDecGainRate);
 		CPPUNIT_ASSERT(option.demAccent);
-		CPPUNIT_ASSERT(false == option.preUtterance);
-		CPPUNIT_ASSERT(false == option.voiceOverlap);
 	}
 
 	CPPUNIT_TEST_SUITE(EventWriteOptionTest);

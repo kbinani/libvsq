@@ -32,32 +32,30 @@ public:
 	 * @param sequence 出力するシーケンス.
 	 * @param stream 出力先のストリーム.
 	 * @todo change_tempo を changeTempo に名前を変える.
-	 * @todo sw を stream に名前変える.
-	 * @todo vsq を sequence に名前変える.
 	 * @todo tempo と change_tempo を渡せるようにする.
 	 */
-	void write(Sequence const* sequence, TextOutputStream* sw, std::string const& software);
+	void write(Sequence const& sequence, TextOutputStream& stream, std::string const& software);
 
 protected:
 	void printStyledNote(
-		TextOutputStream* writer,
-		int clock_start,
-		int clock_length,
+		TextOutputStream& writer,
+		int tickStart,
+		int tickLength,
 		int note,
 		std::vector<Tempo>& tempoInsert,
 		std::string lyric,
-		std::map<std::string, bool>& altered_context,
-		bool tie_start_required,
-		bool tie_stop_required);
+		std::map<std::string, bool>& alteredContext,
+		bool tieStartRequired,
+		bool tieStopRequired);
 
 	void printStyledNoteCor(
-		TextOutputStream* writer,
-		int clock_length,
+		TextOutputStream& writer,
+		int tickLength,
 		int note,
 		std::string lyric,
-		std::map<std::string, bool>& altered_context,
-		bool tie_start_required,
-		bool tie_stop_required,
+		std::map<std::string, bool>& alteredContext,
+		bool tieStartRequired,
+		bool tieStopRequired,
 		std::string type);
 };
 

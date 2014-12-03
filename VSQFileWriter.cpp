@@ -24,80 +24,79 @@
 
 VSQ_BEGIN_NAMESPACE
 
-void VSQFileWriter::write(Sequence const* sequence, OutputStream* stream, int msPreSend, std::string const& encoding, bool printPitch)
+void VSQFileWriter::write(Sequence const& sequence, OutputStream& stream, int msPreSend, std::string const& encoding, bool printPitch)
 {
-	Sequence copyOfSequence = *sequence;
-	Sequence* targetSequence = &copyOfSequence;
-	targetSequence->updateTotalClocks();
+	Sequence targetSequence = sequence;
+	targetSequence.updateTotalTicks();
 	int64_t first_position; //チャンクの先頭のファイル位置
 
 	// ヘッダ
 	// チャンクタイプ
 	char mthd[] = { 0x4d, 0x54, 0x68, 0x64 };
-	stream->write(mthd, 0, 4);
+	stream.write(mthd, 0, 4);
 	// データ長
-	stream->write(0x00);
-	stream->write(0x00);
-	stream->write(0x00);
-	stream->write(0x06);
+	stream.write(0x00);
+	stream.write(0x00);
+	stream.write(0x00);
+	stream.write(0x06);
 	// フォーマット
-	stream->write(0x00);
-	stream->write(0x01);
+	stream.write(0x00);
+	stream.write(0x01);
 	// トラック数
-	writeUnsignedShort(stream, targetSequence->tracks()->size() + 1);
+	writeUnsignedShort(stream, targetSequence.tracks().size() + 1);
 	// 時間単位
-	stream->write(0x01);
-	stream->write(0xe0);
+	stream.write(0x01);
+	stream.write(0xe0);
 
 	// Master Track
 	// チャンクタイプ
 	std::string mtrk = getTrackHeader();
-	stream->write(mtrk.c_str(), 0, 4);
+	stream.write(mtrk.c_str(), 0, 4);
 	// データ長. とりあえず0を入れておく
 	char empty[] = { 0x00, 0x00, 0x00, 0x00 };
-	stream->write(empty, 0, 4);
-	first_position = stream->getPointer();
+	stream.write(empty, 0, 4);
+	first_position = stream.getPointer();
 	// トラック名
 	const int masterTrackNameLength = 12;
 	char masterTrackName[masterTrackNameLength] = { 0x4D, 0x61, 0x73, 0x74, 0x65, 0x72, 0x20, 0x54, 0x72, 0x61, 0x63, 0x6B };
-	MidiEvent::writeDeltaClock(stream, 0);  // デルタタイム
-	stream->write(0xff);  // ステータスタイプ
-	stream->write(0x03);  // イベントタイプSequence/Track Name
-	stream->write(masterTrackNameLength);  // トラック名の文字数. これは固定
-	stream->write(masterTrackName, 0, masterTrackNameLength);
+	MidiEvent::writeDeltaTick(stream, 0);  // デルタタイム
+	stream.write(0xff);  // ステータスタイプ
+	stream.write(0x03);  // イベントタイプSequence/Track Name
+	stream.write(masterTrackNameLength);  // トラック名の文字数. これは固定
+	stream.write(masterTrackName, 0, masterTrackNameLength);
 
 	std::vector<MidiEvent> events;
-	for (int i = 0; i < targetSequence->timesigList.size(); i++) {
-		Timesig entry = targetSequence->timesigList.get(i);
-		events.push_back(MidiEvent::generateTimeSigEvent(entry.getClock(), entry.numerator, entry.denominator));
+	for (int i = 0; i < targetSequence.timesigList.size(); i++) {
+		Timesig entry = targetSequence.timesigList.get(i);
+		events.push_back(MidiEvent::generateTimeSigEvent(entry.tick(), entry.numerator, entry.denominator));
 	}
-	TempoList::Iterator itr = targetSequence->tempoList.iterator();
+	TempoList::Iterator itr = targetSequence.tempoList.iterator();
 	while (itr.hasNext()) {
 		Tempo entry = itr.next();
-		events.push_back(MidiEvent::generateTempoChangeEvent(entry.clock, entry.tempo));
+		events.push_back(MidiEvent::generateTempoChangeEvent(entry.tick, entry.tempo));
 	}
 	std::stable_sort(events.begin(), events.end(), MidiEvent::compare);
 	tick_t last = 0;
 	for (int i = 0; i < events.size(); i++) {
 		MidiEvent midiEvent = events[i];
-		MidiEvent::writeDeltaClock(stream, midiEvent.clock - last);
+		MidiEvent::writeDeltaTick(stream, midiEvent.tick - last);
 		midiEvent.writeData(stream);
-		last = midiEvent.clock;
+		last = midiEvent.tick;
 	}
 
-	MidiEvent::writeDeltaClock(stream, 0);
-	stream->write(0xff);
-	stream->write(0x2f);  // イベントタイプEnd of Track
-	stream->write(0x00);
-	int64_t pos = stream->getPointer();
-	stream->seek(first_position - 4);
+	MidiEvent::writeDeltaTick(stream, 0);
+	stream.write(0xff);
+	stream.write(0x2f);  // イベントタイプEnd of Track
+	stream.write(0x00);
+	int64_t pos = stream.getPointer();
+	stream.seek(first_position - 4);
 	writeUnsignedInt(stream, pos - first_position);
-	stream->seek(pos);
+	stream.seek(pos);
 
 	// トラック
-	Sequence temp = targetSequence->clone();
-	_printTrack(&temp, 0, stream, msPreSend, encoding, printPitch, &targetSequence->master, &targetSequence->mixer);
-	int count = targetSequence->tracks()->size();
+	Sequence temp = targetSequence.clone();
+	_printTrack(temp, 0, stream, msPreSend, encoding, printPitch, &targetSequence.master, &targetSequence.mixer);
+	int count = targetSequence.tracks().size();
 	for (int track = 1; track < count; track++) {
 		_printTrack(targetSequence, track, stream, msPreSend, encoding, printPitch, 0, 0);
 	}
@@ -106,16 +105,16 @@ void VSQFileWriter::write(Sequence const* sequence, OutputStream* stream, int ms
 void VSQFileWriter::writeHandle(Handle const& item, TextStream& stream)
 {
 	stream.writeLine(std::string("[h#") + StringUtil::toString(item.index, "%04d") + std::string("]"));
-	if (item.getHandleType() == HandleType::LYRIC) {
-		for (int i = 0; i < item.getLyricCount(); i++) {
-			stream.writeLine(std::string("L") + StringUtil::toString(i) + "=" + item.getLyricAt(i).toString(item.addQuotationMark));
+	if (item.type() == HandleType::LYRIC) {
+		for (int i = 0; i < item.size(); i++) {
+			stream.writeLine(std::string("L") + StringUtil::toString(i) + "=" + item.get(i).toString(item.addQuotationMark));
 		}
-	} else if (item.getHandleType() == HandleType::VIBRATO) {
+	} else if (item.type() == HandleType::VIBRATO) {
 		stream.writeLine(std::string("IconID=") + item.iconId);
 		stream.writeLine(std::string("IDS=") + item.ids);
 		stream.writeLine(std::string("Original=") + StringUtil::toString(item.original));
 		stream.writeLine(std::string("Caption=") + item.caption);
-		stream.writeLine(std::string("Length=") + StringUtil::toString(item.getLength()));
+		stream.writeLine(std::string("Length=") + StringUtil::toString(item.length()));
 		stream.writeLine(std::string("StartDepth=") + StringUtil::toString(item.startDepth));
 		stream.writeLine(std::string("DepthBPNum=") + StringUtil::toString(item.depthBP.size()));
 		if (item.depthBP.size() > 0) {
@@ -144,30 +143,30 @@ void VSQFileWriter::writeHandle(Handle const& item, TextStream& stream)
 			}
 			stream.writeLine("");
 		}
-	} else if (item.getHandleType() == HandleType::SINGER) {
+	} else if (item.type() == HandleType::SINGER) {
 		stream.writeLine(std::string("IconID=") + item.iconId);
 		stream.writeLine(std::string("IDS=") + item.ids);
 		stream.writeLine(std::string("Original=") + StringUtil::toString(item.original));
 		stream.writeLine(std::string("Caption=") + item.caption);
-		stream.writeLine(std::string("Length=") + StringUtil::toString(item.getLength()));
+		stream.writeLine(std::string("Length=") + StringUtil::toString(item.length()));
 		stream.writeLine(std::string("Language=") + StringUtil::toString(item.language));
 		stream.writeLine(std::string("Program=") + StringUtil::toString(item.program));
-	} else if (item.getHandleType() == HandleType::NOTE_HEAD) {
+	} else if (item.type() == HandleType::NOTE_HEAD) {
 		stream.writeLine(std::string("IconID=") + item.iconId);
 		stream.writeLine(std::string("IDS=") + item.ids);
 		stream.writeLine(std::string("Original=") + StringUtil::toString(item.original));
 		stream.writeLine(std::string("Caption=") + item.caption);
-		stream.writeLine(std::string("Length=") + StringUtil::toString(item.getLength()));
+		stream.writeLine(std::string("Length=") + StringUtil::toString(item.length()));
 		stream.writeLine(std::string("Duration=") + StringUtil::toString(item.duration));
 		stream.writeLine(std::string("Depth=") + StringUtil::toString(item.depth));
-	} else if (item.getHandleType() == HandleType::DYNAMICS) {
+	} else if (item.type() == HandleType::DYNAMICS) {
 		stream.writeLine(std::string("IconID=") + item.iconId);
 		stream.writeLine(std::string("IDS=") + item.ids);
 		stream.writeLine(std::string("Original=") + StringUtil::toString(item.original));
 		stream.writeLine(std::string("Caption=") + item.caption);
 		stream.writeLine(std::string("StartDyn=") + StringUtil::toString(item.startDyn));
 		stream.writeLine(std::string("EndDyn=") + StringUtil::toString(item.endDyn));
-		stream.writeLine(std::string("Length=") + StringUtil::toString(item.getLength()));
+		stream.writeLine(std::string("Length=") + StringUtil::toString(item.length()));
 		if (item.dynBP.size() <= 0) {
 			stream.writeLine("DynBPNum=0");
 		} else {
@@ -193,11 +192,11 @@ void VSQFileWriter::writeEvent(TempEvent const& item, TextStream& stream, EventW
 	stream.write(StringUtil::toString(item.index, "%04d"));
 	stream.writeLine("]");
 	stream.write("Type=");
-	stream.writeLine(EventTypeUtil::toString(item.type));
-	if (item.type == EventType::NOTE) {
+	stream.writeLine(EventTypeUtil::toString(item.type()));
+	if (item.type() == EventType::NOTE) {
 		if (printTargets.length) {
 			stream.write("Length=");
-			stream.writeLine(StringUtil::toString(item.getLength(), "%ld"));
+			stream.writeLine(StringUtil::toString(item.length(), "%ld"));
 		}
 		if (printTargets.note) {
 			stream.write("Note#=");
@@ -227,32 +226,24 @@ void VSQFileWriter::writeEvent(TempEvent const& item, TextStream& stream, EventW
 			stream.write("DEMaccent=");
 			stream.writeLine(StringUtil::toString(item.demAccent, "%d"));
 		}
-		if (printTargets.preUtterance) {
-			//TODO:
-			//            stream.writeLine( "PreUtterance=" + ustEvent.preUtterance );
-		}
-		if (printTargets.voiceOverlap) {
-			//TODO:
-			//            stream.writeLine( "VoiceOverlap=" + ustEvent.voiceOverlap );
-		}
-		if (item.lyricHandle.getHandleType() == HandleType::LYRIC) {
+		if (item.lyricHandle.type() == HandleType::LYRIC) {
 			stream.write("LyricHandle=h#");
 			stream.writeLine(StringUtil::toString(item.lyricHandle.index, "%04d"));
 		}
-		if (item.vibratoHandle.getHandleType() == HandleType::VIBRATO) {
+		if (item.vibratoHandle.type() == HandleType::VIBRATO) {
 			stream.write("VibratoHandle=h#");
 			stream.writeLine(StringUtil::toString(item.vibratoHandle.index, "%04d"));
 			stream.write("VibratoDelay=");
 			stream.writeLine(StringUtil::toString(item.vibratoDelay, "%d"));
 		}
-		if (item.noteHeadHandle.getHandleType() == HandleType::NOTE_HEAD) {
+		if (item.noteHeadHandle.type() == HandleType::NOTE_HEAD) {
 			stream.write("NoteHeadHandle=h#");
 			stream.writeLine(StringUtil::toString(item.noteHeadHandle.index, "%04d"));
 		}
-	} else if (item.type == EventType::SINGER) {
+	} else if (item.type() == EventType::SINGER) {
 		stream.write("IconHandle=h#");
 		stream.writeLine(StringUtil::toString(item.singerHandle.index, "%04d"));
-	} else if (item.type == EventType::ICON) {
+	} else if (item.type() == EventType::ICON) {
 		stream.write("IconHandle=h#");
 		stream.writeLine(StringUtil::toString(item.iconDynamicsHandle.index, "%04d"));
 		stream.write("Note#=");
@@ -260,10 +251,10 @@ void VSQFileWriter::writeEvent(TempEvent const& item, TextStream& stream, EventW
 	}
 }
 
-void VSQFileWriter::printMetaText(Track const* track, TextStream& stream, int eos, tick_t start, bool printPitch, Master* master, Mixer* mixer)
+void VSQFileWriter::printMetaText(Track const& track, TextStream& stream, int eos, tick_t start, bool printPitch, Master* master, Mixer* mixer)
 {
 	//if( common ~= nil ){
-	track->common()->write(stream);
+	track.common().write(stream);
 	//}
 	if (master) {
 		master->write(stream);
@@ -275,7 +266,7 @@ void VSQFileWriter::printMetaText(Track const* track, TextStream& stream, int eo
 	std::vector<Handle> handle;
 	{
 		std::vector<TempEvent*> eventList;
-		Event::ListConstIterator itr = track->events()->iterator();
+		Event::ListConstIterator itr = track.events().iterator();
 		while (itr.hasNext()) {
 			Event* item = itr.next();
 			eventList.push_back(new TempEvent(*item));
@@ -297,7 +288,7 @@ void VSQFileWriter::printMetaText(Track const* track, TextStream& stream, int eo
 		= tempTrack.getSectionNameMap();
 
 	// prepare list of curve name to be printed
-	const std::vector<std::string>* curveNameList = track->curveNameList();
+	const std::vector<std::string>* curveNameList = track.curveNameList();
 
 	std::vector<std::string>::const_iterator i = curveNameList->begin();
 	for (; i != curveNameList->end(); ++i) {
@@ -310,73 +301,73 @@ void VSQFileWriter::printMetaText(Track const* track, TextStream& stream, int eo
 				break;
 			}
 		}
-		if (track->curve(curveName)->size() > 0) {
-			track->curve(curveName)->print(stream, start, sectionName);
+		if (track.curve(curveName)->size() > 0) {
+			track.curve(curveName)->print(stream, start, sectionName);
 		}
 	}
 }
 
-void VSQFileWriter::_printTrack(Sequence const* sequence, int track, OutputStream* stream, int msPreSend, std::string const& encoding, bool printPitch, Master* master, Mixer* mixer)
+void VSQFileWriter::_printTrack(Sequence const& sequence, int track, OutputStream& stream, int msPreSend, std::string const& encoding, bool printPitch, Master* master, Mixer* mixer)
 {
 	// ヘッダ
 	std::string mtrk = getTrackHeader();
-	stream->write(mtrk.c_str(), 0, 4);
+	stream.write(mtrk.c_str(), 0, 4);
 	// データ長. とりあえず0
 	char empty[] = { 0x00, 0x00, 0x00, 0x00 };
-	stream->write(empty, 0, 4);
-	int64_t first_position = stream->getPointer();
+	stream.write(empty, 0, 4);
+	int64_t first_position = stream.getPointer();
 	// トラック名
-	MidiEvent::writeDeltaClock(stream, 0x00);  // デルタタイム
-	stream->write(0xff);  // ステータスタイプ
-	stream->write(0x03);  // イベントタイプSequence/Track Name
-	std::string seq_name = CP932Converter::convertFromUTF8(sequence->track(track)->getName());
-	MidiEvent::writeDeltaClock(stream, seq_name.size());   // seq_nameの文字数
+	MidiEvent::writeDeltaTick(stream, 0x00);  // デルタタイム
+	stream.write(0xff);  // ステータスタイプ
+	stream.write(0x03);  // イベントタイプSequence/Track Name
+	std::string seq_name = CP932Converter::convertFromUTF8(sequence.track(track).name());
+	MidiEvent::writeDeltaTick(stream, seq_name.size());   // seq_nameの文字数
 	//TODO: 第3引数の型キャスト要らなくなるかも
-	stream->write(seq_name.c_str(), 0, (int)seq_name.size());
+	stream.write(seq_name.c_str(), 0, (int)seq_name.size());
 
 	// Meta Textを準備
 	TextStream textStream;
-	printMetaText(sequence->track(track), textStream, sequence->getTotalClocks() + 120,
+	printMetaText(sequence.track(track), textStream, sequence.totalTicks() + 120,
 				  0, printPitch, master, mixer);
-	tick_t lastClock = 0;
+	tick_t lastTick = 0;
 	std::vector<MidiEvent> meta = getMidiEventsFromMetaText(&textStream, encoding);
 	for (int i = 0; i < meta.size(); i++) {
-		MidiEvent::writeDeltaClock(stream, meta[i].clock - lastClock);
+		MidiEvent::writeDeltaTick(stream, meta[i].tick - lastTick);
 		meta[i].writeData(stream);
-		lastClock = meta[i].clock;
+		lastTick = meta[i].tick;
 	}
-	tick_t maxClock = lastClock;
+	tick_t maxTick = lastTick;
 
-	lastClock = 0;
+	lastTick = 0;
 	std::vector<MidiEvent> nrpns =
 		VocaloidMidiEventListFactory::generateMidiEventList(
-			sequence->track(track), &sequence->tempoList,
-			sequence->getTotalClocks(), sequence->getPreMeasureClocks(), msPreSend
+			sequence.track(track), sequence.tempoList,
+			sequence.totalTicks(), sequence.preMeasureTicks(), msPreSend
 		);
 	for (int i = 0; i < nrpns.size(); i++) {
 		MidiEvent item = nrpns[i];
-		MidiEvent::writeDeltaClock(stream, item.clock - lastClock);
+		MidiEvent::writeDeltaTick(stream, item.tick - lastTick);
 		item.writeData(stream);
-		lastClock = item.clock;
+		lastTick = item.tick;
 	}
-	maxClock = std::max(maxClock, lastClock);
+	maxTick = std::max(maxTick, lastTick);
 
 	// トラックエンド
-	lastClock = maxClock;
-	const Event* last_event = sequence->track(track)->events()->get(sequence->track(track)->events()->size() - 1);
-	maxClock = std::max(maxClock, last_event->clock + last_event->getLength());
-	tick_t lastDeltaClock = maxClock - lastClock;
-	if (lastDeltaClock < 0) {
-		lastDeltaClock = 0;
+	lastTick = maxTick;
+	Event const* last_event = sequence.track(track).events().get(sequence.track(track).events().size() - 1);
+	maxTick = std::max(maxTick, last_event->tick + last_event->length());
+	tick_t lastDeltaTick = maxTick - lastTick;
+	if (lastDeltaTick < 0) {
+		lastDeltaTick = 0;
 	}
-	MidiEvent::writeDeltaClock(stream, lastDeltaClock);
-	stream->write(0xff);
-	stream->write(0x2f);
-	stream->write(0x00);
-	int64_t pos = stream->getPointer();
-	stream->seek(first_position - 4);
+	MidiEvent::writeDeltaTick(stream, lastDeltaTick);
+	stream.write(0xff);
+	stream.write(0x2f);
+	stream.write(0x00);
+	int64_t pos = stream.getPointer();
+	stream.seek(first_position - 4);
 	writeUnsignedInt(stream, pos - first_position);
-	stream->seek(pos);
+	stream.seek(pos);
 }
 
 std::vector<MidiEvent> VSQFileWriter::getMidiEventsFromMetaText(TextStream* sr, std::string const& encoding)
@@ -405,7 +396,7 @@ std::vector<MidiEvent> VSQFileWriter::getMidiEventsFromMetaText(TextStream* sr, 
 				line_count++;
 				prefix = getLinePrefixBytes(line_count);
 				MidiEvent add;
-				add.clock = 0;
+				add.tick = 0;
 				add.firstByte = 0xff;
 				add.data.push_back(0x01);
 				for (int i = 0; i < prefix.size(); i++) {
@@ -426,7 +417,7 @@ std::vector<MidiEvent> VSQFileWriter::getMidiEventsFromMetaText(TextStream* sr, 
 				line_count = line_count + 1;
 				prefix = getLinePrefixBytes(line_count);
 				MidiEvent add;
-				add.clock = 0;
+				add.tick = 0;
 				add.firstByte = 0xff;
 				add.data.push_back(0x01);
 				int remain = 127;
@@ -444,7 +435,7 @@ std::vector<MidiEvent> VSQFileWriter::getMidiEventsFromMetaText(TextStream* sr, 
 				line_count = line_count + 1;
 				prefix = getLinePrefixBytes(line_count);
 				MidiEvent add;
-				add.clock = 0;
+				add.tick = 0;
 				add.firstByte = 0xff;
 				int remain = prefix.size() + buffer.size();
 				add.data.push_back(0x01);
@@ -493,16 +484,16 @@ int VSQFileWriter::getHowManyDigits(int number)
 	}
 }
 
-void VSQFileWriter::writeUnsignedShort(OutputStream* stream, int data)
+void VSQFileWriter::writeUnsignedShort(OutputStream& stream, int data)
 {
 	std::vector<char> dat = BitConverter::getBytesUInt16BE(data);
-	stream->write(dat.data(), 0, dat.size());
+	stream.write(dat.data(), 0, dat.size());
 }
 
-void VSQFileWriter::writeUnsignedInt(OutputStream* stream, int data)
+void VSQFileWriter::writeUnsignedInt(OutputStream& stream, int data)
 {
 	std::vector<char> dat = BitConverter::getBytesUInt32BE(data);
-	stream->write(dat.data(), 0, dat.size());
+	stream.write(dat.data(), 0, dat.size());
 }
 
 std::vector<Handle> VSQFileWriter::writeEventList(std::vector<TempEvent*>& eventList, TextStream& stream, tick_t eos)
@@ -520,13 +511,13 @@ std::vector<Handle> VSQFileWriter::writeEventList(std::vector<TempEvent*>& event
 		if (! item.isEOS()) {
 			std::ostringstream ids;
 			ids << "ID#" << StringUtil::toString(item.index, "%04d");
-			tick_t clock = temp[i].clock;
-			while (i + 1 < temp.size() && clock == temp[i + 1].clock) {
+			tick_t tick = temp[i].tick;
+			while (i + 1 < temp.size() && tick == temp[i + 1].tick) {
 				i++;
 				ids << ",ID#" << StringUtil::toString(temp[i].index, "%04d");
 			}
 			std::ostringstream oss;
-			oss << clock << "=" << ids.str();
+			oss << tick << "=" << ids.str();
 			stream.writeLine(oss.str());
 		}
 		i++;
@@ -547,7 +538,7 @@ std::vector<Handle> VSQFileWriter::getHandleList(std::vector<TempEvent*>& eventL
 		current_id = current_id + 1;
 		item->index = current_id;
 		// SingerHandle
-		if (item->singerHandle.getHandleType() == HandleType::SINGER) {
+		if (item->singerHandle.type() == HandleType::SINGER) {
 			current_handle = current_handle + 1;
 			item->singerHandle.index = current_handle;
 			handle.push_back(item->singerHandle);
@@ -556,7 +547,7 @@ std::vector<Handle> VSQFileWriter::getHandleList(std::vector<TempEvent*>& eventL
 			add_quotation_mark = lang == VoiceLanguage::JAPANESE;
 		}
 		// LyricHandle
-		if (item->lyricHandle.getHandleType() == HandleType::LYRIC) {
+		if (item->lyricHandle.type() == HandleType::LYRIC) {
 			current_handle = current_handle + 1;
 			item->lyricHandle.index = current_handle;
 			item->lyricHandle.addQuotationMark = add_quotation_mark;
@@ -564,24 +555,24 @@ std::vector<Handle> VSQFileWriter::getHandleList(std::vector<TempEvent*>& eventL
 			item->lyricHandleIndex = current_handle;
 		}
 		// VibratoHandle
-		if (item->vibratoHandle.getHandleType() == HandleType::VIBRATO) {
+		if (item->vibratoHandle.type() == HandleType::VIBRATO) {
 			current_handle = current_handle + 1;
 			item->vibratoHandle.index = current_handle;
 			handle.push_back(item->vibratoHandle);
 			item->vibratoHandleIndex = current_handle;
 		}
 		// NoteHeadHandle
-		if (item->noteHeadHandle.getHandleType() == HandleType::NOTE_HEAD) {
+		if (item->noteHeadHandle.type() == HandleType::NOTE_HEAD) {
 			current_handle = current_handle + 1;
 			item->noteHeadHandle.index = current_handle;
 			handle.push_back(item->noteHeadHandle);
 			item->noteHeadHandleIndex = current_handle;
 		}
 		// IconDynamicsHandle
-		if (item->iconDynamicsHandle.getHandleType() == HandleType::DYNAMICS) {
+		if (item->iconDynamicsHandle.type() == HandleType::DYNAMICS) {
 			current_handle = current_handle + 1;
 			item->iconDynamicsHandle.index = current_handle;
-			item->iconDynamicsHandle.setLength(item->getLength());
+			item->iconDynamicsHandle.length(item->length());
 			handle.push_back(item->iconDynamicsHandle);
 			// IconDynamicsHandleは, 歌手ハンドルと同じ扱いなので
 			// _singerHandleIndexでよい

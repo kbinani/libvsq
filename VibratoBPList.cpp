@@ -111,7 +111,7 @@ void VibratoBPList::set(int index, VibratoBP const& value)
 	_list[index] = value;
 }
 
-std::string VibratoBPList::getData() const
+std::string VibratoBPList::data() const
 {
 	std::ostringstream ret;
 	for (int i = 0; i < _list.size(); i++) {
@@ -123,7 +123,7 @@ std::string VibratoBPList::getData() const
 	return ret.str();
 }
 
-void VibratoBPList::setData(std::string const& value)
+void VibratoBPList::data(std::string const& value)
 {
 	_list.clear();
 	std::vector<std::string> spl = StringUtil::explode(",", value);

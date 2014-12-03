@@ -23,7 +23,7 @@ TimesigList::~TimesigList()
 	clear();
 }
 
-Timesig TimesigList::get(int index) const
+Timesig const& TimesigList::get(int index) const
 {
 	return list[index];
 }
@@ -39,7 +39,7 @@ int TimesigList::size() const
 	return list.size();
 }
 
-Timesig TimesigList::getTimesigAt(tick_t clock) const
+Timesig const& TimesigList::timesigAt(tick_t tick) const
 {
 	Timesig ret;
 	ret.numerator = 4;
@@ -51,7 +51,7 @@ Timesig TimesigList::getTimesigAt(tick_t clock) const
 	if (0 < count) {
 		for (int i = count - 1; i >= 0; i--) {
 			index = i;
-			if (list[i].getClock() <= clock) {
+			if (list[i].tick() <= tick) {
 				break;
 			}
 		}
@@ -61,18 +61,18 @@ Timesig TimesigList::getTimesigAt(tick_t clock) const
 		ret.numerator = list[index].numerator;
 		ret.denominator = list[index].denominator;
 		int tickPerBar = 480 * 4 / ret.denominator * ret.numerator;
-		int deltaBar = (int)::floor((double)((clock - list[index].getClock()) / tickPerBar));
+		int deltaBar = (int)::floor((double)((tick - list[index].tick()) / tickPerBar));
 		ret.barCount = list[index].barCount + deltaBar;
 	} else {
 		int tickPerBar = 480 * 4 / ret.denominator * ret.numerator;
-		int deltaBar = (int)::floor((double)(clock / tickPerBar));
+		int deltaBar = (int)::floor((double)(tick / tickPerBar));
 		ret.barCount = deltaBar;
 	}
 
-	return ret;
+	return std::move(ret);
 }
 
-tick_t TimesigList::getClockFromBarCount(int barCount) const
+tick_t TimesigList::tickFromBarCount(int barCount) const
 {
 	int index = 0;
 	for (int i = list.size() - 1; i >= 0; i--) {
@@ -84,10 +84,10 @@ tick_t TimesigList::getClockFromBarCount(int barCount) const
 	Timesig item = list[index];
 	int numerator = item.numerator;
 	int denominator = item.denominator;
-	tick_t initClock = item.getClock();
+	tick_t initTick = item.tick();
 	int initBarCount = item.barCount;
-	int clockPerBar = numerator * 480 * 4 / denominator;
-	return initClock + (barCount - initBarCount) * clockPerBar;
+	int tickPerBar = numerator * 480 * 4 / denominator;
+	return initTick + (barCount - initBarCount) * tickPerBar;
 }
 
 void TimesigList::clear()
@@ -95,25 +95,25 @@ void TimesigList::clear()
 	list.clear();
 }
 
-int TimesigList::getBarCountFromClock(tick_t clock) const
+int TimesigList::barCountFromTick(tick_t tick) const
 {
 	int index = 0;
 	int c = list.size();
 	for (int i = c - 1; i >= 0; i--) {
 		index = i;
-		if (list[i].getClock() <= clock) {
+		if (list[i].tick() <= tick) {
 			break;
 		}
 	}
 	int bar_count = 0;
 	if (index >= 0) {
 		Timesig item = list[index];
-		tick_t last_clock = item.getClock();
+		tick_t last_tick = item.tick();
 		int t_bar_count = item.barCount;
 		int numerator = item.numerator;
 		int denominator = item.denominator;
-		tick_t clock_per_bar = numerator * 480 * 4 / denominator;
-		bar_count = t_bar_count + (clock - last_clock) / clock_per_bar;
+		tick_t tick_per_bar = numerator * 480 * 4 / denominator;
+		bar_count = t_bar_count + (tick - last_tick) / tick_per_bar;
 	}
 	return bar_count;
 }
@@ -146,11 +146,11 @@ void TimesigList::updateTimesigInfo()
 			Timesig item = list[j - 1];
 			int numerator = item.numerator;
 			int denominator = item.denominator;
-			tick_t clock = item.getClock();
+			tick_t tick = item.tick();
 			int bar_count = item.barCount;
 			int diff = (int)::floor((double)(480 * 4 / denominator * numerator));
-			clock = clock + (list[j].barCount - bar_count) * diff;
-			list[j].clock = clock;
+			tick = tick + (list[j].barCount - bar_count) * diff;
+			list[j].tick_ = tick;
 		}
 	}
 }

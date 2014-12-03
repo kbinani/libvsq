@@ -41,7 +41,7 @@ public:
 	 * @param index 取得するデータ点のインデックス(0から始まる).
 	 * @return 拍子変更情報.
 	 */
-	Timesig get(int index) const;
+	Timesig const& get(int index) const;
 
 	/**
 	 * @brief データ点を追加する.
@@ -57,10 +57,10 @@ public:
 
 	/**
 	 * @brief 指定された時刻における拍子情報を取得する.
-	 * @param clock Tick 単位の時刻.
+	 * @param tick Tick 単位の時刻.
 	 * @return 指定された時刻での拍子情報.
 	 */
-	Timesig getTimesigAt(tick_t clock) const;
+	Timesig const& timesigAt(tick_t tick) const;
 
 	/**
 	 * @brief 指定した小節の開始クロックを取得する.
@@ -68,7 +68,7 @@ public:
 	 * @param barCount 小節数.
 	 * @return Tick 単位の時刻.
 	 */
-	tick_t getClockFromBarCount(int barCount) const;
+	tick_t tickFromBarCount(int barCount) const;
 
 	/**
 	 * @brief リストをクリアする.
@@ -78,10 +78,10 @@ public:
 	/**
 	 * @brief 指定したクロックが, 曲頭から何小節目に属しているかを調べる.
 	 * ここで使用する小節数は, プリメジャーを考慮しない. 即ち, 曲頭の小節が 0 となる.
-	 * @param clock Tick 単位の時刻.
+	 * @param tick Tick 単位の時刻.
 	 * @return 小節数.
 	 */
-	int getBarCountFromClock(tick_t clock) const;
+	int barCountFromTick(tick_t tick) const;
 
 protected:
 	/**
@@ -93,7 +93,7 @@ protected:
 	void pushWithoutSort(Timesig const& item);
 
 	/**
-	 * @brief リスト内の拍子変更情報の clock の部分を更新する.
+	 * @brief リスト内の拍子変更情報の tick の部分を更新する.
 	 */
 	void updateTimesigInfo();
 };

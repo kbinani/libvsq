@@ -29,7 +29,7 @@ public:
 	/**
 	 * @brief Tick 単位の時刻.
 	 */
-	tick_t clock;
+	tick_t tick;
 
 	/**
 	 * @brief テンポ値. 四分音符の長さをマイクロ秒単位で表した値.
@@ -51,10 +51,10 @@ public:
 
 	/**
 	 * @brief 初期化を行う.
-	 * @param clock Tick 単位の時刻.
+	 * @param tick Tick 単位の時刻.
 	 * @param tempo テンポ値. 四分音符の長さをマイクロ秒単位で表した値.
 	 */
-	Tempo(tick_t clock, int tempo);
+	Tempo(tick_t tick, int tempo);
 
 	Tempo();
 
@@ -76,7 +76,7 @@ public:
 	 * @brief 秒単位の時刻を取得する.
 	 * @return 秒単位の時刻.
 	 */
-	double getTime() const;
+	double time() const;
 
 	/**
 	 * @brief コピーを作成する.

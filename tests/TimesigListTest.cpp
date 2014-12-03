@@ -13,11 +13,11 @@ public:
 		table.push(Timesig(4, 4, 0));
 		table.push(Timesig(3, 4, 1));
 
-		CPPUNIT_ASSERT_EQUAL((tick_t)0, table.get(0).getClock());
+		CPPUNIT_ASSERT_EQUAL((tick_t)0, table.get(0).tick());
 		CPPUNIT_ASSERT_EQUAL(0, table.get(0).barCount);
-		CPPUNIT_ASSERT_EQUAL((tick_t)1920, table.get(1).getClock());
+		CPPUNIT_ASSERT_EQUAL((tick_t)1920, table.get(1).tick());
 		CPPUNIT_ASSERT_EQUAL(1, table.get(1).barCount);
-		CPPUNIT_ASSERT_EQUAL((tick_t)3360, table.get(2).getClock());
+		CPPUNIT_ASSERT_EQUAL((tick_t)3360, table.get(2).tick());
 		CPPUNIT_ASSERT_EQUAL(2, table.get(2).barCount);
 	}
 
@@ -37,17 +37,17 @@ public:
 		 0                   1920            3360         4320        5280        6240        7200        8160        9120        10080
 		 */
 
-		Timesig timesig = table.getTimesigAt(480);
+		Timesig timesig = table.timesigAt(480);
 		CPPUNIT_ASSERT_EQUAL(4, timesig.numerator);
 		CPPUNIT_ASSERT_EQUAL(4, timesig.denominator);
 		CPPUNIT_ASSERT_EQUAL(0, timesig.barCount);
 
-		timesig = table.getTimesigAt(1920);
+		timesig = table.timesigAt(1920);
 		CPPUNIT_ASSERT_EQUAL(3, timesig.numerator);
 		CPPUNIT_ASSERT_EQUAL(4, timesig.denominator);
 		CPPUNIT_ASSERT_EQUAL(1, timesig.barCount);
 
-		timesig = table.getTimesigAt(10000);
+		timesig = table.timesigAt(10000);
 		CPPUNIT_ASSERT_EQUAL(4, timesig.numerator);
 		CPPUNIT_ASSERT_EQUAL(8, timesig.denominator);
 		CPPUNIT_ASSERT_EQUAL(8, timesig.barCount);
@@ -64,17 +64,17 @@ public:
 		CPPUNIT_ASSERT_EQUAL(8, table.get(0).denominator);
 	}
 
-	void testGetClockFromBarCount()
+	void testTickFromBarCount()
 	{
 		TimesigList table;
-		table.push(Timesig(4, 6, 2));     // 3360 clock開始
-		table.push(Timesig(4, 4, 0));     //    0 clock開始
-		table.push(Timesig(3, 4, 1));     // 1920 clock開始
+		table.push(Timesig(4, 6, 2));     // 3360 tick開始
+		table.push(Timesig(4, 4, 0));     //    0 tick開始
+		table.push(Timesig(3, 4, 1));     // 1920 tick開始
 
-		CPPUNIT_ASSERT_EQUAL((tick_t)0, table.getClockFromBarCount(0));
-		CPPUNIT_ASSERT_EQUAL((tick_t)1920, table.getClockFromBarCount(1));
-		CPPUNIT_ASSERT_EQUAL((tick_t)3360, table.getClockFromBarCount(2));
-		CPPUNIT_ASSERT_EQUAL((tick_t)9760, table.getClockFromBarCount(7));
+		CPPUNIT_ASSERT_EQUAL((tick_t)0, table.tickFromBarCount(0));
+		CPPUNIT_ASSERT_EQUAL((tick_t)1920, table.tickFromBarCount(1));
+		CPPUNIT_ASSERT_EQUAL((tick_t)3360, table.tickFromBarCount(2));
+		CPPUNIT_ASSERT_EQUAL((tick_t)9760, table.tickFromBarCount(7));
 	}
 
 	void testClear()
@@ -99,28 +99,28 @@ public:
 		CPPUNIT_ASSERT_EQUAL(1, b.size());
 	}
 
-	void testGetBarCountFromClock()
+	void testBarCountFromTick()
 	{
 		TimesigList a;
-		a.push(Timesig(4, 6, 2));     // 3360 clock開始
-		a.push(Timesig(4, 4, 0));     //    0 clock開始
-		a.push(Timesig(3, 4, 1));     // 1920 clock開始
+		a.push(Timesig(4, 6, 2));     // 3360 tick開始
+		a.push(Timesig(4, 4, 0));     //    0 tick開始
+		a.push(Timesig(3, 4, 1));     // 1920 tick開始
 
-		CPPUNIT_ASSERT_EQUAL(0, a.getBarCountFromClock(0));
-		CPPUNIT_ASSERT_EQUAL(0, a.getBarCountFromClock(1919));
-		CPPUNIT_ASSERT_EQUAL(1, a.getBarCountFromClock(1920));
-		CPPUNIT_ASSERT_EQUAL(2, a.getBarCountFromClock(3360));
-		CPPUNIT_ASSERT_EQUAL(7, a.getBarCountFromClock(9760));
+		CPPUNIT_ASSERT_EQUAL(0, a.barCountFromTick(0));
+		CPPUNIT_ASSERT_EQUAL(0, a.barCountFromTick(1919));
+		CPPUNIT_ASSERT_EQUAL(1, a.barCountFromTick(1920));
+		CPPUNIT_ASSERT_EQUAL(2, a.barCountFromTick(3360));
+		CPPUNIT_ASSERT_EQUAL(7, a.barCountFromTick(9760));
 	}
 
 	CPPUNIT_TEST_SUITE(TimesigListTest);
 	CPPUNIT_TEST(testUpdateTimesigInfo);
 	CPPUNIT_TEST(testGetTimesigAt);
 	CPPUNIT_TEST(testPushDuplicateKey);
-	CPPUNIT_TEST(testGetClockFromBarCount);
+	CPPUNIT_TEST(testTickFromBarCount);
 	CPPUNIT_TEST(testClear);
 	CPPUNIT_TEST(testCopy);
-	CPPUNIT_TEST(testGetBarCountFromClock);
+	CPPUNIT_TEST(testBarCountFromTick);
 	CPPUNIT_TEST_SUITE_END();
 };
 

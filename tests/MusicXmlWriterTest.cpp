@@ -21,15 +21,15 @@ public:
 		sequence.timesigList.clear();
 		sequence.timesigList.push(Timesig(4, 4, 0));
 		sequence.timesigList.push(Timesig(3, 4, 2));
-		Track* track = sequence.track(0);
+		Track& track = sequence.track(0);
 		Event note(1920, EventType::NOTE);
 		note.note = 60;
-		note.setLength(2865);
+		note.length(2865);
 		Lyric lyric("あ", "a");
-		note.lyricHandle.setLyricAt(0, lyric);
-		track->events()->add(note);
+		note.lyricHandle.set(0, lyric);
+		track.events().add(note);
 
-		writer.write(&sequence, &stream, "foo");
+		writer.write(sequence, stream, "foo");
 
 		std::string actualString = stream.toString();
 		stream.close();

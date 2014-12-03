@@ -15,9 +15,9 @@
 
 VSQ_BEGIN_NAMESPACE
 
-NrpnEvent::NrpnEvent(tick_t clock, MidiParameterType nrpn, int dataMsb)
+NrpnEvent::NrpnEvent(tick_t tick, MidiParameterType nrpn, int dataMsb)
 {
-	this->clock = clock;
+	this->tick = tick;
 	this->nrpn = nrpn;
 	this->dataMSB = dataMsb;
 	this->dataLSB = 0x0;
@@ -25,9 +25,9 @@ NrpnEvent::NrpnEvent(tick_t clock, MidiParameterType nrpn, int dataMsb)
 	this->isMSBOmittingRequired = false;
 }
 
-NrpnEvent::NrpnEvent(tick_t clock, MidiParameterType nrpn, int dataMsb, int dataLsb)
+NrpnEvent::NrpnEvent(tick_t tick, MidiParameterType nrpn, int dataMsb, int dataLsb)
 {
-	this->clock = clock;
+	this->tick = tick;
 	this->nrpn = nrpn;
 	this->dataMSB = dataMsb;
 	this->dataLSB = dataLsb;
@@ -35,15 +35,15 @@ NrpnEvent::NrpnEvent(tick_t clock, MidiParameterType nrpn, int dataMsb, int data
 	this->isMSBOmittingRequired = false;
 }
 
-std::vector<NrpnEvent> NrpnEvent::expand()
+std::vector<NrpnEvent> NrpnEvent::expand() const
 {
 	std::vector<NrpnEvent> ret;
 	if (hasLSB) {
-		NrpnEvent v(clock, nrpn, dataMSB, dataLSB);
+		NrpnEvent v(tick, nrpn, dataMSB, dataLSB);
 		v.isMSBOmittingRequired = isMSBOmittingRequired;
 		ret.push_back(v);
 	} else {
-		NrpnEvent v(clock, nrpn, dataMSB);
+		NrpnEvent v(tick, nrpn, dataMSB);
 		v.isMSBOmittingRequired = isMSBOmittingRequired;
 		ret.push_back(v);
 	}
@@ -58,7 +58,7 @@ std::vector<NrpnEvent> NrpnEvent::expand()
 
 int NrpnEvent::compareTo(NrpnEvent const& item) const
 {
-	if (clock == item.clock) {
+	if (tick == item.tick) {
 		int const thisNrpn = static_cast<int>(nrpn);
 		int const itemNrpn = static_cast<int>(item.nrpn);
 
@@ -67,30 +67,30 @@ int NrpnEvent::compareTo(NrpnEvent const& item) const
 
 		return itemNrpnMsb - thisNrpnMsb;
 	} else {
-		return clock - item.clock;
+		return tick - item.tick;
 	}
 }
 
 void NrpnEvent::append(MidiParameterType nrpn, int dataMsb)
 {
-	_list.push_back(NrpnEvent(clock, nrpn, dataMsb));
+	_list.push_back(NrpnEvent(tick, nrpn, dataMsb));
 }
 
 void NrpnEvent::append(MidiParameterType nrpn, int dataMsb, int dataLsb)
 {
-	_list.push_back(NrpnEvent(clock, nrpn, dataMsb, dataLsb));
+	_list.push_back(NrpnEvent(tick, nrpn, dataMsb, dataLsb));
 }
 
 void NrpnEvent::append(MidiParameterType nrpn, int dataMsb, bool isMsbOmittingRequired)
 {
-	NrpnEvent v(this->clock, nrpn, dataMsb);
+	NrpnEvent v(this->tick, nrpn, dataMsb);
 	v.isMSBOmittingRequired = isMsbOmittingRequired;
 	_list.push_back(v);
 }
 
 void NrpnEvent::append(MidiParameterType nrpn, int dataMsb, int dataLsb, bool isMsbOmittingRequired)
 {
-	NrpnEvent v(this->clock, nrpn, dataMsb, dataLsb);
+	NrpnEvent v(this->tick, nrpn, dataMsb, dataLsb);
 	v.isMSBOmittingRequired = isMsbOmittingRequired;
 	_list.push_back(v);
 }
@@ -113,21 +113,21 @@ std::vector<MidiEvent> NrpnEvent::convert(std::vector<NrpnEvent> const& source)
 	MidiEvent e;
 
 	e = MidiEvent();
-	e.clock = source[0].clock;
+	e.tick = source[0].tick;
 	e.firstByte = 0xb0;
 	e.data.push_back(0x63);
 	e.data.push_back(msb);
 	ret.push_back(e);
 
 	e = MidiEvent();
-	e.clock = source[0].clock;
+	e.tick = source[0].tick;
 	e.firstByte = 0xb0;
 	e.data.push_back(0x62);
 	e.data.push_back(lsb);
 	ret.push_back(e);
 
 	e = MidiEvent();
-	e.clock = source[0].clock;
+	e.tick = source[0].tick;
 	e.firstByte = 0xb0;
 	e.data.push_back(0x06);
 	e.data.push_back(source[0].dataMSB);
@@ -135,7 +135,7 @@ std::vector<MidiEvent> NrpnEvent::convert(std::vector<NrpnEvent> const& source)
 
 	if (source[0].hasLSB) {
 		e = MidiEvent();
-		e.clock = source[0].clock;
+		e.tick = source[0].tick;
 		e.firstByte = 0xb0;
 		e.data.push_back(0x26);
 		e.data.push_back(source[0].dataLSB);
@@ -149,7 +149,7 @@ std::vector<MidiEvent> NrpnEvent::convert(std::vector<NrpnEvent> const& source)
 		lsb = tnrpn - (0xff00 & (msb << 8));
 		if (false == item.isMSBOmittingRequired) {
 			e = MidiEvent();
-			e.clock = item.clock;
+			e.tick = item.tick;
 			e.firstByte = 0xb0;
 			e.data.push_back(0x63);
 			e.data.push_back(msb);
@@ -157,21 +157,21 @@ std::vector<MidiEvent> NrpnEvent::convert(std::vector<NrpnEvent> const& source)
 		}
 
 		e = MidiEvent();
-		e.clock = item.clock;
+		e.tick = item.tick;
 		e.firstByte = 0xb0;
 		e.data.push_back(0x62);
 		e.data.push_back(lsb);
 		ret.push_back(e);
 
 		e = MidiEvent();
-		e.clock = item.clock;
+		e.tick = item.tick;
 		e.firstByte = 0xb0;
 		e.data.push_back(0x06);
 		e.data.push_back(item.dataMSB);
 		ret.push_back(e);
 		if (item.hasLSB) {
 			e = MidiEvent();
-			e.clock = item.clock;
+			e.tick = item.tick;
 			e.firstByte = 0xb0;
 			e.data.push_back(0x26);
 			e.data.push_back(item.dataLSB);
@@ -183,7 +183,7 @@ std::vector<MidiEvent> NrpnEvent::convert(std::vector<NrpnEvent> const& source)
 
 NrpnEvent::NrpnEvent()
 {
-	this->clock = 0;
+	this->tick = 0;
 	this->dataLSB = 0;
 	this->dataMSB = 0;
 	this->hasLSB = false;

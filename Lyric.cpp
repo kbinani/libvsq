@@ -23,10 +23,10 @@ Lyric::Lyric(std::string const& line)
 {
 	if (line.size() == 0) {
 		phrase = "a";
-		setPhoneticSymbol("a");
+		phoneticSymbol("a");
 		lengthRatio = 1.0;
 		isProtected = false;
-		setConsonantAdjustment("0");
+		consonantAdjustment("0");
 		return;
 	}
 	int len = line.size();
@@ -71,7 +71,7 @@ Lyric::Lyric(std::string const& line)
 					} else {
 						symbols = work;
 					}
-					setPhoneticSymbol(symbols);
+					phoneticSymbol(symbols);
 					work = "";
 				} else if (indx == 3) {
 					// lengthRatio
@@ -102,24 +102,24 @@ Lyric::Lyric(std::string const& line)
 			}
 		}
 	}
-	setConsonantAdjustment(consonantAdjustment);
+	this->consonantAdjustment(consonantAdjustment);
 }
 
 Lyric::Lyric(std::string const& phrase, std::string const& phoneticSymbol)
 {
 	this->phrase = phrase;
 	_consonantAdjustment.clear();
-	this->setPhoneticSymbol(phoneticSymbol);
+	this->phoneticSymbol(phoneticSymbol);
 	lengthRatio = 1.0;
 	isProtected = false;
 }
 
 bool Lyric::equalsForSynth(Lyric const& item) const
 {
-	if (getPhoneticSymbol() != item.getPhoneticSymbol()) {
+	if (phoneticSymbol() != item.phoneticSymbol()) {
 		return false;
 	}
-	if (getConsonantAdjustment() != item.getConsonantAdjustment()) {
+	if (consonantAdjustment() != item.consonantAdjustment()) {
 		return false;
 	}
 	return true;
@@ -142,9 +142,9 @@ bool Lyric::equals(Lyric const& item) const
 	return true;
 }
 
-std::string Lyric::getConsonantAdjustment() const
+std::string Lyric::consonantAdjustment() const
 {
-	const std::vector<int> arr = getConsonantAdjustmentList();
+	const std::vector<int> arr = consonantAdjustmentList();
 	if (arr.empty()) {
 		return "";
 	}
@@ -156,7 +156,7 @@ std::string Lyric::getConsonantAdjustment() const
 	return ret.str();
 }
 
-void Lyric::setConsonantAdjustment(std::string const& value)
+void Lyric::consonantAdjustment(std::string const& value)
 {
 	std::vector<std::string> spl = StringUtil::explode(",", value);
 	std::vector<int> arr;
@@ -164,10 +164,10 @@ void Lyric::setConsonantAdjustment(std::string const& value)
 	for (i = spl.begin(); i != spl.end(); ++i) {
 		arr.push_back((int)atoi((*i).c_str()));
 	}
-	setConsonantAdjustmentList(arr);
+	consonantAdjustmentList(arr);
 }
 
-std::vector<int> Lyric::getConsonantAdjustmentList() const
+std::vector<int> Lyric::consonantAdjustmentList() const
 {
 	std::vector<int> _consonantAdjustment = this->_consonantAdjustment;
 	if (_consonantAdjustment.empty()) {
@@ -190,7 +190,7 @@ std::vector<int> Lyric::getConsonantAdjustmentList() const
 	return _consonantAdjustment;
 }
 
-void Lyric::setConsonantAdjustmentList(std::vector<int> const& value)
+void Lyric::consonantAdjustmentList(std::vector<int> const& value)
 {
 	_consonantAdjustment.clear();
 	std::vector<int>::const_iterator i;
@@ -219,9 +219,9 @@ Lyric Lyric::clone() const
 	return result;
 }
 
-std::string Lyric::getPhoneticSymbol() const
+std::string Lyric::phoneticSymbol() const
 {
-	const std::vector<std::string> symbol = getPhoneticSymbolList();
+	const std::vector<std::string> symbol = phoneticSymbolList();
 	if (symbol.empty()) {
 		return std::string("");
 	}
@@ -233,7 +233,7 @@ std::string Lyric::getPhoneticSymbol() const
 	return result.str();
 }
 
-void Lyric::setPhoneticSymbol(std::string const& value)
+void Lyric::phoneticSymbol(std::string const& value)
 {
 	std::string s = StringUtil::replace(value, "  ", " ");
 	_phoneticSymbol = StringUtil::explode(" ", s);
@@ -242,7 +242,7 @@ void Lyric::setPhoneticSymbol(std::string const& value)
 	}
 }
 
-std::vector<std::string> Lyric::getPhoneticSymbolList() const
+std::vector<std::string> Lyric::phoneticSymbolList() const
 {
 	std::vector<std::string> ret;
 	std::vector<std::string>::const_iterator i;
@@ -262,8 +262,8 @@ std::string Lyric::toString(bool addQuateMark) const
 	}
 	std::ostringstream result;
 	result << quot << phrase << quot << ",";
-	std::vector<std::string> symbol = getPhoneticSymbolList();
-	std::string strSymbol = getPhoneticSymbol();
+	std::vector<std::string> symbol = phoneticSymbolList();
+	std::string strSymbol = phoneticSymbol();
 	if (false == addQuateMark) {
 		if (strSymbol.size() == 0) {
 			strSymbol = "u:";

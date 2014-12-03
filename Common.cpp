@@ -83,7 +83,7 @@ PlayMode Common::playMode() const
 	return _playMode;
 }
 
-void Common::setPlayMode(PlayMode mode)
+void Common::playMode(PlayMode mode)
 {
 	_playMode = mode;
 	if (mode != PlayMode::OFF) {

@@ -38,7 +38,7 @@ public:
 	 * @param[out] format SMF のフォーマット.
 	 * @param[out] timeFormat 時間分解能.
 	 */
-	void read(InputStream* stream, std::vector<std::vector<MidiEvent>>& dest, int& format, int& timeFormat);
+	void read(InputStream& stream, std::vector<std::vector<MidiEvent>>& dest, int& format, int& timeFormat);
 };
 
 VSQ_END_NAMESPACE

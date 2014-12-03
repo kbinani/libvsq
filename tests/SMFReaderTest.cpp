@@ -14,7 +14,7 @@ public:
 		SMFReader reader;
 		vector<vector<MidiEvent> > actual;
 		int format, timeFormat;
-		reader.read(&stream, actual, format, timeFormat);
+		reader.read(stream, actual, format, timeFormat);
 		stream.close();
 
 		CPPUNIT_ASSERT_EQUAL((size_t)2, actual.size());

@@ -18,7 +18,7 @@ VSQ_BEGIN_NAMESPACE
 
 Timesig::Timesig()
 {
-	this->clock = 0;
+	this->tick_ = 0;
 	this->numerator = 4;
 	this->denominator = 4;
 	this->barCount = 0;
@@ -26,21 +26,21 @@ Timesig::Timesig()
 
 Timesig::Timesig(int numerator, int denominator, int barCount)
 {
-	this->clock = 0;
+	this->tick_ = 0;
 	this->numerator = numerator;
 	this->denominator = denominator;
 	this->barCount = barCount;
 }
 
-tick_t Timesig::getClock() const
+tick_t Timesig::tick() const
 {
-	return clock;
+	return tick_;
 }
 
 std::string Timesig::toString() const
 {
 	std::ostringstream oss;
-	oss << "{Clock=" << this->clock << ", Numerator=" << this->numerator << ", Denominator=" << this->denominator << ", BarCount=" << this->barCount << "}";
+	oss << "{Tick=" << this->tick_ << ", Numerator=" << this->numerator << ", Denominator=" << this->denominator << ", BarCount=" << this->barCount << "}";
 	return oss.str();
 }
 
@@ -52,7 +52,7 @@ bool Timesig::compareTo(Timesig const& item) const
 Timesig Timesig::clone() const
 {
 	Timesig result(numerator, denominator, barCount);
-	result.clock = clock;
+	result.tick_ = tick_;
 	return result;
 }
 

@@ -21,13 +21,13 @@ VSQ_BEGIN_NAMESPACE
 
 MidiEvent::MidiEvent()
 {
-	clock = 0;
+	tick = 0;
 	firstByte = 0;
 }
 
-void MidiEvent::writeData(OutputStream* stream) const
+void MidiEvent::writeData(OutputStream& stream) const
 {
-	stream->write(firstByte);
+	stream.write(firstByte);
 	int size = (int)data.size();
 	if (0 < size) {
 		char* buffer = new char[size]();
@@ -35,11 +35,11 @@ void MidiEvent::writeData(OutputStream* stream) const
 			buffer[i] = (char)data[i];
 		}
 		if (firstByte == 0xff) {
-			stream->write(buffer[0]);
-			writeDeltaClock(stream, size - 1);
-			stream->write(buffer, 1, size - 1);
+			stream.write(buffer[0]);
+			writeDeltaTick(stream, size - 1);
+			stream.write(buffer, 1, size - 1);
 		} else {
-			stream->write(buffer, 0, size);
+			stream.write(buffer, 0, size);
 		}
 		delete [] buffer;
 	}
@@ -47,8 +47,8 @@ void MidiEvent::writeData(OutputStream* stream) const
 
 int MidiEvent::compareTo(MidiEvent const& item) const
 {
-	if (clock != item.clock) {
-		return clock - item.clock;
+	if (tick != item.tick) {
+		return tick - item.tick;
 	} else {
 		int first_this = firstByte & 0xf0;
 		int first_item = item.firstByte & 0xf0;
@@ -82,14 +82,14 @@ int MidiEvent::compareTo(MidiEvent const& item) const
 				}
 			}
 		}
-		return clock - item.clock;
+		return tick - item.tick;
 	}
 }
 
-MidiEvent MidiEvent::generateTimeSigEvent(tick_t clock, int numerator, int denominator)
+MidiEvent MidiEvent::generateTimeSigEvent(tick_t tick, int numerator, int denominator)
 {
 	MidiEvent ret;
-	ret.clock = clock;
+	ret.tick = tick;
 	ret.firstByte = 0xff;
 	int b_numer = (int)::floor(::log((double)denominator) / ::log(2.0) + 0.1);
 	ret.data.push_back(0x58);
@@ -100,10 +100,10 @@ MidiEvent MidiEvent::generateTimeSigEvent(tick_t clock, int numerator, int denom
 	return ret;
 }
 
-MidiEvent MidiEvent::generateTempoChangeEvent(tick_t clock, int tempo)
+MidiEvent MidiEvent::generateTempoChangeEvent(tick_t tick, int tempo)
 {
 	MidiEvent ret;
-	ret.clock = clock;
+	ret.tick = tick;
 	ret.firstByte = 0xff;
 	int b1 = tempo & 0xff;
 	tempo = tempo >> 8;
@@ -117,7 +117,7 @@ MidiEvent MidiEvent::generateTempoChangeEvent(tick_t clock, int tempo)
 	return ret;
 }
 
-void MidiEvent::writeDeltaClock(OutputStream* stream, int number)
+void MidiEvent::writeDeltaTick(OutputStream& stream, int number)
 {
 	std::vector<bool> bits;
 	uint64_t val = 0x1;
@@ -147,16 +147,16 @@ void MidiEvent::writeDeltaClock(OutputStream* stream, int number)
 		if (i != bytes) {
 			num += 0x80;
 		}
-		stream->write(num);
+		stream.write(num);
 	}
 }
 
-tick_t MidiEvent::readDeltaClock(InputStream* stream)
+tick_t MidiEvent::readDeltaTick(InputStream& stream)
 {
 	tick_t ret = 0;
 	const tick_t mask = ~(tick_t)0 - (tick_t)0xFF + (tick_t)0x80;
 	while (1) {
-		int i = stream->read();
+		int i = stream.read();
 		if (i < 0) {
 			break;
 		}
@@ -169,15 +169,15 @@ tick_t MidiEvent::readDeltaClock(InputStream* stream)
 	return ret;
 }
 
-MidiEvent MidiEvent::read(InputStream* stream, tick_t& last_clock, uint8_t& last_status_byte)
+MidiEvent MidiEvent::read(InputStream& stream, tick_t& last_tick, uint8_t& last_status_byte)
 {
-	tick_t delta_clock = readDeltaClock(stream);
-	last_clock += delta_clock;
-	int first_byte = stream->read();
+	tick_t delta_tick = readDeltaTick(stream);
+	last_tick += delta_tick;
+	int first_byte = stream.read();
 	if (first_byte < 0x80) {
 		// ランニングステータスが適用される
-		int64_t pos = stream->getPointer();
-		stream->seek(pos - 1);
+		int64_t pos = stream.getPointer();
+		stream.seek(pos - 1);
 		first_byte = last_status_byte;
 	} else {
 		last_status_byte = first_byte;
@@ -193,11 +193,11 @@ MidiEvent MidiEvent::read(InputStream* stream, tick_t& last_clock, uint8_t& last
 		// 3byte使用するシステムメッセージ
 		//     0xF2: ソングポジション・ポインタ
 		MidiEvent me;
-		me.clock = last_clock;
+		me.tick = last_tick;
 		me.firstByte = first_byte;
 		me.data.clear();
-		me.data.push_back(0xff & stream->read());
-		me.data.push_back(0xff & stream->read());
+		me.data.push_back(0xff & stream.read());
+		me.data.push_back(0xff & stream.read());
 		return me;
 	} else if (ctrl == 0xC0 || ctrl == 0xD0 || first_byte == 0xF1 || first_byte == 0xF3) {
 		// 2byte使用するチャンネルメッセージ
@@ -207,10 +207,10 @@ MidiEvent MidiEvent::read(InputStream* stream, tick_t& last_clock, uint8_t& last
 		//     0xF1: クォータフレーム
 		//     0xF3: ソングセレクト
 		MidiEvent me;
-		me.clock = last_clock;
+		me.tick = last_tick;
 		me.firstByte = first_byte;
 		me.data.clear();
-		me.data.push_back(0xff & stream->read());
+		me.data.push_back(0xff & stream.read());
 		return me;
 	} else if (first_byte == 0xF6) {
 		// 1byte使用するシステムメッセージ
@@ -223,43 +223,43 @@ MidiEvent MidiEvent::read(InputStream* stream, tick_t& last_clock, uint8_t& last
 		//     0xFE: アクティブセンシング
 		//     0xFF: システムリセット
 		MidiEvent me;
-		me.clock = last_clock;
+		me.tick = last_tick;
 		me.firstByte = first_byte;
 		me.data.clear();
 		return me;
 	} else if (first_byte == 0xff) {
 		// メタイベント
-		int meta_event_type = stream->read();
-		tick_t meta_event_length = readDeltaClock(stream);
+		int meta_event_type = stream.read();
+		tick_t meta_event_length = readDeltaTick(stream);
 		MidiEvent me;
-		me.clock = last_clock;
+		me.tick = last_tick;
 		me.firstByte = first_byte;
 		me.data.clear();
 		me.data.push_back(meta_event_type);
 		for (int i = 0; i < meta_event_length; i++) {
-			me.data.push_back(stream->read());
+			me.data.push_back(stream.read());
 		}
 		return me;
 	} else if (first_byte == 0xf0) {
 		// f0ステータスのSysEx
 		MidiEvent me;
-		me.clock = last_clock;
+		me.tick = last_tick;
 		me.firstByte = first_byte;
-		int sysex_length = (int)readDeltaClock(stream);
+		int sysex_length = (int)readDeltaTick(stream);
 		me.data.clear();
 		for (int i = 0; i < sysex_length + 1; i++) {
-			me.data.push_back(stream->read());
+			me.data.push_back(stream.read());
 		}
 		return me;
 	} else if (first_byte == 0xf7) {
 		// f7ステータスのSysEx
 		MidiEvent me;
-		me.clock = last_clock;
+		me.tick = last_tick;
 		me.firstByte = first_byte;
-		int sysex_length = (int)readDeltaClock(stream);
+		int sysex_length = (int)readDeltaTick(stream);
 		me.data.clear();
 		for (int i = 0; i < sysex_length; i++) {
-			me.data.push_back(stream->read());
+			me.data.push_back(stream.read());
 		}
 		return me;
 	} else {
