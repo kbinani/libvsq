@@ -2,8 +2,20 @@
 #include "../VocaloidMidiEventListFactory.hpp"
 #include "../Sequence.hpp"
 
+#include <iostream> // debug
+
 using namespace std;
 using namespace VSQ_NS;
+
+struct NrpnEventSpec
+{
+	tick_t clock;// = 0;
+	MidiParameterType::MidiParameterTypeEnum nrpn;// = 0;
+	int dataMSB;// = 0;
+	bool hasLSB;// = false;
+	int dataLSB;// = 0;
+	bool isMSBOmittingRequired;// = false;
+};
 
 class VocaloidMidiEventListFactoryStub : public VocaloidMidiEventListFactory{
 public:
@@ -603,20 +615,20 @@ public:
         vector<NrpnEvent> events = VocaloidMidiEventListFactoryStub::generateVoiceChangeParameterNRPN( track, &sequence.tempoList, 500, sequence.getPreMeasureClocks() );
         // 中身は見ない。各カーブに MIDI イベントが1つずつできることだけをチェック
         // 各イベントの子にあたるイベントのテストは、test_addVoiceChangeParameters で行う
-        // vocaloid1 で出力されるのは 18 種類
-        CPPUNIT_ASSERT_EQUAL( (size_t)18, events.size() );
+        // vocaloid1 で出力されるのは 18 種類 + DELAY イベント 1 個
+        CPPUNIT_ASSERT_EQUAL( (size_t)(18 + 1), events.size() );
 
         // VOCALOID2 の場合
-        // 6 種類
+        // 6 種類 + DELAY イベント 1 個
         track->common()->version = "DSB3";
         events = VocaloidMidiEventListFactoryStub::generateVoiceChangeParameterNRPN( track, &sequence.tempoList, 500, sequence.getPreMeasureClocks() );
-        CPPUNIT_ASSERT_EQUAL( (size_t)6, events.size() );
+        CPPUNIT_ASSERT_EQUAL( (size_t)(6 + 1), events.size() );
 
         // UNKNOWN の場合
-        // 5 種類
+        // 5 種類 + DELAY イベント 1 個
         track->common()->version = "";
         events = VocaloidMidiEventListFactoryStub::generateVoiceChangeParameterNRPN( track, &sequence.tempoList, 500, sequence.getPreMeasureClocks() );
-        CPPUNIT_ASSERT_EQUAL( (size_t)5, events.size() );
+        CPPUNIT_ASSERT_EQUAL( (size_t)(5 + 1), events.size() );
     }
 
     void testAddVoiceChangeParameters(){
@@ -629,39 +641,49 @@ public:
         int preSend = 500;
         int delay = VocaloidMidiEventListFactoryStub::addVoiceChangeParameters( dest, list, &sequence.tempoList, preSend, 0 );
 
-        CPPUNIT_ASSERT_EQUAL( (size_t)2, dest.size() );
+        CPPUNIT_ASSERT_EQUAL( (size_t)3, dest.size() );
         CPPUNIT_ASSERT_EQUAL( 500, delay );
 
-        vector<NrpnEvent> actual = dest[0].expand();
-        CPPUNIT_ASSERT_EQUAL( (size_t)3, actual.size() );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)0, actual[0].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::VCP_DELAY, actual[0].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 0x03, actual[0].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( 0x74, actual[0].dataLSB );
-        CPPUNIT_ASSERT( actual[0].hasLSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[0].isMSBOmittingRequired );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)0, actual[1].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::VCP_VOICE_CHANGE_PARAMETER_ID, actual[1].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 0x31, actual[1].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[1].hasLSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[1].isMSBOmittingRequired );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)0, actual[2].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::VCP_VOICE_CHANGE_PARAMETER, actual[2].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 0, actual[2].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[2].hasLSB );
-        CPPUNIT_ASSERT( actual[2].isMSBOmittingRequired );
+		{
+			vector<NrpnEvent> actual = dest[0].expand();
+			CPPUNIT_ASSERT_EQUAL( (size_t)1, actual.size() );
+			CPPUNIT_ASSERT_EQUAL( (tick_t)0, actual[0].clock );
+			CPPUNIT_ASSERT_EQUAL( MidiParameterType::VCP_DELAY, actual[0].nrpn );
+			CPPUNIT_ASSERT_EQUAL( 0x03, actual[0].dataMSB );
+			CPPUNIT_ASSERT_EQUAL( 0x74, actual[0].dataLSB );
+			CPPUNIT_ASSERT( actual[0].hasLSB );
+			CPPUNIT_ASSERT_EQUAL( false, actual[0].isMSBOmittingRequired );
+		}
 
-        actual = dest[1].expand();
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, actual[0].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::VCP_VOICE_CHANGE_PARAMETER_ID, actual[0].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 0x31, actual[0].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[0].hasLSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[0].isMSBOmittingRequired );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, actual[1].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::VCP_VOICE_CHANGE_PARAMETER, actual[1].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 127, actual[1].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[1].hasLSB );
-        CPPUNIT_ASSERT( actual[1].isMSBOmittingRequired );
+		{
+			vector<NrpnEvent> actual = dest[1].expand();
+			CPPUNIT_ASSERT_EQUAL( (size_t)2, actual.size() );
+			CPPUNIT_ASSERT_EQUAL( (tick_t)0, actual[0].clock );
+			CPPUNIT_ASSERT_EQUAL( MidiParameterType::VCP_VOICE_CHANGE_PARAMETER_ID, actual[0].nrpn );
+			CPPUNIT_ASSERT_EQUAL( 0x31, actual[0].dataMSB );
+			CPPUNIT_ASSERT_EQUAL( false, actual[0].hasLSB );
+			CPPUNIT_ASSERT_EQUAL( false, actual[0].isMSBOmittingRequired );
+			CPPUNIT_ASSERT_EQUAL( (tick_t)0, actual[1].clock );
+			CPPUNIT_ASSERT_EQUAL( MidiParameterType::VCP_VOICE_CHANGE_PARAMETER, actual[1].nrpn );
+			CPPUNIT_ASSERT_EQUAL( 0, actual[1].dataMSB );
+			CPPUNIT_ASSERT_EQUAL( false, actual[1].hasLSB );
+			CPPUNIT_ASSERT( actual[1].isMSBOmittingRequired );
+		}
+
+		{
+			vector<NrpnEvent> actual = dest[2].expand();
+			CPPUNIT_ASSERT_EQUAL( (size_t)2, actual.size() );
+			CPPUNIT_ASSERT_EQUAL( (tick_t)1440, actual[0].clock );
+			CPPUNIT_ASSERT_EQUAL( MidiParameterType::VCP_VOICE_CHANGE_PARAMETER_ID, actual[0].nrpn );
+			CPPUNIT_ASSERT_EQUAL( 0x31, actual[0].dataMSB );
+			CPPUNIT_ASSERT_EQUAL( false, actual[0].hasLSB );
+			CPPUNIT_ASSERT_EQUAL( false, actual[0].isMSBOmittingRequired );
+			CPPUNIT_ASSERT_EQUAL( (tick_t)1440, actual[1].clock );
+			CPPUNIT_ASSERT_EQUAL( MidiParameterType::VCP_VOICE_CHANGE_PARAMETER, actual[1].nrpn );
+			CPPUNIT_ASSERT_EQUAL( 127, actual[1].dataMSB );
+			CPPUNIT_ASSERT_EQUAL( false, actual[1].hasLSB );
+			CPPUNIT_ASSERT( actual[1].isMSBOmittingRequired );
+		}
     }
 
     void testGenerateFx2DepthNRPN(){
@@ -794,321 +816,85 @@ public:
         int preSendMilliseconds = 500;
         vector<NrpnEvent> actual = VocaloidMidiEventListFactoryStub::generateNRPN(
             track, &sequence.tempoList, sequence.getTotalClocks(), sequence.getPreMeasureClocks(), preSendMilliseconds );
-        CPPUNIT_ASSERT_EQUAL( (size_t)50, actual.size() );
 
-        CPPUNIT_ASSERT_EQUAL( (tick_t)0, actual[0].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CC_PBS_DELAY, actual[0].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 0x03, actual[0].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( 0x74, actual[0].dataLSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[0].isMSBOmittingRequired );
+		std::vector<NrpnEventSpec> expected = {
+			// 0
+			{ (tick_t)0,	MidiParameterType::CC_PBS_DELAY,						0x03,		true,	0x74,	false},
+			{ (tick_t)0,	MidiParameterType::CC_PBS_PITCH_BEND_SENSITIVITY,		0,			true,	0x00,	false },
+			{ (tick_t)0,	MidiParameterType::CC_E_DELAY,							0x03,		true,	0x74,	false },
+			{ (tick_t)0,	MidiParameterType::CC_E_EXPRESSION,						127,		false,	0xFF,	false },
+			{ (tick_t)0,	MidiParameterType::CC_BS_VERSION_AND_DEVICE,			0x00,		true,	0x00,	false },
+			// 5
+			{ (tick_t)0,	MidiParameterType::CC_BS_DELAY,							0x00,		true,	0x00,	true },
+			{ (tick_t)0,	MidiParameterType::CC_BS_LANGUAGE_TYPE,					0,			false,	0xFF,	true },
+			{ (tick_t)0,	MidiParameterType::PC_VOICE_TYPE,						0,			false,	0xFF,	false },
+			{ (tick_t)0,	MidiParameterType::VCP_DELAY,							0x03,		true,	0x74,	false },
+			{ (tick_t)0,	MidiParameterType::VCP_VOICE_CHANGE_PARAMETER_ID,		0x31,		false,	0xFF,	false },
+			// 10
+			{ (tick_t)0,	MidiParameterType::VCP_VOICE_CHANGE_PARAMETER,			64,			false,	0xFF,	true },
+			{ (tick_t)0,	MidiParameterType::VCP_VOICE_CHANGE_PARAMETER_ID,		0x32,		false,	0xFF,	false },
+			{ (tick_t)0,	MidiParameterType::VCP_VOICE_CHANGE_PARAMETER,			64,			false,	0xFF,	true },
+			{ (tick_t)0,	MidiParameterType::VCP_VOICE_CHANGE_PARAMETER_ID,		0x33,		false,	0xFF,	false },
+			{ (tick_t)0,	MidiParameterType::VCP_VOICE_CHANGE_PARAMETER,			64,			false,	0xFF,	true },
+			// 15
+			{ (tick_t)0,	MidiParameterType::VCP_VOICE_CHANGE_PARAMETER_ID,		0x34,		false,	0xFF,	false },
+			{ (tick_t)0,	MidiParameterType::VCP_VOICE_CHANGE_PARAMETER,			64,			false,	0xFF,	true },
+			{ (tick_t)0,	MidiParameterType::VCP_VOICE_CHANGE_PARAMETER_ID,		0x35,		false,	0xFF,	false },
+			{ (tick_t)0,	MidiParameterType::VCP_VOICE_CHANGE_PARAMETER,			64,			false,	0xFF,	true },
+			{ (tick_t)0,	MidiParameterType::VCP_VOICE_CHANGE_PARAMETER_ID,		0x70,		false,	0xFF,	false },
+			// 20
+			{ (tick_t)0,	MidiParameterType::VCP_VOICE_CHANGE_PARAMETER,			64,			false,	0xFF,	true },
+			{ (tick_t)0,	MidiParameterType::PB_DELAY,							0x03,		true,	0x74,	false },
+			{ (tick_t)0,	MidiParameterType::PB_PITCH_BEND,						0x7F,		true,	0x7F,	false },
+			{ (tick_t)1440,	MidiParameterType::CC_PBS_PITCH_BEND_SENSITIVITY,		24,			true,	0x00,	false },
+			{ (tick_t)1440, MidiParameterType::CC_E_EXPRESSION,						0,			false,	0xFF,	false },
+			// 25
+			{ (tick_t)1440, MidiParameterType::CC_BS_VERSION_AND_DEVICE,			0x00,		true,	0x00,	false },
+			{ (tick_t)1440, MidiParameterType::CC_BS_DELAY,							0x03,		true,	0x74,	true },
+			{ (tick_t)1440, MidiParameterType::CC_BS_LANGUAGE_TYPE,					0,			false,	0xFF,	true },
+			{ (tick_t)1440, MidiParameterType::PC_VOICE_TYPE,						0,			false,	0xFF,	false },
+			{ (tick_t)1440, MidiParameterType::PB_PITCH_BEND,						0x00,		true,	0x00,	false },
+			// 30
+			{ (tick_t)1440, MidiParameterType::CVM_NM_DELAY,						0x03,		true,	0x74,	false },
+			{ (tick_t)1440, MidiParameterType::CVM_NM_NOTE_NUMBER,					60,			false,	0xFF,	true },
+			{ (tick_t)1440, MidiParameterType::CVM_NM_VELOCITY,						127,		false,	0xFF,	true },
+			{ (tick_t)1440, MidiParameterType::CVM_NM_NOTE_DURATION,				0x03,		true,	0x74,	true },
+			{ (tick_t)1440, MidiParameterType::CVM_NM_NOTE_LOCATION,				3,			false,	0xFF,	true },
+			// 35
+			{ (tick_t)1440, MidiParameterType::CVM_NM_PHONETIC_SYMBOL_BYTES,		1,			false,	0xFF,	true },
+			{ (tick_t)1440, (MidiParameterType::MidiParameterTypeEnum)0x5013,		(int)'a',	true,	0,		true },
+			{ (tick_t)1440, MidiParameterType::CVM_NM_PHONETIC_SYMBOL_CONTINUATION,	0x7f,		false,	0xFF,	true },
+			{ (tick_t)1440, MidiParameterType::CVM_NM_V1MEAN,						4,			false,	0xFF,	true },
+			{ (tick_t)1440, MidiParameterType::CVM_NM_D1MEAN,						8,			false,	0xFF,	true },
+			// 40
+			{ (tick_t)1440, MidiParameterType::CVM_NM_D1MEAN_FIRST_NOTE,			0x14,		false,	0xFF,	true },
+			{ (tick_t)1440, MidiParameterType::CVM_NM_D2MEAN,						28,			false,	0xFF,	true },
+			{ (tick_t)1440, MidiParameterType::CVM_NM_D4MEAN,						63,			false,	0xFF,	true },
+			{ (tick_t)1440, MidiParameterType::CVM_NM_PMEAN_ONSET_FIRST_NOTE,		65,			false,	0xFF,	true },
+			{ (tick_t)1440, MidiParameterType::CVM_NM_VMEAN_NOTE_TRNSITION,			66,			false,	0xFF,	true },
+			// 45
+			{ (tick_t)1440, MidiParameterType::CVM_NM_PMEAN_ENDING_NOTE,			67,			false,	0xFF,	true },
+			{ (tick_t)1440, MidiParameterType::CVM_NM_ADD_PORTAMENTO,				3,			false,	0xFF,	true },
+			{ (tick_t)1440, MidiParameterType::CVM_NM_CHANGE_AFTER_PEAK,			50,			false,	0xFF,	true },
+			{ (tick_t)1440, MidiParameterType::CVM_NM_ACCENT,						50,			false,	0xFF,	true },
+			{ (tick_t)1440, MidiParameterType::CVM_NM_NOTE_MESSAGE_CONTINUATION,	0x7f,		false,	0xFF,	true },
+		};
 
-        CPPUNIT_ASSERT_EQUAL( (tick_t)0, actual[1].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CC_PBS_PITCH_BEND_SENSITIVITY, actual[1].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 0, actual[1].dataMSB );
-        CPPUNIT_ASSERT( actual[1].hasLSB );
-        CPPUNIT_ASSERT_EQUAL( 0x00, actual[1].dataLSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[1].isMSBOmittingRequired );
+		CPPUNIT_ASSERT_EQUAL( expected.size(), actual.size() );
 
-        CPPUNIT_ASSERT_EQUAL( (tick_t)0, actual[2].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CC_E_DELAY, actual[2].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 0x03, actual[2].dataMSB );
-        CPPUNIT_ASSERT( actual[2].hasLSB );
-        CPPUNIT_ASSERT_EQUAL( 0x74, actual[2].dataLSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[2].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)0, actual[3].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CC_E_EXPRESSION, actual[3].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 127, actual[3].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[3].hasLSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[3].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)0, actual[4].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CC_BS_VERSION_AND_DEVICE, actual[4].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 0x00, actual[4].dataMSB );
-        CPPUNIT_ASSERT( actual[4].hasLSB );
-        CPPUNIT_ASSERT_EQUAL( 0x00, actual[4].dataLSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[4].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)0, actual[5].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CC_BS_DELAY, actual[5].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 0x00, actual[5].dataMSB );
-        CPPUNIT_ASSERT( actual[5].hasLSB );
-        CPPUNIT_ASSERT_EQUAL( 0x00, actual[5].dataLSB );
-        CPPUNIT_ASSERT( actual[5].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)0, actual[6].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CC_BS_LANGUAGE_TYPE, actual[6].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 0, actual[6].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[6].hasLSB );
-        CPPUNIT_ASSERT( actual[6].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)0, actual[7].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::PC_VOICE_TYPE, actual[7].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 0, actual[7].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[7].hasLSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[7].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)0, actual[8].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::VCP_DELAY, actual[8].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 0x03, actual[8].dataMSB );
-        CPPUNIT_ASSERT( actual[8].hasLSB );
-        CPPUNIT_ASSERT_EQUAL( 0x74, actual[8].dataLSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[8].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)0, actual[9].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::VCP_VOICE_CHANGE_PARAMETER_ID, actual[9].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 0x31, actual[9].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[9].hasLSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[9].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)0, actual[10].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::VCP_VOICE_CHANGE_PARAMETER, actual[10].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 64, actual[10].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[10].hasLSB );
-        CPPUNIT_ASSERT( actual[10].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)0, actual[11].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::VCP_VOICE_CHANGE_PARAMETER_ID, actual[11].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 0x32, actual[11].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[11].hasLSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[11].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)0, actual[12].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::VCP_VOICE_CHANGE_PARAMETER, actual[12].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 64, actual[12].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[12].hasLSB );
-        CPPUNIT_ASSERT( actual[12].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)0, actual[13].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::VCP_VOICE_CHANGE_PARAMETER_ID, actual[13].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 0x33, actual[13].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[13].hasLSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[13].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)0, actual[14].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::VCP_VOICE_CHANGE_PARAMETER, actual[14].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 64, actual[14].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[14].hasLSB );
-        CPPUNIT_ASSERT( actual[14].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)0, actual[15].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::VCP_VOICE_CHANGE_PARAMETER_ID, actual[15].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 0x34, actual[15].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[15].hasLSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[15].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)0, actual[16].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::VCP_VOICE_CHANGE_PARAMETER, actual[16].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 64, actual[16].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[16].hasLSB );
-        CPPUNIT_ASSERT( actual[16].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)0, actual[17].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::VCP_VOICE_CHANGE_PARAMETER_ID, actual[17].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 0x35, actual[17].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[17].hasLSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[17].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)0, actual[18].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::VCP_VOICE_CHANGE_PARAMETER, actual[18].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 64, actual[18].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[18].hasLSB );
-        CPPUNIT_ASSERT( actual[18].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)0, actual[19].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::VCP_VOICE_CHANGE_PARAMETER_ID, actual[19].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 0x70, actual[19].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[19].hasLSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[19].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)0, actual[20].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::VCP_VOICE_CHANGE_PARAMETER, actual[20].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 64, actual[20].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[20].hasLSB );
-        CPPUNIT_ASSERT( actual[20].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)0, actual[21].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::PB_DELAY, actual[21].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 0x03, actual[21].dataMSB );
-        CPPUNIT_ASSERT( actual[21].hasLSB );
-        CPPUNIT_ASSERT_EQUAL( 0x74, actual[21].dataLSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[21].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)0, actual[22].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::PB_PITCH_BEND, actual[22].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 0x7F, actual[22].dataMSB );
-        CPPUNIT_ASSERT( actual[22].hasLSB );
-        CPPUNIT_ASSERT_EQUAL( 0x7F, actual[22].dataLSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[22].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, actual[23].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CC_PBS_PITCH_BEND_SENSITIVITY, actual[23].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 24, actual[23].dataMSB );
-        CPPUNIT_ASSERT( actual[23].hasLSB );
-        CPPUNIT_ASSERT_EQUAL( 0x00, actual[23].dataLSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[23].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, actual[24].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CC_E_EXPRESSION, actual[24].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 0, actual[24].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[24].hasLSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[24].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, actual[25].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CC_BS_VERSION_AND_DEVICE, actual[25].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 0x00, actual[25].dataMSB );
-        CPPUNIT_ASSERT( actual[25].hasLSB );
-        CPPUNIT_ASSERT_EQUAL( 0x00, actual[25].dataLSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[25].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, actual[26].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CC_BS_DELAY, actual[26].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 0x03, actual[26].dataMSB );
-        CPPUNIT_ASSERT( actual[26].hasLSB );
-        CPPUNIT_ASSERT_EQUAL( 0x74, actual[26].dataLSB );
-        CPPUNIT_ASSERT( actual[26].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, actual[27].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CC_BS_LANGUAGE_TYPE, actual[27].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 0, actual[27].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[27].hasLSB );
-        CPPUNIT_ASSERT( actual[27].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, actual[28].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::PC_VOICE_TYPE, actual[28].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 0, actual[28].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[28].hasLSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[28].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, actual[29].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::PB_PITCH_BEND, actual[29].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 0x00, actual[29].dataMSB );
-        CPPUNIT_ASSERT( actual[29].hasLSB );
-        CPPUNIT_ASSERT_EQUAL( 0x00, actual[29].dataLSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[29].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, actual[30].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_DELAY, actual[30].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 0x03, actual[30].dataMSB );
-        CPPUNIT_ASSERT( actual[30].hasLSB );
-        CPPUNIT_ASSERT_EQUAL( 0x74, actual[30].dataLSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[30].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, actual[31].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_NOTE_NUMBER, actual[31].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 60, actual[31].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[31].hasLSB );
-        CPPUNIT_ASSERT( actual[31].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, actual[32].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_VELOCITY, actual[32].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 127, actual[32].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[32].hasLSB );
-        CPPUNIT_ASSERT( actual[32].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, actual[33].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_NOTE_DURATION, actual[33].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 0x03, actual[33].dataMSB );
-        CPPUNIT_ASSERT( actual[33].hasLSB );
-        CPPUNIT_ASSERT_EQUAL( 0x74, actual[33].dataLSB );
-        CPPUNIT_ASSERT( actual[33].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, actual[34].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_NOTE_LOCATION, actual[34].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 3, actual[34].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[34].hasLSB );
-        CPPUNIT_ASSERT( actual[34].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, actual[35].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_PHONETIC_SYMBOL_BYTES, actual[35].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 1, actual[35].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[35].hasLSB );
-        CPPUNIT_ASSERT( actual[35].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, actual[36].clock );
-        CPPUNIT_ASSERT_EQUAL( (MidiParameterType::MidiParameterTypeEnum)0x5013, actual[36].nrpn );
-        CPPUNIT_ASSERT_EQUAL( (int)'a', actual[36].dataMSB );
-        CPPUNIT_ASSERT( actual[36].hasLSB );
-        CPPUNIT_ASSERT_EQUAL( 0, actual[36].dataLSB );
-        CPPUNIT_ASSERT( actual[36].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, actual[37].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_PHONETIC_SYMBOL_CONTINUATION, actual[37].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 0x7f, actual[37].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[37].hasLSB );
-        CPPUNIT_ASSERT( actual[37].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, actual[38].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_V1MEAN, actual[38].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 4, actual[38].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[38].hasLSB );
-        CPPUNIT_ASSERT( actual[38].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, actual[39].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_D1MEAN, actual[39].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 8, actual[39].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[39].hasLSB );
-        CPPUNIT_ASSERT( actual[39].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, actual[40].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_D1MEAN_FIRST_NOTE, actual[40].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 0x14, actual[40].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[40].hasLSB );
-        CPPUNIT_ASSERT( actual[40].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, actual[41].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_D2MEAN, actual[41].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 28, actual[41].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[41].hasLSB );
-        CPPUNIT_ASSERT( actual[41].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, actual[42].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_D4MEAN, actual[42].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 63, actual[42].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[42].hasLSB );
-        CPPUNIT_ASSERT( actual[42].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, actual[43].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_PMEAN_ONSET_FIRST_NOTE, actual[43].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 65, actual[43].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[43].hasLSB );
-        CPPUNIT_ASSERT( actual[43].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, actual[44].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_VMEAN_NOTE_TRNSITION, actual[44].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 66, actual[44].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[44].hasLSB );
-        CPPUNIT_ASSERT( actual[44].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, actual[45].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_PMEAN_ENDING_NOTE, actual[45].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 67, actual[45].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[45].hasLSB );
-        CPPUNIT_ASSERT( actual[45].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, actual[46].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_ADD_PORTAMENTO, actual[46].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 3, actual[46].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[46].hasLSB );
-        CPPUNIT_ASSERT( actual[46].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, actual[47].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_CHANGE_AFTER_PEAK, actual[47].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 50, actual[47].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[47].hasLSB );
-        CPPUNIT_ASSERT( actual[47].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, actual[48].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_ACCENT, actual[48].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 50, actual[48].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[48].hasLSB );
-        CPPUNIT_ASSERT( actual[48].isMSBOmittingRequired );
-
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1440, actual[49].clock );
-        CPPUNIT_ASSERT_EQUAL( MidiParameterType::CVM_NM_NOTE_MESSAGE_CONTINUATION, actual[49].nrpn );
-        CPPUNIT_ASSERT_EQUAL( 0x7f, actual[49].dataMSB );
-        CPPUNIT_ASSERT_EQUAL( false, actual[49].hasLSB );
-        CPPUNIT_ASSERT( actual[49].isMSBOmittingRequired );
+		for (int i = 0; i < expected.size(); ++i) {
+			ostringstream message;
+			message << "#" << i << " element";
+			NrpnEventSpec const& spec = expected[i];
+			CPPUNIT_ASSERT_EQUAL_MESSAGE(message.str(), spec.clock, actual[i].clock );
+			CPPUNIT_ASSERT_EQUAL_MESSAGE(message.str(), spec.nrpn, actual[i].nrpn );
+			CPPUNIT_ASSERT_EQUAL_MESSAGE(message.str(), spec.dataMSB, actual[i].dataMSB );
+			CPPUNIT_ASSERT_EQUAL_MESSAGE(message.str(), spec.hasLSB, actual[i].hasLSB );
+			if (spec.hasLSB) {
+				CPPUNIT_ASSERT_EQUAL_MESSAGE(message.str(), spec.dataLSB, actual[i].dataLSB );
+			}
+			CPPUNIT_ASSERT_EQUAL_MESSAGE(message.str(), spec.isMSBOmittingRequired, actual[i].isMSBOmittingRequired );
+		}
     }
 
     CPPUNIT_TEST_SUITE( VocaloidMidiEventListFactoryTest );

@@ -19,6 +19,7 @@
 #include "Track.hpp"
 #include "TempoList.hpp"
 #include "MidiParameterType.hpp"
+#include <algorithm>
 
 VSQ_BEGIN_NAMESPACE
 
@@ -228,7 +229,7 @@ protected:
             }
         }
 
-        std::sort( list.begin(), list.end(), NrpnEvent::compare );
+        std::stable_sort( list.begin(), list.end(), NrpnEvent::compare );
         vector<NrpnEvent> merged;
         for( int i = 0; i < list.size(); i++ ){
             vector<NrpnEvent> expanded = list[i].expand();
@@ -546,7 +547,7 @@ protected:
                 }
             }
         }
-        std::sort( ret.begin(), ret.end(), NrpnEvent::compare );
+        std::stable_sort( ret.begin(), ret.end(), NrpnEvent::compare );
         return ret;
     }
 
@@ -584,7 +585,7 @@ protected:
                 lastDelay = addVoiceChangeParameters( res, list, tempoList, msPreSend, lastDelay );
             }
         }
-        std::sort( res.begin(), res.end(), NrpnEvent::compare );
+        std::stable_sort( res.begin(), res.end(), NrpnEvent::compare );
         return res;
     }
 
@@ -622,24 +623,17 @@ protected:
             _getActualClockAndDelay( tempoList, clock, msPreSend, &actualClock, &delay );
 
             if( actualClock >= 0 ){
-                NrpnEvent add( 0, MidiParameterType::CC_BS_DELAY, 0 );
-                bool initialized = false;
-                if( lastDelay != delay ){
-                    int delayMsb, delayLsb;
-                    _getMsbAndLsb( delay, &delayMsb, &delayLsb );
-                    add = NrpnEvent( actualClock, MidiParameterType::VCP_DELAY, delayMsb, delayLsb );
-                    initialized = true;
-                }
-                lastDelay = delay;
+				if (lastDelay != delay) {
+					int delayMsb, delayLsb;
+					_getMsbAndLsb( delay, &delayMsb, &delayLsb );
+					dest.emplace_back(actualClock, MidiParameterType::VCP_DELAY, delayMsb, delayLsb);
+					lastDelay = delay;
+				}
 
-                if( false == initialized ){
-                    add = NrpnEvent( actualClock, MidiParameterType::VCP_VOICE_CHANGE_PARAMETER_ID, id );
-                }else{
-                    add.append( MidiParameterType::VCP_VOICE_CHANGE_PARAMETER_ID, id );
-                }
-                add.append( MidiParameterType::VCP_VOICE_CHANGE_PARAMETER, value, true );
-                dest.push_back( add );
-            }
+				NrpnEvent add( actualClock, MidiParameterType::VCP_VOICE_CHANGE_PARAMETER_ID, id );
+				add.append( MidiParameterType::VCP_VOICE_CHANGE_PARAMETER, value, true );
+				dest.push_back( add );
+			}
         }
         return lastDelay;
     }
