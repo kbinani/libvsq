@@ -142,20 +142,20 @@ public:
         listA.move( 240, 481, 19 );
 
         string expected = "0=11,480=17,481=19";
-        assertEqual( expected, listA.getData() );
-        assertEqual( 3, listA.size() );
+        CPPUNIT_ASSERT_EQUAL( expected, listA.getData() );
+        CPPUNIT_ASSERT_EQUAL( 3, listA.size() );
 
-        assertEqual( 11, listA.get( 0 ).value );
-        assertEqual( (tick_t)0, listA.getKeyClock( 0 ) );
-        assertEqual( 1, listA.get( 0 ).id );
+        CPPUNIT_ASSERT_EQUAL( 11, listA.get( 0 ).value );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)0, listA.getKeyClock( 0 ) );
+        CPPUNIT_ASSERT_EQUAL( 1, listA.get( 0 ).id );
 
-        assertEqual( 17, listA.get( 1 ).value );
-        assertEqual( (tick_t)480, listA.getKeyClock( 1 ) );
-        assertEqual( 3, listA.get( 1 ).id );
+        CPPUNIT_ASSERT_EQUAL( 17, listA.get( 1 ).value );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)480, listA.getKeyClock( 1 ) );
+        CPPUNIT_ASSERT_EQUAL( 3, listA.get( 1 ).id );
 
-        assertEqual( 19, listA.get( 2 ).value );
-        assertEqual( (tick_t)481, listA.getKeyClock( 2 ) );
-        assertEqual( 2, listA.get( 2 ).id );
+        CPPUNIT_ASSERT_EQUAL( 19, listA.get( 2 ).value );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)481, listA.getKeyClock( 2 ) );
+        CPPUNIT_ASSERT_EQUAL( 2, listA.get( 2 ).id );
 
         // 移動先にデータがある場合
         BPList listB( "foo", 63, -10, 1000 );
@@ -165,16 +165,16 @@ public:
         listB.move( 240, 480, 19 );
 
         expected = "0=11,480=19";
-        assertEqual( 2, listB.size() );
-        assertEqual( expected, listB.getData() );
+        CPPUNIT_ASSERT_EQUAL( 2, listB.size() );
+        CPPUNIT_ASSERT_EQUAL( expected, listB.getData() );
 
-        assertEqual( 11, listB.get( 0 ).value );
-        assertEqual( (tick_t)0, listB.getKeyClock( 0 ) );
-        assertEqual( 1, listB.get( 0 ).id );
+        CPPUNIT_ASSERT_EQUAL( 11, listB.get( 0 ).value );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)0, listB.getKeyClock( 0 ) );
+        CPPUNIT_ASSERT_EQUAL( 1, listB.get( 0 ).id );
 
-        assertEqual( 19, listB.get( 1 ).value );
-        assertEqual( (tick_t)480, listB.getKeyClock( 1 ) );
-        assertEqual( 2, listB.get( 1 ).id );
+        CPPUNIT_ASSERT_EQUAL( 19, listB.get( 1 ).value );
+        CPPUNIT_ASSERT_EQUAL( (tick_t)480, listB.getKeyClock( 1 ) );
+        CPPUNIT_ASSERT_EQUAL( 2, listB.get( 1 ).id );
     }
     
     void testGetValue()
@@ -284,8 +284,8 @@ public:
         stream.setPointer( -1 );
         string lastLine = list.appendFromText( stream );
         string expected = "0=11,340=13,480=17";
-        assertEqual( expected, list.getData() );
-        assertEqual( string( "[foooo]" ), lastLine );
+        CPPUNIT_ASSERT_EQUAL( expected, list.getData() );
+        CPPUNIT_ASSERT_EQUAL( string( "[foooo]" ), lastLine );
     }
     
     void testSize()
@@ -370,11 +370,11 @@ public:
 
         list.removeWithId( 1 );
         string expected = "1920=12";
-        assertEqual( expected, list.getData() );
+        CPPUNIT_ASSERT_EQUAL( expected, list.getData() );
 
         // 存在しないIDを削除しようとする
         list.removeWithId( 1 );
-        assertEqual( expected, list.getData() );
+        CPPUNIT_ASSERT_EQUAL( expected, list.getData() );
     }
     
     void testGetValueAtWithoutLastIndex()

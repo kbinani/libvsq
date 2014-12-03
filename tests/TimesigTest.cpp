@@ -41,9 +41,9 @@ public:
     {
         Timesig a( 4, 4, 0 );
         Timesig b( 4, 4, 1 );
-        assertEqual( true, a.compareTo( b ) );
-        assertEqual( false, b.compareTo( a ) );
-        assertEqual( false, a.compareTo( a ) );
+        CPPUNIT_ASSERT_EQUAL( true, a.compareTo( b ) );
+        CPPUNIT_ASSERT_EQUAL( false, b.compareTo( a ) );
+        CPPUNIT_ASSERT_EQUAL( false, a.compareTo( a ) );
     }
 
     void testClone(){
