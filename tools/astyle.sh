@@ -2,7 +2,7 @@
 
 (
   cd "$(cd "$(dirname "$0")"; pwd)/../"
-  for FILE in $(git ls-files | grep -e '\.hpp' -e '\.cpp'); do
+  for FILE in $(git ls-files | grep -e '\.hpp' -e '\.cpp' -e '\.h'); do
     astyle \
       --style=linux \
       --indent=force-tab=4 \

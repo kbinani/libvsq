@@ -102,4 +102,5 @@ ADD_LIBRARY(vsq STATIC
     include/libvsq/Namespace.hpp
     include/libvsq/BasicTypes.hpp
     include/libvsq/EnumUtil.hpp
-    src/BP.cpp)
+    src/BP.cpp
+	include/libvsq/libvsq.h)
