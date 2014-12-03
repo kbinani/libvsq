@@ -24,39 +24,40 @@ VSQ_BEGIN_NAMESPACE
 class BP
 {
 public:
-    /**
-     * @brief データ点の値
-     */
-    int value;
+	/**
+	 * @brief データ点の値
+	 */
+	int value;
 
-    /**
-     * @brief データ点のユニーク ID
-     */
-    int id;
+	/**
+	 * @brief データ点のユニーク ID
+	 */
+	int id;
 
-    /**
-     * @brief コンストラクタ
-     * @param value (int) データ点の値
-     * @param id (int) データ点のユニーク ID
-     */
-    explicit BP( int value, int id )
-    {
-        this->value = value;
-        this->id = id;
-    }
+	/**
+	 * @brief コンストラクタ
+	 * @param value (int) データ点の値
+	 * @param id (int) データ点のユニーク ID
+	 */
+	explicit BP(int value, int id)
+	{
+		this->value = value;
+		this->id = id;
+	}
 
-    /**
-     * @brief コピーを作成する
-     * @return (BP) このインスタンスのコピー
-     */
-    BP clone() const{
-        return BP( value, id );
-    }
+	/**
+	 * @brief コピーを作成する
+	 * @return (BP) このインスタンスのコピー
+	 */
+	BP clone() const
+	{
+		return BP(value, id);
+	}
 
 private:
-    BP()
-    {
-    }
+	BP()
+	{
+	}
 };
 
 VSQ_END_NAMESPACE

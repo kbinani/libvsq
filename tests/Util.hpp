@@ -10,18 +10,21 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
 #define REGISTER_TEST_SUITE( ATestFixtureType )      \
-  static CppUnit::AutoRegisterSuite< ATestFixtureType > CPPUNIT_JOIN( testSuite, ATestFixtureType )
+	static CppUnit::AutoRegisterSuite< ATestFixtureType > CPPUNIT_JOIN( testSuite, ATestFixtureType )
 
-class TestUtil{
+class TestUtil
+{
 private:
-    static std::string fixtureRootPath;
+	static std::string fixtureRootPath;
 
 public:
-    static void setFixtureRootPath( const std::string &fixtureRootPath ){
-        TestUtil::fixtureRootPath = fixtureRootPath;
-    }
+	static void setFixtureRootPath(const std::string& fixtureRootPath)
+	{
+		TestUtil::fixtureRootPath = fixtureRootPath;
+	}
 
-    static std::string getFixtureRootPath(){
-        return TestUtil::fixtureRootPath;
-    }
+	static std::string getFixtureRootPath()
+	{
+		return TestUtil::fixtureRootPath;
+	}
 };

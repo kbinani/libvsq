@@ -24,45 +24,46 @@ VSQ_BEGIN_NAMESPACE
 class MeasureLine
 {
 public:
-    /**
-     * @brief tick 単位の時刻
-     */
-    tick_t tick;
+	/**
+	 * @brief tick 単位の時刻
+	 */
+	tick_t tick;
 
-    /**
-     * @brief 小節の境界かどうか
-     */
-    bool isBorder;
+	/**
+	 * @brief 小節の境界かどうか
+	 */
+	bool isBorder;
 
-    /**
-     * @brief 補助線かどうか
-     */
-    bool isAssistLine;
+	/**
+	 * @brief 補助線かどうか
+	 */
+	bool isAssistLine;
 
-    /**
-     * @brief 小節数
-     */
-    int barCount;
+	/**
+	 * @brief 小節数
+	 */
+	int barCount;
 
-    /**
-     * @brief 拍子の分子
-     */
-    int numerator;
+	/**
+	 * @brief 拍子の分子
+	 */
+	int numerator;
 
-    /**
-     * @brief 拍子の分母
-     */
-    int denominator;
+	/**
+	 * @brief 拍子の分母
+	 */
+	int denominator;
 
 public:
-    explicit MeasureLine( tick_t tick, int barCount, int numerator, int denominator, bool isBorder, bool isAssistLine ){
-        this->tick = tick;
-        this->barCount = barCount;
-        this->numerator = numerator;
-        this->denominator = denominator;
-        this->isBorder = isBorder;
-        this->isAssistLine = isAssistLine;
-    }
+	explicit MeasureLine(tick_t tick, int barCount, int numerator, int denominator, bool isBorder, bool isAssistLine)
+	{
+		this->tick = tick;
+		this->barCount = barCount;
+		this->numerator = numerator;
+		this->denominator = denominator;
+		this->isBorder = isBorder;
+		this->isAssistLine = isAssistLine;
+	}
 };
 
 VSQ_END_NAMESPACE

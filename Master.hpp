@@ -25,63 +25,69 @@ VSQ_BEGIN_NAMESPACE
 /**
  * @brief VSQ ファイルのメタテキストの [Master] に記録される内容を取り扱うクラス
  */
-class Master{
+class Master
+{
 public:
-    /**
-     * @brief プリメジャーの長さ(小節数)
-     */
-    int preMeasure;
+	/**
+	 * @brief プリメジャーの長さ(小節数)
+	 */
+	int preMeasure;
 
-    explicit Master(){
-        this->preMeasure = 1;
-    }
+	explicit Master()
+	{
+		this->preMeasure = 1;
+	}
 
-    /**
-     * @brief プリメジャーを指定し、初期化を行う
-     * @param preMeasure プリメジャーの長さ(小節数)
-     */
-    explicit Master( int preMeasure ){
-        this->preMeasure = preMeasure;
-    }
+	/**
+	 * @brief プリメジャーを指定し、初期化を行う
+	 * @param preMeasure プリメジャーの長さ(小節数)
+	 */
+	explicit Master(int preMeasure)
+	{
+		this->preMeasure = preMeasure;
+	}
 
-    /**
-     * @brief テキストストリームから読み込むことで初期化を行う
-     * @param stream 読み込むテキストストリーム
-     * @param lastLine 読み込んだ最後の行。
-     */
-    explicit Master( TextStream &stream, std::string &lastLine ){
-        this->preMeasure = 0;
-        lastLine = stream.readLine();
-        while( lastLine.find( "[" ) == std::string::npos ){
-            std::vector<std::string> spl = StringUtil::explode( "=", lastLine );
-            if( spl[0] == "PreMeasure" ){
-                this->preMeasure = StringUtil::parseInt<int>( spl[1] );
-            }
-            if( !stream.ready() ){
-                break;
-            }
-            lastLine = stream.readLine();
-        }
-    }
+	/**
+	 * @brief テキストストリームから読み込むことで初期化を行う
+	 * @param stream 読み込むテキストストリーム
+	 * @param lastLine 読み込んだ最後の行。
+	 */
+	explicit Master(TextStream& stream, std::string& lastLine)
+	{
+		this->preMeasure = 0;
+		lastLine = stream.readLine();
+		while (lastLine.find("[") == std::string::npos) {
+			std::vector<std::string> spl = StringUtil::explode("=", lastLine);
+			if (spl[0] == "PreMeasure") {
+				this->preMeasure = StringUtil::parseInt<int>(spl[1]);
+			}
+			if (!stream.ready()) {
+				break;
+			}
+			lastLine = stream.readLine();
+		}
+	}
 
-    /**
-     * @brief コピーを作成する
-     * @return このオブジェクトのコピー
-     */
-    Master clone() const{
-        return Master( this->preMeasure );
-    }
+	/**
+	 * @brief コピーを作成する
+	 * @return このオブジェクトのコピー
+	 */
+	Master clone() const
+	{
+		return Master(this->preMeasure);
+	}
 
-    /**
-     * @brief テキストストリームに出力する
-     * @param stream (TextStream) 出力先
-     */
-    void write( TextStream &stream ) const{
-        stream.writeLine( "[Master]" );
-        std::ostringstream oss;
-        oss << "PreMeasure=" << this->preMeasure;
-        stream.writeLine( oss.str() );
-    }
+	/**
+	 * @brief テキストストリームに出力する
+	 * @param stream (TextStream) 出力先
+	 */
+	void write(TextStream& stream) const
+	{
+		stream.writeLine("[Master]");
+		std::ostringstream oss;
+		oss << "PreMeasure=" << this->preMeasure;
+		stream.writeLine(oss.str());
+	}
 };
 
 VSQ_END_NAMESPACE

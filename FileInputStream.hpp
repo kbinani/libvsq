@@ -24,62 +24,68 @@ VSQ_BEGIN_NAMESPACE
 /**
  * @brief ファイルからの読み込みストリーム
  */
-class FileInputStream : public InputStream{
+class FileInputStream : public InputStream
+{
 private:
-    std::ifstream stream;
+	std::ifstream stream;
 
 public:
-    explicit FileInputStream( const std::string &filePath )
-        : stream( filePath.c_str(), std::ios::binary )
-    {
-    }
+	explicit FileInputStream(const std::string& filePath)
+		: stream(filePath.c_str(), std::ios::binary)
+	{
+	}
 
-    /**
-     * @brief 1 バイトを読み込む
-     * @return 読み込んだバイト値
-     */
-    int read(){
-        int result = stream.get();
-        if( stream.eof() ){
-            return -1;
-        }else{
-            return result;
-        }
-    }
+	/**
+	 * @brief 1 バイトを読み込む
+	 * @return 読み込んだバイト値
+	 */
+	int read()
+	{
+		int result = stream.get();
+		if (stream.eof()) {
+			return -1;
+		} else {
+			return result;
+		}
+	}
 
-    /**
-     * @brief バッファーに読み込む
-     * @param buffer 読み込んだデータを格納するバッファー
-     * @param startIndex 読み込んだデータを格納するオフセット
-     * @param length 読み込む長さ
-     */
-    int read( char *buffer, int64_t startIndex, int64_t length ){
-        return stream.read( buffer + sizeof( char ) * startIndex, length ).gcount();
-    }
+	/**
+	 * @brief バッファーに読み込む
+	 * @param buffer 読み込んだデータを格納するバッファー
+	 * @param startIndex 読み込んだデータを格納するオフセット
+	 * @param length 読み込む長さ
+	 */
+	int read(char* buffer, int64_t startIndex, int64_t length)
+	{
+		return stream.read(buffer + sizeof(char) * startIndex, length).gcount();
+	}
 
-    /**
-     * @brief ファイルポインターを移動する
-     * @param position ファイルポインター
-     */
-    void seek( int64_t position ){
-        stream.clear();
-        stream.seekg( position );
-    }
+	/**
+	 * @brief ファイルポインターを移動する
+	 * @param position ファイルポインター
+	 */
+	void seek(int64_t position)
+	{
+		stream.clear();
+		stream.seekg(position);
+	}
 
-    /**
-     * @brief ファイルポインターを取得する
-     * @return ファイルポインター
-     */
-    int64_t getPointer(){
-        return (int64_t)stream.tellg();
-    }
+	/**
+	 * @brief ファイルポインターを取得する
+	 * @return ファイルポインター
+	 */
+	int64_t getPointer()
+	{
+		return (int64_t)stream.tellg();
+	}
 
-    /**
-     * @brief ストリームを閉じる
-     */
-    void close(){
-        stream.close();
-    }
+	/**
+	 * @brief ストリームを閉じる
+	 */
+	void close()
+	{
+		stream.close();
+	}
 };
 
 VSQ_END_NAMESPACE

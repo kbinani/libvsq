@@ -27,3 +27,5 @@ CMakeCache.txt
 Debug
 Release
 *.xcodeproj
+*.orig
+

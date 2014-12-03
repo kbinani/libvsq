@@ -22,46 +22,54 @@ VSQ_BEGIN_NAMESPACE
 /**
  * @brief ファイルへの出力を行う、OutputStream の実装
  */
-class FileOutputStream : public OutputStream{
+class FileOutputStream : public OutputStream
+{
 private:
-    /**
-     * @brief 出力先のストリーム
-     */
-    std::ofstream stream;
+	/**
+	 * @brief 出力先のストリーム
+	 */
+	std::ofstream stream;
 
 public:
-    /**
-     * @brief 出力先のファイルパスを指定し、初期化する
-     */
-    explicit FileOutputStream( const std::string &filePath ){
-        stream.open( filePath.c_str(), std::ios::binary );
-        if( !stream.is_open() ) throw OutputStream::IOException();
-    }
+	/**
+	 * @brief 出力先のファイルパスを指定し、初期化する
+	 */
+	explicit FileOutputStream(const std::string& filePath)
+	{
+		stream.open(filePath.c_str(), std::ios::binary);
+		if (!stream.is_open()) { throw OutputStream::IOException(); }
+	}
 
-    ~FileOutputStream(){
-        if( stream.is_open() ) stream.close();
-    }
+	~FileOutputStream()
+	{
+		if (stream.is_open()) { stream.close(); }
+	}
 
-    void write( const char *buffer, int64_t startIndex, int64_t length ){
-        stream.write( buffer + sizeof( char ) * startIndex, length );
-    }
+	void write(const char* buffer, int64_t startIndex, int64_t length)
+	{
+		stream.write(buffer + sizeof(char) * startIndex, length);
+	}
 
-    void write( int value ){
-        char c = 0xFF & value;
-        stream.write( &c, 1 );
-    }
+	void write(int value)
+	{
+		char c = 0xFF & value;
+		stream.write(&c, 1);
+	}
 
-    void seek( int64_t position ){
-        stream.seekp( position, std::ios::beg );
-    }
+	void seek(int64_t position)
+	{
+		stream.seekp(position, std::ios::beg);
+	}
 
-    int64_t getPointer(){
-        return (int64_t)stream.tellp();
-    }
+	int64_t getPointer()
+	{
+		return (int64_t)stream.tellp();
+	}
 
-    void close(){
-        stream.close();
-    }
+	void close()
+	{
+		stream.close();
+	}
 };
 
 VSQ_END_NAMESPACE

@@ -26,64 +26,69 @@ VSQ_BEGIN_NAMESPACE
 class VibratoBP
 {
 public:
-    /**
-     * データ点の X 値
-     * @var double
-     */
-    double x;
+	/**
+	 * データ点の X 値
+	 * @var double
+	 */
+	double x;
 
-    /**
-     * データ点の Y 値
-     * @var int
-     */
-    int y;
+	/**
+	 * データ点の Y 値
+	 * @var int
+	 */
+	int y;
 
 public:
-    VibratoBP(){
-        x = 0.0;
-        y = 0;
-    }
+	VibratoBP()
+	{
+		x = 0.0;
+		y = 0;
+	}
 
-    /**
-     * @brief 初期化を行う
-     * @param x (double) x 軸の値
-     * @param y (int) y 軸の値
-     * @return (VibratoBP)
-     */
-    VibratoBP( double x, int y ){
-        this->x = x;
-        this->y = y;
-    }
+	/**
+	 * @brief 初期化を行う
+	 * @param x (double) x 軸の値
+	 * @param y (int) y 軸の値
+	 * @return (VibratoBP)
+	 */
+	VibratoBP(double x, int y)
+	{
+		this->x = x;
+		this->y = y;
+	}
 
-    /**
-     * @brief 順序を比較する
-     * @param item (VibratoBP) 比較対象のアイテム
-     * @return (int) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
-     */
-    int compareTo(const VSQ_NS::VibratoBP &item)const {
-        return compareCore( *this, item );
-    }
+	/**
+	 * @brief 順序を比較する
+	 * @param item (VibratoBP) 比較対象のアイテム
+	 * @return (int) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
+	 */
+	int compareTo(const VSQ_NS::VibratoBP& item)const
+	{
+		return compareCore(*this, item);
+	}
 
-    /**
-     * @brief 2 つの {@link VibratoBP} を比較する
-     * @param a (VibratoBP) 比較対象のオブジェクト
-     * @param b (VibratoBP) 比較対象のオブジェクト
-     * @return (boolean) <code>a</code> が <code>b</code> よりも小さい場合は <code>true</code>、そうでない場合は <code>false</code> を返す
-     */
-    static bool compare( const VSQ_NS::VibratoBP &a, const VSQ_NS::VibratoBP &b ){
-        return compareCore( a, b ) < 0;
-    }
+	/**
+	 * @brief 2 つの {@link VibratoBP} を比較する
+	 * @param a (VibratoBP) 比較対象のオブジェクト
+	 * @param b (VibratoBP) 比較対象のオブジェクト
+	 * @return (boolean) <code>a</code> が <code>b</code> よりも小さい場合は <code>true</code>、そうでない場合は <code>false</code> を返す
+	 */
+	static bool compare(const VSQ_NS::VibratoBP& a, const VSQ_NS::VibratoBP& b)
+	{
+		return compareCore(a, b) < 0;
+	}
 
 private:
-    static int compareCore( const VSQ_NS::VibratoBP &a, const VSQ_NS::VibratoBP &b ){
-        double v = a.x - b.x;
-        if( v > 0.0 ){
-            return 1;
-        }else if( v < 0.0 ){
-            return -1;
-        }
-        return 0;
-    }
+	static int compareCore(const VSQ_NS::VibratoBP& a, const VSQ_NS::VibratoBP& b)
+	{
+		double v = a.x - b.x;
+		if (v > 0.0) {
+			return 1;
+		} else if (v < 0.0) {
+			return -1;
+		}
+		return 0;
+	}
 
 };
 

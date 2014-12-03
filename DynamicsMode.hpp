@@ -21,19 +21,20 @@ VSQ_BEGIN_NAMESPACE
 /**
  * @brief VOCALOID1における、ダイナミクスモードを表す定数を格納するための列挙子
  */
-class DynamicsMode{
+class DynamicsMode
+{
 public:
-    enum DynamicsModeEnum{
-        /**
-         * @brief DYNカーブが非表示になるモード(デフォルト)
-         */
-        STANDARD = 0,
+	enum DynamicsModeEnum {
+		/**
+		 * @brief DYNカーブが非表示になるモード(デフォルト)
+		 */
+		STANDARD = 0,
 
-        /**
-         * @brief DYNカーブが表示されるモード(エキスパートモード)
-         */
-        EXPERT = 1
-    };
+		/**
+		 * @brief DYNカーブが表示されるモード(エキスパートモード)
+		 */
+		EXPERT = 1
+	};
 };
 
 VSQ_END_NAMESPACE

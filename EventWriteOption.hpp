@@ -21,32 +21,32 @@ VSQ_BEGIN_NAMESPACE
 class EventWriteOption
 {
 public:
-    bool length;
-    bool note;
-    bool dynamics;
-    bool pmBendDepth;
-    bool pmBendLength;
-    bool pmbPortamentoUse;
-    bool demDecGainRate;
-    bool demAccent;
-    //TODO:UTAU専用のフィールドなので消す
-    bool preUtterance;
-    //TODO:UTAU専用のフィールドなので消す
-    bool voiceOverlap;
+	bool length;
+	bool note;
+	bool dynamics;
+	bool pmBendDepth;
+	bool pmBendLength;
+	bool pmbPortamentoUse;
+	bool demDecGainRate;
+	bool demAccent;
+	//TODO:UTAU専用のフィールドなので消す
+	bool preUtterance;
+	//TODO:UTAU専用のフィールドなので消す
+	bool voiceOverlap;
 
-    EventWriteOption()
-    {
-        length = true;
-        note = true;
-        dynamics = true;
-        pmBendDepth = true;
-        pmBendLength = true;
-        pmbPortamentoUse = true;
-        demDecGainRate = true;
-        demAccent = true;
-        preUtterance = false;
-        voiceOverlap = false;
-    }
+	EventWriteOption()
+	{
+		length = true;
+		note = true;
+		dynamics = true;
+		pmBendDepth = true;
+		pmBendLength = true;
+		pmbPortamentoUse = true;
+		demDecGainRate = true;
+		demAccent = true;
+		preUtterance = false;
+		voiceOverlap = false;
+	}
 };
 
 VSQ_END_NAMESPACE
