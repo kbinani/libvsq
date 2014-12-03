@@ -1,5 +1,5 @@
 /**
- * SMFReader.cpp
+ * @file SMFReader.cpp
  * Copyright © 2014 kbinani
  *
  * This file is part of libvsq.

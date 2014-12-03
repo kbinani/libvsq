@@ -1,5 +1,5 @@
 /**
- * BitConverter.cpp
+ * @file BitConverter.cpp
  * Copyright © 2014 kbinani
  *
  * This file is part of libvsq.

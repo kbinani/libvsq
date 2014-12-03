@@ -1,5 +1,5 @@
 /**
- * FileOutputStream.cpp
+ * @file FileOutputStream.cpp
  * Copyright © 2014 kbinani
  *
  * This file is part of libvsq.

@@ -1,5 +1,5 @@
 /**
- * Timesig.cpp
+ * @file Timesig.cpp
  * Copyright © 2014 kbinani
  *
  * This file is part of libvsq.

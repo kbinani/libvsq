@@ -1,5 +1,5 @@
 /**
- * StreamWriter.cpp
+ * @file StreamWriter.cpp
  * Copyright © 2014 kbinani
  *
  * This file is part of libvsq.

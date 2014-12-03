@@ -1,5 +1,5 @@
 /**
- * PhoneticSymbolDictionary.cpp
+ * @file PhoneticSymbolDictionary.cpp
  * Copyright © 2014 kbinani
  *
  * This file is part of libvsq.

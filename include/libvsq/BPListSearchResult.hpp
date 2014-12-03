@@ -1,5 +1,5 @@
 /**
- * BPListSearchResult.hpp
+ * @file BPListSearchResult.hpp
  * Copyright © 2012 kbinani
  *
  * This file is part of libvsq.

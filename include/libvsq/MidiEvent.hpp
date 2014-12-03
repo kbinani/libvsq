@@ -1,5 +1,5 @@
 /**
- * MidiEvent.hpp
+ * @file MidiEvent.hpp
  * Copyright © 2012,2014 kbinani
  *
  * This file is part of libvsq.

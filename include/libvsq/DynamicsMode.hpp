@@ -1,5 +1,5 @@
 /**
- * DynamicsMode.hpp
+ * @file DynamicsMode.hpp
  * Copyright © 2012 kbinani
  *
  * This file is part of libvsq.

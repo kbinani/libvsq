@@ -1,5 +1,5 @@
 /**
- * CP932Converter.hpp
+ * @file CP932Converter.hpp
  * Copyright © 2012,2014 kbinani
  *
  * This file is part of libvsq.

@@ -1,5 +1,5 @@
 /**
- * libvsq.h
+ * @file libvsq.h
  * Copyright © 2014 kbinani
  *
  * This file is part of libvsq.

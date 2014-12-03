@@ -1,5 +1,5 @@
 /**
- * VSQFileWriter.cpp
+ * @file VSQFileWriter.cpp
  * Copyright © 2014 kbinani
  *
  * This file is part of libvsq.

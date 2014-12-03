@@ -1,5 +1,5 @@
 /**
- * VibratoBP.cpp
+ * @file VibratoBP.cpp
  * Copyright © 2014 kbinani
  *
  * This file is part of libvsq.

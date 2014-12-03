@@ -1,5 +1,5 @@
 /**
- * NrpnEvent.hpp
+ * @file NrpnEvent.hpp
  * Copyright © 2012,2014 kbinani
  *
  * This file is part of libvsq.

@@ -1,5 +1,5 @@
 /**
- * PublicForUnitTest.hpp
+ * @file PublicForUnitTest.hpp
  * Copyright © 2014 kbinani
  *
  * This file is part of libvsq.

@@ -1,5 +1,5 @@
 /**
- * VocaloidMidiEventListFactory.hpp
+ * @file VocaloidMidiEventListFactory.hpp
  * Copyright © 2012,2014 kbinani
  *
  * This file is part of libvsq.

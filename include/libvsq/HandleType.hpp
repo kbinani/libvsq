@@ -1,5 +1,5 @@
 /**
- * HandleType.hpp
+ * @file HandleType.hpp
  * Copyright © 2012,2014 kbinani
  *
  * This file is part of libvsq.

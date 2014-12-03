@@ -25,7 +25,7 @@
       "$FILE"
     if [ -n "$(echo "$FILE" | grep -v '^tests/')" ]; then
       BASENAME=$(basename "$FILE")
-      if [ -z "$(head -2 "$FILE" | tail -1 | grep "$BASENAME")" ]; then
+      if [ -z "$(head -2 "$FILE" | tail -1 | grep "@file $BASENAME")" ]; then
         echo "Error: missing license header for '$FILE'."
         OK=0
       fi
@@ -48,7 +48,7 @@
   done
   rm -f "$TEST_MAIN_CPP" "$TEST_MAIN_OUT"
 
-  if [ $OK ]; then
+  if [ "$OK" = "1" ]; then
     echo "SUCCESS"
   else
     echo "FAIL"
