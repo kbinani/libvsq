@@ -108,10 +108,11 @@ public:
 	static std::string toString(T value, std::string const& format)
 	{
 		std::vector<char> buffer(32);
-		int amount = snprintf(buffer.data(), buffer.size(), format.c_str(), value);
+
+		int amount = _sprintf(buffer, format, value);
 		if (amount > buffer.size()) {
 			buffer.resize(amount);
-			amount = snprintf(buffer.data(), buffer.size(), format.c_str(), value);
+			amount = _sprintf(buffer, format, value);
 		}
 		return std::string(buffer.data(), amount);
 	}
@@ -151,6 +152,18 @@ private:
 	static std::string::size_type getDelimiterIndex(std::string const& text, std::string const& delimiter, std::string const& escape, std::string::size_type searchFrom);
 
 	static char _toLower(char c);
+
+	template<class T>
+	static int _sprintf(std::vector<char>& buffer, std::string const& format, T value)
+	{
+		return
+#ifdef _MSC_VER
+			sprintf_s
+#else
+			snprintf
+#endif
+			(buffer.data(), buffer.size(), format.c_str(), value);
+	}
 };
 
 LIBVSQ_END_NAMESPACE

@@ -12,6 +12,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
 #include "../include/libvsq/TextStream.hpp"
+#include <algorithm>
 #include <sstream>
 
 LIBVSQ_BEGIN_NAMESPACE

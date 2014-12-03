@@ -607,7 +607,7 @@ void Track::deepCopy(Track* destination) const
 
 void Track::setupCurveNameMap()
 {
-	curveNameMap = {
+	std::map<std::string, BPList*> tmp = {
 		{"bre",			&_bre},
 		{"bri",			&_bri},
 		{"cle",			&_cle},
@@ -632,6 +632,7 @@ void Track::setupCurveNameMap()
 		{"reso4bw",		&_reso4BWBPList},
 		{"reso4freq",	&_reso4FreqBPList},
 	};
+	curveNameMap.swap(tmp);
 }
 
 void Track::addCurveNameTo(std::vector<std::string>& vocaloid1CurveNameList,

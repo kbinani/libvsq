@@ -14,6 +14,7 @@
 #pragma once
 
 #include "./BasicTypes.hpp"
+#include <cstdint>
 #include <exception>
 #include <string>
 #include <vector>

@@ -13,6 +13,7 @@
  */
 #include "../include/libvsq/ByteArrayOutputStream.hpp"
 #include <cstdlib>
+#include <algorithm>
 
 LIBVSQ_BEGIN_NAMESPACE
 

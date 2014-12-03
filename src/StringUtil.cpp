@@ -13,6 +13,7 @@
  */
 #include "../include/libvsq/StringUtil.hpp"
 #include <algorithm>
+#include <functional>
 #include <sstream>
 #include <iomanip>
 

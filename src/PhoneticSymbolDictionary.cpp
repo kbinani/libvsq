@@ -13,6 +13,7 @@
  */
 #include "../include/libvsq/PhoneticSymbolDictionary.hpp"
 #include "../include/libvsq/StringUtil.hpp"
+#include <algorithm>
 #include <fstream>
 
 #pragma execution_character_set("utf-8")

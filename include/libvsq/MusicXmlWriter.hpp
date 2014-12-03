@@ -15,9 +15,10 @@
 
 #include "./Namespace.hpp"
 #include "./Tempo.hpp"
+#include <map>
+#include <memory>
 #include <string>
 #include <vector>
-#include <map>
 
 LIBVSQ_BEGIN_NAMESPACE
 
