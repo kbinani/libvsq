@@ -7,31 +7,6 @@
 using namespace std;
 using namespace vsq;
 
-class VSQFileReaderStub : public VSQFileReader
-{
-public:
-	class TentativeEventStub : public VSQFileReader::TentativeEvent
-	{
-	public:
-		TentativeEventStub(const TentativeEvent& event) :
-			TentativeEvent(event)
-		{
-		}
-	};
-
-	Handle parseHandle(TextStream& stream, int index, string& lastLine)
-	{
-		return VSQFileReader::parseHandle(stream, index, lastLine);
-	}
-
-	TentativeEventStub parseEvent(TextStream& sr, string& lastLine)
-	{
-		TentativeEvent event = VSQFileReader::parseEvent(sr, lastLine);
-		TentativeEventStub result(event);
-		return result;
-	}
-};
-
 class VSQFileReaderTest : public CppUnit::TestCase
 {
 public:
@@ -301,7 +276,7 @@ public:
 		string lastLine = "";
 		int index = 100;
 
-		VSQFileReaderStub reader;
+		VSQFileReader reader;
 		Handle handle = reader.parseHandle(stream, index, lastLine);
 		CPPUNIT_ASSERT_EQUAL(HandleType::LYRIC, handle.type());
 		CPPUNIT_ASSERT_EQUAL(index, handle.index);
@@ -335,7 +310,7 @@ public:
 		string lastLine = "";
 		int index = 100;
 
-		VSQFileReaderStub reader;
+		VSQFileReader reader;
 		Handle handle = reader.parseHandle(stream, index, lastLine);
 		CPPUNIT_ASSERT_EQUAL(HandleType::LYRIC, handle.type());
 		CPPUNIT_ASSERT_EQUAL(index, handle.index);
@@ -361,7 +336,7 @@ public:
 		getVibratoStream(stream);
 		string lastLine = "";
 		int index = 101;
-		VSQFileReaderStub reader;
+		VSQFileReader reader;
 		Handle handle = reader.parseHandle(stream, index, lastLine);
 
 		CPPUNIT_ASSERT_EQUAL(HandleType::VIBRATO, handle.type());
@@ -393,7 +368,7 @@ public:
 
 		string lastLine = "";
 		int index = 101;
-		VSQFileReaderStub reader;
+		VSQFileReader reader;
 		Handle handle = reader.parseHandle(stream, index, lastLine);
 
 		CPPUNIT_ASSERT_EQUAL(0, handle.rateBP.size());
@@ -406,7 +381,7 @@ public:
 		getSingerStream(stream);
 		int index = 101;
 		string lastLine = "";
-		VSQFileReaderStub reader;
+		VSQFileReader reader;
 		Handle handle = reader.parseHandle(stream, index, lastLine);
 		CPPUNIT_ASSERT_EQUAL(index, handle.index);
 		CPPUNIT_ASSERT_EQUAL(HandleType::SINGER, handle.type());
@@ -425,7 +400,7 @@ public:
 		getAttackStream(stream);
 		string lastLine = "";
 		int index = 204;
-		VSQFileReaderStub reader;
+		VSQFileReader reader;
 		Handle handle = reader.parseHandle(stream, index, lastLine);
 		CPPUNIT_ASSERT_EQUAL(HandleType::NOTE_HEAD, handle.type());
 		CPPUNIT_ASSERT_EQUAL(index, handle.index);
@@ -444,7 +419,7 @@ public:
 		getCrescendoStream(stream);
 		string lastLine;
 		int index = 204;
-		VSQFileReaderStub reader;
+		VSQFileReader reader;
 		Handle handle = reader.parseHandle(stream, index, lastLine);
 		CPPUNIT_ASSERT_EQUAL(index, handle.index);
 		CPPUNIT_ASSERT_EQUAL(HandleType::DYNAMICS, handle.type());
@@ -478,8 +453,10 @@ public:
 		stream.writeLine("[ID#9999]");
 		stream.setPointer(-1);
 		string lastLine = "";
-		VSQFileReaderStub reader;
-		VSQFileReaderStub::TentativeEventStub event = reader.parseEvent(stream, lastLine);
+		VSQFileReader reader;
+		int lyricHandleIndex, singerHandleIndex, vibratoHandleIndex, noteHeadHandleIndex;
+		EventType type;
+		Event event = reader.parseEvent(stream, lastLine, type, lyricHandleIndex, singerHandleIndex, vibratoHandleIndex, noteHeadHandleIndex);
 
 		CPPUNIT_ASSERT_EQUAL(EventType::NOTE, event.type());
 		CPPUNIT_ASSERT_EQUAL((tick_t)1, event.length());
@@ -489,10 +466,10 @@ public:
 		CPPUNIT_ASSERT_EQUAL(5, event.pmBendLength);
 		CPPUNIT_ASSERT_EQUAL(6, event.demDecGainRate);
 		CPPUNIT_ASSERT_EQUAL(7, event.demAccent);
-		CPPUNIT_ASSERT_EQUAL(1, event.lyricHandleIndex);
-		CPPUNIT_ASSERT_EQUAL(2, event.singerHandleIndex);
-		CPPUNIT_ASSERT_EQUAL(3, event.vibratoHandleIndex);
-		CPPUNIT_ASSERT_EQUAL(4, event.noteHeadHandleIndex);
+		CPPUNIT_ASSERT_EQUAL(1, lyricHandleIndex);
+		CPPUNIT_ASSERT_EQUAL(2, singerHandleIndex);
+		CPPUNIT_ASSERT_EQUAL(3, vibratoHandleIndex);
+		CPPUNIT_ASSERT_EQUAL(4, noteHeadHandleIndex);
 	}
 
 	CPPUNIT_TEST_SUITE(VSQFileReaderTest);
