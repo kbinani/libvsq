@@ -38,7 +38,7 @@ public:
             CPPUNIT_ASSERT_EQUAL( (int16_t)13330, BitConverter::makeInt16LE( bytes ) );
         }
         {
-            char bytes[2] = { 0x34, 0xF1 };
+            char bytes[2] = { 0x34, (char)0xF1 };
             CPPUNIT_ASSERT_EQUAL( (int16_t)-3788, BitConverter::makeInt16LE( bytes ) );
         }
     }

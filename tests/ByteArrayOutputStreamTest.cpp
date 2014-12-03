@@ -23,7 +23,7 @@ public:
         CPPUNIT_ASSERT_EQUAL( (int64_t)2, stream.getPointer() );
         char bufferA[] = { 0, 0, 127, 0, 0 };
         stream.write( bufferA, 2, 1 );
-        char bufferB[] = { 128, 255 };
+        char bufferB[] = { (char)128, (char)255 };
         stream.write( bufferB, 0, 2 );
         CPPUNIT_ASSERT_EQUAL( (int64_t)5, stream.getPointer() );
         string actual = stream.toString();

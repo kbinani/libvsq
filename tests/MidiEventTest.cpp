@@ -202,12 +202,12 @@ public:
         CPPUNIT_ASSERT_EQUAL( (tick_t)0, MidiEvent::readDeltaClock( &emptyStream ) );
 
         // 2バイト読み込む場合
-        char data[] = { 0x81, 0x00 };
+        char data[] = { (char)0x81, 0x00 };
         MemoryInputStream stream( data, 2 );
         CPPUNIT_ASSERT_EQUAL( (tick_t)128, MidiEvent::readDeltaClock( &stream ) );
 
         // 読み込みの途中でEOFとなる場合
-        char data2[] = { 0x81 };
+        char data2[] = { (char)0x81 };
         MemoryInputStream stream2( data2, 1 );
         CPPUNIT_ASSERT_EQUAL( (tick_t)0x1, MidiEvent::readDeltaClock( &stream2 ) );
     }
@@ -215,7 +215,7 @@ public:
     void testRead(){
         {
             // データ部が3byteの場合(note off)
-            char data[] = { 0x00, 0x81, 0x01, 0x02 };
+            char data[] = { 0x00, (char)0x81, 0x01, 0x02 };
             MemoryInputStream stream( data, 4 );
             tick_t lastClock = 10;
             uint8_t lastStatus = 0;
@@ -247,7 +247,7 @@ public:
 
         {
             // データ部が2byteの場合
-            char data[] = { 0x01, 0xF3, 0x05 };
+            char data[] = { 0x01, (char)0xF3, 0x05 };
             MemoryInputStream stream( data, 3 );
             tick_t lastClock = 12;
             uint8_t lastStatus = 0;
@@ -262,7 +262,7 @@ public:
 
         {
             // データ部が1byteの場合
-            char data[] = { 0x02, 0xF6 };
+            char data[] = { 0x02, (char)0xF6 };
             MemoryInputStream stream( data, 2 );
             tick_t lastClock = 13;
             uint8_t lastStatus = 0;
@@ -276,7 +276,7 @@ public:
 
         {
             // メタイベントの場合
-            char data[] = { 0x03, 0xFF, 0x06, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05 };
+            char data[] = { 0x03, (char)0xFF, 0x06, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05 };
             MemoryInputStream stream( data, 9 );
             tick_t lastClock = 14;
             uint8_t lastStatus = 0;
@@ -296,7 +296,7 @@ public:
 
         {
             // f0ステータスのSysEx
-            char data[] = { 0x04, 0xF0, 0x03, 0xF0, 0x06, 0x07, 0xF7 };
+            char data[] = { 0x04, (char)0xF0, 0x03, (char)0xF0, 0x06, 0x07, (char)0xF7 };
             MemoryInputStream stream( data, 7 );
             tick_t lastClock = 0;
             uint8_t lastStatus = 0;
@@ -314,7 +314,7 @@ public:
 
         {
             // f7ステータスのSysEx
-            char data[] = { 0x05, 0xF7, 0x03, 0x08, 0x09, 0x0A };
+            char data[] = { 0x05, (char)0xF7, 0x03, 0x08, 0x09, 0x0A };
             MemoryInputStream stream( data, 6 );
             tick_t lastClock = 1440;
             uint8_t lastStatus = 0x81;
@@ -331,7 +331,7 @@ public:
 
         {
             // 処理できないMIDIイベント
-            char data[] = { 0x01, 0xF4 };
+            char data[] = { 0x01, (char)0xF4 };
             MemoryInputStream stream( data, 2 );
             tick_t lastClock = 0;
             uint8_t lastStatus = 0;
