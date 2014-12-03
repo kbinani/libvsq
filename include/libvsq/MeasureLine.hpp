@@ -15,7 +15,7 @@
 
 #include "./BasicTypes.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 /**
  * @brief 小節を区切る線を表現するクラス.
@@ -64,4 +64,4 @@ public:
 	{}
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

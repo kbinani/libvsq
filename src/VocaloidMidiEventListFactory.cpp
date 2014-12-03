@@ -19,7 +19,7 @@
 #include <algorithm>
 #include <sstream>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 std::vector<MidiEvent> VocaloidMidiEventListFactory::generateMidiEventList(
 	Track const& target, TempoList const& tempoList, tick_t totalTicks, tick_t preMeasureTick, int msPreSend)
@@ -550,4 +550,4 @@ void VocaloidMidiEventListFactory::generateNRPNByBPList(
 	}
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

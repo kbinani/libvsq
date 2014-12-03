@@ -15,7 +15,7 @@
 #include "../include/libvsq/TextStream.hpp"
 #include "../include/libvsq/StringUtil.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 Mixer::Mixer()
 {
@@ -122,4 +122,4 @@ void Mixer::write(TextStream& stream) const
 	}
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

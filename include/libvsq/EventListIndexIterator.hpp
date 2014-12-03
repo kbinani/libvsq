@@ -17,7 +17,7 @@
 #include "./Event.hpp"
 #include "./EventListIndexIteratorKind.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 /**
  * @brief イベントリスト中の, インデックスを順に返す反復子.
@@ -90,4 +90,4 @@ private:
 	int _nextPosition() const;
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

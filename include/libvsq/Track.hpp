@@ -21,7 +21,7 @@
 #include "./EventListIndexIteratorKind.hpp"
 #include <map>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 /**
  * @todo _pit とかを一般化する.
@@ -235,4 +235,4 @@ private:
 						bool addToVocaloid1, bool addToVocaloid2) const;
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

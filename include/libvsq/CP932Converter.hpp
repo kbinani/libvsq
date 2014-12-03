@@ -17,7 +17,7 @@
 #include <string>
 #include <vector>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 /**
  * @brief UTF8 から CP932 への文字コード変換ユーティリティ.
@@ -66,4 +66,4 @@ private:
 	static void initializeCP932ToUTF8Dictionary(int dict[0xFFFF]);
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

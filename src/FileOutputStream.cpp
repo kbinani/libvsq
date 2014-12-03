@@ -13,7 +13,7 @@
  */
 #include "../include/libvsq/FileOutputStream.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 FileOutputStream::FileOutputStream(std::string const& filePath)
 {
@@ -52,4 +52,4 @@ void FileOutputStream::close()
 	stream.close();
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

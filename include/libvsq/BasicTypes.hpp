@@ -15,11 +15,11 @@
 
 #include "./Namespace.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 /**
  * @brief tick 単位の時刻を表す整数値の型.
  */
 typedef long int tick_t;
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

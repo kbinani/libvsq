@@ -17,7 +17,7 @@
 #include <vector>
 #include <sstream>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 Common::Common()
 {
@@ -121,4 +121,4 @@ void Common::init()
 	this->_lastPlayMode = PlayMode::PLAY_WITH_SYNTH;
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

@@ -14,7 +14,7 @@
 #include "../include/libvsq/TempoList.hpp"
 #include <algorithm>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 TempoList::Iterator::Iterator(std::vector<Tempo> const* list)
 {
@@ -153,4 +153,4 @@ void TempoList::clear()
 	_array.clear();
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

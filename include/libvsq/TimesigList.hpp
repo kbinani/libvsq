@@ -18,7 +18,7 @@
 #include <algorithm>
 #include "Timesig.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 /**
  * @brief 拍子情報を格納したテーブルを表すクラス.
@@ -98,4 +98,4 @@ protected:
 	void updateTimesigInfo();
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

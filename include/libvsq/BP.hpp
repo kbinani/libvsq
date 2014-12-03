@@ -15,7 +15,7 @@
 
 #include "./Namespace.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 /**
  * @brief コントロールカーブのデータ点を表現するクラス.
@@ -51,4 +51,4 @@ public:
 	int id;
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

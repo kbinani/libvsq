@@ -14,7 +14,7 @@
 #include "../include/libvsq/Timesig.hpp"
 #include <sstream>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 Timesig::Timesig()
 {
@@ -61,4 +61,4 @@ bool Timesig::compare(Timesig const& a, Timesig const& b)
 	return a.compareTo(b);
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

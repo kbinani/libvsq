@@ -16,7 +16,7 @@
 #include <sstream>
 #include <iomanip>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 std::vector<std::string>
 StringUtil::explode(std::string const& delimiter, std::string const& text, std::string::size_type limit, std::string const& escape)
@@ -122,4 +122,4 @@ char StringUtil::_toLower(char c)
 	return tolower(c);
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

@@ -16,7 +16,7 @@
 #include "./MidiParameterType.hpp"
 #include "./NrpnEvent.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 class Track;
 class TempoList;
@@ -251,4 +251,4 @@ private:
 	);
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

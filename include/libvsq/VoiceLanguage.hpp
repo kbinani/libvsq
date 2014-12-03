@@ -15,7 +15,7 @@
 
 #include "./EnumUtil.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 /**
  * @brief 歌手の歌唱言語を表す列挙子.
@@ -44,4 +44,4 @@ namespace VoiceLanguageUtil
 extern VoiceLanguage valueFromSingerName(std::string const& name);
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

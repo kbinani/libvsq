@@ -14,7 +14,7 @@
 #include "../include/libvsq/PhoneticSymbol.hpp"
 #include "../include/libvsq/StringUtil.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 bool PhoneticSymbol::isConsonant(std::string const& symbol)
 {
@@ -75,4 +75,4 @@ bool PhoneticSymbol::isConsonantEN(std::string const& search)
 	return symbolConsonantEN.find(search) != std::string::npos;
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

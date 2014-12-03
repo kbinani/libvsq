@@ -13,7 +13,7 @@
  */
 #include "../include/libvsq/BP.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 BP::BP(int aValue, int aId)
 	: value(aValue)
@@ -30,4 +30,4 @@ BP BP::clone() const
 BP::BP()
 {}
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

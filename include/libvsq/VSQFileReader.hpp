@@ -19,7 +19,7 @@
 #include "./Track.hpp"
 #include "./MidiEvent.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 class Sequence;
 class InputStream;
@@ -146,4 +146,4 @@ private:
 	Track getTrackByTextStream(TextStream& stream, Master* master = 0, Mixer* mixer = 0);
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

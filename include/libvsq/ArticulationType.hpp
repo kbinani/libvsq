@@ -15,7 +15,7 @@
 
 #include "./EnumUtil.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 /**
  * @brief アイコン設定の種類を表す.
@@ -54,4 +54,4 @@ enum class ArticulationType {
 
 LIBVSQ_DECLARE_ENUM_TO_OSTREAM_OPERATOR(ArticulationType)
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

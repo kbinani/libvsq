@@ -17,7 +17,7 @@
 #include "./Tempo.hpp"
 #include <vector>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 /**
  * @brief テンポ情報を格納したテーブルを表すクラス.
@@ -121,4 +121,4 @@ public:
 	void clear();
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

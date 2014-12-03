@@ -13,7 +13,7 @@
  */
 #include "../include/libvsq/VibratoBP.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 VibratoBP::VibratoBP()
 {
@@ -48,4 +48,4 @@ int VibratoBP::compareCore(VibratoBP const& a, VibratoBP const& b)
 	return 0;
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

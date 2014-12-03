@@ -16,7 +16,7 @@
 #include "../include/libvsq/StringUtil.hpp"
 #include <sstream>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 Master::Master()
 {
@@ -57,4 +57,4 @@ void Master::write(TextStream& stream) const
 	stream.writeLine(oss.str());
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

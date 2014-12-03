@@ -15,7 +15,7 @@
 
 #include "./EnumUtil.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 /**
  * @brief 歌声合成の再生モードを表す列挙子.
@@ -39,4 +39,4 @@ enum class PlayMode {
 
 LIBVSQ_DECLARE_ENUM_TO_OSTREAM_OPERATOR(PlayMode)
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

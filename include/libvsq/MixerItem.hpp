@@ -15,7 +15,7 @@
 
 #include "./Namespace.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 /**
  * @brief @link Mixer の <code>slave</code> 要素に格納されるアイテムを表すクラス.
@@ -59,4 +59,4 @@ public:
 	MixerItem clone() const;
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

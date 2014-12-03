@@ -19,7 +19,7 @@
 #include "./ArticulationType.hpp"
 #include "./Lyric.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 /**
  * @brief ハンドルを取り扱います. ハンドルには LyricHandle, VibratoHandle, SingerHandle および NoteHeadHandle がある.
@@ -272,4 +272,4 @@ protected:
 	void _init_lyric();
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

@@ -14,7 +14,7 @@
 #include "../include/libvsq/MeasureLineIterator.hpp"
 #include "../include/libvsq/TimesigList.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 MeasureLineIterator::MeasureLineIterator(TimesigList const* list, tick_t assistLineStep)
 {
@@ -119,4 +119,4 @@ MeasureLine MeasureLineIterator::returnOther()
 	return ret;
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

@@ -14,7 +14,7 @@
 #include "../include/libvsq/TextStream.hpp"
 #include <sstream>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 TextStream::TextStream()
 {
@@ -123,4 +123,4 @@ void TextStream::_ensureCapacity(int length)
 	}
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

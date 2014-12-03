@@ -18,7 +18,7 @@
 #include <sstream>
 #include <algorithm>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 BPList::KeyTickIterator::KeyTickIterator(BPList* list)
 {
@@ -571,4 +571,4 @@ void BPList::addWithoutSort(tick_t tick, int value)
 	_length++;
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

@@ -15,7 +15,7 @@
 
 #include "./EnumUtil.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 /**
  * @brief IndexIterator の反復子の種類を表す列挙子.
@@ -54,4 +54,4 @@ enum class EventListIndexIteratorKind {
 
 LIBVSQ_DECLARE_ENUM_TO_OSTREAM_OPERATOR(EventListIndexIteratorKind)
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

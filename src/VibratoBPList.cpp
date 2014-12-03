@@ -16,7 +16,7 @@
 #include <algorithm>
 #include <sstream>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 VibratoBPList::VibratoBPList(std::string const& textNum, std::string const& textBPX, std::string const& textBPY)
 {
@@ -145,4 +145,4 @@ void VibratoBPList::data(std::string const& value)
 	std::stable_sort(_list.begin(), _list.end(), VibratoBP::compare);
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

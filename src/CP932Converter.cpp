@@ -14,7 +14,7 @@
 #include "../include/libvsq/CP932Converter.hpp"
 #include <sstream>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 std::string CP932Converter::convertFromUTF8(std::string const& utf8)
 {
@@ -218,4 +218,4 @@ void CP932Converter::initializeCP932ToUTF8Dictionary(int dict[0xFFFF])
 	}
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

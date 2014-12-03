@@ -15,7 +15,7 @@
 
 #include "./EnumUtil.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 /**
  * @brief VOCALOID1における, ダイナミクスモードを表す定数を格納するための列挙子.
@@ -34,4 +34,4 @@ enum class DynamicsMode {
 
 LIBVSQ_DECLARE_ENUM_TO_OSTREAM_OPERATOR(DynamicsMode)
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

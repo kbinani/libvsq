@@ -18,7 +18,7 @@
 #include <vector>
 #include <string>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 class TextStream;
 
@@ -341,4 +341,4 @@ private:
 	void addWithoutSort(tick_t tick, int value);
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

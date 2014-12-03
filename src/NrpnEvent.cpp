@@ -13,7 +13,7 @@
  */
 #include "../include/libvsq/NrpnEvent.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 NrpnEvent::NrpnEvent(tick_t tick, MidiParameterType nrpn, int dataMsb)
 {
@@ -190,4 +190,4 @@ NrpnEvent::NrpnEvent()
 	this->nrpn = (MidiParameterType)0;
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

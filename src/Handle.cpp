@@ -14,7 +14,7 @@
 #include "../include/libvsq/Handle.hpp"
 #include "../include/libvsq/StringUtil.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 Handle::Handle(HandleType type)
 {
@@ -223,4 +223,4 @@ void Handle::_init_lyric()
 	_lyrics.clear();
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

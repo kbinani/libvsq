@@ -14,7 +14,7 @@
 #include "../include/libvsq/EventListIndexIterator.hpp"
 #include "../include/libvsq/EventListIndexIteratorKind.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 EventListIndexIterator::EventListIndexIterator(Event::List const* list, EventListIndexIteratorKind iteratorKind)
 {
@@ -87,4 +87,4 @@ int EventListIndexIterator::_nextPosition() const
 	return -1;
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

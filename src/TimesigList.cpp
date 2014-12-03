@@ -13,7 +13,7 @@
  */
 #include "../include/libvsq/TimesigList.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 TimesigList::TimesigList()
 {}
@@ -155,4 +155,4 @@ void TimesigList::updateTimesigInfo()
 	}
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

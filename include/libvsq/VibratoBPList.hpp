@@ -18,7 +18,7 @@
 #include <string>
 #include <vector>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 /**
  * @brief ビブラートデータポイントのリストを表すクラス.
@@ -95,4 +95,4 @@ public:
 	void data(std::string const& value);
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

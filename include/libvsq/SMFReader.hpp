@@ -18,7 +18,7 @@
 #include <exception>
 #include <vector>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 class InputStream;
 
@@ -41,4 +41,4 @@ public:
 	void read(InputStream& stream, std::vector<std::vector<MidiEvent>>& dest, int& format, int& timeFormat);
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

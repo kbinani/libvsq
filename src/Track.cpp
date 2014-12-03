@@ -14,7 +14,7 @@
 #include "../include/libvsq/Track.hpp"
 #include "../include/libvsq/StringUtil.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 Track::Track()
 {
@@ -643,4 +643,4 @@ void Track::addCurveNameTo(std::vector<std::string>& vocaloid1CurveNameList,
 	if (addToVocaloid2) { vocaloid2CurveNameList.push_back(name); }
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

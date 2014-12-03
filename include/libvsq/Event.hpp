@@ -20,7 +20,7 @@
 #include <string>
 #include <memory>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 /**
  * @brief VSQ ファイルのメタテキスト内に記述されるイベントを表すクラス.
@@ -436,4 +436,4 @@ private:
 	void init();
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

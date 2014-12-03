@@ -13,7 +13,7 @@
  */
 #include "../include/libvsq/MixerItem.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 MixerItem::MixerItem(int feder, int panpot, int mute, int solo)
 {
@@ -28,4 +28,4 @@ MixerItem MixerItem::clone() const
 	return MixerItem(this->feder, this->panpot, this->mute, this->solo);
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

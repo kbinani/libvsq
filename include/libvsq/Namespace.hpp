@@ -13,8 +13,8 @@
  */
 #pragma once
 
-#define VSQ_NS vsq
+#define LIBVSQ_NS vsq
 
-#define VSQ_BEGIN_NAMESPACE	namespace VSQ_NS {
+#define LIBVSQ_BEGIN_NAMESPACE	namespace LIBVSQ_NS {
 
-#define VSQ_END_NAMESPACE	}
+#define LIBVSQ_END_NAMESPACE	}

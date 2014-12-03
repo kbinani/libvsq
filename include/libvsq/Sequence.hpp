@@ -20,7 +20,7 @@
 #include "./Mixer.hpp"
 #include "./Track.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 /**
  * @brief VSQ ファイルのシーケンスを保持するクラス.
@@ -172,4 +172,4 @@ private:
 	void init(std::string const& singer, int preMeasure, int numerator, int denominator, int tempo);
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

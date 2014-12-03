@@ -17,7 +17,7 @@
 #include "./InputStream.hpp"
 #include <fstream>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 /**
  * @brief ファイルからの読み込みストリーム.
@@ -62,4 +62,4 @@ public:
 	void close() override;
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

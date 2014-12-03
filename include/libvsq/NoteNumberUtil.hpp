@@ -16,7 +16,7 @@
 #include "./Namespace.hpp"
 #include <string>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 class NoteNumberUtil
 {
@@ -45,4 +45,4 @@ private:
 	NoteNumberUtil(); /* = delete */
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

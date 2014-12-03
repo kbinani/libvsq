@@ -16,7 +16,7 @@
 #include "./BasicTypes.hpp"
 #include <string>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 /**
  * @brief テンポ情報テーブル内の要素を表現するクラス.
@@ -96,4 +96,4 @@ private:
 	static int compareCore(Tempo const& a, Tempo const& b);
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

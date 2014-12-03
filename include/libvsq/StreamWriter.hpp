@@ -18,7 +18,7 @@
 #include <memory>
 #include <string>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 class OutputStream;
 
@@ -53,4 +53,4 @@ public:
 	void writeLine(std::string const& text) override;
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

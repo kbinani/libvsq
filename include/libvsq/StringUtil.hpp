@@ -18,7 +18,7 @@
 #include <vector>
 #include <string>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 /**
  * @brief 文字列関連のユーティリティ.
@@ -149,4 +149,4 @@ private:
 	static char _toLower(char c);
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

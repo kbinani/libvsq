@@ -15,7 +15,7 @@
 
 #include "./EnumUtil.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 /**
  * {@link Event} の種類を表現する列挙子.
@@ -44,4 +44,4 @@ enum class EventType {
 
 LIBVSQ_DECLARE_ENUM_TO_STRING_FREE_FUNCTION(EventType)
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

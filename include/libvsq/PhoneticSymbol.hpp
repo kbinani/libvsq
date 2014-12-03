@@ -16,7 +16,7 @@
 #include "./Namespace.hpp"
 #include <string>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 /**
  * @brief VSQ で使用される発音記号のためのユーティリティ.
@@ -58,4 +58,4 @@ private:
 	static bool isConsonantEN(std::string const& search);
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

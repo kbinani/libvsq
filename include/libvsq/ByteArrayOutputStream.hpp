@@ -19,7 +19,7 @@
 #include <string>
 #include <vector>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 /**
  * @brief データがバイト配列に書き込まれるストリームの実装.
@@ -106,4 +106,4 @@ private:
 	void ensureBufferLength(int length);
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

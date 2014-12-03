@@ -17,7 +17,7 @@
 #include <string>
 #include <fstream>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 /**
  * @brief ファイルへの出力を行う, OutputStream の実装.
@@ -49,4 +49,4 @@ public:
 	void close() override;
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

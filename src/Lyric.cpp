@@ -17,7 +17,7 @@
 #include <cstdlib>
 #include <sstream>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 Lyric::Lyric(std::string const& line)
 {
@@ -309,4 +309,4 @@ std::string Lyric::toString(bool addQuateMark) const
 	return result.str();
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

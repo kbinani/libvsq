@@ -14,7 +14,7 @@
 #include "../include/libvsq/StreamWriter.hpp"
 #include "../include/libvsq/FileOutputStream.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 StreamWriter::StreamWriter(std::string const& filePath)
 {
@@ -58,4 +58,4 @@ void StreamWriter::writeLine(std::string const& text)
 	}
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

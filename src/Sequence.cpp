@@ -13,7 +13,7 @@
  */
 #include "../include/libvsq/Sequence.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 Sequence::Sequence()
 {
@@ -170,4 +170,4 @@ void Sequence::init(std::string const& singer, int preMeasure, int numerator, in
 	tempoList.push(Tempo(0, tempo));
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

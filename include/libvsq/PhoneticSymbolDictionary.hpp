@@ -17,7 +17,7 @@
 #include <string>
 #include <map>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 /**
  * @brief Convert phrase into corresponding VOCALOID symbols.
@@ -127,4 +127,4 @@ private:
 	void init(std::string const& source);
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

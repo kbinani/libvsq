@@ -18,7 +18,7 @@
 #include "./PlayMode.hpp"
 #include <string>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 class TextStream;
 
@@ -117,4 +117,4 @@ private:
 	void init();
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

@@ -19,7 +19,7 @@
 #include <vector>
 #include <map>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 class Sequence;
 class TextOutputStream;
@@ -59,4 +59,4 @@ protected:
 		std::string type);
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

@@ -19,7 +19,7 @@
 #include "./PublicForUnitTest.hpp"
 #include <memory>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 class Sequence;
 class OutputStream;
@@ -110,4 +110,4 @@ private:
 	std::unique_ptr<Impl> _impl;
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

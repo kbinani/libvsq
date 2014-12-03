@@ -16,7 +16,7 @@
 #include "./TextOutputStream.hpp"
 #include <vector>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 /**
  * @brief 文字列への読み書きストリーム.
@@ -110,4 +110,4 @@ private:
 	void _ensureCapacity(int length);
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

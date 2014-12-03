@@ -15,7 +15,7 @@
 
 #include "./EnumUtil.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 /**
  * @brief VOCALOID で使用される NRPN を表す列挙子.
@@ -578,4 +578,4 @@ extern bool isDataLsbRequire(MidiParameterType nrpn);
 
 LIBVSQ_DECLARE_ENUM_TO_OSTREAM_OPERATOR(MidiParameterType)
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

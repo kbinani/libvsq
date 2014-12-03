@@ -23,7 +23,7 @@
 #include <string.h>
 #include <sstream>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 class VSQFileWriter::Impl
 {
@@ -692,4 +692,4 @@ void VSQFileWriter::_writeUnsignedInt(OutputStream& stream, int data)
 	_impl->writeUnsignedInt(stream, data);
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

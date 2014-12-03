@@ -17,7 +17,7 @@
 #include <cstdint>
 #include <vector>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 class BitConverter
 {
@@ -55,4 +55,4 @@ public:
 	static uint16_t makeUInt16BE(char bytes[2]);
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

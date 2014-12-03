@@ -13,7 +13,7 @@
  */
 #include "../include/libvsq/BitConverter.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 std::vector<char>
 BitConverter::getBytesUInt16BE(uint16_t value)
@@ -63,4 +63,4 @@ uint16_t BitConverter::makeUInt16BE(char bytes[2])
 		   (0x00ff & bytes[1]);
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

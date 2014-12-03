@@ -17,7 +17,7 @@
 #include <string>
 #include <vector>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 /**
  * @brief 歌詞ハンドルに格納する歌詞情報を保持するクラス.
@@ -137,4 +137,4 @@ public:
 	std::string toString(bool addQuateMark = false) const;
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

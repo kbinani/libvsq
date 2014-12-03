@@ -18,7 +18,7 @@
 #include "./MidiEvent.hpp"
 #include <vector>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 /**
  * @brief NRPN イベントを表すクラス.
@@ -144,4 +144,4 @@ protected:
 	NrpnEvent();
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

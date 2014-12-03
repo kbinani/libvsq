@@ -17,7 +17,7 @@
 #include "../include/libvsq/StringUtil.hpp"
 #include "../include/libvsq/NoteNumberUtil.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 void MusicXmlWriter::write(Sequence const& sequence, TextOutputStream& stream, std::string const& software)
 {
@@ -364,4 +364,4 @@ void MusicXmlWriter::printStyledNoteCor(
 	stream.writeLine("      </note>");
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

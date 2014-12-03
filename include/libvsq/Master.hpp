@@ -16,7 +16,7 @@
 #include "./Namespace.hpp"
 #include <string>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 class TextStream;
 
@@ -59,4 +59,4 @@ public:
 	void write(TextStream& stream) const;
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

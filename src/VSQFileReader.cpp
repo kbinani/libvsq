@@ -19,7 +19,7 @@
 #include "../include/libvsq/CP932Converter.hpp"
 #include <sstream>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 void VSQFileReader::read(Sequence& sequence, InputStream& stream, std::string const& encoding)
 {
@@ -499,4 +499,4 @@ Track VSQFileReader::getTrackByTextStream(TextStream& stream, Master* master, Mi
 	return result;
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

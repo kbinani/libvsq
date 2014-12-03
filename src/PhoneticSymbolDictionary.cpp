@@ -15,7 +15,7 @@
 #include "../include/libvsq/StringUtil.hpp"
 #include <fstream>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 PhoneticSymbolDictionary::Element::Element(std::string const& word, std::string const& symbol)
 {
@@ -133,4 +133,4 @@ void PhoneticSymbolDictionary::init(std::string const& source)
 	}
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

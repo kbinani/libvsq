@@ -18,7 +18,7 @@
 #include <string>
 #include <vector>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 class OutputStream;
 class InputStream;
@@ -126,4 +126,4 @@ public:
 	static bool compare(MidiEvent const& a, MidiEvent const& b);
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

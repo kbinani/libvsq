@@ -16,7 +16,7 @@
 #include "./Namespace.hpp"
 #include <cstdint>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 /**
  * @brief 読み込みストリーム.
@@ -60,4 +60,4 @@ public:
 	virtual void close() = 0;
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

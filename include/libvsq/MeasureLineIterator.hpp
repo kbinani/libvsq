@@ -17,7 +17,7 @@
 #include "./MeasureLine.hpp"
 #include <exception>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 class TimesigList;
 
@@ -87,4 +87,4 @@ private:
 	MeasureLine returnOther();
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

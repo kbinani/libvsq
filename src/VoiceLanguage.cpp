@@ -14,7 +14,7 @@
 #include "../include/libvsq/VoiceLanguage.hpp"
 #include "../include/libvsq/StringUtil.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 VoiceLanguage
 VoiceLanguageUtil::valueFromSingerName(std::string const& name)
@@ -53,4 +53,4 @@ VoiceLanguageUtil::valueFromSingerName(std::string const& name)
 	return VoiceLanguage::JAPANESE;
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

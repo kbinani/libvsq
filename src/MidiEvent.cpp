@@ -17,7 +17,7 @@
 #include "../include/libvsq/StringUtil.hpp"
 #include <cmath>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 MidiEvent::MidiEvent()
 {
@@ -271,4 +271,4 @@ bool MidiEvent::compare(MidiEvent const& a, MidiEvent const& b)
 	return (a.compareTo(b) < 0);
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

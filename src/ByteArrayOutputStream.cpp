@@ -14,7 +14,7 @@
 #include "../include/libvsq/ByteArrayOutputStream.hpp"
 #include <cstdlib>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 ByteArrayOutputStream::ByteArrayOutputStream()
 {
@@ -78,4 +78,4 @@ void ByteArrayOutputStream::ensureBufferLength(int length)
 	}
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

@@ -16,7 +16,7 @@
 #include "./BasicTypes.hpp"
 #include "./BP.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 /**
  * @brief コントロールパラメータのデータ点検索結果を格納するクラス.
@@ -49,4 +49,4 @@ public:
 	{}
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

@@ -17,7 +17,7 @@
 #include <exception>
 #include <string>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 /**
  * @brief テキスト出力のためのストリーム.
@@ -53,4 +53,4 @@ public:
 	virtual void writeLine(std::string const& line) = 0;
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

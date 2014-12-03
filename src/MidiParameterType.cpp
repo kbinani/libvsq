@@ -14,7 +14,7 @@
 #include "../include/libvsq/MidiParameterType.hpp"
 #include "../include/libvsq/StringUtil.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 int MidiParameterTypeUtil::getVoiceChangeParameterId(std::string const& curve_name)
 {
@@ -133,4 +133,4 @@ bool MidiParameterTypeUtil::isDataLsbRequire(MidiParameterType nrpn)
 	return false;
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

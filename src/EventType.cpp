@@ -13,7 +13,7 @@
  */
 #include "../include/libvsq/EventType.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 namespace EventTypeUtil
 {
@@ -33,4 +33,4 @@ std::string toString(EventType value)
 
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

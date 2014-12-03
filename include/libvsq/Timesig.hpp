@@ -16,7 +16,7 @@
 #include "./BasicTypes.hpp"
 #include <string>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 /**
  * @brief 拍子変更情報テーブル内の要素を表現するためのクラス.
@@ -90,4 +90,4 @@ public:
 	static bool compare(Timesig const& a, Timesig const& b);
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

@@ -15,7 +15,7 @@
 #include "../include/libvsq/InputStream.hpp"
 #include "../include/libvsq/BitConverter.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 void SMFReader::read(InputStream& stream, std::vector<std::vector<MidiEvent>>& dest, int& format, int& timeFormat)
 {
@@ -67,4 +67,4 @@ void SMFReader::read(InputStream& stream, std::vector<std::vector<MidiEvent>>& d
 	}
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

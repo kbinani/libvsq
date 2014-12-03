@@ -14,7 +14,7 @@
 #include "../include/libvsq/Tempo.hpp"
 #include <sstream>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 std::string Tempo::toString() const
 {
@@ -75,4 +75,4 @@ int Tempo::compareCore(Tempo const& a, Tempo const& b)
 	return (int)(a.tick - b.tick);
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

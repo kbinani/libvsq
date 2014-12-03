@@ -13,7 +13,7 @@
  */
 #include "../include/libvsq/NoteNumberUtil.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 std::string NoteNumberUtil::getNoteStringBase(int note)
 {
@@ -64,4 +64,4 @@ int NoteNumberUtil::getNoteAlter(int note)
 	return ALTER[note % 12];
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

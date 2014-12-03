@@ -15,7 +15,7 @@
 #include "../include/libvsq/StringUtil.hpp"
 #include <algorithm>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 Event::List::List()
 {}
@@ -531,4 +531,4 @@ void Event::init()
 	pMeanEndingNote = 12;
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

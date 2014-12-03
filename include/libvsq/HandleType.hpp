@@ -15,7 +15,7 @@
 
 #include "./EnumUtil.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 /**
  * @brief {@link Handle} の種類を表現する列挙子.
@@ -51,4 +51,4 @@ enum class HandleType {
 
 LIBVSQ_DECLARE_ENUM_TO_OSTREAM_OPERATOR(HandleType)
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

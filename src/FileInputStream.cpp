@@ -13,7 +13,7 @@
  */
 #include "../include/libvsq/FileInputStream.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 FileInputStream::FileInputStream(std::string const& filePath)
 	: stream(filePath.c_str(), std::ios::binary)
@@ -50,4 +50,4 @@ void FileInputStream::close()
 	stream.close();
 }
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

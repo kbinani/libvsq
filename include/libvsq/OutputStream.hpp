@@ -17,7 +17,7 @@
 #include <cstdint>
 #include <exception>
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 /**
  * @brief 書き込みストリーム.
@@ -67,4 +67,4 @@ public:
 	virtual void close() = 0;
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE

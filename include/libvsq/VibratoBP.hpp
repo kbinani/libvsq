@@ -15,7 +15,7 @@
 
 #include "./Namespace.hpp"
 
-VSQ_BEGIN_NAMESPACE
+LIBVSQ_BEGIN_NAMESPACE
 
 /**
  * @brief ビブラートのデータポイント.
@@ -62,4 +62,4 @@ private:
 	static int compareCore(VibratoBP const& a, VibratoBP const& b);
 };
 
-VSQ_END_NAMESPACE
+LIBVSQ_END_NAMESPACE
