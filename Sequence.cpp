@@ -49,7 +49,7 @@ Sequence Sequence::clone() const
 	return ret;
 }
 
-const Track* Sequence::track(int trackIndex) const
+Track const* Sequence::track(int trackIndex) const
 {
 	return &_track[trackIndex];
 }
@@ -59,7 +59,7 @@ Track* Sequence::track(int trackIndex)
 	return &_track[trackIndex];
 }
 
-const std::vector<Track>* Sequence::tracks() const
+std::vector<Track> const* Sequence::tracks() const
 {
 	return &_track;
 }
@@ -94,7 +94,7 @@ tick_t Sequence::getTickPerQuarter() const
 	return _tickPerQuarter;
 }
 
-const std::vector<std::string> Sequence::getCurveNameList()
+std::vector<std::string> Sequence::getCurveNameList()
 {
 	std::vector<std::string> result;
 	result.push_back("VEL");

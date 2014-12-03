@@ -28,7 +28,7 @@ Timesig TimesigList::get(int index) const
 	return list[index];
 }
 
-void TimesigList::push(const Timesig& item)
+void TimesigList::push(Timesig const& item)
 {
 	pushWithoutSort(item);
 	updateTimesigInfo();
@@ -118,7 +118,7 @@ int TimesigList::getBarCountFromClock(tick_t clock) const
 	return bar_count;
 }
 
-void TimesigList::pushWithoutSort(const Timesig& item)
+void TimesigList::pushWithoutSort(Timesig const& item)
 {
 	int index = -1;
 	int count = list.size();

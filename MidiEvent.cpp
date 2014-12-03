@@ -45,7 +45,7 @@ void MidiEvent::writeData(OutputStream* stream) const
 	}
 }
 
-int MidiEvent::compareTo(const MidiEvent& item) const
+int MidiEvent::compareTo(MidiEvent const& item) const
 {
 	if (clock != item.clock) {
 		return clock - item.clock;
@@ -267,7 +267,7 @@ MidiEvent MidiEvent::read(InputStream* stream, tick_t& last_clock, uint8_t& last
 	}
 }
 
-bool MidiEvent::compare(const MidiEvent& a, const MidiEvent& b)
+bool MidiEvent::compare(MidiEvent const& a, MidiEvent const& b)
 {
 	return (a.compareTo(b) < 0);
 }

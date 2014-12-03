@@ -79,7 +79,7 @@ public:
 		 * @param internalId 検索するイベント ID.
 		 * @param value 置換するオブジェクト.
 		 */
-		void setForId(int internalId, const Event& value);
+		void setForId(int internalId, Event const& value);
 
 		/**
 		 * @brief イベントを並べ替える.
@@ -97,7 +97,7 @@ public:
 		 */
 		ListIterator iterator();
 
-		const ListConstIterator iterator() const;
+		ListConstIterator iterator() const;
 
 		/**
 		 * @brief イベントを追加する.
@@ -176,7 +176,7 @@ public:
 		/**
 		 * @brief 反復子の元になるリスト.
 		 */
-		const List* _list;
+		List const* _list;
 
 		/**
 		 * @brief 反復子の現在の位置.
@@ -408,7 +408,7 @@ public:
 	 * @brief イベントリストの末尾の要素を表すオブジェクトを取得する.
 	 * @return オブジェクト.
 	 */
-	static const Event getEOS();
+	static Event getEOS();
 
 	/*
 	 * @param item [VsqEvent]

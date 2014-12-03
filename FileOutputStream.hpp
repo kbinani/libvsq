@@ -38,7 +38,7 @@ public:
 
 	~FileOutputStream();
 
-	void write(const char* buffer, int64_t startIndex, int64_t length);
+	void write(char const* buffer, int64_t startIndex, int64_t length);
 
 	void write(int value);
 

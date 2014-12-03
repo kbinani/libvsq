@@ -83,7 +83,7 @@ public:
 	 * @param dynamicsMode シーケンスの Dynamics モード.
 	 * @param playMode シーケンスの Play モード.
 	 */
-	Common(std::string name, int r, int g, int b, DynamicsMode::DynamicsModeEnum dynamicsMode, PlayMode::PlayModeEnum playMode);
+	Common(std::string const& name, int r, int g, int b, DynamicsMode::DynamicsModeEnum dynamicsMode, PlayMode::PlayModeEnum playMode);
 
 	/**
 	 * @brief コピーを作成する.

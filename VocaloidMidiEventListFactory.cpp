@@ -21,19 +21,19 @@
 VSQ_BEGIN_NAMESPACE
 
 std::vector<MidiEvent> VocaloidMidiEventListFactory::generateMidiEventList(
-	Track* target, TempoList* tempoList, tick_t totalClocks, tick_t preMeasureClock, int msPreSend)
+	Track const* target, TempoList const* tempoList, tick_t totalClocks, tick_t preMeasureClock, int msPreSend)
 {
 	std::vector<NrpnEvent> nrpnEventList = generateNRPN(target, tempoList, totalClocks, preMeasureClock, msPreSend);
 	return NrpnEvent::convert(nrpnEventList);
 }
 
 std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateNRPN(
-	Track* target, TempoList* tempoList, tick_t totalClocks, tick_t preMeasureClock, int msPreSend)
+	Track const* target, TempoList const* tempoList, tick_t totalClocks, tick_t preMeasureClock, int msPreSend)
 {
 	std::vector<NrpnEvent> list;
 
 	std::string version = target->common()->version;
-	Event::List* events = target->events();
+	Event::List const* events = target->events();
 
 	int count = events->size();
 	int note_start = 0;
@@ -147,10 +147,10 @@ std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateNRPN(
 	return merged;
 }
 
-std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateExpressionNRPN(Track* track, TempoList* tempoList, int preSendMilliseconds)
+std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateExpressionNRPN(Track const* track, TempoList const* tempoList, int preSendMilliseconds)
 {
 	std::vector<NrpnEvent> ret;
-	BPList* dyn = track->curve("DYN");
+	BPList const* dyn = track->curve("DYN");
 	NrpnEventProvider* provider = new NrpnEventProvider(MidiParameterType::CC_E_DELAY, MidiParameterType::CC_E_EXPRESSION);
 	generateNRPNByBPList(ret, tempoList, preSendMilliseconds, dyn, provider);
 	delete provider;
@@ -165,7 +165,7 @@ NrpnEvent VocaloidMidiEventListFactory::generateHeaderNRPN()
 	return ret;
 }
 
-std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateSingerNRPN(TempoList* tempoList, const Event* singerEvent, int preSendMilliseconds)
+std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateSingerNRPN(TempoList const* tempoList, Event const* singerEvent, int preSendMilliseconds)
 {
 	tick_t clock = singerEvent->clock;
 	Handle singer_handle;
@@ -194,7 +194,7 @@ std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateSingerNRPN(TempoLis
 	return ret;
 }
 
-NrpnEvent VocaloidMidiEventListFactory::generateNoteNRPN(Track* track, TempoList* tempoList, const Event* noteEvent, int msPreSend, int noteLocation, int* lastDelay, int* delay)
+NrpnEvent VocaloidMidiEventListFactory::generateNoteNRPN(Track const* track, TempoList const* tempoList, Event const* noteEvent, int msPreSend, int noteLocation, int* lastDelay, int* delay)
 {
 	tick_t clock = noteEvent->clock;
 	NrpnEvent add(0, MidiParameterType::CC_BS_DELAY, 0, 0);
@@ -323,27 +323,27 @@ NrpnEvent VocaloidMidiEventListFactory::generateNoteNRPN(Track* track, TempoList
 	return add;
 }
 
-std::vector<NrpnEvent> VocaloidMidiEventListFactory::generatePitchBendNRPN(Track* track, TempoList* tempoList, int msPreSend)
+std::vector<NrpnEvent> VocaloidMidiEventListFactory::generatePitchBendNRPN(Track const* track, TempoList const* tempoList, int msPreSend)
 {
 	std::vector<NrpnEvent> ret;
-	BPList* pit = track->curve("PIT");
+	BPList const* pit = track->curve("PIT");
 	PitchBendNrpnEventProvider* provider = new PitchBendNrpnEventProvider();
 	generateNRPNByBPList(ret, tempoList, msPreSend, pit, provider);
 	delete provider;
 	return ret;
 }
 
-std::vector<NrpnEvent> VocaloidMidiEventListFactory::generatePitchBendSensitivityNRPN(Track* track, TempoList* tempoList, int msPreSend)
+std::vector<NrpnEvent> VocaloidMidiEventListFactory::generatePitchBendSensitivityNRPN(Track const* track, TempoList const* tempoList, int msPreSend)
 {
 	std::vector<NrpnEvent> ret;
-	BPList* pbs = track->curve("PBS");
+	BPList const* pbs = track->curve("PBS");
 	PitchBendSensitivityNrpnEventProvider* provider = new PitchBendSensitivityNrpnEventProvider();
 	generateNRPNByBPList(ret, tempoList, msPreSend, pbs, provider);
 	delete provider;
 	return ret;
 }
 
-std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateVibratoNRPN(TempoList* tempoList, const Event* noteEvent, int msPreSend)
+std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateVibratoNRPN(TempoList const* tempoList, Event const* noteEvent, int msPreSend)
 {
 	std::vector<NrpnEvent> ret;
 	if (noteEvent->vibratoHandle.getHandleType() != HandleType::UNKNOWN) {
@@ -411,7 +411,7 @@ std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateVibratoNRPN(TempoLi
 	return ret;
 }
 
-std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateVoiceChangeParameterNRPN(Track* track, TempoList* tempoList, int msPreSend, tick_t premeasure_clock)
+std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateVoiceChangeParameterNRPN(Track const* track, TempoList const* tempoList, int msPreSend, tick_t premeasure_clock)
 {
 	std::string renderer = track->common()->version;
 	std::vector<NrpnEvent> res;
@@ -453,7 +453,7 @@ std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateVoiceChangeParamete
 
 	int lastDelay = 0;
 	for (int i = 0; i < curves.size(); i++) {
-		BPList* list = track->curve(curves[i]);
+		BPList const* list = track->curve(curves[i]);
 		if (list->size() > 0) {
 			lastDelay = addVoiceChangeParameters(res, list, tempoList, msPreSend, lastDelay);
 		}
@@ -462,17 +462,17 @@ std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateVoiceChangeParamete
 	return res;
 }
 
-std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateFx2DepthNRPN(Track* track, TempoList* tempoList, int preSendMilliseconds)
+std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateFx2DepthNRPN(Track const* track, TempoList const* tempoList, int preSendMilliseconds)
 {
 	std::vector<NrpnEvent> ret;
-	BPList* fx2depth = track->curve("fx2depth");
+	BPList const* fx2depth = track->curve("fx2depth");
 	NrpnEventProvider* provider = new NrpnEventProvider(MidiParameterType::CC_FX2_DELAY, MidiParameterType::CC_FX2_EFFECT2_DEPTH);
 	generateNRPNByBPList(ret, tempoList, preSendMilliseconds, fx2depth, provider);
 	delete provider;
 	return ret;
 }
 
-int VocaloidMidiEventListFactory::addVoiceChangeParameters(std::vector<NrpnEvent>& dest, BPList* list, TempoList* tempoList, int msPreSend, int lastDelay)
+int VocaloidMidiEventListFactory::addVoiceChangeParameters(std::vector<NrpnEvent>& dest, BPList const* list, TempoList const* tempoList, int msPreSend, int lastDelay)
 {
 	int id = MidiParameterType::getVoiceChangeParameterId(list->getName());
 	for (int j = 0; j < list->size(); j++) {
@@ -498,7 +498,7 @@ int VocaloidMidiEventListFactory::addVoiceChangeParameters(std::vector<NrpnEvent
 	return lastDelay;
 }
 
-void VocaloidMidiEventListFactory::_getActualClockAndDelay(TempoList* tempoList, tick_t clock, int msPreSend, tick_t* actualClock, int* delay)
+void VocaloidMidiEventListFactory::_getActualClockAndDelay(TempoList const* tempoList, tick_t clock, int msPreSend, tick_t* actualClock, int* delay)
 {
 	double clock_msec = tempoList->getSecFromClock(clock) * 1000.0;
 
@@ -524,8 +524,8 @@ void VocaloidMidiEventListFactory::_getMsbAndLsb(int value, int* msb, int* lsb)
 
 void VocaloidMidiEventListFactory::generateNRPNByBPList(
 	std::vector<NrpnEvent>& result,
-	TempoList* tempoList, int preSendMilliseconds,
-	BPList* list, NrpnEventProvider* provider
+	TempoList const* tempoList, int preSendMilliseconds,
+	BPList const* list, NrpnEventProvider const* provider
 )
 {
 	size_t count = list->size();

@@ -91,7 +91,7 @@ public:
 	 * @param item 比較対象のアイテム.
 	 * @return このインスタンスが比較対象よりも小さい場合は負の整数, 等しい場合は 0, 大きい場合は正の整数を返す.
 	 */
-	int compareTo(const NrpnEvent& item) const;
+	int compareTo(NrpnEvent const& item) const;
 
 	/**
 	 * @brief NRPN, DATA MSB を指定し, イベントを追加する.

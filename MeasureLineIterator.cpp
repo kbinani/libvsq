@@ -16,7 +16,7 @@
 
 VSQ_BEGIN_NAMESPACE
 
-MeasureLineIterator::MeasureLineIterator(const TimesigList* list, tick_t assistLineStep)
+MeasureLineIterator::MeasureLineIterator(TimesigList const* list, tick_t assistLineStep)
 {
 	this->list = list;
 	endTick = 0;

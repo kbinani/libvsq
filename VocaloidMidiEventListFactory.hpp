@@ -50,14 +50,14 @@ private:
 		virtual ~NrpnEventProvider()
 		{}
 
-		virtual NrpnEvent getDelayNrpnEvent(tick_t actualClock, int delay)
+		virtual NrpnEvent getDelayNrpnEvent(tick_t actualClock, int delay) const
 		{
 			int delayMsb, delayLsb;
 			VocaloidMidiEventListFactory::_getMsbAndLsb(delay, &delayMsb, &delayLsb);
 			return NrpnEvent(actualClock, delayNrpn, delayMsb, delayLsb);
 		}
 
-		virtual NrpnEvent getNrpnEvent(tick_t actualClock, int value)
+		virtual NrpnEvent getNrpnEvent(tick_t actualClock, int value) const
 		{
 			return NrpnEvent(actualClock, nrpn, value);
 		}
@@ -71,10 +71,9 @@ private:
 	public:
 		explicit PitchBendNrpnEventProvider()
 			: NrpnEventProvider(MidiParameterType::PB_DELAY, MidiParameterType::PB_PITCH_BEND)
-		{
-		}
+		{}
 
-		NrpnEvent getNrpnEvent(tick_t actualClock, int value) override
+		NrpnEvent getNrpnEvent(tick_t actualClock, int value) const override
 		{
 			int actualValue = value + 0x2000;
 			int msb, lsb;
@@ -91,10 +90,9 @@ private:
 	public:
 		PitchBendSensitivityNrpnEventProvider()
 			: NrpnEventProvider(MidiParameterType::CC_PBS_DELAY, MidiParameterType::CC_PBS_PITCH_BEND_SENSITIVITY)
-		{
-		}
+		{}
 
-		NrpnEvent getNrpnEvent(tick_t actualClock, int value) override
+		NrpnEvent getNrpnEvent(tick_t actualClock, int value) const override
 		{
 			return NrpnEvent(actualClock, nrpn, value, 0x00);
 		}
@@ -111,7 +109,7 @@ public:
 	 * @return A list of VOCALOID MIDI event.
 	 */
 	static std::vector<MidiEvent> generateMidiEventList(
-		Track* target, TempoList* tempoList, tick_t totalClocks, tick_t preMeasureClock, int msPreSend);
+		Track const* target, TempoList const* tempoList, tick_t totalClocks, tick_t preMeasureClock, int msPreSend);
 
 protected:
 	/**
@@ -124,7 +122,7 @@ protected:
 	 * @return A list of NrpnEvent.
 	 */
 	static std::vector<NrpnEvent> generateNRPN(
-		Track* target, TempoList* tempoList, tick_t totalClocks, tick_t preMeasureClock, int msPreSend);
+		Track const* target, TempoList const* tempoList, tick_t totalClocks, tick_t preMeasureClock, int msPreSend);
 
 	/**
 	 * @brief Generate a list of Expression(DYN) NrpnEvent from a specified track.
@@ -133,7 +131,7 @@ protected:
 	 * @param msPreSend Length of pre-send time in milli seconds.
 	 * @return A list of NrpnEvent.
 	 */
-	static std::vector<NrpnEvent> generateExpressionNRPN(Track* track, TempoList* tempoList, int preSendMilliseconds);
+	static std::vector<NrpnEvent> generateExpressionNRPN(Track const* track, TempoList const* tempoList, int preSendMilliseconds);
 
 	/**
 	 * @brief Generate prefix NrpnEvent for track.
@@ -150,7 +148,7 @@ protected:
 	 * @param preSendMilliseconds Length of pre-send time in milli seconds.
 	 * @return A list of NrpnEvent.
 	 */
-	static std::vector<NrpnEvent> generateSingerNRPN(TempoList* tempoList, const Event* singerEvent, int preSendMilliseconds);
+	static std::vector<NrpnEvent> generateSingerNRPN(TempoList const* tempoList, Event const* singerEvent, int preSendMilliseconds);
 
 	/**
 	 * @brief Generate NRPN from note events in the track.
@@ -167,7 +165,7 @@ protected:
 	 * @param [out] delay Delay time of the note item.
 	 * @return Generated NRPN.
 	 */
-	static NrpnEvent generateNoteNRPN(Track* track, TempoList* tempoList, const Event* noteEvent, int msPreSend, int noteLocation, int* lastDelay, int* delay);
+	static NrpnEvent generateNoteNRPN(Track const* track, TempoList const* tempoList, Event const* noteEvent, int msPreSend, int noteLocation, int* lastDelay, int* delay);
 
 	/**
 	 * @brief 指定したシーケンスの指定したトラックから, PitchBend の NRPN リストを作成する.
@@ -176,7 +174,7 @@ protected:
 	 * @param msPreSend ミリ秒単位のプリセンド時間.
 	 * @return NrpnEvent の配列.
 	 */
-	static std::vector<NrpnEvent> generatePitchBendNRPN(Track* track, TempoList* tempoList, int msPreSend);
+	static std::vector<NrpnEvent> generatePitchBendNRPN(Track const* track, TempoList const* tempoList, int msPreSend);
 
 	/**
 	 * @brief 指定したシーケンスの指定したトラックから, PitchBendSensitivity の NRPN リストを作成する.
@@ -185,7 +183,7 @@ protected:
 	 * @param msPreSend ミリ秒単位のプリセンド時間.
 	 * @return NrpnEvent の配列.
 	 */
-	static std::vector<NrpnEvent> generatePitchBendSensitivityNRPN(Track* track, TempoList* tempoList, int msPreSend);
+	static std::vector<NrpnEvent> generatePitchBendSensitivityNRPN(Track const* track, TempoList const* tempoList, int msPreSend);
 
 	/**
 	 * @brief トラックの音符イベントから, ビブラート出力用の NRPN のリストを作成する.
@@ -194,7 +192,7 @@ protected:
 	 * @param msPreSend ミリ秒単位のプリセンド時間.
 	 * @return NrpnEvent の配列.
 	 */
-	static std::vector<NrpnEvent> generateVibratoNRPN(TempoList* tempoList, const Event* noteEvent, int msPreSend);
+	static std::vector<NrpnEvent> generateVibratoNRPN(TempoList const* tempoList, Event const* noteEvent, int msPreSend);
 
 	/**
 	 * @brief 指定したシーケンスの指定したトラックから, VoiceChangeParameter の NRPN リストを作成する.
@@ -203,9 +201,9 @@ protected:
 	 * @param msPreSend ミリ秒単位のプリセンド時間.
 	 * @return NrpnEvent の配列.
 	 */
-	static std::vector<NrpnEvent> generateVoiceChangeParameterNRPN(Track* track, TempoList* tempoList, int msPreSend, tick_t premeasure_clock);
+	static std::vector<NrpnEvent> generateVoiceChangeParameterNRPN(Track const* track, TempoList const* tempoList, int msPreSend, tick_t premeasure_clock);
 
-	static std::vector<NrpnEvent> generateFx2DepthNRPN(Track* track, TempoList* tempoList, int preSendMilliseconds);
+	static std::vector<NrpnEvent> generateFx2DepthNRPN(Track const* track, TempoList const* tempoList, int preSendMilliseconds);
 
 	/**
 	 * @brief Voice Change Parameter の NRPN を追加する.
@@ -216,7 +214,7 @@ protected:
 	 * @param lastDelay 直前の delay 値(ミリ秒単位).
 	 * @return delay 値(ミリ秒単位).
 	 */
-	static int addVoiceChangeParameters(std::vector<NrpnEvent>& dest, BPList* list, TempoList* tempoList, int msPreSend, int lastDelay);
+	static int addVoiceChangeParameters(std::vector<NrpnEvent>& dest, BPList const* list, TempoList const* tempoList, int msPreSend, int lastDelay);
 
 	/**
 	 * @brief 指定した時刻における, プリセンド込の時刻と, ディレイを取得する.
@@ -226,7 +224,7 @@ protected:
 	 * @param[out] actualClock プリセンド分のクロックを引いた Tick 単位の時刻.
 	 * @param[out] delay ミリ秒単位のプリセンド時間.
 	 */
-	static void _getActualClockAndDelay(TempoList* tempoList, tick_t clock, int msPreSend, tick_t* actualClock, int* delay);
+	static void _getActualClockAndDelay(TempoList const* tempoList, tick_t clock, int msPreSend, tick_t* actualClock, int* delay);
 
 	/**
 	 * @brief DATA の値を MSB と LSB に分解する.
@@ -248,8 +246,8 @@ private:
 	 */
 	static void generateNRPNByBPList(
 		std::vector<NrpnEvent>& result,
-		TempoList* tempoList, int preSendMilliseconds,
-		BPList* list, NrpnEventProvider* provider
+		TempoList const* tempoList, int preSendMilliseconds,
+		BPList const* list, NrpnEventProvider const* provider
 	);
 };
 

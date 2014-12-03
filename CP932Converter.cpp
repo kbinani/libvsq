@@ -119,7 +119,7 @@ std::vector<std::vector<int>> CP932Converter::_getUnicodeBytesFromUTF8String(std
 	return result;
 }
 
-std::vector<int> CP932Converter::_getUnicodeBytesFromUTF8Bytes(const std::vector<int>& utf8)
+std::vector<int> CP932Converter::_getUnicodeBytesFromUTF8Bytes(std::vector<int> const& utf8)
 {
 	if (utf8.size() == 1) {
 		// 0xxx xxxx
@@ -187,7 +187,7 @@ void CP932Converter::initializeUnicodeToCp932Dictionary(int dict[256][256][2])
 			dict[i][j][1] = 0;
 		}
 	}
-#include "./CP932ConverterData.inc"
+#	include "./CP932ConverterData.inc"
 }
 
 void CP932Converter::initializeCP932ToUTF8Dictionary(int dict[0xFFFF])

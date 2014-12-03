@@ -15,7 +15,7 @@
 
 VSQ_BEGIN_NAMESPACE
 
-const std::string EventType::toString(EventTypeEnum value)
+std::string EventType::toString(EventTypeEnum value)
 {
 	if (value == EventType::SINGER) {
 		return "Singer";

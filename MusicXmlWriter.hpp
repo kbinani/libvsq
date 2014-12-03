@@ -36,7 +36,7 @@ public:
 	 * @todo vsq を sequence に名前変える.
 	 * @todo tempo と change_tempo を渡せるようにする.
 	 */
-	void write(const Sequence* sequence, TextOutputStream* sw, std::string const& software);
+	void write(Sequence const* sequence, TextOutputStream* sw, std::string const& software);
 
 protected:
 	void printStyledNote(

@@ -54,7 +54,7 @@ Common::Common(TextStream& stream, std::string& lastLine)
 	}
 }
 
-Common::Common(std::string name, int r, int g, int b, DynamicsMode::DynamicsModeEnum dynamicsMode, PlayMode::PlayModeEnum playMode)
+Common::Common(std::string const& name, int r, int g, int b, DynamicsMode::DynamicsModeEnum dynamicsMode, PlayMode::PlayModeEnum playMode)
 {
 	init();
 	this->version = "DSB301";

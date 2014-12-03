@@ -26,7 +26,7 @@ FileOutputStream::~FileOutputStream()
 	if (stream.is_open()) { stream.close(); }
 }
 
-void FileOutputStream::write(const char* buffer, int64_t startIndex, int64_t length)
+void FileOutputStream::write(char const* buffer, int64_t startIndex, int64_t length)
 {
 	stream.write(buffer + sizeof(char) * startIndex, length);
 }

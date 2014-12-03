@@ -72,13 +72,13 @@ public:
 	 * @param startIndex 書き込み開始位置.
 	 * @param length 書き込むバイト値の個数.
 	 */
-	void write(const char* array, int64_t startIndex, int64_t length);
+	void write(char const* array, int64_t startIndex, int64_t length);
 
 	/**
 	 * @brief バイト列を文字列に変換する.
 	 * @return 変換された文字列.
 	 */
-	const std::string toString();
+	std::string toString();
 
 	/**
 	 * @brief 現在のファイルポインタを取得する.

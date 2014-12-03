@@ -17,7 +17,8 @@
 
 VSQ_BEGIN_NAMESPACE
 
-std::vector<std::string> StringUtil::explode(std::string const& delimiter, std::string const& text, std::string::size_type limit, std::string const& escape)
+std::vector<std::string>
+StringUtil::explode(std::string const& delimiter, std::string const& text, std::string::size_type limit, std::string const& escape)
 {
 	std::vector<std::string> result;
 	std::string::size_type searchFrom = 0;

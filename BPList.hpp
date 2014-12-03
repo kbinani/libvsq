@@ -128,7 +128,7 @@ public:
 	 * @brief コントロールカーブの名前を取得する.
 	 * @return コントロールカーブの名前.
 	 */
-	const std::string getName() const;
+	std::string getName() const;
 
 	/**
 	 * @brief コントロールカーブの名前を設定する.
@@ -160,7 +160,7 @@ public:
 	 */
 	void renumberIds();
 
-	const std::string getData() const;
+	std::string getData() const;
 
 	void setData(std::string const& value);
 
@@ -233,7 +233,7 @@ public:
 	 * @param index 取得するデータ点のインデックス(最初のインデックスは0).
 	 * @return データ点のインスタンス.
 	 */
-	const BP get(int index) const;
+	BP get(int index) const;
 
 	/**
 	 * @brief データ点の時刻を取得する.
@@ -254,7 +254,7 @@ public:
 	 * @param id データ点の ID.
 	 * @return 検索結果を格納したオブジェクト.
 	 */
-	const BPListSearchResult findElement(int id) const;
+	BPListSearchResult findElement(int id) const;
 
 	/**
 	 * @brief 指定した ID のデータ点の値を設定する.
@@ -276,7 +276,7 @@ public:
 	 * @param reader
 	 * @return
 	 */
-	const std::string appendFromText(TextStream& reader);
+	std::string appendFromText(TextStream& reader);
 
 	/**
 	 * @brief データ点の個数を返す.

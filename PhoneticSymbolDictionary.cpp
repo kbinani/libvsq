@@ -50,7 +50,7 @@ PhoneticSymbolDictionary::PhoneticSymbolDictionary()
 	_maxDivisions = 1;
 }
 
-const PhoneticSymbolDictionary::Element* PhoneticSymbolDictionary::attach(std::string const& word) const
+PhoneticSymbolDictionary::Element const* PhoneticSymbolDictionary::attach(std::string const& word) const
 {
 	std::string key = StringUtil::toLower(word);
 	std::map<std::string, Element>::const_iterator index = table.find(key);
@@ -66,7 +66,7 @@ int PhoneticSymbolDictionary::maxDivisions() const
 	return _maxDivisions;
 }
 
-const PhoneticSymbolDictionary* PhoneticSymbolDictionary::vocaloidJpDictionary()
+PhoneticSymbolDictionary const* PhoneticSymbolDictionary::vocaloidJpDictionary()
 {
 	static PhoneticSymbolDictionary result;
 	if (result.table.empty()) {
@@ -77,7 +77,7 @@ const PhoneticSymbolDictionary* PhoneticSymbolDictionary::vocaloidJpDictionary()
 	return &result;
 }
 
-const PhoneticSymbolDictionary* PhoneticSymbolDictionary::vocaloidEnDictionary()
+PhoneticSymbolDictionary const* PhoneticSymbolDictionary::vocaloidEnDictionary()
 {
 	static PhoneticSymbolDictionary result;
 	if (result.table.empty()) {

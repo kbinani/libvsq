@@ -20,7 +20,7 @@ class VocaloidMidiEventListFactoryStub : public VocaloidMidiEventListFactory
 {
 public:
 	static vector<NrpnEvent> generateNRPN(
-		Track* target, TempoList* tempoList, tick_t totalClocks, tick_t preMeasureClock, int msPreSend)
+		Track const* target, TempoList const* tempoList, tick_t totalClocks, tick_t preMeasureClock, int msPreSend)
 	{
 		return VocaloidMidiEventListFactory::generateNRPN(target, tempoList, totalClocks, preMeasureClock, msPreSend);
 	}

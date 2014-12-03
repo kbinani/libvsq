@@ -54,7 +54,7 @@ public:
 	 * @brief 小節線の情報を取得する区間を指定し, 初期化する.
 	 * @param list テンポ変更リスト.
 	 */
-	explicit MeasureLineIterator(const TimesigList* list, tick_t assistLineStep = 0);
+	explicit MeasureLineIterator(TimesigList const* list, tick_t assistLineStep = 0);
 
 	/**
 	 * @brief 次の小節線が取得可能かどうかを取得する.

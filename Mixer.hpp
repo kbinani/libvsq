@@ -69,7 +69,7 @@ public:
 	/**
 	 * @brief テキストストリームから読み込みを行い, 初期化を行う.
 	 * @param stream 読み込むテキストストリーム.
-	 * @param lastLine 読み込んだ最後の行. テーブルの ["value"] に文字列が格納される.
+	 * @param lastLine 読み込んだ最後の行.
 	 */
 	Mixer(TextStream& stream, std::string& lastLine);
 

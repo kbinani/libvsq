@@ -89,7 +89,7 @@ public:
 	 * @param word A word to get symbol information.
 	 * @return Symbol information. Returns 0 if symbol information was not found.
 	 */
-	const Element* attach(std::string const& word) const;
+	Element const* attach(std::string const& word) const;
 
 	/**
 	 * @brief Get a maximum division number in this dictionary.
@@ -102,13 +102,13 @@ public:
 	 * @brief Get an instance of dictionary used for VOCALOID Japanese voice bank.
 	 * @return An instance of dictionary.
 	 */
-	static const PhoneticSymbolDictionary* vocaloidJpDictionary();
+	static PhoneticSymbolDictionary const* vocaloidJpDictionary();
 
 	/**
 	 * @brief Get an instance of dictionary used for VOCALOID English voice bank.
 	 * @return An instance of dictionary.
 	 */
-	static const PhoneticSymbolDictionary* vocaloidEnDictionary();
+	static PhoneticSymbolDictionary const* vocaloidEnDictionary();
 
 private:
 	/**

@@ -46,7 +46,7 @@ protected:
 			_type = type;
 		}
 
-		void setLyrics(const std::vector<Lyric>& lyrics)
+		void setLyrics(std::vector<Lyric> const& lyrics)
 		{
 			_lyrics = lyrics;
 		}
@@ -73,7 +73,7 @@ protected:
 		TentativeTrack() : Track()
 		{}
 
-		void setCommon(const Common& value)
+		void setCommon(Common const& value)
 		{
 			_common = value;
 		}

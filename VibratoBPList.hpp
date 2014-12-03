@@ -72,30 +72,26 @@ public:
 	 * @param index 0 から始まるインデックス.
 	 * @return データ点.
 	 */
-	const VibratoBP get(int index) const;
+	VibratoBP get(int index) const;
 
 	/**
 	 * @brief 指定したインデックスのデータ点を設定する.
 	 * @param index インデックス(最初のインデックスは0).
 	 * @param value 設定するデータ点.
 	 */
-	void set(int index, const VibratoBP value);
+	void set(int index, VibratoBP const& value);
 
 	/**
 	 * @brief データ点のリストを, 文字列に変換する. 例えば "key1=value1,key2=value2" のように変換される.
 	 * @return 変換後の文字列.
 	 */
-	const std::string getData() const;
+	std::string getData() const;
 
 	/**
 	 * @brief "key1=value=1,key2=value2" のような文字列から, データ点のリストを設定する.
 	 * @param value データ点の文字列形式.
 	 */
 	void setData(std::string const& value);
-
-private:
-	explicit VibratoBPList(std::vector<double> const&);
-
 };
 
 VSQ_END_NAMESPACE

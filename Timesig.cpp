@@ -37,14 +37,14 @@ tick_t Timesig::getClock() const
 	return clock;
 }
 
-const std::string Timesig::toString() const
+std::string Timesig::toString() const
 {
 	std::ostringstream oss;
 	oss << "{Clock=" << this->clock << ", Numerator=" << this->numerator << ", Denominator=" << this->denominator << ", BarCount=" << this->barCount << "}";
 	return oss.str();
 }
 
-bool Timesig::compareTo(const Timesig& item) const
+bool Timesig::compareTo(Timesig const& item) const
 {
 	return (this->barCount - item.barCount) < 0;
 }
@@ -56,7 +56,7 @@ Timesig Timesig::clone() const
 	return result;
 }
 
-bool Timesig::compare(const Timesig& a, const Timesig& b)
+bool Timesig::compare(Timesig const& a, Timesig const& b)
 {
 	return a.compareTo(b);
 }

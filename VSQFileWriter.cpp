@@ -24,7 +24,7 @@
 
 VSQ_BEGIN_NAMESPACE
 
-void VSQFileWriter::write(const Sequence* sequence, OutputStream* stream, int msPreSend, const std::string& encoding, bool printPitch)
+void VSQFileWriter::write(Sequence const* sequence, OutputStream* stream, int msPreSend, std::string const& encoding, bool printPitch)
 {
 	Sequence copyOfSequence = *sequence;
 	Sequence* targetSequence = &copyOfSequence;
@@ -103,7 +103,7 @@ void VSQFileWriter::write(const Sequence* sequence, OutputStream* stream, int ms
 	}
 }
 
-void VSQFileWriter::writeHandle(const Handle& item, TextStream& stream)
+void VSQFileWriter::writeHandle(Handle const& item, TextStream& stream)
 {
 	stream.writeLine(std::string("[h#") + StringUtil::toString(item.index, "%04d") + std::string("]"));
 	if (item.getHandleType() == HandleType::LYRIC) {
@@ -187,7 +187,7 @@ void VSQFileWriter::writeHandle(const Handle& item, TextStream& stream)
 	}
 }
 
-void VSQFileWriter::writeEvent(const TempEvent& item, TextStream& stream, EventWriteOption printTargets) const
+void VSQFileWriter::writeEvent(TempEvent const& item, TextStream& stream, EventWriteOption printTargets) const
 {
 	stream.write("[ID#");
 	stream.write(StringUtil::toString(item.index, "%04d"));
@@ -260,7 +260,7 @@ void VSQFileWriter::writeEvent(const TempEvent& item, TextStream& stream, EventW
 	}
 }
 
-void VSQFileWriter::printMetaText(const Track* track, TextStream& stream, int eos, tick_t start, bool printPitch, Master* master, Mixer* mixer)
+void VSQFileWriter::printMetaText(Track const* track, TextStream& stream, int eos, tick_t start, bool printPitch, Master* master, Mixer* mixer)
 {
 	//if( common ~= nil ){
 	track->common()->write(stream);
@@ -316,7 +316,7 @@ void VSQFileWriter::printMetaText(const Track* track, TextStream& stream, int eo
 	}
 }
 
-void VSQFileWriter::_printTrack(Sequence* sequence, int track, OutputStream* stream, int msPreSend, const std::string& encoding, bool printPitch, Master* master, Mixer* mixer)
+void VSQFileWriter::_printTrack(Sequence const* sequence, int track, OutputStream* stream, int msPreSend, std::string const& encoding, bool printPitch, Master* master, Mixer* mixer)
 {
 	// ヘッダ
 	std::string mtrk = getTrackHeader();
@@ -379,7 +379,7 @@ void VSQFileWriter::_printTrack(Sequence* sequence, int track, OutputStream* str
 	stream->seek(pos);
 }
 
-std::vector<MidiEvent> VSQFileWriter::getMidiEventsFromMetaText(TextStream* sr, const std::string& encoding)
+std::vector<MidiEvent> VSQFileWriter::getMidiEventsFromMetaText(TextStream* sr, std::string const& encoding)
 {
 	std::string _NL = "\n";// + (char)0x0a;
 	std::vector<MidiEvent> ret;
@@ -536,7 +536,7 @@ std::vector<Handle> VSQFileWriter::writeEventList(std::vector<TempEvent*>& event
 	return handles;
 }
 
-const std::vector<Handle> VSQFileWriter::getHandleList(std::vector<TempEvent*>& eventList)
+std::vector<Handle> VSQFileWriter::getHandleList(std::vector<TempEvent*>& eventList)
 {
 	std::vector<Handle> handle;
 	int current_id = -1;

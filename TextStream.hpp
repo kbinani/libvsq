@@ -64,13 +64,13 @@ public:
 	 * @brief 現在の読み込み位置から 1 文字を読み込み, 読み書き位置を一つ進める.
 	 * @return 読み込んだ文字.
 	 */
-	const std::string get();
+	std::string get();
 
 	/**
 	 * @brief 現在の読み込み位置から, 改行またはファイル末端まで読み込む.
 	 * @return 読み込んだ文字列.
 	 */
-	const std::string readLine();
+	std::string readLine();
 
 	/**
 	 * @brief テキストストリームが読み込み可能な状態かどうかを返す.
@@ -99,7 +99,7 @@ public:
 	 * @brief ストリームに書きこまれた文字列を連結し, 返す.
 	 * @return 文字列.
 	 */
-	const std::string toString();
+	std::string toString();
 
 private:
 	/**

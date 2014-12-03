@@ -27,17 +27,17 @@ VibratoBP::VibratoBP(double x, int y)
 	this->y = y;
 }
 
-int VibratoBP::compareTo(const VibratoBP& item) const
+int VibratoBP::compareTo(VibratoBP const& item) const
 {
 	return compareCore(*this, item);
 }
 
-bool VibratoBP::compare(const VibratoBP& a, const VibratoBP& b)
+bool VibratoBP::compare(VibratoBP const& a, VibratoBP const& b)
 {
 	return compareCore(a, b) < 0;
 }
 
-int VibratoBP::compareCore(const VibratoBP& a, const VibratoBP& b)
+int VibratoBP::compareCore(VibratoBP const& a, VibratoBP const& b)
 {
 	double v = a.x - b.x;
 	if (v > 0.0) {

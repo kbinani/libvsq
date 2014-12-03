@@ -17,7 +17,7 @@
 
 VSQ_BEGIN_NAMESPACE
 
-void SMFReader::read(InputStream* stream, std::vector<std::vector<MidiEvent> >& dest, int& format, int& timeFormat)
+void SMFReader::read(InputStream* stream, std::vector<std::vector<MidiEvent>>& dest, int& format, int& timeFormat)
 {
 	// ヘッダ
 	char byte4[4] = { 0 };

@@ -19,7 +19,7 @@
 
 VSQ_BEGIN_NAMESPACE
 
-void MusicXmlWriter::write(const Sequence* sequence, TextOutputStream* sw, std::string const& software)
+void MusicXmlWriter::write(Sequence const* sequence, TextOutputStream* sw, std::string const& software)
 {
 	bool change_tempo = false;
 	int tempo = 120;

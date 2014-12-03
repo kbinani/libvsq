@@ -26,18 +26,18 @@ Track::Track(std::string const& name, std::string const& singer)
 	this->_initCor(name, singer);
 }
 
-Track::Track(const Track& value)
+Track::Track(Track const& value)
 {
 	value.deepCopy(this);
 }
 
-Track& Track::operator = (const Track& value)
+Track& Track::operator = (Track const& value)
 {
 	value.deepCopy(this);
 	return *this;
 }
 
-const std::string Track::getName() const
+std::string Track::getName() const
 {
 	//if( common == nil ){
 	//    return "Master Track";
@@ -258,7 +258,7 @@ EventListIndexIterator Track::getIndexIterator(EventListIndexIteratorKind::Event
 	}
 	*/
 
-const Event* Track::getSingerEventAt(tick_t clock) const
+Event const* Track::getSingerEventAt(tick_t clock) const
 {
 	const Event* last = 0;
 	const Event::List* events = this->events();
@@ -334,7 +334,7 @@ const Event* Track::getSingerEventAt(tick_t clock) const
 	}
 	*/
 
-const BPList* Track::curve(std::string const& curveName) const
+BPList const* Track::curve(std::string const& curveName) const
 {
 	std::string search = StringUtil::toLower(curveName);
 	std::map<std::string, BPList*>::const_iterator index
@@ -441,7 +441,7 @@ Event::List* Track::events()
 	return &_events;
 }
 
-const Event::List* Track::events() const
+Event::List const* Track::events() const
 {
 	return &_events;
 }
@@ -451,12 +451,12 @@ Common* Track::common()
 	return &_common;
 }
 
-const Common* Track::common() const
+Common const* Track::common() const
 {
 	return &_common;
 }
 
-const std::vector<std::string>* Track::curveNameList() const
+std::vector<std::string> const* Track::curveNameList() const
 {
 	static std::vector<std::string> vocaloid1;
 	static std::vector<std::string> vocaloid2;

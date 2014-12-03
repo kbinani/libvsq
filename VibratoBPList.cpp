@@ -59,7 +59,7 @@ VibratoBPList::VibratoBPList(std::string const& textNum, std::string const& text
 	}
 }
 
-VibratoBPList::VibratoBPList(const std::vector<double>& x, const std::vector<int>& y)
+VibratoBPList::VibratoBPList(std::vector<double> const& x, std::vector<int> const& y)
 {
 	int len = std::min(x.size(), y.size());
 	for (int i = 0; i < len; i++) {
@@ -101,17 +101,17 @@ int VibratoBPList::size() const
 	return (int)_list.size();
 }
 
-const VibratoBP VibratoBPList::get(int index) const
+VibratoBP VibratoBPList::get(int index) const
 {
 	return _list[index];
 }
 
-void VibratoBPList::set(int index, const VibratoBP value)
+void VibratoBPList::set(int index, VibratoBP const& value)
 {
 	_list[index] = value;
 }
 
-const std::string VibratoBPList::getData() const
+std::string VibratoBPList::getData() const
 {
 	std::ostringstream ret;
 	for (int i = 0; i < _list.size(); i++) {
@@ -148,8 +148,5 @@ void VibratoBPList::setData(std::string const& value)
 	}
 	std::stable_sort(_list.begin(), _list.end(), VibratoBP::compare);
 }
-
-VibratoBPList::VibratoBPList(const std::vector<double>&)
-{}
 
 VSQ_END_NAMESPACE

@@ -37,7 +37,7 @@ void ByteArrayOutputStream::write(int byte)
 	_length = std::max(_length, _pointer);
 }
 
-void ByteArrayOutputStream::write(const char* array, int64_t startIndex, int64_t length)
+void ByteArrayOutputStream::write(char const* array, int64_t startIndex, int64_t length)
 {
 	ensureBufferLength(_pointer + length);
 	for (int i = 0; i < length; i++) {
@@ -47,7 +47,7 @@ void ByteArrayOutputStream::write(const char* array, int64_t startIndex, int64_t
 	_length = std::max(_length, _pointer);
 }
 
-const std::string ByteArrayOutputStream::toString()
+std::string ByteArrayOutputStream::toString()
 {
 	std::string result(_array, _length);
 	return result;

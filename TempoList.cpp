@@ -15,7 +15,7 @@
 
 VSQ_BEGIN_NAMESPACE
 
-TempoList::Iterator::Iterator(const std::vector<Tempo>* list)
+TempoList::Iterator::Iterator(std::vector<Tempo> const* list)
 {
 	this->list = list;
 	this->iterator = list->begin();
@@ -43,7 +43,7 @@ void TempoList::sort()
 	std::stable_sort(_array.begin(), _array.end(), Tempo::compare);
 }
 
-void TempoList::push(const Tempo& value)
+void TempoList::push(Tempo const& value)
 {
 	_array.push_back(value);
 }
@@ -58,7 +58,7 @@ Tempo TempoList::get(int index) const
 	return _array[index];
 }
 
-void TempoList::set(int index, const Tempo& value)
+void TempoList::set(int index, Tempo const& value)
 {
 	_array[index] = value;
 }

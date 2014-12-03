@@ -39,7 +39,7 @@ void TextStream::setPointer(int value)
 	_position = value;
 }
 
-const std::string TextStream::get()
+std::string TextStream::get()
 {
 	_position++;
 	std::string ret;
@@ -47,7 +47,7 @@ const std::string TextStream::get()
 	return ret;
 }
 
-const std::string TextStream::readLine()
+std::string TextStream::readLine()
 {
 	std::ostringstream sb;
 	// '\n'が来るまで読み込み
@@ -108,7 +108,7 @@ void TextStream::close()
 	_length = 0;
 }
 
-const std::string TextStream::toString()
+std::string TextStream::toString()
 {
 	std::string ret;
 	if (_array) {

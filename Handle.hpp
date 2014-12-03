@@ -134,7 +134,7 @@ public:
 	 * @brief 強弱記号の場合の, IconId の最初の5文字.
 	 * @return IconId の接頭辞.
 	 */
-	inline static const std::string getIconIdPrefixDynaff()
+	inline static std::string getIconIdPrefixDynaff()
 	{
 		return "$0501";
 	}
@@ -143,7 +143,7 @@ public:
 	 * @brief クレッシェンドの場合の, IconId の最初の5文字.
 	 * @return IconId の接頭辞.
 	 */
-	inline static const std::string getIconIdPrefixCrescend()
+	inline static std::string getIconIdPrefixCrescend()
 	{
 		return "$0502";
 	}
@@ -152,7 +152,7 @@ public:
 	 * @brief デクレッシェンドの場合の, IconId の最初の5文字.
 	 * @return IconId の接頭辞.
 	 */
-	inline static const std::string getIconIdPrefixDecrescend()
+	inline static std::string getIconIdPrefixDecrescend()
 	{
 		return "$0503";
 	}
@@ -215,7 +215,7 @@ public:
 	 * @brief 歌詞を追加する.
 	 * @param lyric 追加する歌詞.
 	 */
-	void addLyric(Lyric lyric);
+	void addLyric(Lyric const& lyric);
 
 	/**
 	 * @brief 歌詞の個数を返す.
@@ -227,7 +227,7 @@ public:
 	 * @brief Display String 値を取得する.
 	 * @return Display String 値.
 	 */
-	const std::string getDisplayString() const;
+	std::string getDisplayString() const;
 
 	/**
 	 * @brief ハンドルのタイプを取得する.

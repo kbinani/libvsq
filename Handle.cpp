@@ -66,7 +66,7 @@ const Lyric Handle::getLyricAt(int index) const
 	return _lyrics[index];
 }
 
-void Handle::setLyricAt(int index, const Lyric& value)
+void Handle::setLyricAt(int index, Lyric const& value)
 {
 	if (_lyrics.size() < index + 1) {
 		int remain = index + 1 - _lyrics.size();
@@ -77,7 +77,7 @@ void Handle::setLyricAt(int index, const Lyric& value)
 	_lyrics[index] = value;
 }
 
-void Handle::addLyric(Lyric lyric)
+void Handle::addLyric(Lyric const& lyric)
 {
 	_lyrics.push_back(lyric);
 }
@@ -87,7 +87,7 @@ int Handle::getLyricCount() const
 	return _lyrics.size();
 }
 
-const std::string Handle::getDisplayString() const
+std::string Handle::getDisplayString() const
 {
 	return ids + caption;
 }

@@ -56,7 +56,7 @@ std::vector<NrpnEvent> NrpnEvent::expand()
 	return ret;
 }
 
-int NrpnEvent::compareTo(const NrpnEvent& item) const
+int NrpnEvent::compareTo(NrpnEvent const& item) const
 {
 	if (clock == item.clock) {
 		int thisNrpnMsb = (nrpn - (nrpn % 0x100)) / 0x100;
@@ -91,7 +91,7 @@ void NrpnEvent::append(MidiParameterType::MidiParameterTypeEnum nrpn, int dataMs
 	_list.push_back(v);
 }
 
-bool NrpnEvent::compare(const NrpnEvent& a, const NrpnEvent& b)
+bool NrpnEvent::compare(NrpnEvent const& a, NrpnEvent const& b)
 {
 	if (a.compareTo(b) < 0) {
 		return true;
@@ -100,7 +100,7 @@ bool NrpnEvent::compare(const NrpnEvent& a, const NrpnEvent& b)
 	}
 }
 
-std::vector<MidiEvent> NrpnEvent::convert(const std::vector<NrpnEvent>& source)
+std::vector<MidiEvent> NrpnEvent::convert(std::vector<NrpnEvent> const& source)
 {
 	int nrpn = source[0].nrpn;
 	int msb = 0xff & (nrpn >> 8);

@@ -27,7 +27,7 @@ private:
 	/**
 	 * @brief 反復子の元になるリスト.
 	 */
-	const Event::List* _list;
+	Event::List const* _list;
 
 	/**
 	 * @brief next メソッドで最後に返したインデックス.
@@ -67,7 +67,7 @@ public:
 	 *
 	 * @todo iteratorKind の型を EventListIndexIteratorKind にできないか?
 	 */
-	EventListIndexIterator(const Event::List* list, int iteratorKind);
+	EventListIndexIterator(Event::List const* list, int iteratorKind);
 
 	/**
 	 * @brief 反復子の次の要素を返す.

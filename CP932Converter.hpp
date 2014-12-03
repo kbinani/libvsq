@@ -45,7 +45,7 @@ protected:
 	 * @param s 変換前の文字列.
 	 * @return 変換後の unicode のバイト列.
 	 */
-	static std::vector<std::vector<int> > _getUnicodeBytesFromUTF8String(std::string const& s);
+	static std::vector<std::vector<int>> _getUnicodeBytesFromUTF8String(std::string const& s);
 
 	/**
 	 * @brief UTF8 のバイト列を Unicode のバイト列に変換する.

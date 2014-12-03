@@ -67,7 +67,7 @@ BPList::BPList(std::string const& name, int defaultValue, int minimum, int maxim
 	_maxId = 0;
 }
 
-const std::string BPList::getName() const
+std::string BPList::getName() const
 {
 	return _name;
 }
@@ -101,7 +101,7 @@ void BPList::renumberIds()
 	}
 }
 
-const std::string BPList::getData() const
+std::string BPList::getData() const
 {
 	std::ostringstream ret;
 	for (int i = 0; i < _length; i++) {
@@ -245,7 +245,7 @@ int BPList::getValue(int index) const
 	return _items[index].value;
 }
 
-const BP BPList::get(int index) const
+BP BPList::get(int index) const
 {
 	return _items[index];
 }
@@ -266,7 +266,7 @@ int BPList::findValueFromId(int id) const
 	return _defaultValue;
 }
 
-const BPListSearchResult BPList::findElement(int id) const
+BPListSearchResult BPList::findElement(int id) const
 {
 	BPListSearchResult context;
 	for (int i = 0; i < _length; i++) {
@@ -328,7 +328,7 @@ void BPList::print(TextStream& stream, tick_t startClock, std::string const& hea
 	}
 }
 
-const std::string BPList::appendFromText(TextStream& reader)
+std::string BPList::appendFromText(TextStream& reader)
 {
 	tick_t clock = 0;
 	int value = 0;

@@ -19,12 +19,12 @@ VSQ_BEGIN_NAMESPACE
 Event::List::List()
 {}
 
-Event::List::List(const List& list)
+Event::List::List(List const& list)
 {
 	copy(list);
 }
 
-Event::List& Event::List::operator = (const List& list)
+Event::List& Event::List::operator = (List const& list)
 {
 	copy(list);
 	return *this;
@@ -47,7 +47,7 @@ int Event::List::findIndexFromId(int internalId) const
 	return -1;
 }
 
-const Event* Event::List::findFromId(int internalId) const
+Event const* Event::List::findFromId(int internalId) const
 {
 	int index = findIndexFromId(internalId);
 	if (0 <= index && index < _events.size()) {
@@ -57,7 +57,7 @@ const Event* Event::List::findFromId(int internalId) const
 	}
 }
 
-void Event::List::setForId(int internalId, const Event& value)
+void Event::List::setForId(int internalId, Event const& value)
 {
 	int c = _events.size();
 	for (int i = 0; i < c; i++) {
@@ -94,12 +94,12 @@ Event::List::iterator()
 	return ListIterator(this);
 }
 
-const Event::ListConstIterator Event::List::iterator() const
+Event::ListConstIterator Event::List::iterator() const
 {
 	return ListConstIterator(this);
 }
 
-int Event::List::add(const Event& item)
+int Event::List::add(Event const& item)
 {
 	int id = _getNextId(0);
 	_addCor(item, id);
@@ -111,7 +111,7 @@ int Event::List::add(const Event& item)
 	return id;
 }
 
-int Event::List::add(const Event& item, int internalId)
+int Event::List::add(Event const& item, int internalId)
 {
 	_addCor(item, internalId);
 	std::stable_sort(_events.begin(), _events.end(), Event::comp);
@@ -142,12 +142,12 @@ int Event::List::size() const
 	return _events.size();
 }
 
-const Event* Event::List::get(int index) const
+Event const* Event::List::get(int index) const
 {
 	return _events[index];
 }
 
-void Event::List::set(int index, const Event& value)
+void Event::List::set(int index, Event const& value)
 {
 	int id = _events[index]->id;
 	*_events[index] = value;
@@ -165,7 +165,7 @@ void Event::List::updateIdList()
 	}
 }
 
-void Event::List::_addCor(const Event& item, int internalId)
+void Event::List::_addCor(Event const& item, int internalId)
 {
 	updateIdList();
 	Event* add = new Event();
@@ -186,7 +186,7 @@ int Event::List::_getNextId(int next)
 	return max + 1 + next;
 }
 
-void Event::List::copy(const List& list)
+void Event::List::copy(List const& list)
 {
 	_events.clear();
 	_ids.clear();
@@ -196,7 +196,7 @@ void Event::List::copy(const List& list)
 	}
 }
 
-Event::ListConstIterator::ListConstIterator(const List* list) :
+Event::ListConstIterator::ListConstIterator(List const* list) :
 	_list(list),
 	_pos(-1)
 {
@@ -306,7 +306,7 @@ bool Event::isEOS() const
 	return isEos;
 }
 
-int Event::compareTo(const Event& item) const
+int Event::compareTo(Event const& item) const
 {
 	tick_t ret = clock - item.clock;
 	if (ret == 0) {
@@ -316,7 +316,7 @@ int Event::compareTo(const Event& item) const
 	}
 }
 
-bool Event::compare(const Event& a, const Event& b)
+bool Event::compare(Event const& a, Event const& b)
 {
 	return (a.compareTo(b) < 0);
 }
@@ -326,7 +326,7 @@ bool Event::comp(Event const* a, Event const* b)
 	return (a->compareTo(*b) < 0);
 }
 
-const Event Event::getEOS()
+Event Event::getEOS()
 {
 	return Event();
 }

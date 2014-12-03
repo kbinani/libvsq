@@ -51,7 +51,7 @@ public:
 	 * @param value 指定された列挙子の文字列表現.
 	 * @return 変換後の文字列.
 	 */
-	static const std::string toString(EventTypeEnum value);
+	static std::string toString(EventTypeEnum value);
 
 private:
 	EventType();

@@ -262,7 +262,7 @@ Handle VSQFileReader::parseHandle(TextStream& stream, int index, std::string& la
 	return result;
 }
 
-void VSQFileReader::parseTimesigList(const std::vector<MidiEvent>& midiEventList, TimesigList& timesigList)
+void VSQFileReader::parseTimesigList(std::vector<MidiEvent> const& midiEventList, TimesigList& timesigList)
 {
 	timesigList.clear();
 	int dnominator = 4;
@@ -297,7 +297,7 @@ void VSQFileReader::parseTimesigList(const std::vector<MidiEvent>& midiEventList
 	}
 }
 
-void VSQFileReader::parseTempoList(const std::vector<MidiEvent>& midiEventList, TempoList& tempoList)
+void VSQFileReader::parseTempoList(std::vector<MidiEvent> const& midiEventList, TempoList& tempoList)
 {
 	tempoList.clear();
 	int lastTempo = 500000;
@@ -319,7 +319,7 @@ void VSQFileReader::parseTempoList(const std::vector<MidiEvent>& midiEventList, 
 	tempoList.updateTempoInfo();
 }
 
-void VSQFileReader::getMetatextByMidiEventList(const std::vector<MidiEvent>& midiEventList, std::string const& encoding, TextStream& stream, std::string& trackName)
+void VSQFileReader::getMetatextByMidiEventList(std::vector<MidiEvent> const& midiEventList, std::string const& encoding, TextStream& stream, std::string& trackName)
 {
 	int count = midiEventList.size();
 	std::vector<int> buffer;

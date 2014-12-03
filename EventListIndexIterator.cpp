@@ -16,7 +16,7 @@
 
 VSQ_BEGIN_NAMESPACE
 
-EventListIndexIterator::EventListIndexIterator(const Event::List* list, int iteratorKind)
+EventListIndexIterator::EventListIndexIterator(Event::List const* list, int iteratorKind)
 {
 	this->_list = list;
 	this->_pos = -1;

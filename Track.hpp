@@ -143,7 +143,7 @@ public:
 	 * @brief トラックの名前を取得する.
 	 * @return トラック名.
 	 */
-	const std::string getName() const;
+	std::string getName() const;
 
 	/**
 	 * @brief トラックの名前を設定する.
@@ -164,9 +164,9 @@ public:
 	 * @return 歌手イベント. 存在しなければ null を返す.
 	 * @todo Change to const method.
 	 */
-	const Event* getSingerEventAt(tick_t clock) const;
+	Event const* getSingerEventAt(tick_t clock) const;
 
-	const BPList* curve(std::string const& curveName) const;
+	BPList const* curve(std::string const& curveName) const;
 
 	/**
 	 * @brief 指定された名前のカーブを取得する.
@@ -187,7 +187,7 @@ public:
 	 */
 	Event::List* events();
 
-	const Event::List* events() const;
+	Event::List const* events() const;
 
 	/**
 	 * @brief Get an instance of Common.
@@ -197,13 +197,13 @@ public:
 	/**
 	 * @brief Get an instance of Common.
 	 */
-	const Common* common() const;
+	Common const* common() const;
 
 	/**
 	 * @brief Get a list of curve name for this track.
 	 * @return A list of curve name.
 	 */
-	virtual const std::vector<std::string>* curveNameList() const;
+	virtual std::vector<std::string> const* curveNameList() const;
 
 protected:
 	/**

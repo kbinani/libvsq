@@ -147,7 +147,7 @@ public:
 	 * @brief カーブ名のリストを取得する.
 	 * @return カーブ名のリスト.
 	 */
-	static const std::vector<std::string> getCurveNameList();
+	static std::vector<std::string> getCurveNameList();
 
 	/**
 	 * @brief totalClock の値を更新する.

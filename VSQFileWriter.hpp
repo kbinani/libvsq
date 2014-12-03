@@ -41,7 +41,7 @@ protected:
 		int vibratoHandleIndex;
 		int noteHeadHandleIndex;
 
-		explicit TempEvent(const Event& item)
+		explicit TempEvent(Event const& item)
 			: Event(item)
 		{
 			index = -1;
@@ -108,7 +108,7 @@ protected:
 	 * @param encoding マルチバイト文字のテキストエンコーディング(現在は Shift_JIS 固定で, 引数は無視される).
 	 * @param printPitch pitch を含めて出力するかどうか(現在は false 固定で, 引数は無視される).
 	 */
-	void _printTrack(Sequence* sequence, int track, OutputStream* stream, int msPreSend, std::string const& encoding, bool printPitch, Master* master = 0, Mixer* mixer = 0);
+	void _printTrack(Sequence const* sequence, int track, OutputStream* stream, int msPreSend, std::string const& encoding, bool printPitch, Master* master = 0, Mixer* mixer = 0);
 
 	/**
 	 * @brief 文字列を MIDI メタイベントにしたものを取得する.
@@ -158,7 +158,7 @@ private:
 	 * @brief リスト内のイベントから, ハンドルの一覧を作成する. 同時に, 各イベント, ハンドルの番号を設定する.
 	 * @return ハンドルの一覧.
 	 */
-	const std::vector<Handle> getHandleList(std::vector<TempEvent*>& eventList);
+	std::vector<Handle> getHandleList(std::vector<TempEvent*>& eventList);
 
 	/**
 	 * @brief SMF のトラックヘッダー文字列を取得する.

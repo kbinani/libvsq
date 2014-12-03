@@ -114,7 +114,7 @@ Lyric::Lyric(std::string const& phrase, std::string const& phoneticSymbol)
 	isProtected = false;
 }
 
-bool Lyric::equalsForSynth(Lyric& item) const
+bool Lyric::equalsForSynth(Lyric const& item) const
 {
 	if (getPhoneticSymbol() != item.getPhoneticSymbol()) {
 		return false;
@@ -125,7 +125,7 @@ bool Lyric::equalsForSynth(Lyric& item) const
 	return true;
 }
 
-bool Lyric::equals(Lyric& item) const
+bool Lyric::equals(Lyric const& item) const
 {
 	if (false == equalsForSynth(item)) {
 		return false;
@@ -142,7 +142,7 @@ bool Lyric::equals(Lyric& item) const
 	return true;
 }
 
-const std::string Lyric::getConsonantAdjustment() const
+std::string Lyric::getConsonantAdjustment() const
 {
 	const std::vector<int> arr = getConsonantAdjustmentList();
 	if (arr.empty()) {
@@ -167,7 +167,7 @@ void Lyric::setConsonantAdjustment(std::string const& value)
 	setConsonantAdjustmentList(arr);
 }
 
-const std::vector<int> Lyric::getConsonantAdjustmentList() const
+std::vector<int> Lyric::getConsonantAdjustmentList() const
 {
 	std::vector<int> _consonantAdjustment = this->_consonantAdjustment;
 	if (_consonantAdjustment.empty()) {
@@ -190,7 +190,7 @@ const std::vector<int> Lyric::getConsonantAdjustmentList() const
 	return _consonantAdjustment;
 }
 
-void Lyric::setConsonantAdjustmentList(const std::vector<int>& value)
+void Lyric::setConsonantAdjustmentList(std::vector<int> const& value)
 {
 	_consonantAdjustment.clear();
 	std::vector<int>::const_iterator i;
@@ -219,7 +219,7 @@ Lyric Lyric::clone() const
 	return result;
 }
 
-const std::string Lyric::getPhoneticSymbol() const
+std::string Lyric::getPhoneticSymbol() const
 {
 	const std::vector<std::string> symbol = getPhoneticSymbolList();
 	if (symbol.empty()) {
@@ -242,7 +242,7 @@ void Lyric::setPhoneticSymbol(std::string const& value)
 	}
 }
 
-const std::vector<std::string> Lyric::getPhoneticSymbolList() const
+std::vector<std::string> Lyric::getPhoneticSymbolList() const
 {
 	std::vector<std::string> ret;
 	std::vector<std::string>::const_iterator i;
@@ -252,7 +252,7 @@ const std::vector<std::string> Lyric::getPhoneticSymbolList() const
 	return ret;
 }
 
-const std::string Lyric::toString(bool addQuateMark) const
+std::string Lyric::toString(bool addQuateMark) const
 {
 	std::string quot;
 	if (addQuateMark) {

@@ -68,7 +68,7 @@ public:
 	 * @brief 文字列に変換する.
 	 * @return 変換後の文字列.
 	 */
-	const std::string toString() const;
+	std::string toString() const;
 
 	/**
 	 * @brief 順序を比較する.

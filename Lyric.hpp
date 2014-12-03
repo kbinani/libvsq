@@ -72,20 +72,20 @@ public:
 	 * @param item 比較対象のオブジェクト.
 	 * @return 比較対象と同じであれば <code>true</code> を, そうでなければ <code>false</code> を返す.
 	 */
-	bool equalsForSynth(Lyric& item) const;
+	bool equalsForSynth(Lyric const& item) const;
 
 	/**
 	 * @brief このオブジェクトのインスタンスと, 指定されたオブジェクトが同じかどうかを調べる.
 	 * @param item 比較対象のオブジェクト.
 	 * @return 比較対象と同じであれば <code>true</code> を, そうでなければ <code>false</code> を返す.
 	 */
-	bool equals(Lyric& item) const;
+	bool equals(Lyric const& item) const;
 
 	/**
 	 * @brief Get a string value of consonant adjustment, separated by ",".
 	 * @return A string value of consonant adjustment.
 	 */
-	const std::string getConsonantAdjustment() const;
+	std::string getConsonantAdjustment() const;
 
 	/**
 	 * @brief Set consonant adjustment with a string, adjustment value concatenated with ",".
@@ -97,13 +97,13 @@ public:
 	 * @brief Consonant Adjustment を, 整数配列で取得する.
 	 * @return Consonant Adjustment を格納した整数の配列.
 	 */
-	const std::vector<int> getConsonantAdjustmentList() const;
+	std::vector<int> getConsonantAdjustmentList() const;
 
 	/**
 	 * @brief Consonant Adjustment を, 整数配列形式で設定する.
 	 * @param value Consonant Adjustment を格納した整数の配列.
 	 */
-	void setConsonantAdjustmentList(const std::vector<int>& value);
+	void setConsonantAdjustmentList(std::vector<int> const& value);
 
 	/**
 	 * @brief コピーを作成する.
@@ -115,7 +115,7 @@ public:
 	 * @brief この歌詞の発音記号を取得する.
 	 * @return 発音記号.
 	 */
-	const std::string getPhoneticSymbol() const;
+	std::string getPhoneticSymbol() const;
 
 	/**
 	 * @brief この歌詞の発音記号を設定する.
@@ -127,14 +127,14 @@ public:
 	 * @brief この歌詞の発音記号の配列を取得する.
 	 * @return 発音記号の配列.
 	 */
-	const std::vector<std::string> getPhoneticSymbolList() const;
+	std::vector<std::string> getPhoneticSymbolList() const;
 
 	/**
 	 * @brief このインスタンスを文字列に変換する.
 	 * @param addQuateMark 歌詞, 発音記号の前後に引用符(")を追加するかどうか.
 	 * @return 変換後の文字列.
 	 */
-	const std::string toString(bool addQuateMark = false) const;
+	std::string toString(bool addQuateMark = false) const;
 };
 
 VSQ_END_NAMESPACE

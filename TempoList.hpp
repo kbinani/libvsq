@@ -31,14 +31,14 @@ public:
 	class Iterator
 	{
 	private:
-		const std::vector<Tempo>* list;
+		std::vector<Tempo> const* list;
 		std::vector<Tempo>::const_iterator iterator;
 
 	public:
 		/**
 		 * @todo このコンストラクタは隠蔽すべき.
 		 */
-		explicit Iterator(const std::vector<Tempo>* list);
+		explicit Iterator(std::vector<Tempo> const* list);
 
 		bool hasNext();
 
