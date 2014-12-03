@@ -1,19 +1,18 @@
 # libvsq
 
-is a library for reading/writing/editing musical score files for VOCALOID2, written in C++.
+libvsq is a library for reading/writing/editing VSQ file (*.vsq) fes for VOCALOID2 and VOCALOID1, written in C++.
 
 ## License
 
-the BSD License.
+The BSD License.
 
 ## Library Reference
 
 http://ci.kbinani.info/job/libvsq-devel/doxygen/
 
-## Usage
+## Building
 
-You don't need to build this library because libvsq is header-only library.
-Please just `#include` header file(s).
+This project uses CMake. Do `cmake .` then `make` in usual manner.
 
 ## Notice
 
