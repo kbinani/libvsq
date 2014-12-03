@@ -1,5 +1,5 @@
 #include "Util.hpp"
-#include "../EventWriteOption.hpp"
+#include "../include/libvsq/EventWriteOption.hpp"
 
 using namespace std;
 using namespace vsq;

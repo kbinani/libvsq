@@ -1,4 +1,4 @@
-#include "../FileOutputStream.hpp"
+#include "../include/libvsq/FileOutputStream.hpp"
 #include "Util.hpp"
 #include <stdio.h>
 

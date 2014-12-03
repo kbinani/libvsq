@@ -1,5 +1,5 @@
 #include "Util.hpp"
-#include "../FileInputStream.hpp"
+#include "../include/libvsq/FileInputStream.hpp"
 
 using namespace std;
 using namespace vsq;

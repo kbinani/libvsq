@@ -1,8 +1,8 @@
 #include "Util.hpp"
-#include "../VSQFileReader.hpp"
-#include "../FileInputStream.hpp"
-#include "../TextStream.hpp"
-#include "../Sequence.hpp"
+#include "../include/libvsq/VSQFileReader.hpp"
+#include "../include/libvsq/FileInputStream.hpp"
+#include "../include/libvsq/TextStream.hpp"
+#include "../include/libvsq/Sequence.hpp"
 
 using namespace std;
 using namespace vsq;

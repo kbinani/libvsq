@@ -1,5 +1,5 @@
 #include "Util.hpp"
-#include "../Timesig.hpp"
+#include "../include/libvsq/Timesig.hpp"
 
 using namespace std;
 using namespace vsq;

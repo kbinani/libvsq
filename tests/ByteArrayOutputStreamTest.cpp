@@ -1,6 +1,6 @@
 #include "Util.hpp"
-#include "../ByteArrayOutputStream.hpp"
-#include "../StringUtil.hpp"
+#include "../include/libvsq/ByteArrayOutputStream.hpp"
+#include "../include/libvsq/StringUtil.hpp"
 #include <sstream>
 
 using namespace std;

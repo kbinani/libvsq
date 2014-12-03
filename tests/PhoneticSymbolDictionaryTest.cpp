@@ -1,5 +1,5 @@
 #include "Util.hpp"
-#include "../PhoneticSymbolDictionary.hpp"
+#include "../include/libvsq/PhoneticSymbolDictionary.hpp"
 
 using namespace std;
 using namespace vsq;

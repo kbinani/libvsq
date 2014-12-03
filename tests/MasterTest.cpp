@@ -1,5 +1,5 @@
-#include "../Master.hpp"
-#include "../TextStream.hpp"
+#include "../include/libvsq/Master.hpp"
+#include "../include/libvsq/TextStream.hpp"
 #include "Util.hpp"
 
 using namespace std;

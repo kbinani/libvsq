@@ -1,5 +1,5 @@
 #include "Util.hpp"
-#include "../MixerItem.hpp"
+#include "../include/libvsq/MixerItem.hpp"
 
 using namespace vsq;
 

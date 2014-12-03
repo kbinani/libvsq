@@ -1,6 +1,6 @@
 #include "Util.hpp"
-#include "../Common.hpp"
-#include "../TextStream.hpp"
+#include "../include/libvsq/Common.hpp"
+#include "../include/libvsq/TextStream.hpp"
 
 using namespace std;
 using namespace vsq;

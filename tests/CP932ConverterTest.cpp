@@ -1,5 +1,5 @@
 #include "Util.hpp"
-#include "../CP932Converter.hpp"
+#include "../include/libvsq/CP932Converter.hpp"
 
 using namespace std;
 using namespace vsq;

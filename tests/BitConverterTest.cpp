@@ -1,5 +1,5 @@
 #include "Util.hpp"
-#include "../BitConverter.hpp"
+#include "../include/libvsq/BitConverter.hpp"
 
 using namespace vsq;
 using namespace std;

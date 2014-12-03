@@ -1,6 +1,6 @@
 #include "Util.hpp"
-#include "../VocaloidMidiEventListFactory.hpp"
-#include "../Sequence.hpp"
+#include "../include/libvsq/VocaloidMidiEventListFactory.hpp"
+#include "../include/libvsq/Sequence.hpp"
 
 #include <iostream> // debug
 

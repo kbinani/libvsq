@@ -1,6 +1,6 @@
 #include "Util.hpp"
-#include "../Sequence.hpp"
-#include "../ByteArrayOutputStream.hpp"
+#include "../include/libvsq/Sequence.hpp"
+#include "../include/libvsq/ByteArrayOutputStream.hpp"
 
 using namespace std;
 using namespace vsq;

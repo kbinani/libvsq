@@ -1,5 +1,5 @@
 #include "Util.hpp"
-#include "../NoteNumberUtil.hpp"
+#include "../include/libvsq/NoteNumberUtil.hpp"
 
 using namespace std;
 using namespace vsq;

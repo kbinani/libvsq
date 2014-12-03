@@ -1,6 +1,6 @@
 #include "Util.hpp"
-#include "../StreamWriter.hpp"
-#include "../FileOutputStream.hpp"
+#include "../include/libvsq/StreamWriter.hpp"
+#include "../include/libvsq/FileOutputStream.hpp"
 
 using namespace std;
 using namespace vsq;

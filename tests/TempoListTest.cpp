@@ -1,5 +1,5 @@
 #include "Util.hpp"
-#include "../TempoList.hpp"
+#include "../include/libvsq/TempoList.hpp"
 
 using namespace std;
 using namespace vsq;

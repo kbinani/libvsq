@@ -1,5 +1,5 @@
 #include "Util.hpp"
-#include "../StringUtil.hpp"
+#include "../include/libvsq/StringUtil.hpp"
 
 using namespace std;
 using namespace vsq;

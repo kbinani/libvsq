@@ -1,4 +1,4 @@
-#include "../Lyric.hpp"
+#include "../include/libvsq/Lyric.hpp"
 #include "Util.hpp"
 
 using namespace std;

@@ -1,5 +1,5 @@
 #include "Util.hpp"
-#include "../Track.hpp"
+#include "../include/libvsq/Track.hpp"
 
 using namespace std;
 using namespace vsq;

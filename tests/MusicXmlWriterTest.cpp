@@ -1,8 +1,8 @@
 #include "Util.hpp"
-#include "../MusicXmlWriter.hpp"
-#include "../ByteArrayOutputStream.hpp"
-#include "../TextStream.hpp"
-#include "../Sequence.hpp"
+#include "../include/libvsq/MusicXmlWriter.hpp"
+#include "../include/libvsq/ByteArrayOutputStream.hpp"
+#include "../include/libvsq/TextStream.hpp"
+#include "../include/libvsq/Sequence.hpp"
 
 using namespace vsq;
 

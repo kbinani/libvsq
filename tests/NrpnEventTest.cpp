@@ -1,5 +1,5 @@
 #include "Util.hpp"
-#include "../NrpnEvent.hpp"
+#include "../include/libvsq/NrpnEvent.hpp"
 
 using namespace std;
 using namespace vsq;

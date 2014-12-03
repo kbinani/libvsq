@@ -1,5 +1,5 @@
 #include "Util.hpp"
-#include "../HandleType.hpp"
+#include "../include/libvsq/HandleType.hpp"
 
 class HandleTypeTest : public CppUnit::TestCase
 {

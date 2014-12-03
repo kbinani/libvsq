@@ -1,5 +1,5 @@
 #include "Util.hpp"
-#include "../ArticulationType.hpp"
+#include "../include/libvsq/ArticulationType.hpp"
 
 using namespace vsq;
 

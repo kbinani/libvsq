@@ -1,5 +1,5 @@
 #include "Util.hpp"
-#include "../VoiceLanguage.hpp"
+#include "../include/libvsq/VoiceLanguage.hpp"
 
 using namespace std;
 using namespace vsq;

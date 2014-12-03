@@ -1,6 +1,6 @@
 #include "Util.hpp"
-#include "../EventListIndexIterator.hpp"
-#include "../EventListIndexIteratorKind.hpp"
+#include "../include/libvsq/EventListIndexIterator.hpp"
+#include "../include/libvsq/EventListIndexIteratorKind.hpp"
 
 using namespace vsq;
 

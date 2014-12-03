@@ -1,7 +1,7 @@
 #include "Util.hpp"
-#include "../MidiEvent.hpp"
-#include "../ByteArrayOutputStream.hpp"
-#include "../InputStream.hpp"
+#include "../include/libvsq/MidiEvent.hpp"
+#include "../include/libvsq/ByteArrayOutputStream.hpp"
+#include "../include/libvsq/InputStream.hpp"
 
 using namespace std;
 using namespace vsq;

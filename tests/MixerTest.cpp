@@ -1,6 +1,6 @@
 #include "Util.hpp"
-#include "../Mixer.hpp"
-#include "../TextStream.hpp"
+#include "../include/libvsq/Mixer.hpp"
+#include "../include/libvsq/TextStream.hpp"
 
 using namespace vsq;
 

@@ -1,4 +1,4 @@
-#include "../PhoneticSymbol.hpp"
+#include "../include/libvsq/PhoneticSymbol.hpp"
 #include "Util.hpp"
 
 using namespace std;

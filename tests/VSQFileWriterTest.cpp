@@ -1,9 +1,9 @@
 #include "Util.hpp"
-#include "../VSQFileWriter.hpp"
-#include "../ByteArrayOutputStream.hpp"
-#include "../Sequence.hpp"
-#include "../TextStream.hpp"
-#include "../StringUtil.hpp"
+#include "../include/libvsq/VSQFileWriter.hpp"
+#include "../include/libvsq/ByteArrayOutputStream.hpp"
+#include "../include/libvsq/Sequence.hpp"
+#include "../include/libvsq/TextStream.hpp"
+#include "../include/libvsq/StringUtil.hpp"
 #include <iostream>
 
 using namespace std;

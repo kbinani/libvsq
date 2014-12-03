@@ -1,5 +1,5 @@
 #include "Util.hpp"
-#include "../Handle.hpp"
+#include "../include/libvsq/Handle.hpp"
 
 using namespace std;
 using namespace vsq;

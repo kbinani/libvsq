@@ -1,5 +1,5 @@
 #include "Util.hpp"
-#include "../PlayMode.hpp"
+#include "../include/libvsq/PlayMode.hpp"
 
 using namespace std;
 using namespace vsq;
