@@ -12,6 +12,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
 #include "../include/libvsq/TempoList.hpp"
+#include <algorithm>
 
 VSQ_BEGIN_NAMESPACE
 

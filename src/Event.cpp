@@ -13,6 +13,7 @@
  */
 #include "../include/libvsq/Event.hpp"
 #include "../include/libvsq/StringUtil.hpp"
+#include <algorithm>
 
 VSQ_BEGIN_NAMESPACE
 

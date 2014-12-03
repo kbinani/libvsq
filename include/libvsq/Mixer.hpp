@@ -15,6 +15,7 @@
 
 #include "./Namespace.hpp"
 #include "./MixerItem.hpp"
+#include <string>
 #include <vector>
 
 VSQ_BEGIN_NAMESPACE

@@ -13,6 +13,7 @@
  */
 #include "../include/libvsq/VibratoBPList.hpp"
 #include "../include/libvsq/StringUtil.hpp"
+#include <algorithm>
 #include <sstream>
 
 VSQ_BEGIN_NAMESPACE

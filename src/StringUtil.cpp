@@ -12,6 +12,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
 #include "../include/libvsq/StringUtil.hpp"
+#include <algorithm>
 #include <sstream>
 #include <iomanip>
 

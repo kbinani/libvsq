@@ -20,6 +20,7 @@
 #include "../include/libvsq/VocaloidMidiEventListFactory.hpp"
 #include "../include/libvsq/BitConverter.hpp"
 #include "../include/libvsq/VoiceLanguage.hpp"
+#include <string.h>
 #include <sstream>
 
 VSQ_BEGIN_NAMESPACE

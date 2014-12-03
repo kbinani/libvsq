@@ -14,8 +14,9 @@
 #include "../include/libvsq/BPList.hpp"
 #include "../include/libvsq/StringUtil.hpp"
 #include "../include/libvsq/TextStream.hpp"
-#include <sstream>
 #include <cmath>
+#include <sstream>
+#include <algorithm>
 
 VSQ_BEGIN_NAMESPACE
 

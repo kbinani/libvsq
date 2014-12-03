@@ -14,6 +14,7 @@
 #pragma once
 
 #include "./BasicTypes.hpp"
+#include <cstdint>
 #include <vector>
 
 VSQ_BEGIN_NAMESPACE

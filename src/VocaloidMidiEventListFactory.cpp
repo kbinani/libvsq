@@ -16,6 +16,7 @@
 #include "../include/libvsq/TempoList.hpp"
 #include "../include/libvsq/StringUtil.hpp"
 #include <cmath>
+#include <algorithm>
 #include <sstream>
 
 VSQ_BEGIN_NAMESPACE
