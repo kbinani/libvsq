@@ -18,7 +18,6 @@ VSQ_BEGIN_NAMESPACE
 
 TextStream::TextStream()
 {
-	_array = NULL;
 	_arrayLength = 0;
 	_length = 0;
 	_position = -1;
@@ -41,7 +40,7 @@ void TextStream::setPointer(int value)
 
 std::string TextStream::get()
 {
-	_position++;
+	++_position;
 	std::string ret;
 	ret += _array[_position];
 	return ret;
@@ -77,8 +76,8 @@ void TextStream::write(std::string const& str)
 	int newSize = _position + 1 + len;
 	int offset = _position + 1;
 	_ensureCapacity(newSize);
-	const char* ptr = str.c_str();
-	for (int i = 0; i < len; i++) {
+	char const* ptr = str.c_str();
+	for (int i = 0; i < len; ++i) {
 		_array[offset + i] = ptr[i];
 	}
 	_position += len;
@@ -91,7 +90,7 @@ void TextStream::writeLine(std::string const& str)
 	int offset = _position + 1;
 	int newSize = offset + len + 1;
 	_ensureCapacity(newSize);
-	for (int i = 0; i < len; i++) {
+	for (int i = 0; i < len; ++i) {
 		_array[offset + i] = str[i];
 	}
 	_array[offset + len] = (char)0x0A;
@@ -101,18 +100,14 @@ void TextStream::writeLine(std::string const& str)
 
 void TextStream::close()
 {
-	if (_array) {
-		free(_array);
-		_array = NULL;
-	}
 	_length = 0;
 }
 
 std::string TextStream::toString() const
 {
 	std::string ret;
-	if (_array) {
-		ret += _array;
+	if (!_array.empty()) {
+		ret += _array.data();
 	}
 	return ret;
 }
@@ -120,8 +115,8 @@ std::string TextStream::toString() const
 void TextStream::_ensureCapacity(int length)
 {
 	if (length > _arrayLength) {
-		_array = (char*)::realloc(_array, (length + 1) * sizeof(char));
-		for (int i = _arrayLength; i <= length; i++) {
+		_array.resize(length + 1);
+		for (int i = _arrayLength; i <= length; ++i) {
 			_array[i] = 0;
 		}
 		_arrayLength = length;

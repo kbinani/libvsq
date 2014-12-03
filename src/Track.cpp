@@ -265,7 +265,7 @@ Event const* Track::singerEventAt(tick_t tick) const
 	EventListIndexIterator itr = getIndexIterator(EventListIndexIteratorKind::SINGER);
 	while (itr.hasNext()) {
 		int index = itr.next();
-		const Event* item = events.get(index);
+		Event const* item = events.get(index);
 		if (tick < item->tick) {
 			return last;
 		}
@@ -337,8 +337,7 @@ Event const* Track::singerEventAt(tick_t tick) const
 BPList const* Track::curve(std::string const& curveName) const
 {
 	std::string search = StringUtil::toLower(curveName);
-	std::map<std::string, BPList*>::const_iterator index
-		= curveNameMap.find(search);
+	auto index = curveNameMap.find(search);
 	if (index == curveNameMap.end()) {
 		return nullptr;
 	} else {
@@ -349,8 +348,7 @@ BPList const* Track::curve(std::string const& curveName) const
 BPList* Track::curve(std::string const& curveName)
 {
 	std::string search = StringUtil::toLower(curveName);
-	std::map<std::string, BPList*>::const_iterator index
-		= curveNameMap.find(search);
+	auto index = curveNameMap.find(search);
 	if (index == curveNameMap.end()) {
 		return nullptr;
 	} else {
@@ -501,32 +499,31 @@ std::vector<std::string> const* Track::curveNameList() const
 
 std::map<std::string, std::string> Track::getSectionNameMap() const
 {
-	static std::map<std::string, std::string> result;
-	if (result.empty()) {
-		result.insert(std::make_pair("[PitchBendBPList]", "pit"));
-		result.insert(std::make_pair("[PitchBendSensBPList]", "pbs"));
-		result.insert(std::make_pair("[DynamicsBPList]", "dyn"));
-		result.insert(std::make_pair("[EpRResidualBPList]", "bre"));
-		result.insert(std::make_pair("[EpRESlopeBPList]", "bri"));
-		result.insert(std::make_pair("[EpRESlopeDepthBPList]", "cle"));
-		result.insert(std::make_pair("[EpRSineBPList]", "harmonics"));
-		result.insert(std::make_pair("[VibTremDepthBPList]", "fx2depth"));
-		result.insert(std::make_pair("[Reso1FreqBPList]", "reso1Freq"));
-		result.insert(std::make_pair("[Reso2FreqBPList]", "reso2Freq"));
-		result.insert(std::make_pair("[Reso3FreqBPList]", "reso3Freq"));
-		result.insert(std::make_pair("[Reso4FreqBPList]", "reso4Freq"));
-		result.insert(std::make_pair("[Reso1BWBPList]", "reso1BW"));
-		result.insert(std::make_pair("[Reso2BWBPList]", "reso2BW"));
-		result.insert(std::make_pair("[Reso3BWBPList]", "reso3BW"));
-		result.insert(std::make_pair("[Reso4BWBPList]", "reso4BW"));
-		result.insert(std::make_pair("[Reso1AmpBPList]", "reso1Amp"));
-		result.insert(std::make_pair("[Reso2AmpBPList]", "reso2Amp"));
-		result.insert(std::make_pair("[Reso3AmpBPList]", "reso3Amp"));
-		result.insert(std::make_pair("[Reso4AmpBPList]", "reso4Amp"));
-		result.insert(std::make_pair("[GenderFactorBPList]", "gen"));
-		result.insert(std::make_pair("[PortamentoTimingBPList]", "por"));
-		result.insert(std::make_pair("[OpeningBPList]", "ope"));
-	}
+	static std::map<std::string, std::string> const result = {
+		{"[PitchBendBPList]",			"pit"},
+		{"[PitchBendSensBPList]",		"pbs"},
+		{"[DynamicsBPList]",			"dyn"},
+		{"[EpRResidualBPList]",			"bre"},
+		{"[EpRESlopeBPList]",			"bri"},
+		{"[EpRESlopeDepthBPList]",		"cle"},
+		{"[EpRSineBPList]",				"harmonics"},
+		{"[VibTremDepthBPList]",		"fx2depth"},
+		{"[Reso1FreqBPList]",			"reso1Freq"},
+		{"[Reso2FreqBPList]",			"reso2Freq"},
+		{"[Reso3FreqBPList]",			"reso3Freq"},
+		{"[Reso4FreqBPList]",			"reso4Freq"},
+		{"[Reso1BWBPList]",				"reso1BW"},
+		{"[Reso2BWBPList]",				"reso2BW"},
+		{"[Reso3BWBPList]",				"reso3BW"},
+		{"[Reso4BWBPList]",				"reso4BW"},
+		{"[Reso1AmpBPList]",			"reso1Amp"},
+		{"[Reso2AmpBPList]",			"reso2Amp"},
+		{"[Reso3AmpBPList]",			"reso3Amp"},
+		{"[Reso4AmpBPList]",			"reso4Amp"},
+		{"[GenderFactorBPList]",		"gen"},
+		{"[PortamentoTimingBPList]",	"por"},
+		{"[OpeningBPList]",				"ope"},
+	};
 	return result;
 }
 
@@ -578,7 +575,7 @@ void Track::deepCopy(Track* destination) const
 	destination->_common = _common.clone();
 	destination->_events.clear();
 	for (int i = 0; i < _events.size(); i++) {
-		const Event* item = _events.get(i);
+		Event const* item = _events.get(i);
 		destination->_events.add(item->clone(), item->id);
 	}
 	destination->_pit = _pit.clone();
@@ -610,30 +607,31 @@ void Track::deepCopy(Track* destination) const
 
 void Track::setupCurveNameMap()
 {
-	curveNameMap.clear();
-	curveNameMap.insert(std::make_pair("bre", &_bre));
-	curveNameMap.insert(std::make_pair("bri", &_bri));
-	curveNameMap.insert(std::make_pair("cle", &_cle));
-	curveNameMap.insert(std::make_pair("dyn", &_dyn));
-	curveNameMap.insert(std::make_pair("gen", &_gen));
-	curveNameMap.insert(std::make_pair("ope", &_ope));
-	curveNameMap.insert(std::make_pair("pbs", &_pbs));
-	curveNameMap.insert(std::make_pair("pit", &_pit));
-	curveNameMap.insert(std::make_pair("por", &_por));
-	curveNameMap.insert(std::make_pair("harmonics", &_harmonics));
-	curveNameMap.insert(std::make_pair("fx2depth", &_fx2depth));
-	curveNameMap.insert(std::make_pair("reso1amp", &_reso1AmpBPList));
-	curveNameMap.insert(std::make_pair("reso1bw", &_reso1BWBPList));
-	curveNameMap.insert(std::make_pair("reso1freq", &_reso1FreqBPList));
-	curveNameMap.insert(std::make_pair("reso2amp", &_reso2AmpBPList));
-	curveNameMap.insert(std::make_pair("reso2bw", &_reso2BWBPList));
-	curveNameMap.insert(std::make_pair("reso2freq", &_reso2FreqBPList));
-	curveNameMap.insert(std::make_pair("reso3amp", &_reso3AmpBPList));
-	curveNameMap.insert(std::make_pair("reso3bw", &_reso3BWBPList));
-	curveNameMap.insert(std::make_pair("reso3freq", &_reso3FreqBPList));
-	curveNameMap.insert(std::make_pair("reso4amp", &_reso4AmpBPList));
-	curveNameMap.insert(std::make_pair("reso4bw", &_reso4BWBPList));
-	curveNameMap.insert(std::make_pair("reso4freq", &_reso4FreqBPList));
+	curveNameMap = {
+		{"bre",			&_bre},
+		{"bri",			&_bri},
+		{"cle",			&_cle},
+		{"dyn",			&_dyn},
+		{"gen",			&_gen},
+		{"ope",			&_ope},
+		{"pbs",			&_pbs},
+		{"pit",			&_pit},
+		{"por",			&_por},
+		{"harmonics",	&_harmonics},
+		{"fx2depth",	&_fx2depth},
+		{"reso1amp",	&_reso1AmpBPList},
+		{"reso1bw",		&_reso1BWBPList},
+		{"reso1freq",	&_reso1FreqBPList},
+		{"reso2amp",	&_reso2AmpBPList},
+		{"reso2bw",		&_reso2BWBPList},
+		{"reso2freq",	&_reso2FreqBPList},
+		{"reso3amp",	&_reso3AmpBPList},
+		{"reso3bw",		&_reso3BWBPList},
+		{"reso3freq",	&_reso3FreqBPList},
+		{"reso4amp",	&_reso4AmpBPList},
+		{"reso4bw",		&_reso4BWBPList},
+		{"reso4freq",	&_reso4FreqBPList},
+	};
 }
 
 void Track::addCurveNameTo(std::vector<std::string>& vocaloid1CurveNameList,

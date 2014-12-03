@@ -14,6 +14,7 @@
 #pragma once
 
 #include "./TextOutputStream.hpp"
+#include <vector>
 
 VSQ_BEGIN_NAMESPACE
 
@@ -26,7 +27,7 @@ private:
 	/**
 	 * @brief 書き込まれたデータを保持するバッファー.
 	 */
-	char* _array;
+	std::vector<char> _array;
 
 	/**
 	 * @brief _array の現在の長さ.

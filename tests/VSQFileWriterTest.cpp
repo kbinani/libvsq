@@ -15,10 +15,9 @@ public:
 	class TempEventStub : public TempEvent
 	{
 	public:
-		explicit TempEventStub(const Event& item) :
+		explicit TempEventStub(Event const& item) :
 			TempEvent(item)
-		{
-		}
+		{}
 	};
 
 	void writeUnsignedShort(OutputStream& stream, int data)
@@ -51,8 +50,9 @@ public:
 		VSQFileWriter::printMetaText(t, stream, eos, start, printPitch, master, mixer);
 	}
 
-	void writeEvent(TempEventStub const& item, TextStream& stream, EventWriteOption printTargets = EventWriteOption()) const
+	void writeEvent(std::unique_ptr<TempEventStub> const& e, TextStream& stream, EventWriteOption printTargets = EventWriteOption()) const
 	{
+		std::unique_ptr<TempEvent> item(new TempEvent(*e));
 		VSQFileWriter::writeEvent(item, stream, printTargets);
 	}
 
@@ -670,19 +670,19 @@ class VSQFileWriterTest : public CppUnit::TestCase
 
 	void testWriteEventNoteWithOption()
 	{
-		VSQFileWriterStub::TempEventStub event(Event(0, EventType::NOTE));
-		event.length(2);
-		event.note = 6;
-		event.dynamics = 21;
-		event.pmBendDepth = 4;
-		event.pmBendLength = 5;
-		event.pmbPortamentoUse = 3;
-		event.demDecGainRate = 7;
-		event.demAccent = 8;
-		event.vibratoDelay = 13;
-		event.lyricHandle.index = 1;
-		event.tick = 20;
-		event.index = 1;
+		std::unique_ptr<VSQFileWriterStub::TempEventStub> event(new VSQFileWriterStub::TempEventStub(Event(0, EventType::NOTE)));
+		event->length(2);
+		event->note = 6;
+		event->dynamics = 21;
+		event->pmBendDepth = 4;
+		event->pmBendLength = 5;
+		event->pmbPortamentoUse = 3;
+		event->demDecGainRate = 7;
+		event->demAccent = 8;
+		event->vibratoDelay = 13;
+		event->lyricHandle.index = 1;
+		event->tick = 20;
+		event->index = 1;
 		EventWriteOption optionAll;
 		optionAll.length = true;
 		optionAll.note = true;
@@ -716,13 +716,13 @@ class VSQFileWriterTest : public CppUnit::TestCase
 		// 現在, PreUtteranceとVoiceOverlapは扱わないようにしているので,
 		// オプション全指定と, オプションが無い場合の動作が全くおなじになってしまっている.
 		// ustEventをちゃんと処理するようになったら, TODOコメントのところを外すこと
-		event.lyricHandle = Handle(HandleType::LYRIC);
-		event.lyricHandle.set(0, Lyric("わ", "w a"));
-		event.lyricHandle.index = 11;
-		event.vibratoHandle = Handle(HandleType::VIBRATO);
-		event.vibratoHandle.index = 12;
-		event.noteHeadHandle = Handle(HandleType::NOTE_HEAD);
-		event.noteHeadHandle.index = 14;
+		event->lyricHandle = Handle(HandleType::LYRIC);
+		event->lyricHandle.set(0, Lyric("わ", "w a"));
+		event->lyricHandle.index = 11;
+		event->vibratoHandle = Handle(HandleType::VIBRATO);
+		event->vibratoHandle.index = 12;
+		event->noteHeadHandle = Handle(HandleType::NOTE_HEAD);
+		event->noteHeadHandle.index = 14;
 		stream = TextStream();
 		writer.writeEvent(event, stream, optionAll);
 		expected =
@@ -786,12 +786,12 @@ class VSQFileWriterTest : public CppUnit::TestCase
 
 	void testWriteEventSinger()
 	{
-		VSQFileWriterStub::TempEventStub event(Event(0, EventType::SINGER));
-		event.singerHandle = Handle(HandleType::SINGER);
-		event.singerHandle.index = 16;
-		event.index = 16;
-		event.tick = 1;
-		event.index = 15;
+		std::unique_ptr<VSQFileWriterStub::TempEventStub> event(new VSQFileWriterStub::TempEventStub(Event(0, EventType::SINGER)));
+		event->singerHandle = Handle(HandleType::SINGER);
+		event->singerHandle.index = 16;
+		event->index = 16;
+		event->tick = 1;
+		event->index = 15;
 		TextStream stream;
 		VSQFileWriterStub writer;
 		writer.writeEvent(event, stream);
@@ -804,13 +804,13 @@ class VSQFileWriterTest : public CppUnit::TestCase
 
 	void testWriteEventIcon()
 	{
-		VSQFileWriterStub::TempEventStub event(Event(0, EventType::ICON));
-		event.note = 19;
-		event.index = 17;
-		event.iconDynamicsHandle = Handle(HandleType::DYNAMICS);
-		event.iconDynamicsHandle.index = 18;
-		event.tick = 2;
-		event.index = 17;
+		std::unique_ptr<VSQFileWriterStub::TempEventStub> event(new VSQFileWriterStub::TempEventStub(Event(0, EventType::ICON)));
+		event->note = 19;
+		event->index = 17;
+		event->iconDynamicsHandle = Handle(HandleType::DYNAMICS);
+		event->iconDynamicsHandle.index = 18;
+		event->tick = 2;
+		event->index = 17;
 		TextStream stream;
 		VSQFileWriterStub writer;
 		writer.writeEvent(event, stream);

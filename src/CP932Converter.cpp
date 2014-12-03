@@ -18,7 +18,7 @@ VSQ_BEGIN_NAMESPACE
 
 std::string CP932Converter::convertFromUTF8(std::string const& utf8)
 {
-	std::vector<std::vector<int> > utf8codes = _getUnicodeBytesFromUTF8String(utf8);
+	std::vector<std::vector<int>> utf8codes = _getUnicodeBytesFromUTF8String(utf8);
 	std::ostringstream result;
 	static int _unicode_to_cp932[256][256][2];
 	static int initialized = 0;
@@ -80,7 +80,7 @@ std::string CP932Converter::convertToUTF8(std::string const& cp932)
 
 std::vector<std::vector<int>> CP932Converter::_getUnicodeBytesFromUTF8String(std::string const& s)
 {
-	std::vector<std::vector<int> > result;
+	std::vector<std::vector<int>> result;
 	int i = 0;
 	while (i < s.size()) {
 		int b = 0xff & (int)s[i];

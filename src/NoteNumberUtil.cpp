@@ -59,7 +59,7 @@ int NoteNumberUtil::getNoteOctave(int note)
 
 int NoteNumberUtil::getNoteAlter(int note)
 {
-	static int ALTER[13] = { 0, 1, 0, -1, 0, 0, 1, 0, 1, 0, -1, 0, 0 };
+	static int const ALTER[13] = { 0, 1, 0, -1, 0, 0, 1, 0, 1, 0, -1, 0, 0 };
 	note = note % 12 + 12;
 	return ALTER[note % 12];
 }

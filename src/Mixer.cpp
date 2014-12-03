@@ -72,10 +72,10 @@ Mixer::Mixer(TextStream& stream, std::string& lastLine)
 		this->slave.push_back(MixerItem(0, 0, 0, 0));
 	}
 	std::vector<std::string> spl = StringUtil::explode("\n", buffer);
-	for (int i = 0; i < spl.size(); i++) {
+	for (std::string const& s : spl) {
 		std::string ind = "";
 		int index;
-		std::vector<std::string> spl2 = StringUtil::explode("=", spl[i]);
+		std::vector<std::string> spl2 = StringUtil::explode("=", s);
 		if (spl2[0].find("Feder") == 0) {
 			ind = spl2[0].substr(std::string("Feder").size());
 			index = StringUtil::parseInt<int>(ind);
@@ -99,8 +99,7 @@ Mixer::Mixer(TextStream& stream, std::string& lastLine)
 Mixer Mixer::clone() const
 {
 	Mixer res(this->masterFeder, this->masterPanpot, this->masterMute, this->outputMode);
-	for (int i = 0; i < this->slave.size(); i++) {
-		MixerItem item = this->slave[i];
+	for (MixerItem const& item : this->slave) {
 		res.slave.push_back(item.clone());
 	}
 	return res;

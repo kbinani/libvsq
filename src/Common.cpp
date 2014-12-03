@@ -34,7 +34,7 @@ Common::Common(TextStream& stream, std::string& lastLine)
 	this->_playMode = PlayMode::PLAY_WITH_SYNTH;
 	lastLine = stream.readLine();
 	while (lastLine.find("[") != 0) {
-		std::vector<std::string> spl = StringUtil::explode("=", lastLine);
+		auto spl = StringUtil::explode("=", lastLine);
 		std::string search = spl[0];
 		if (search == "Version") {
 			this->version = spl[1];
@@ -68,7 +68,7 @@ Common::Common(std::string const& name, int r, int g, int b, DynamicsMode dynami
 
 Common Common::clone() const
 {
-	std::vector<std::string> spl = StringUtil::explode(",", this->color);
+	auto spl = StringUtil::explode(",", this->color);
 	int r = StringUtil::parseInt<int>(spl[0]);
 	int g = StringUtil::parseInt<int>(spl[1]);
 	int b = StringUtil::parseInt<int>(spl[2]);

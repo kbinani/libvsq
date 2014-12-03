@@ -36,8 +36,7 @@ public:
 
 	void testConstructByStream()
 	{
-		FileOutputStream stream("foo.txt");
-		StreamWriter writer(&stream);
+		StreamWriter writer(new FileOutputStream("foo.txt"));
 		writer.write("foo");
 		writer.writeLine("bar");
 		writer.close();

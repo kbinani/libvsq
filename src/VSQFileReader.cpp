@@ -23,7 +23,7 @@ VSQ_BEGIN_NAMESPACE
 
 void VSQFileReader::read(Sequence& sequence, InputStream& stream, std::string const& encoding)
 {
-	std::vector<std::vector<MidiEvent> > events;
+	std::vector<std::vector<MidiEvent>> events;
 	SMFReader reader;
 	int format, timeFormat;
 	reader.read(stream, events, format, timeFormat);
@@ -304,7 +304,7 @@ void VSQFileReader::parseTempoList(std::vector<MidiEvent> const& midiEventList, 
 	int count = -1;
 	int listSize = midiEventList.size();
 	for (int j = 0; j < listSize; j++) {
-		MidiEvent item = midiEventList[j];
+		MidiEvent const& item = midiEventList[j];
 		if (item.firstByte == 0xff && item.data.size() >= 4 && item.data[0] == 0x51) {
 			count++;
 			if (count == 0 && item.tick != 0) {
@@ -324,7 +324,7 @@ void VSQFileReader::getMetatextByMidiEventList(std::vector<MidiEvent> const& mid
 	int count = midiEventList.size();
 	std::vector<int> buffer;
 	for (int i = 0; i < count; i++) {
-		MidiEvent item = midiEventList[i];
+		MidiEvent const& item = midiEventList[i];
 		if (item.firstByte == 0xff && item.data.size() > 0) {
 			// meta textを抽出
 			int type = item.data[0];
@@ -345,7 +345,7 @@ void VSQFileReader::getMetatextByMidiEventList(std::vector<MidiEvent> const& mid
 						buffer.push_back(d);
 					}
 
-					std::vector<int>::iterator lineFeedPosition = std::find(buffer.begin(), buffer.end(), 0x0a);
+					auto lineFeedPosition = std::find(buffer.begin(), buffer.end(), 0x0a);
 					while (lineFeedPosition != buffer.end()) {
 						std::ostringstream copy;
 						int lineFeedIndex = lineFeedPosition - buffer.begin();
@@ -393,9 +393,9 @@ void VSQFileReader::getMetatextByMidiEventList(std::vector<MidiEvent> const& mid
 Track VSQFileReader::getTrackByTextStream(TextStream& stream, Master* master, Mixer* mixer)
 {
 	std::map<int, tick_t> eventTickMap;
-	std::map<int, TentativeEvent*> eventIdMap;
+	std::map<int, std::shared_ptr<TentativeEvent>> eventIdMap;
 	std::map<int, Handle> handleIdMap;
-	std::vector<Event*> temporaryEventList;
+	std::vector<std::shared_ptr<TentativeEvent>> temporaryEventList;
 
 	TentativeTrack result;
 	std::map<std::string, std::string> sectionNameMap = result.getSectionNameMap();
@@ -407,8 +407,7 @@ Track VSQFileReader::getTrackByTextStream(TextStream& stream, Master* master, Mi
 			break;
 		}
 
-		std::map<std::string, std::string>::const_iterator index =
-			sectionNameMap.find(lastLine);
+		auto index = sectionNameMap.find(lastLine);
 		if (index != sectionNameMap.end()) {
 			std::string name = index->second;
 			lastLine = result.curve(name)->appendFromText(stream);
@@ -421,12 +420,12 @@ Track VSQFileReader::getTrackByTextStream(TextStream& stream, Master* master, Mi
 		} else if (lastLine == "[EventList]") {
 			lastLine = stream.readLine();
 			while (lastLine.find("[") != 0) {
-				std::vector<std::string> parameters = StringUtil::explode("=", lastLine);
+				auto parameters = StringUtil::explode("=", lastLine);
 				tick_t tick = StringUtil::parseInt<tick_t>(parameters[0]);
 				if (parameters[1] != "EOS") {
-					std::vector<std::string> idList = StringUtil::explode(",", parameters[1]);
+					auto idList = StringUtil::explode(",", parameters[1]);
 					for (int i = 0; i < idList.size(); i++) {
-						std::vector<std::string> idParameters = StringUtil::explode("#", idList[i]);
+						auto idParameters = StringUtil::explode("#", idList[i]);
 						int id = StringUtil::parseInt<int>(idParameters[1]);
 						eventTickMap.insert(std::make_pair(id, tick));
 					}
@@ -443,10 +442,10 @@ Track VSQFileReader::getTrackByTextStream(TextStream& stream, Master* master, Mi
 			std::string buffer = lastLine;
 			buffer = StringUtil::replace(buffer, "[", "");
 			buffer = StringUtil::replace(buffer, "]", "");
-			std::vector<std::string> parameters = StringUtil::explode("#", buffer);
+			auto parameters = StringUtil::explode("#", buffer);
 			int index = StringUtil::parseInt<int>(parameters[1]);
 			if (lastLine.find("[ID#") == 0) {
-				TentativeEvent* item = new TentativeEvent();
+				auto item = std::make_shared<TentativeEvent>();
 				*item = parseEvent(stream, lastLine);
 				temporaryEventList.push_back(item);
 				eventIdMap.insert(std::make_pair(index, item));
@@ -461,8 +460,8 @@ Track VSQFileReader::getTrackByTextStream(TextStream& stream, Master* master, Mi
 	}
 
 	// まずhandleをidに埋め込み
-	for (std::map<int, TentativeEvent*>::iterator i = eventIdMap.begin(); i != eventIdMap.end(); ++i) {
-		TentativeEvent* id = i->second;
+	for (auto const& i : eventIdMap) {
+		auto id = i.second;
 		if (handleIdMap.find(id->singerHandleIndex) != handleIdMap.end()) {
 			if (id->type() == EventType::SINGER) {
 				id->singerHandle = handleIdMap[id->singerHandleIndex];
@@ -485,9 +484,9 @@ Track VSQFileReader::getTrackByTextStream(TextStream& stream, Master* master, Mi
 	Event::List& events = result.events();
 	events.clear();
 	int count = 0;
-	for (std::map<int, tick_t>::iterator i = eventTickMap.begin(); i != eventTickMap.end(); ++i) {
-		int id = i->first;
-		tick_t tick = i->second;
+	for (auto i : eventTickMap) {
+		int id = i.first;
+		tick_t tick = i.second;
 		if (eventIdMap.find(id) != eventIdMap.end()) {
 			count++;
 			Event item = *eventIdMap[id];
@@ -497,11 +496,7 @@ Track VSQFileReader::getTrackByTextStream(TextStream& stream, Master* master, Mi
 	}
 	events.sort();
 
-	for (std::vector<Event*>::iterator i = temporaryEventList.begin(); i != temporaryEventList.end(); ++i) {
-		delete(*i);
-	}
-
-	return (Track)result;
+	return result;
 }
 
 VSQ_END_NAMESPACE

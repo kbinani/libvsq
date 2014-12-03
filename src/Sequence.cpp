@@ -96,17 +96,18 @@ tick_t Sequence::tickPerQuarter() const
 
 std::vector<std::string> Sequence::curveNameList()
 {
-	std::vector<std::string> result;
-	result.push_back("VEL");
-	result.push_back("DYN");
-	result.push_back("BRE");
-	result.push_back("BRI");
-	result.push_back("CLE");
-	result.push_back("OPE");
-	result.push_back("GEN");
-	result.push_back("POR");
-	result.push_back("PIT");
-	result.push_back("PBS");
+	static std::vector<std::string> const result = {
+		"VEL",
+		"DYN",
+		"BRE",
+		"BRI",
+		"CLE",
+		"OPE",
+		"GEN",
+		"POR",
+		"PIT",
+		"PBS",
+	};
 	return result;
 }
 
@@ -118,12 +119,12 @@ void Sequence::updateTotalTicks()
 		Track& track = _track[i];
 		int numEvents = track.events().size();
 		if (0 < numEvents) {
-			const Event* lastItem = track.events().get(numEvents - 1);
+			Event const* lastItem = track.events().get(numEvents - 1);
 			max = std::max(max, lastItem->tick + lastItem->length());
 		}
 		for (int j = 0; j < curveNameList.size(); j++) {
 			std::string vct = curveNameList[j];
-			const BPList* list = track.curve(vct);
+			BPList const* list = track.curve(vct);
 			if (list) {
 				int size = list->size();
 				if (size > 0) {

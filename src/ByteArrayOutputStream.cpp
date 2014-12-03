@@ -20,7 +20,7 @@ ByteArrayOutputStream::ByteArrayOutputStream()
 {
 	_pointer = 0;
 	_arrayLength = UNIT_BUFFER_LENGTH;
-	_array = (char*)::calloc(_arrayLength, sizeof(char));
+	_array.resize(_arrayLength);
 	_length = 0;
 }
 
@@ -49,7 +49,7 @@ void ByteArrayOutputStream::write(char const* array, int64_t startIndex, int64_t
 
 std::string ByteArrayOutputStream::toString() const
 {
-	std::string result(_array, _length);
+	std::string result(_array.data(), _length);
 	return result;
 }
 
@@ -65,10 +65,6 @@ void ByteArrayOutputStream::seek(int64_t position)
 
 void ByteArrayOutputStream::close()
 {
-	if (_array) {
-		free(_array);
-		_array = NULL;
-	}
 	_length = 0;
 	_arrayLength = 0;
 }
@@ -77,16 +73,8 @@ void ByteArrayOutputStream::ensureBufferLength(int length)
 {
 	int amount = length - _arrayLength;
 	if (0 < amount) {
-		char* temporary = (char*)realloc(_array, length * sizeof(char));
-		if (!temporary) {
-			close();
-			return;
-		}
-		_array = temporary;
-		for (int i = _arrayLength; i < _arrayLength + amount; i++) {
-			_array[i] = 0;
-		}
 		_arrayLength = length;
+		_array.resize(_arrayLength);
 	}
 }
 

@@ -187,68 +187,68 @@ void VSQFileWriter::writeHandle(Handle const& item, TextStream& stream)
 	}
 }
 
-void VSQFileWriter::writeEvent(TempEvent const& item, TextStream& stream, EventWriteOption printTargets) const
+void VSQFileWriter::writeEvent(std::unique_ptr<TempEvent> const& item, TextStream& stream, EventWriteOption printTargets) const
 {
 	stream.write("[ID#");
-	stream.write(StringUtil::toString(item.index, "%04d"));
+	stream.write(StringUtil::toString(item->index, "%04d"));
 	stream.writeLine("]");
 	stream.write("Type=");
-	stream.writeLine(EventTypeUtil::toString(item.type()));
-	if (item.type() == EventType::NOTE) {
+	stream.writeLine(EventTypeUtil::toString(item->type()));
+	if (item->type() == EventType::NOTE) {
 		if (printTargets.length) {
 			stream.write("Length=");
-			stream.writeLine(StringUtil::toString(item.length(), "%ld"));
+			stream.writeLine(StringUtil::toString(item->length(), "%ld"));
 		}
 		if (printTargets.note) {
 			stream.write("Note#=");
-			stream.writeLine(StringUtil::toString(item.note, "%d"));
+			stream.writeLine(StringUtil::toString(item->note, "%d"));
 		}
 		if (printTargets.dynamics) {
 			stream.write("Dynamics=");
-			stream.writeLine(StringUtil::toString(item.dynamics, "%d"));
+			stream.writeLine(StringUtil::toString(item->dynamics, "%d"));
 		}
 		if (printTargets.pmBendDepth) {
 			stream.write("PMBendDepth=");
-			stream.writeLine(StringUtil::toString(item.pmBendDepth, "%d"));
+			stream.writeLine(StringUtil::toString(item->pmBendDepth, "%d"));
 		}
 		if (printTargets.pmBendLength) {
 			stream.write("PMBendLength=");
-			stream.writeLine(StringUtil::toString(item.pmBendLength, "%d"));
+			stream.writeLine(StringUtil::toString(item->pmBendLength, "%d"));
 		}
 		if (printTargets.pmbPortamentoUse) {
 			stream.write("PMbPortamentoUse=");
-			stream.writeLine(StringUtil::toString(item.pmbPortamentoUse, "%d"));
+			stream.writeLine(StringUtil::toString(item->pmbPortamentoUse, "%d"));
 		}
 		if (printTargets.demDecGainRate) {
 			stream.write("DEMdecGainRate=");
-			stream.writeLine(StringUtil::toString(item.demDecGainRate, "%d"));
+			stream.writeLine(StringUtil::toString(item->demDecGainRate, "%d"));
 		}
 		if (printTargets.demAccent) {
 			stream.write("DEMaccent=");
-			stream.writeLine(StringUtil::toString(item.demAccent, "%d"));
+			stream.writeLine(StringUtil::toString(item->demAccent, "%d"));
 		}
-		if (item.lyricHandle.type() == HandleType::LYRIC) {
+		if (item->lyricHandle.type() == HandleType::LYRIC) {
 			stream.write("LyricHandle=h#");
-			stream.writeLine(StringUtil::toString(item.lyricHandle.index, "%04d"));
+			stream.writeLine(StringUtil::toString(item->lyricHandle.index, "%04d"));
 		}
-		if (item.vibratoHandle.type() == HandleType::VIBRATO) {
+		if (item->vibratoHandle.type() == HandleType::VIBRATO) {
 			stream.write("VibratoHandle=h#");
-			stream.writeLine(StringUtil::toString(item.vibratoHandle.index, "%04d"));
+			stream.writeLine(StringUtil::toString(item->vibratoHandle.index, "%04d"));
 			stream.write("VibratoDelay=");
-			stream.writeLine(StringUtil::toString(item.vibratoDelay, "%d"));
+			stream.writeLine(StringUtil::toString(item->vibratoDelay, "%d"));
 		}
-		if (item.noteHeadHandle.type() == HandleType::NOTE_HEAD) {
+		if (item->noteHeadHandle.type() == HandleType::NOTE_HEAD) {
 			stream.write("NoteHeadHandle=h#");
-			stream.writeLine(StringUtil::toString(item.noteHeadHandle.index, "%04d"));
+			stream.writeLine(StringUtil::toString(item->noteHeadHandle.index, "%04d"));
 		}
-	} else if (item.type() == EventType::SINGER) {
+	} else if (item->type() == EventType::SINGER) {
 		stream.write("IconHandle=h#");
-		stream.writeLine(StringUtil::toString(item.singerHandle.index, "%04d"));
-	} else if (item.type() == EventType::ICON) {
+		stream.writeLine(StringUtil::toString(item->singerHandle.index, "%04d"));
+	} else if (item->type() == EventType::ICON) {
 		stream.write("IconHandle=h#");
-		stream.writeLine(StringUtil::toString(item.iconDynamicsHandle.index, "%04d"));
+		stream.writeLine(StringUtil::toString(item->iconDynamicsHandle.index, "%04d"));
 		stream.write("Note#=");
-		stream.writeLine(StringUtil::toString(item.note, "%d"));
+		stream.writeLine(StringUtil::toString(item->note, "%d"));
 	}
 }
 
@@ -266,18 +266,16 @@ void VSQFileWriter::printMetaText(Track const& track, TextStream& stream, int eo
 
 	std::vector<Handle> handle;
 	{
-		std::vector<TempEvent*> eventList;
+		std::vector<std::unique_ptr<TempEvent>> eventList;
 		Event::ListConstIterator itr = track.events().iterator();
 		while (itr.hasNext()) {
 			Event* item = itr.next();
-			eventList.push_back(new TempEvent(*item));
+			eventList.emplace_back(new TempEvent(*item));
 		}
 
 		handle = writeEventList(eventList, stream, eos);
-		for (std::vector<TempEvent*>::iterator itr = eventList.begin(); itr != eventList.end(); ++itr) {
-			TempEvent* item = *itr;
-			writeEvent(*item, stream);
-			delete item;
+		for (auto const& item : eventList) {
+			writeEvent(item, stream);
 		}
 	}
 	for (int i = 0; i < handle.size(); ++i) {
@@ -291,14 +289,12 @@ void VSQFileWriter::printMetaText(Track const& track, TextStream& stream, int eo
 	// prepare list of curve name to be printed
 	const std::vector<std::string>* curveNameList = track.curveNameList();
 
-	std::vector<std::string>::const_iterator i = curveNameList->begin();
-	for (; i != curveNameList->end(); ++i) {
-		std::string curveName = StringUtil::toLower(*i);
+	for (std::string const& i : *curveNameList) {
+		std::string curveName = StringUtil::toLower(i);
 		std::string sectionName;
-		std::map<std::string, std::string>::iterator index = sectionNameMap.begin();
-		for (; index != sectionNameMap.end(); ++index) {
-			if (StringUtil::toLower(index->second) == curveName) {
-				sectionName = index->first;
+		for (auto const& index : sectionNameMap) {
+			if (StringUtil::toLower(index.second) == curveName) {
+				sectionName = index.first;
 				break;
 			}
 		}
@@ -461,12 +457,14 @@ std::vector<int> VSQFileWriter::getLinePrefixBytes(int count)
 	int c = (int)::floor((digits - 1) / 4) + 1;
 	std::ostringstream format;
 	format << "DM:%0" << (c * 4) << "d:";
-	char* str = new char[1024];
-	::memset(str, 0, 1024);
-	sprintf(str, format.str().c_str(), count);
 
-	std::string resultString = str;
-	delete [] str;
+	std::string resultString = StringUtil::toString(count, format.str());
+//	std::vector<char> str(1024);
+//	::memset(str, 0, 1024);
+//	sprintf(str, format.str().c_str(), count);
+
+//	std::string resultString = str;
+//	delete [] str;
 
 	std::vector<int> result;
 	for (int i = 0; i < resultString.size(); i++) {
@@ -497,13 +495,13 @@ void VSQFileWriter::writeUnsignedInt(OutputStream& stream, int data)
 	stream.write(dat.data(), 0, dat.size());
 }
 
-std::vector<Handle> VSQFileWriter::writeEventList(std::vector<TempEvent*>& eventList, TextStream& stream, tick_t eos)
+std::vector<Handle> VSQFileWriter::writeEventList(std::vector<std::unique_ptr<TempEvent>>& eventList, TextStream& stream, tick_t eos)
 {
 	std::vector<Handle> handles = getHandleList(eventList);
 	stream.writeLine("[EventList]");
 	std::vector<TempEvent> temp;
-	for (std::vector<TempEvent*>::iterator itr = eventList.begin(); itr != eventList.end(); ++itr) {
-		temp.push_back(**itr);
+	for (auto const& item : eventList) {
+		temp.push_back(*item);
 	}
 	std::stable_sort(temp.begin(), temp.end(), Event::compare);
 	int i = 0;
@@ -528,14 +526,13 @@ std::vector<Handle> VSQFileWriter::writeEventList(std::vector<TempEvent*>& event
 	return handles;
 }
 
-std::vector<Handle> VSQFileWriter::getHandleList(std::vector<TempEvent*>& eventList)
+std::vector<Handle> VSQFileWriter::getHandleList(std::vector<std::unique_ptr<TempEvent>>& eventList)
 {
 	std::vector<Handle> handle;
 	int current_id = -1;
 	int current_handle = -1;
 	bool add_quotation_mark = true;
-	for (std::vector<TempEvent*>::iterator itr = eventList.begin(); itr != eventList.end(); ++itr) {
-		TempEvent* item = *itr;
+	for (auto const& item : eventList) {
 		current_id = current_id + 1;
 		item->index = current_id;
 		// SingerHandle

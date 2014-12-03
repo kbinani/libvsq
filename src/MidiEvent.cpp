@@ -30,18 +30,17 @@ void MidiEvent::writeData(OutputStream& stream) const
 	stream.write(firstByte);
 	int size = (int)data.size();
 	if (0 < size) {
-		char* buffer = new char[size]();
+		std::vector<char> buffer(size);
 		for (int i = 0; i < size; i++) {
 			buffer[i] = (char)data[i];
 		}
 		if (firstByte == 0xff) {
 			stream.write(buffer[0]);
 			writeDeltaTick(stream, size - 1);
-			stream.write(buffer, 1, size - 1);
+			stream.write(buffer.data(), 1, size - 1);
 		} else {
-			stream.write(buffer, 0, size);
+			stream.write(buffer.data(), 0, size);
 		}
-		delete [] buffer;
 	}
 }
 

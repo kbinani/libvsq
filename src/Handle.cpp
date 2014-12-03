@@ -76,7 +76,7 @@ void Handle::set(int index, Lyric const& value)
 	if (_lyrics.size() < index + 1) {
 		int remain = index + 1 - _lyrics.size();
 		for (int i = 0; i < remain; i++) {
-			_lyrics.push_back(Lyric("", ""));
+			_lyrics.emplace_back("", "");
 		}
 	}
 	_lyrics[index] = value;
@@ -171,7 +171,7 @@ Handle Handle::clone() const
 
 int Handle::getHandleIndexFromString(std::string const& s)
 {
-	std::vector<std::string> spl = StringUtil::explode("#", s);
+	auto spl = StringUtil::explode("#", s);
 	return StringUtil::parseInt<int>(spl[1]);
 }
 

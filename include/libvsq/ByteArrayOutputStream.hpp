@@ -17,6 +17,7 @@
 #include "./OutputStream.hpp"
 #include <cstdint>
 #include <string>
+#include <vector>
 
 VSQ_BEGIN_NAMESPACE
 
@@ -40,7 +41,7 @@ private:
 	/**
 	 * @brief 書き込み先のバイト列.
 	 */
-	char* _array;
+	std::vector<char> _array;
 
 	/**
 	 * @brief 確保されたバイト列の現在の長さ.

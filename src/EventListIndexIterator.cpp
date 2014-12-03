@@ -20,11 +20,16 @@ EventListIndexIterator::EventListIndexIterator(Event::List const* list, EventLis
 {
 	this->_list = list;
 	this->_pos = -1;
-	this->_kindSinger = (static_cast<int>(iteratorKind) & static_cast<int>(EventListIndexIteratorKind::SINGER)) == static_cast<int>(EventListIndexIteratorKind::SINGER);
-	this->_kindNote = (static_cast<int>(iteratorKind) & static_cast<int>(EventListIndexIteratorKind::NOTE)) == static_cast<int>(EventListIndexIteratorKind::NOTE);
-	this->_kindCrescend = (static_cast<int>(iteratorKind) & static_cast<int>(EventListIndexIteratorKind::CRESCENDO)) == static_cast<int>(EventListIndexIteratorKind::CRESCENDO);
-	this->_kindDecrescend = (static_cast<int>(iteratorKind) & static_cast<int>(EventListIndexIteratorKind::DECRESCENDO)) == static_cast<int>(EventListIndexIteratorKind::DECRESCENDO);
-	this->_kindDynaff = (static_cast<int>(iteratorKind) & static_cast<int>(EventListIndexIteratorKind::DYNAFF)) == static_cast<int>(EventListIndexIteratorKind::DYNAFF);
+
+	auto testEnum = [iteratorKind](EventListIndexIteratorKind kind) {
+		return (static_cast<int>(iteratorKind) & static_cast<int>(kind)) == static_cast<int>(kind);
+	};
+
+	this->_kindSinger		= testEnum(EventListIndexIteratorKind::SINGER);
+	this->_kindNote			= testEnum(EventListIndexIteratorKind::NOTE);
+	this->_kindCrescend		= testEnum(EventListIndexIteratorKind::CRESCENDO);
+	this->_kindDecrescend	= testEnum(EventListIndexIteratorKind::DECRESCENDO);
+	this->_kindDynaff		= testEnum(EventListIndexIteratorKind::DYNAFF);
 }
 
 int EventListIndexIterator::next()

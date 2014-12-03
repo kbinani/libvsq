@@ -19,17 +19,15 @@ VSQ_BEGIN_NAMESPACE
 StreamWriter::StreamWriter(std::string const& filePath)
 {
 	try {
-		stream = new FileOutputStream(filePath);
+		stream.reset(new FileOutputStream(filePath));
 	} catch (OutputStream::IOException) {
 		throw TextOutputStream::IOException();
 	}
-	deleteInDestructor = stream;
 }
 
 StreamWriter::StreamWriter(OutputStream* stream)
 {
-	this->stream = stream;
-	this->deleteInDestructor = 0;
+	this->stream.reset(stream);
 }
 
 StreamWriter::~StreamWriter()
@@ -41,23 +39,23 @@ void StreamWriter::close()
 {
 	if (stream) {
 		stream->close();
-		stream = 0;
-	}
-	if (deleteInDestructor) {
-		delete deleteInDestructor;
-		deleteInDestructor = 0;
+		stream.reset();
 	}
 }
 
 void StreamWriter::write(std::string const& text)
 {
-	if (stream) { stream->write(text.c_str(), 0, text.length()); }
+	if (stream) {
+		stream->write(text.c_str(), 0, text.length());
+	}
 }
 
 void StreamWriter::writeLine(std::string const& text)
 {
 	write(text);
-	if (stream) { stream->write(0x0A); }
+	if (stream) {
+		stream->write(0x0A);
+	}
 }
 
 VSQ_END_NAMESPACE

@@ -49,7 +49,7 @@ Timesig const& TimesigList::timesigAt(tick_t tick) const
 	int index = -1;
 	int count = list.size();
 	if (0 < count) {
-		for (int i = count - 1; i >= 0; i--) {
+		for (int i = count - 1; i >= 0; --i) {
 			index = i;
 			if (list[i].tick() <= tick) {
 				break;
@@ -75,7 +75,7 @@ Timesig const& TimesigList::timesigAt(tick_t tick) const
 tick_t TimesigList::tickFromBarCount(int barCount) const
 {
 	int index = 0;
-	for (int i = list.size() - 1; i >= 0; i--) {
+	for (int i = list.size() - 1; i >= 0; --i) {
 		index = i;
 		if (list[i].barCount <= barCount) {
 			break;
@@ -99,7 +99,7 @@ int TimesigList::barCountFromTick(tick_t tick) const
 {
 	int index = 0;
 	int c = list.size();
-	for (int i = c - 1; i >= 0; i--) {
+	for (int i = c - 1; i >= 0; --i) {
 		index = i;
 		if (list[i].tick() <= tick) {
 			break;
@@ -122,7 +122,7 @@ void TimesigList::pushWithoutSort(Timesig const& item)
 {
 	int index = -1;
 	int count = list.size();
-	for (int i = 0; i < count; i++) {
+	for (int i = 0; i < count; ++i) {
 		if (list[i].barCount == item.barCount) {
 			index = i;
 			break;
@@ -142,7 +142,7 @@ void TimesigList::updateTimesigInfo()
 		std::stable_sort(list.begin(), list.end(), Timesig::compare);
 
 		int count = list.size();
-		for (int j = 1; j < count; j++) {
+		for (int j = 1; j < count; ++j) {
 			Timesig item = list[j - 1];
 			int numerator = item.numerator;
 			int denominator = item.denominator;

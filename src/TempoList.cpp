@@ -80,7 +80,7 @@ double TempoList::tickFromTime(double time) const
 		base_tick = _array[0].tick;
 		base_time = _array[0]._time;
 	} else {
-		for (int i = c - 1; i >= 0; i--) {
+		for (int i = c - 1; i >= 0; --i) {
 			Tempo item = _array[i];
 			if (item._time < time) {
 				return item.tick + (time - item._time) * TempoList::gatetimePerQuater * 1000000.0 / item.tempo;
@@ -108,7 +108,7 @@ void TempoList::updateTempoInfo()
 	tick_t prev_tick = item0.tick;
 	int prev_tempo = item0.tempo;
 	double inv_tpq_sec = 1.0 / (TempoList::gatetimePerQuater * 1000000.0);
-	for (int i = 1; i < c; i++) {
+	for (int i = 1; i < c; ++i) {
 		_array[i]._time = prev_time + prev_tempo * (_array[i].tick - prev_tick) * inv_tpq_sec;
 
 		Tempo itemi = _array[i];
@@ -121,7 +121,7 @@ void TempoList::updateTempoInfo()
 double TempoList::timeFromTick(double tick) const
 {
 	int c = _array.size();
-	for (int i = c - 1; i >= 0; i--) {
+	for (int i = c - 1; i >= 0; --i) {
 		Tempo item = _array[i];
 		if (item.tick < tick) {
 			double init = item.time();
@@ -139,7 +139,7 @@ int TempoList::tempoAt(tick_t tick) const
 {
 	int index = 0;
 	int c = size();
-	for (int i = c - 1; i >= 0; i--) {
+	for (int i = c - 1; i >= 0; --i) {
 		index = i;
 		if (_array[i].tick <= tick) {
 			break;

@@ -118,18 +118,17 @@ void BPList::data(std::string const& value)
 {
 	_length = 0;
 	_maxId = 0;
-	std::vector<std::string> spl = StringUtil::explode(",", value);
-	for (int i = 0; i < spl.size(); i++) {
-		std::vector<std::string> spl2 = StringUtil::explode("=", spl[i]);
-		if (spl2.size() < 2) {
+	for (auto const& s : StringUtil::explode(",", value)) {
+		auto tokens = StringUtil::explode("=", s);
+		if (tokens.size() < 2) {
 			continue;
 		}
 		tick_t tick;
 		int value;
 		try {
-			tick = StringUtil::parseInt<tick_t>(spl2[0]);
-			value = StringUtil::parseInt<int>(spl2[1]);
-		} catch (StringUtil::IntegerParseException&) {
+			tick = StringUtil::parseInt<tick_t>(tokens[0]);
+			value = StringUtil::parseInt<int>(tokens[1]);
+		} catch (StringUtil::IntegerParseException const&) {
 			continue;
 		}
 		if (value < _minValue) {

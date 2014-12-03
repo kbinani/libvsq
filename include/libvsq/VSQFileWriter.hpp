@@ -17,6 +17,7 @@
 #include "./Track.hpp"
 #include "./EventWriteOption.hpp"
 #include "./MidiEvent.hpp"
+#include <memory>
 
 VSQ_BEGIN_NAMESPACE
 
@@ -85,7 +86,7 @@ protected:
 	 * @param stream 出力先.
 	 * @param printTargets 出力するアイテムのリスト.
 	 */
-	void writeEvent(TempEvent const& item, TextStream& stream, EventWriteOption printTargets = EventWriteOption()) const;
+	void writeEvent(std::unique_ptr<TempEvent> const& item, TextStream& stream, EventWriteOption printTargets = EventWriteOption()) const;
 
 	/**
 	 * @brief トラックのメタテキストを, テキストストリームに出力する.
@@ -152,13 +153,13 @@ private:
 	 * @param eos EOS として出力する Tick 単位の時刻.
 	 * @return リスト中のイベントに含まれるハンドルの一覧.
 	 */
-	std::vector<Handle> writeEventList(std::vector<TempEvent*>& eventList, TextStream& stream, tick_t eos);
+	std::vector<Handle> writeEventList(std::vector<std::unique_ptr<TempEvent>>& eventList, TextStream& stream, tick_t eos);
 
 	/**
 	 * @brief リスト内のイベントから, ハンドルの一覧を作成する. 同時に, 各イベント, ハンドルの番号を設定する.
 	 * @return ハンドルの一覧.
 	 */
-	std::vector<Handle> getHandleList(std::vector<TempEvent*>& eventList);
+	std::vector<Handle> getHandleList(std::vector<std::unique_ptr<TempEvent>>& eventList);
 
 	/**
 	 * @brief SMF のトラックヘッダー文字列を取得する.

@@ -101,7 +101,7 @@ std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateNRPN(
 	int lastDelay = 0;
 	int last_note_end = 0;
 	for (int i = note_start; i <= note_end; i++) {
-		const Event* item = events.get(i);
+		Event const* item = events.get(i);
 		if (item->type() == EventType::NOTE) {
 			int note_loc = 0x03;
 			if (item->tick == last_note_end) {
@@ -112,7 +112,7 @@ std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateNRPN(
 			tick_t nexttick = item->tick + item->length() + 1;
 			int event_count = events.size();
 			for (int j = i + 1; j < event_count; j++) {
-				const Event* itemj = events.get(j);
+				Event const* itemj = events.get(j);
 				if (itemj->type() == EventType::NOTE) {
 					nexttick = itemj->tick;
 					break;
@@ -152,9 +152,8 @@ std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateExpressionNRPN(Trac
 {
 	std::vector<NrpnEvent> ret;
 	BPList const* dyn = track.curve("DYN");
-	NrpnEventProvider* provider = new NrpnEventProvider(MidiParameterType::CC_E_DELAY, MidiParameterType::CC_E_EXPRESSION);
+	std::unique_ptr<NrpnEventProvider> provider(new NrpnEventProvider(MidiParameterType::CC_E_DELAY, MidiParameterType::CC_E_EXPRESSION));
 	generateNRPNByBPList(ret, tempoList, preSendMilliseconds, *dyn, *provider);
-	delete provider;
 	return ret;
 }
 
@@ -328,9 +327,8 @@ std::vector<NrpnEvent> VocaloidMidiEventListFactory::generatePitchBendNRPN(Track
 {
 	std::vector<NrpnEvent> ret;
 	BPList const* pit = track.curve("PIT");
-	PitchBendNrpnEventProvider* provider = new PitchBendNrpnEventProvider();
+	std::unique_ptr<PitchBendNrpnEventProvider> provider(new PitchBendNrpnEventProvider());
 	generateNRPNByBPList(ret, tempoList, msPreSend, *pit, *provider);
-	delete provider;
 	return ret;
 }
 
@@ -338,9 +336,8 @@ std::vector<NrpnEvent> VocaloidMidiEventListFactory::generatePitchBendSensitivit
 {
 	std::vector<NrpnEvent> ret;
 	BPList const* pbs = track.curve("PBS");
-	PitchBendSensitivityNrpnEventProvider* provider = new PitchBendSensitivityNrpnEventProvider();
+	std::unique_ptr<PitchBendSensitivityNrpnEventProvider> provider(new PitchBendSensitivityNrpnEventProvider());
 	generateNRPNByBPList(ret, tempoList, msPreSend, *pbs, *provider);
-	delete provider;
 	return ret;
 }
 
@@ -467,9 +464,8 @@ std::vector<NrpnEvent> VocaloidMidiEventListFactory::generateFx2DepthNRPN(Track 
 {
 	std::vector<NrpnEvent> ret;
 	BPList const* fx2depth = track.curve("fx2depth");
-	NrpnEventProvider* provider = new NrpnEventProvider(MidiParameterType::CC_FX2_DELAY, MidiParameterType::CC_FX2_EFFECT2_DEPTH);
+	std::unique_ptr<NrpnEventProvider> provider(new NrpnEventProvider(MidiParameterType::CC_FX2_DELAY, MidiParameterType::CC_FX2_EFFECT2_DEPTH));
 	generateNRPNByBPList(ret, tempoList, preSendMilliseconds, *fx2depth, *provider);
-	delete provider;
 	return ret;
 }
 

@@ -53,7 +53,7 @@ PhoneticSymbolDictionary::PhoneticSymbolDictionary()
 PhoneticSymbolDictionary::Element const* PhoneticSymbolDictionary::attach(std::string const& word) const
 {
 	std::string key = StringUtil::toLower(word);
-	std::map<std::string, Element>::const_iterator index = table.find(key);
+	auto index = table.find(key);
 	if (index == table.end()) {
 		return 0;
 	} else {

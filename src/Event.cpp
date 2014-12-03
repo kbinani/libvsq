@@ -60,9 +60,7 @@ Event const* Event::List::findFromId(int internalId) const
 
 void Event::List::setForId(int internalId, Event const& value)
 {
-	int c = _events.size();
-	for (int i = 0; i < c; i++) {
-		auto const& item = _events[i];
+	for (auto const& item : _events) {
 		if (item->id == internalId) {
 			*item = value;
 			item->id = internalId;
@@ -150,9 +148,8 @@ void Event::List::updateIdList()
 	if (_ids.size() != _events.size()) {
 		_ids.clear();
 	}
-	int count = _events.size();
-	for (int i = 0; i < count; i++) {
-		_ids.push_back(_events[i]->id);
+	for (auto const& item : _events) {
+		_ids.push_back(item->id);
 	}
 }
 
@@ -171,8 +168,9 @@ int Event::List::_getNextId(int next)
 {
 	updateIdList();
 	int max = -1;
-	for (int i = 0; i < _ids.size(); i++) {
-		max = std::max(max, _ids[i]);
+	auto max_element = std::max_element(_ids.begin(), _ids.end());
+	if (max_element != _ids.end()) {
+		max = *max_element;
 	}
 	return max + 1 + next;
 }
@@ -201,7 +199,7 @@ bool Event::ListConstIterator::hasNext()
 
 Event* Event::ListConstIterator::next()
 {
-	_pos++;
+	++_pos;
 	return _list->_events[_pos].get();
 }
 
@@ -215,12 +213,12 @@ void Event::ListIterator::remove()
 {
 	if (0 <= _pos && _pos < _nonConstList->size()) {
 		_nonConstList->removeAt(_pos);
-		_pos--;
+		--_pos;
 	}
 }
 
-Event::Event(std::string const& line) :
-	vibratoHandle()
+Event::Event(std::string const& line)
+	: vibratoHandle()
 {
 	init();
 	std::vector<std::string> spl = StringUtil::explode("=", line);
@@ -531,7 +529,6 @@ void Event::init()
 	vMeanNoteTransition = 12;
 	d4mean = 24;
 	pMeanEndingNote = 12;
-	//    ustEvent = nil;
 }
 
 VSQ_END_NAMESPACE

@@ -47,10 +47,9 @@ std::vector<NrpnEvent> NrpnEvent::expand() const
 		v.isMSBOmittingRequired = isMSBOmittingRequired;
 		ret.push_back(v);
 	}
-	for (int i = 0; i < _list.size(); i++) {
-		std::vector<NrpnEvent> add = _list[i].expand();
-		for (int j = 0; j < add.size(); j++) {
-			ret.push_back(add[j]);
+	for (NrpnEvent const& e : _list) {
+		for (NrpnEvent const& add : e.expand()) {
+			ret.push_back(add);
 		}
 	}
 	return ret;

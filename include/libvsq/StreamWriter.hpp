@@ -15,6 +15,7 @@
 
 #include "./Namespace.hpp"
 #include "./TextOutputStream.hpp"
+#include <memory>
 #include <string>
 
 VSQ_BEGIN_NAMESPACE
@@ -27,8 +28,7 @@ class OutputStream;
 class StreamWriter : public TextOutputStream
 {
 private:
-	OutputStream* stream;
-	OutputStream* deleteInDestructor;
+	std::unique_ptr<OutputStream> stream;
 
 public:
 	/**
@@ -40,7 +40,7 @@ public:
 	/**
 	 * @brief Initialize writer by stream.
 	 * @param  stream  A stream. This stream is automatically closed
-	 *     when 'close' is called (however, not to be deleted).
+	 *     when 'close' is called. The ownership of @a stream object will be moved to this object.
 	 */
 	explicit StreamWriter(OutputStream* stream);
 

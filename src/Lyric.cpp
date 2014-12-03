@@ -148,10 +148,15 @@ std::string Lyric::consonantAdjustment() const
 	if (arr.empty()) {
 		return "";
 	}
-	std::vector<int>::const_iterator i;
 	std::ostringstream ret;
-	for (i = arr.begin(); i != arr.end(); ++i) {
-		ret << (i == arr.begin() ? "" : ",") << (*i);
+	bool first = true;
+	for (int adjustment : arr) {
+		if (first) {
+			first = false;
+		} else {
+			ret << ",";
+		}
+		ret << adjustment;
 	}
 	return ret.str();
 }
@@ -160,9 +165,13 @@ void Lyric::consonantAdjustment(std::string const& value)
 {
 	std::vector<std::string> spl = StringUtil::explode(",", value);
 	std::vector<int> arr;
-	std::vector<std::string>::iterator i;
-	for (i = spl.begin(); i != spl.end(); ++i) {
-		arr.push_back((int)atoi((*i).c_str()));
+	for (auto const& token : spl) {
+		int v = 0;
+		try {
+			v = StringUtil::parseInt<int>(token);
+		} catch (...) {
+		}
+		arr.push_back(v);
 	}
 	consonantAdjustmentList(arr);
 }
@@ -175,10 +184,9 @@ std::vector<int> Lyric::consonantAdjustmentList() const
 			_consonantAdjustment.clear();
 		} else {
 			_consonantAdjustment.clear();
-			std::vector<std::string>::const_iterator i;
-			for (i = _phoneticSymbol.begin(); i != _phoneticSymbol.end(); ++i) {
+			for (std::string const& symbol : _phoneticSymbol) {
 				int consonantAdjustment;
-				if (PhoneticSymbol::isConsonant((*i))) {
+				if (PhoneticSymbol::isConsonant(symbol)) {
 					consonantAdjustment = 64;
 				} else {
 					consonantAdjustment = 0;
@@ -193,9 +201,8 @@ std::vector<int> Lyric::consonantAdjustmentList() const
 void Lyric::consonantAdjustmentList(std::vector<int> const& value)
 {
 	_consonantAdjustment.clear();
-	std::vector<int>::const_iterator i;
-	for (i = value.begin(); i != value.end(); ++i) {
-		_consonantAdjustment.push_back((*i));
+	for (int i : value) {
+		_consonantAdjustment.push_back(i);
 	}
 }
 
@@ -221,14 +228,19 @@ Lyric Lyric::clone() const
 
 std::string Lyric::phoneticSymbol() const
 {
-	const std::vector<std::string> symbol = phoneticSymbolList();
+	std::vector<std::string> const& symbol = phoneticSymbolList();
 	if (symbol.empty()) {
 		return std::string("");
 	}
 	std::ostringstream result;
-	std::vector<std::string>::const_iterator i;
-	for (i = symbol.begin(); i != symbol.end(); ++i) {
-		result << (i == symbol.begin() ? "" : " ") << (*i);
+	bool first = true;
+	for (std::string const& s : symbol) {
+		if (first) {
+			first = false;
+		} else {
+			result << " ";
+		}
+		result << s;
 	}
 	return result.str();
 }
@@ -245,9 +257,8 @@ void Lyric::phoneticSymbol(std::string const& value)
 std::vector<std::string> Lyric::phoneticSymbolList() const
 {
 	std::vector<std::string> ret;
-	std::vector<std::string>::const_iterator i;
-	for (i = _phoneticSymbol.begin(); i != _phoneticSymbol.end(); ++i) {
-		ret.push_back((*i));
+	for (std::string const& symbol : _phoneticSymbol) {
+		ret.push_back(symbol);
 	}
 	return ret;
 }
@@ -277,10 +288,9 @@ std::string Lyric::toString(bool addQuateMark) const
 	result << escaped;
 	std::vector<int> consonantAdjustment = _consonantAdjustment;
 	if (consonantAdjustment.empty()) {
-		std::vector<std::string>::iterator i;
-		for (i = symbol.begin(); i != symbol.end(); ++i) {
+		for (std::string const& s : symbol) {
 			int adjustment;
-			if (PhoneticSymbol::isConsonant((*i))) {
+			if (PhoneticSymbol::isConsonant(s)) {
 				adjustment = 64;
 			} else {
 				adjustment = 0;
@@ -288,9 +298,8 @@ std::string Lyric::toString(bool addQuateMark) const
 			consonantAdjustment.push_back(adjustment);
 		}
 	}
-	std::vector<int>::iterator i;
-	for (i = consonantAdjustment.begin(); i != consonantAdjustment.end(); ++i) {
-		result << "," << (*i);
+	for (int i : consonantAdjustment) {
+		result << "," << i;
 	}
 	if (isProtected) {
 		result << ",1";

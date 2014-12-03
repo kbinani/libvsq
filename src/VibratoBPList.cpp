@@ -23,40 +23,36 @@ VibratoBPList::VibratoBPList(std::string const& textNum, std::string const& text
 	int num = 0;
 	try {
 		num = StringUtil::parseInt<int>(textNum);
-	} catch (StringUtil::IntegerParseException&) {
+	} catch (StringUtil::IntegerParseException const&) {
 		num = 0;
 	}
-	std::vector<std::string> bpx = StringUtil::explode(",", textBPX);
-	std::vector<std::string> bpy = StringUtil::explode(",", textBPY);
-	int actNum = std::min(num, std::min((int)bpx.size(), (int)bpy.size()));
+	auto bpx = StringUtil::explode(",", textBPX);
+	auto bpy = StringUtil::explode(",", textBPY);
+	int actNum = std::min({num, (int)bpx.size(), (int)bpy.size()});
 	if (actNum > 0) {
-		double* x = new double[actNum]();
-		int* y = new int[actNum]();
+		std::vector<double> x(actNum);
+		std::vector<int> y(actNum);
 		try {
 			for (int i = 0; i < actNum; i++) {
 				x[i] = StringUtil::parseFloat<double>(bpx[i]);
 			}
-		} catch (StringUtil::FloatParseException&) {
-			delete [] x;
-			x = 0;
+		} catch (StringUtil::FloatParseException const&) {
+			x.clear();
 		}
 		try {
 			for (int i = 0; i < actNum; i++) {
 				y[i] = StringUtil::parseInt<int>(bpy[i]);
 			}
-		} catch (StringUtil::IntegerParseException&) {
-			delete [] y;
-			y = 0;
+		} catch (StringUtil::IntegerParseException const&) {
+			y.clear();
 		}
 
-		if (x && y) {
+		if (x.size() == actNum && y.size() == actNum) {
 			for (int i = 0; i < actNum; i++) {
 				_list.push_back(VibratoBP(x[i], y[i]));
 			}
 			std::stable_sort(_list.begin(), _list.end(), VibratoBP::compare);
 		}
-		if (x) { delete [] x; }
-		if (y) { delete [] y; }
 	}
 }
 
@@ -127,24 +123,23 @@ std::string VibratoBPList::data() const
 void VibratoBPList::data(std::string const& value)
 {
 	_list.clear();
-	std::vector<std::string> spl = StringUtil::explode(",", value);
-	std::vector<std::string>::iterator i;
-	for (i = spl.begin(); i != spl.end(); ++i) {
-		std::vector<std::string> spl2 = StringUtil::explode("=", (*i));
+	auto spl = StringUtil::explode(",", value);
+	for (auto const& token : spl) {
+		auto spl2 = StringUtil::explode("=", token);
 		if (spl2.size() >= 2) {
 			double x;
 			int y;
 			try {
 				x = StringUtil::parseFloat<double>(spl2[0]);
-			} catch (StringUtil::FloatParseException&) {
+			} catch (StringUtil::FloatParseException const&) {
 				continue;
 			}
 			try {
 				y = StringUtil::parseInt<int>(spl2[1]);
-			} catch (StringUtil::IntegerParseException&) {
+			} catch (StringUtil::IntegerParseException const&) {
 				continue;
 			}
-			_list.push_back(VibratoBP(x, y));
+			_list.emplace_back(x, y);
 		}
 	}
 	std::stable_sort(_list.begin(), _list.end(), VibratoBP::compare);

@@ -18,13 +18,13 @@ VSQ_BEGIN_NAMESPACE
 
 bool PhoneticSymbol::isConsonant(std::string const& symbol)
 {
-	std::string search = "\t" + symbol + "\t";
+	std::string search = std::string("\t") + symbol + std::string("\t");
 	return isConsonantEN(search) || isConsonantJP(search);
 }
 
 bool PhoneticSymbol::isVowel(std::string const& symbol)
 {
-	std::string search = "\t" + symbol + "\t";
+	std::string search = std::string("\t") + symbol + std::string("\t");
 	return isVowelEN(search) || isVowelJP(search);
 }
 
@@ -53,25 +53,25 @@ bool PhoneticSymbol::isValidSymbol(std::string const& symbol)
 
 bool PhoneticSymbol::isVowelJP(std::string const& search)
 {
-	const std::string symbolVowelJP = "\ta\ti\tM\te\to\t";
+	static std::string const symbolVowelJP = "\ta\ti\tM\te\to\t";
 	return symbolVowelJP.find(search) != std::string::npos;
 }
 
 bool PhoneticSymbol::isConsonantJP(std::string const& search)
 {
-	const std::string symbolConsonantJP = "\tk\tk'\tg\tg'\tN\tN'\ts\tS\tz\tZ\tdz\tdZ\tt\tt'\tts\ttS\td\td'\tn\tJ\th\th\\\tC\tp\\\tp\\'\tb\tb'\tp\tp'\tm\tm'\tj\t4\t4'\tw\tN\\\t";
+	static std::string const symbolConsonantJP = "\tk\tk'\tg\tg'\tN\tN'\ts\tS\tz\tZ\tdz\tdZ\tt\tt'\tts\ttS\td\td'\tn\tJ\th\th\\\tC\tp\\\tp\\'\tb\tb'\tp\tp'\tm\tm'\tj\t4\t4'\tw\tN\\\t";
 	return symbolConsonantJP.find(search) != std::string::npos;
 }
 
 bool PhoneticSymbol::isVowelEN(std::string const& search)
 {
-	const std::string symbolVowelEN = "\t@\tV\te\te\tI\ti:\t{\tO:\tQ\tU\tu:\t@r\teI\taI\tOI\t@U\taU\tI@\te@\tU@\tO@\tQ@\t";
+	static std::string const symbolVowelEN = "\t@\tV\te\te\tI\ti:\t{\tO:\tQ\tU\tu:\t@r\teI\taI\tOI\t@U\taU\tI@\te@\tU@\tO@\tQ@\t";
 	return symbolVowelEN.find(search) != std::string::npos;
 }
 
 bool PhoneticSymbol::isConsonantEN(std::string const& search)
 {
-	const std::string symbolConsonantEN = "\tw\tj\tb\td\tg\tbh\tdh\tgh\tdZ\tv\tD\tz\tZ\tm\tn\tN\tr\tl\tl0\tp\tt\tk\tph\tth\tkh\ttS\tf\tT\ts\tS\th\tSil\tAsp\t";
+	static std::string const symbolConsonantEN = "\tw\tj\tb\td\tg\tbh\tdh\tgh\tdZ\tv\tD\tz\tZ\tm\tn\tN\tr\tl\tl0\tp\tt\tk\tph\tth\tkh\ttS\tf\tT\ts\tS\th\tSil\tAsp\t";
 	return symbolConsonantEN.find(search) != std::string::npos;
 }
 
