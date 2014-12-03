@@ -21,3 +21,9 @@ config.status
 config.log
 autoscan.log
 Makefile
+CMakeFiles
+CMakeScripts
+CMakeCache.txt
+Debug
+Release
+*.xcodeproj
