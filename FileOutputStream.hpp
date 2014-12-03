@@ -38,15 +38,15 @@ public:
 
 	~FileOutputStream();
 
-	void write(char const* buffer, int64_t startIndex, int64_t length);
+	void write(char const* buffer, int64_t startIndex, int64_t length) override;
 
-	void write(int value);
+	void write(int value) override;
 
-	void seek(int64_t position);
+	void seek(int64_t position) override;
 
-	int64_t getPointer();
+	int64_t getPointer() override;
 
-	void close();
+	void close() override;
 };
 
 VSQ_END_NAMESPACE

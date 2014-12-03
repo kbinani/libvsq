@@ -21,7 +21,7 @@ public:
 		this->pointer = 0;
 	}
 
-	int read()
+	int read() override
 	{
 		if (0 <= pointer && pointer < length) {
 			return 0xFF & data[this->pointer++];
@@ -30,7 +30,7 @@ public:
 		}
 	}
 
-	int read(char* buffer, int64_t startIndex, int64_t length)
+	int read(char* buffer, int64_t startIndex, int64_t length) override
 	{
 		int count = 0;
 		for (int64_t i = 0; i < length; ++i) {
@@ -44,17 +44,17 @@ public:
 		return count;
 	}
 
-	void close()
+	void close() override
 	{
 		length = 0;
 	}
 
-	int64_t getPointer()
+	int64_t getPointer() override
 	{
 		return pointer;
 	}
 
-	void seek(int64_t pointer)
+	void seek(int64_t pointer) override
 	{
 		this->pointer = pointer;
 	}

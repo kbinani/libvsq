@@ -137,6 +137,9 @@ public:
 
 	Track(Track const& value);
 
+	virtual ~Track()
+	{}
+
 	Track& operator = (Track const& value);
 
 	/**

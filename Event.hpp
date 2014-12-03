@@ -190,6 +190,9 @@ public:
 		 */
 		ListConstIterator(List const* list);
 
+		virtual ~ListConstIterator()
+		{}
+
 		/**
 		 * @brief 反復子が次の要素を持つ場合に <code>true</code> を返す.
 		 * @return 反復子がさらに要素を持つ場合は <code>true</code> を, そうでなければ <code>false</code> を返す.
@@ -357,6 +360,9 @@ public:
 	 * @param eventType イベントの種類.
 	 */
 	Event(tick_t clock, EventType eventType);
+
+	virtual ~Event()
+	{}
 
 	/**
 	 * @brief 長さを取得する.

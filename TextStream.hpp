@@ -82,18 +82,18 @@ public:
 	 * @brief 文字列をストリームに書きこむ.
 	 * @param str 書きこむ文字列.
 	 */
-	void write(std::string const& str);
+	void write(std::string const& str) override;
 
 	/**
 	 * @brief 文字列をストリームに書きこむ. 末尾に改行文字を追加する.
 	 * @param str 書きこむ文字列.
 	 */
-	void writeLine(std::string const& str);
+	void writeLine(std::string const& str) override;
 
 	/**
 	 * @brief ストリームを閉じる.
 	 */
-	void close();
+	void close() override;
 
 	/**
 	 * @brief ストリームに書きこまれた文字列を連結し, 返す.

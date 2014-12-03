@@ -64,7 +64,7 @@ public:
 	 * @brief 指定されたバイト値をストリームに書きこむ.
 	 * @param byte 書きこむバイト値.
 	 */
-	void write(int byte);
+	void write(int byte) override;
 
 	/**
 	 * @brief 指定された配列の, 指定した範囲のバイト値をストリームに書きこむ.
@@ -72,7 +72,7 @@ public:
 	 * @param startIndex 書き込み開始位置.
 	 * @param length 書き込むバイト値の個数.
 	 */
-	void write(char const* array, int64_t startIndex, int64_t length);
+	void write(char const* array, int64_t startIndex, int64_t length) override;
 
 	/**
 	 * @brief バイト列を文字列に変換する.
@@ -84,18 +84,18 @@ public:
 	 * @brief 現在のファイルポインタを取得する.
 	 * @return 現在のファイルポインタ.
 	 */
-	int64_t getPointer();
+	int64_t getPointer() override;
 
 	/**
 	 * @brief ファイルポインタを指定した位置に変更する.
 	 * @param position 新しいポインタ値.
 	 */
-	void seek(int64_t position);
+	void seek(int64_t position) override;
 
 	/**
 	 * @brief ストリームを閉じる.
 	 */
-	void close();
+	void close() override;
 
 private:
 	/**

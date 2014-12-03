@@ -34,7 +34,7 @@ public:
 	 * @brief 1 バイトを読み込む.
 	 * @return 読み込んだバイト値.
 	 */
-	int read();
+	int read() override;
 
 	/**
 	 * @brief バッファーに読み込む.
@@ -42,24 +42,24 @@ public:
 	 * @param startIndex 読み込んだデータを格納するオフセット.
 	 * @param length 読み込む長さ.
 	 */
-	int read(char* buffer, int64_t startIndex, int64_t length);
+	int read(char* buffer, int64_t startIndex, int64_t length) override;
 
 	/**
 	 * @brief ファイルポインターを移動する.
 	 * @param position ファイルポインター.
 	 */
-	void seek(int64_t position);
+	void seek(int64_t position) override;
 
 	/**
 	 * @brief ファイルポインターを取得する.
 	 * @return ファイルポインター.
 	 */
-	int64_t getPointer();
+	int64_t getPointer() override;
 
 	/**
 	 * @brief ストリームを閉じる.
 	 */
-	void close();
+	void close() override;
 };
 
 VSQ_END_NAMESPACE

@@ -46,7 +46,7 @@ public:
 
 	~StreamWriter();
 
-	void close();
+	void close() override;
 
 	void write(std::string const& text) override;
 

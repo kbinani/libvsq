@@ -162,6 +162,9 @@ public:
 	 */
 	explicit Handle(HandleType type = HandleType::UNKNOWN);
 
+	virtual ~Handle()
+	{}
+
 	/**
 	 * @brief articulation の種類を取得する.
 	 * @return articulation の種類.
