@@ -4,6 +4,11 @@ PROJECT(libvsq)
 
 SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY lib)
 SET(CMAKE_CXX_FLAGS "-std=c++11")
+SET(COVERAGE false CACHE BOOL "Enable gcov")
+
+IF(COVERAGE)
+  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -coverage")
+ENDIF()
 
 ADD_LIBRARY(vsq STATIC
     include/libvsq/ArticulationType.hpp
