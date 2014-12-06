@@ -37,7 +37,7 @@ public:
 	BP clone() const;
 
 private:
-	BP();
+	BP() = delete;
 
 public:
 	/**

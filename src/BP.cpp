@@ -26,8 +26,4 @@ BP BP::clone() const
 	return BP(value, id);
 }
 
-
-BP::BP()
-{}
-
 LIBVSQ_END_NAMESPACE
