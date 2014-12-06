@@ -17,17 +17,18 @@
   export CXX="$GCC_ROOT/bin/g++${GCC_SUFFIX}"
   export CC="$GCC_ROOT/bin/gcc${GCC_SUFFIX}"
 
-  cd "$DIR"
   rm -rf CMakeCache.txt CMakeFiles
   cmake . -DCOVERAGE=true
   make clean
   make
 
-  cd "$DIR/tests"
-  rm -rf CMakeCache.txt CMakeFiles
-  cmake . -DCOVERAGE=true
-  make clean
-  make
+  (
+    cd "$DIR/tests"
+    rm -rf CMakeCache.txt CMakeFiles
+    cmake . -DCOVERAGE=true
+    make clean
+    make
+  )
 
   (
     cd "$DIR/tests"
@@ -39,6 +40,5 @@
 
   source tools/audit.sh
 
-  cd "$DIR"
   "$DOXYGEN"
 )
