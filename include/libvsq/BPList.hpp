@@ -141,7 +141,7 @@ public:
 	 * @brief このリスト内で使用されている ID の最大値を取得する.
 	 * @return 使用されている ID の最大値.
 	 */
-	int getMaxId() const;
+	int maxUsedId() const;
 
 	/**
 	 * @brief コントロールカーブのデフォルト値を取得する.

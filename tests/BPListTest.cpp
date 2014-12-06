@@ -15,7 +15,7 @@ public:
 		CPPUNIT_ASSERT_EQUAL(63, list.defaultValue());
 		CPPUNIT_ASSERT_EQUAL(-10, list.minimum());
 		CPPUNIT_ASSERT_EQUAL(1000, list.maximum());
-		CPPUNIT_ASSERT_EQUAL(0, list.getMaxId());
+		CPPUNIT_ASSERT_EQUAL(0, list.maxUsedId());
 	}
 
 	void testGetterAndSetterName()
@@ -26,11 +26,11 @@ public:
 		CPPUNIT_ASSERT_EQUAL(string("bar"), list.name());
 	}
 
-	void testGetMaxId()
+	void testmaxUsedId()
 	{
 		BPList list("foo", 63, -10, 1000);
 		list.add(0, 1);
-		CPPUNIT_ASSERT_EQUAL(1, list.getMaxId());
+		CPPUNIT_ASSERT_EQUAL(1, list.maxUsedId());
 	}
 
 	void testGetterAndSetterDefaultValue()
@@ -343,18 +343,18 @@ public:
 		int idA = list.addWithId(480, 11, 3);
 		CPPUNIT_ASSERT_EQUAL(3, idA);
 		CPPUNIT_ASSERT_EQUAL(11, list.get(0).value);
-		CPPUNIT_ASSERT_EQUAL(3, list.getMaxId());
+		CPPUNIT_ASSERT_EQUAL(3, list.maxUsedId());
 
 		// 同じtickに値をaddすると, データ点は増えずに値が上書きされる
 		idA = list.addWithId(480, 12, 4);
 		CPPUNIT_ASSERT_EQUAL(4, idA);
 		CPPUNIT_ASSERT_EQUAL(12, list.get(0).value);
-		CPPUNIT_ASSERT_EQUAL(4, list.getMaxId());
+		CPPUNIT_ASSERT_EQUAL(4, list.maxUsedId());
 
 		// 既存の点より小さいtickに値をaddすると, 並び替えが起こる
 		int idB = list.addWithId(240, 99, 5);
 		CPPUNIT_ASSERT_EQUAL(5, idB);
-		CPPUNIT_ASSERT_EQUAL(5, list.getMaxId());
+		CPPUNIT_ASSERT_EQUAL(5, list.maxUsedId());
 		CPPUNIT_ASSERT_EQUAL((tick_t)240, list.keyTickAt(0));
 		CPPUNIT_ASSERT_EQUAL(5, list.get(0).id);
 		CPPUNIT_ASSERT_EQUAL(99, list.get(0).value);
@@ -426,7 +426,7 @@ public:
 	CPPUNIT_TEST_SUITE(BPListTest);
 	CPPUNIT_TEST(testConstruct);
 	CPPUNIT_TEST(testGetterAndSetterName);
-	CPPUNIT_TEST(testGetMaxId);
+	CPPUNIT_TEST(testmaxUsedId);
 	CPPUNIT_TEST(testGetterAndSetterDefaultValue);
 	CPPUNIT_TEST(testRenumberIds);
 	CPPUNIT_TEST(testGetData);

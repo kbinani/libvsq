@@ -73,7 +73,7 @@ void BPList::name(std::string const& value)
 	_name = value;
 }
 
-int BPList::getMaxId() const
+int BPList::maxUsedId() const
 {
 	return _maxId;
 }
