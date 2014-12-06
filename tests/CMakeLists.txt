@@ -15,8 +15,7 @@ SET(COVERAGE false CACHE BOOL "Enable gcov")
 
 IF(COVERAGE)
   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -coverage")
-#  SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lgcov")
-  TARGET_LINK_LIBRARIES(libvsqtest gcov)
+  SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lgcov")
 ENDIF()
 
 ADD_EXECUTABLE(libvsqtest
@@ -67,7 +66,6 @@ ADD_EXECUTABLE(libvsqtest
     VibratoBPTest.cpp
     VocaloidMidiEventListFactoryTest.cpp
     VoiceLanguageTest.cpp
-    main.cpp
     Util.hpp
 	ext/gtest/src/gtest-all.cc
 	ext/gtest/src/gtest_main.cc)
