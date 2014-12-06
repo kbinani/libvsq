@@ -41,86 +41,7 @@ protected:
 	Event::List _events;
 
 private:
-	/**
-	 * @brief PIT. ピッチベンド(pitchBendBPList). default=0.
-	 */
-	BPList _pit;
-
-	/**
-	 * @brief PBS. ピッチベンドセンシティビティ(pitchBendSensBPList). default=2.
-	 */
-	BPList _pbs;
-
-	/**
-	 * @brief DYN. ダイナミクス(dynamicsBPList). default=64.
-	 */
-	BPList _dyn;
-
-	/**
-	 * @brief BRE. ブレシネス(epRResidualBPList). default=0.
-	 */
-	BPList _bre;
-
-	/**
-	 * @brief BRI. ブライトネス(epRESlopeBPList). default=64.
-	 */
-	BPList _bri;
-
-	/**
-	 * @brief CLE. クリアネス(epRESlopeDepthBPList). default=0.
-	 */
-	BPList _cle;
-
-	BPList _reso1FreqBPList;
-
-	BPList _reso2FreqBPList;
-
-	BPList _reso3FreqBPList;
-
-	BPList _reso4FreqBPList;
-
-	BPList _reso1BWBPList;
-
-	BPList _reso2BWBPList;
-
-	BPList _reso3BWBPList;
-
-	BPList _reso4BWBPList;
-
-	BPList _reso1AmpBPList;
-
-	BPList _reso2AmpBPList;
-
-	BPList _reso3AmpBPList;
-
-	BPList _reso4AmpBPList;
-
-	/**
-	 * @brief Harmonics. (EpRSineBPList)default = 64.
-	 */
-	BPList _harmonics;
-
-	/**
-	 * @brief Effect2 Depth.
-	 */
-	BPList _fx2depth;
-
-	/**
-	 * @brief GEN. ジェンダーファクター(genderFactorBPList). default=64.
-	 */
-	BPList _gen;
-
-	/**
-	 * @brief POR. ポルタメントタイミング(portamentoTimingBPList). default=64.
-	 */
-	BPList _por;
-
-	/**
-	 * @brief OPE. オープニング(openingBPList). default=127.
-	 */
-	BPList _ope;
-
-	std::map<std::string, BPList*> curveNameMap;
+	std::map<std::string, std::unique_ptr<BPList>> curveNameMap;
 
 public:
 	/**
@@ -233,8 +154,6 @@ private:
 	 * @param destination Copy destination
 	 */
 	void deepCopy(Track* destination) const;
-
-	void setupCurveNameMap();
 
 	void addCurveNameTo(std::vector<std::string>& vocaloid1CurveNameList,
 						std::vector<std::string>& vocaloid2CurveNameList,

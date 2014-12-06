@@ -13,6 +13,7 @@
  */
 #include "../include/libvsq/Track.hpp"
 #include "../include/libvsq/StringUtil.hpp"
+#include <memory>
 
 LIBVSQ_BEGIN_NAMESPACE
 
@@ -341,7 +342,7 @@ BPList const* Track::curve(std::string const& curveName) const
 	if (index == curveNameMap.end()) {
 		return nullptr;
 	} else {
-		return index->second;
+		return index->second.get();
 	}
 }
 
@@ -352,7 +353,7 @@ BPList* Track::curve(std::string const& curveName)
 	if (index == curveNameMap.end()) {
 		return nullptr;
 	} else {
-		return index->second;
+		return index->second.get();
 	}
 }
 
@@ -530,31 +531,29 @@ std::map<std::string, std::string> Track::getSectionNameMap() const
 void Track::_initCor(std::string const& name, std::string const& singer)
 {
 	this->_common = Common(name, 179, 181, 123, DynamicsMode::EXPERT, PlayMode::PLAY_WITH_SYNTH);
-	this->_pit = BPList("pit", 0, -8192, 8191);
-	this->_pbs = BPList("pbs", 2, 0, 24);
-	this->_dyn = BPList("dyn", 64, 0, 127);
-	this->_bre = BPList("bre", 0, 0, 127);
-	this->_bri = BPList("bri", 64, 0, 127);
-	this->_cle = BPList("cle", 0, 0, 127);
-	this->_reso1FreqBPList = BPList("reso1freq", 64, 0, 127);
-	this->_reso2FreqBPList = BPList("reso2freq", 64, 0, 127);
-	this->_reso3FreqBPList = BPList("reso3freq", 64, 0, 127);
-	this->_reso4FreqBPList = BPList("reso4freq", 64, 0, 127);
-	this->_reso1BWBPList = BPList("reso1bw", 64, 0, 127);
-	this->_reso2BWBPList = BPList("reso2bw", 64, 0, 127);
-	this->_reso3BWBPList = BPList("reso3bw", 64, 0, 127);
-	this->_reso4BWBPList = BPList("reso4bw", 64, 0, 127);
-	this->_reso1AmpBPList = BPList("reso1amp", 64, 0, 127);
-	this->_reso2AmpBPList = BPList("reso2amp", 64, 0, 127);
-	this->_reso3AmpBPList = BPList("reso3amp", 64, 0, 127);
-	this->_reso4AmpBPList = BPList("reso4amp", 64, 0, 127);
-	this->_harmonics = BPList("harmonics", 64, 0, 127);
-	this->_fx2depth = BPList("fx2depth", 64, 0, 127);
-	this->_gen = BPList("gen", 64, 0, 127);
-	this->_por = BPList("por", 64, 0, 127);
-	this->_ope = BPList("ope", 127, 0, 127);
-
-	setupCurveNameMap();
+	curveNameMap["pit"] = std::move(std::unique_ptr<BPList>(new BPList("pit", 0, -8192, 8191)));
+	curveNameMap["pbs"] = std::move(std::unique_ptr<BPList>(new BPList("pbs", 2, 0, 24)));
+	curveNameMap["dyn"] = std::move(std::unique_ptr<BPList>(new BPList("dyn", 64, 0, 127)));
+	curveNameMap["bre"] = std::move(std::unique_ptr<BPList>(new BPList("bre", 0, 0, 127)));
+	curveNameMap["bri"] = std::move(std::unique_ptr<BPList>(new BPList("bri", 64, 0, 127)));
+	curveNameMap["cle"] = std::move(std::unique_ptr<BPList>(new BPList("cle", 0, 0, 127)));
+	curveNameMap["reso1freq"] = std::move(std::unique_ptr<BPList>(new BPList("reso1freq", 64, 0, 127)));
+	curveNameMap["reso2freq"] = std::move(std::unique_ptr<BPList>(new BPList("reso2freq", 64, 0, 127)));
+	curveNameMap["reso3freq"] = std::move(std::unique_ptr<BPList>(new BPList("reso3freq", 64, 0, 127)));
+	curveNameMap["reso4freq"] = std::move(std::unique_ptr<BPList>(new BPList("reso4freq", 64, 0, 127)));
+	curveNameMap["reso1bw"] = std::move(std::unique_ptr<BPList>(new BPList("reso1bw", 64, 0, 127)));
+	curveNameMap["reso2bw"] = std::move(std::unique_ptr<BPList>(new BPList("reso2bw", 64, 0, 127)));
+	curveNameMap["reso3bw"] = std::move(std::unique_ptr<BPList>(new BPList("reso3bw", 64, 0, 127)));
+	curveNameMap["reso4bw"] = std::move(std::unique_ptr<BPList>(new BPList("reso4bw", 64, 0, 127)));
+	curveNameMap["reso1amp"] = std::move(std::unique_ptr<BPList>(new BPList("reso1amp", 64, 0, 127)));
+	curveNameMap["reso2amp"] = std::move(std::unique_ptr<BPList>(new BPList("reso2amp", 64, 0, 127)));
+	curveNameMap["reso3amp"] = std::move(std::unique_ptr<BPList>(new BPList("reso3amp", 64, 0, 127)));
+	curveNameMap["reso4amp"] = std::move(std::unique_ptr<BPList>(new BPList("reso4amp", 64, 0, 127)));
+	curveNameMap["harmonics"] = std::move(std::unique_ptr<BPList>(new BPList("harmonics", 64, 0, 127)));
+	curveNameMap["fx2depth"] = std::move(std::unique_ptr<BPList>(new BPList("fx2depth", 64, 0, 127)));
+	curveNameMap["gen"] = std::move(std::unique_ptr<BPList>(new BPList("gen", 64, 0, 127)));
+	curveNameMap["por"] = std::move(std::unique_ptr<BPList>(new BPList("por", 64, 0, 127)));
+	curveNameMap["ope"] = std::move(std::unique_ptr<BPList>(new BPList("ope", 127, 0, 127)));
 
 	Event event(0, EventType::SINGER);
 	Handle ish(HandleType::SINGER);
@@ -578,61 +577,15 @@ void Track::deepCopy(Track* destination) const
 		Event const* item = _events.get(i);
 		destination->_events.add(item->clone(), item->id);
 	}
-	destination->_pit = _pit.clone();
-	destination->_pbs = _pbs.clone();
-	destination->_dyn = _dyn.clone();
-	destination->_bre = _bre.clone();
-	destination->_bri = _bri.clone();
-	destination->_cle = _cle.clone();
-	destination->_reso1FreqBPList = _reso1FreqBPList.clone();
-	destination->_reso2FreqBPList = _reso2FreqBPList.clone();
-	destination->_reso3FreqBPList = _reso3FreqBPList.clone();
-	destination->_reso4FreqBPList = _reso4FreqBPList.clone();
-	destination->_reso1BWBPList = _reso1BWBPList.clone();
-	destination->_reso2BWBPList = _reso2BWBPList.clone();
-	destination->_reso3BWBPList = _reso3BWBPList.clone();
-	destination->_reso4BWBPList = _reso4BWBPList.clone();
-	destination->_reso1AmpBPList = _reso1AmpBPList.clone();
-	destination->_reso2AmpBPList = _reso2AmpBPList.clone();
-	destination->_reso3AmpBPList = _reso3AmpBPList.clone();
-	destination->_reso4AmpBPList = _reso4AmpBPList.clone();
-	destination->_harmonics = _harmonics.clone();
-	destination->_fx2depth = _fx2depth.clone();
-	destination->_gen = _gen.clone();
-	destination->_por = _por.clone();
-	destination->_ope = _ope.clone();
-
-	destination->setupCurveNameMap();
-}
-
-void Track::setupCurveNameMap()
-{
-	std::map<std::string, BPList*> tmp = {
-		{"bre",			&_bre},
-		{"bri",			&_bri},
-		{"cle",			&_cle},
-		{"dyn",			&_dyn},
-		{"gen",			&_gen},
-		{"ope",			&_ope},
-		{"pbs",			&_pbs},
-		{"pit",			&_pit},
-		{"por",			&_por},
-		{"harmonics",	&_harmonics},
-		{"fx2depth",	&_fx2depth},
-		{"reso1amp",	&_reso1AmpBPList},
-		{"reso1bw",		&_reso1BWBPList},
-		{"reso1freq",	&_reso1FreqBPList},
-		{"reso2amp",	&_reso2AmpBPList},
-		{"reso2bw",		&_reso2BWBPList},
-		{"reso2freq",	&_reso2FreqBPList},
-		{"reso3amp",	&_reso3AmpBPList},
-		{"reso3bw",		&_reso3BWBPList},
-		{"reso3freq",	&_reso3FreqBPList},
-		{"reso4amp",	&_reso4AmpBPList},
-		{"reso4bw",		&_reso4BWBPList},
-		{"reso4freq",	&_reso4FreqBPList},
-	};
-	curveNameMap.swap(tmp);
+	destination->curveNameMap.clear();
+    for (auto const& item : curveNameMap) {
+        BPList* list = new BPList(item.second->name(),
+                                  item.second->defaultValue(),
+                                  item.second->minimum(),
+                                  item.second->maximum());
+		*list = item.second->clone();
+        destination->curveNameMap[item.first] = std::move(std::unique_ptr<BPList>(list));
+    }
 }
 
 void Track::addCurveNameTo(std::vector<std::string>& vocaloid1CurveNameList,

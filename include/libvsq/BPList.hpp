@@ -114,7 +114,7 @@ private:
 	static const int INIT_BUFLEN = 512;
 
 public:
-	BPList();
+	BPList() = delete;
 
 	/**
 	 * @brief 初期化を行う.

@@ -53,11 +53,6 @@ void BPList::KeyTickIterator::remove()
 	}
 }
 
-BPList::BPList()
-{
-	_init();
-}
-
 BPList::BPList(std::string const& name, int defaultValue, int minimum, int maximum)
 {
 	_init();
