@@ -24,36 +24,6 @@ Common::Common()
 	init();
 }
 
-Common::Common(TextStream& stream, std::string& lastLine)
-{
-	init();
-	this->version = "";
-	this->name = "";
-	this->color = "0,0,0";
-	this->dynamicsMode = DynamicsMode::STANDARD;
-	this->_playMode = PlayMode::PLAY_WITH_SYNTH;
-	lastLine = stream.readLine();
-	while (lastLine.find("[") != 0) {
-		auto spl = StringUtil::explode("=", lastLine);
-		std::string search = spl[0];
-		if (search == "Version") {
-			this->version = spl[1];
-		} else if (search == "Name") {
-			this->name = spl[1];
-		} else if (search == "Color") {
-			this->color = spl[1];
-		} else if (search == "DynamicsMode") {
-			this->dynamicsMode = static_cast<DynamicsMode>(StringUtil::parseInt<int>(spl[1]));
-		} else if (search == "PlayMode") {
-			this->_playMode = (PlayMode)StringUtil::parseInt<int>(spl[1]);
-		}
-		if (!stream.ready()) {
-			break;
-		}
-		lastLine = stream.readLine();
-	}
-}
-
 Common::Common(std::string const& name, int r, int g, int b, DynamicsMode dynamicsMode, PlayMode playMode)
 {
 	init();
@@ -94,21 +64,6 @@ void Common::playMode(PlayMode mode)
 PlayMode Common::lastPlayMode() const
 {
 	return _lastPlayMode;
-}
-
-void Common::write(TextStream& stream) const
-{
-	stream.writeLine("[Common]");
-	stream.writeLine("Version=" + this->version);
-	stream.writeLine("Name=" + this->name);
-	stream.writeLine("Color=" + this->color);
-	std::ostringstream oss;
-	oss << "DynamicsMode=" << (int)this->dynamicsMode;
-	stream.writeLine(oss.str());
-
-	oss.str("");
-	oss << "PlayMode=" << (int)this->_playMode;
-	stream.writeLine(oss.str());
 }
 
 void Common::init()

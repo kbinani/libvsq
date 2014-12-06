@@ -67,14 +67,6 @@ public:
 
 	/**
 	 * @brief 初期化を行う.
-	 * @param stream 読み込み元のテキストストリーム.
-	 * @param[inout] lastLine 読み込んだ最後の行.
-	 * @todo VSQFileReaderに移動する.
-	 */
-	Common(TextStream& stream, std::string& lastLine);
-
-	/**
-	 * @brief 初期化を行う.
 	 * @param name トラック名.
 	 * @param r 赤(意味は不明).
 	 * @param g 緑(意味は不明).
@@ -104,13 +96,6 @@ public:
 	 * @brief Get previous play mode before play mode is set to OFF.
 	 */
 	PlayMode lastPlayMode() const;
-
-	/**
-	 * @brief テキストストリームに出力する.
-	 * @param stream 出力先のストリーム.
-	 * @todo VSQFileWriterに移動する.
-	 */
-	void write(TextStream& stream) const;
 
 private:
 	void init();

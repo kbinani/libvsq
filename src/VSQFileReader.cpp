@@ -26,8 +26,8 @@ class VSQFileReader::Impl
 	class TentativeHandle : public Handle
 	{
 	public:
-		explicit TentativeHandle(HandleType type) :
-		Handle(type)
+		explicit TentativeHandle(HandleType type)
+			: Handle(type)
 		{}
 
 		void setHandleType(HandleType type)
@@ -69,7 +69,8 @@ class VSQFileReader::Impl
 	class TentativeTrack : public Track
 	{
 	public:
-		TentativeTrack() : Track()
+		TentativeTrack()
+			: Track()
 		{}
 
 		void setCommon(Common const& value)
@@ -82,7 +83,7 @@ class VSQFileReader::Impl
 			return Track::getSectionNameMap();
 		}
 	};
-	
+
 public:
 	Impl()
 	{}
@@ -125,7 +126,7 @@ public:
 		sequence.updateTotalTicks();
 	}
 
-	Event parseEvent(TextStream& stream, std::string& lastLine, EventType&type, int& lyricHandleIndex, int& singerHandleIndex, int& vibratoHandleIndex, int& noteHeadHandleIndex)
+	Event parseEvent(TextStream& stream, std::string& lastLine, EventType& type, int& lyricHandleIndex, int& singerHandleIndex, int& vibratoHandleIndex, int& noteHeadHandleIndex)
 	{
 		Event result;
 		type = EventType::UNKNOWN;
@@ -392,6 +393,37 @@ public:
 		tempoList.updateTempoInfo();
 	}
 
+	Common parseCommon(TextStream& stream, std::string& lastLine)
+	{
+		Common common;
+		common.version = "";
+		common.name = "";
+		common.color = "0,0,0";
+		common.dynamicsMode = DynamicsMode::STANDARD;
+		common.playMode(PlayMode::PLAY_WITH_SYNTH);
+		lastLine = stream.readLine();
+		while (lastLine.find("[") != 0) {
+			auto spl = StringUtil::explode("=", lastLine);
+			std::string search = spl[0];
+			if (search == "Version") {
+				common.version = spl[1];
+			} else if (search == "Name") {
+				common.name = spl[1];
+			} else if (search == "Color") {
+				common.color = spl[1];
+			} else if (search == "DynamicsMode") {
+				common.dynamicsMode = StringUtil::parseInt<DynamicsMode>(spl[1]);
+			} else if (search == "PlayMode") {
+				common.playMode(StringUtil::parseInt<PlayMode>(spl[1]));
+			}
+			if (!stream.ready()) {
+				break;
+			}
+			lastLine = stream.readLine();
+		}
+		return common;
+	}
+
 	/**
 	 * @brief MIDI イベントのリストから, VOCALOIDメタテキストとトラック名を取得する.
 	 * @param midi_event
@@ -498,7 +530,7 @@ public:
 				std::string name = index->second;
 				lastLine = result.curve(name)->appendFromText(stream);
 			} else if (lastLine == "[Common]") {
-				result.setCommon(Common(stream, lastLine));
+				result.setCommon(parseCommon(stream, lastLine));
 			} else if (lastLine == "[Master]" && master != 0) {
 				*master = Master(stream, lastLine);
 			} else if (lastLine == "[Mixer]" && mixer != 0) {

@@ -289,9 +289,7 @@ public:
 
 	void printMetaText(Track const& track, TextStream& stream, int eos, tick_t start, bool printPitch, Master* master, Mixer* mixer)
 	{
-		//if( common ~= nil ){
-		track.common().write(stream);
-		//}
+		_printCommon(track.common(), stream);
 		if (master) {
 			master->write(stream);
 		}
@@ -560,6 +558,21 @@ private:
 		stream.write(StringUtil::toString(eos, "%d"));
 		stream.writeLine("=EOS");
 		return handles;
+	}
+
+	void _printCommon(Common const& common, TextStream& stream) const
+	{
+		stream.writeLine("[Common]");
+		stream.writeLine("Version=" + common.version);
+		stream.writeLine("Name=" + common.name);
+		stream.writeLine("Color=" + common.color);
+		std::ostringstream oss;
+		oss << "DynamicsMode=" << static_cast<int>(common.dynamicsMode);
+		stream.writeLine(oss.str());
+
+		oss.str("");
+		oss << "PlayMode=" << static_cast<int>(common.playMode());
+		stream.writeLine(oss.str());
 	}
 
 	/**
