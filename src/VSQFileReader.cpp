@@ -128,7 +128,7 @@ public:
 
 	Event parseEvent(TextStream& stream, std::string& lastLine, EventType& type, int& lyricHandleIndex, int& singerHandleIndex, int& vibratoHandleIndex, int& noteHeadHandleIndex)
 	{
-		Event result;
+		Event result(0, EventType::UNKNOWN);
 		type = EventType::UNKNOWN;
 		singerHandleIndex = -2;
 		lyricHandleIndex = -1;
@@ -202,7 +202,7 @@ public:
 		result.iconId = "";
 		result.ids = "normal";
 		result.setLyrics(std::vector<Lyric>());
-		result.add(Lyric(""));
+		result.add(Lyric("", ""));
 		result.original = 0;
 		result.caption = "";
 		result.length(0);
@@ -287,7 +287,7 @@ public:
 				tmpDynBPY = parameters[1];
 			} else if (search.find("L") == 0 && search.size() >= 2) {
 				int index = StringUtil::parseInt<int>(search.substr(1, 1));
-				Lyric lyric(parameters[1]);
+				Lyric lyric = parseLyric(parameters[1]);
 				result.setHandleType(HandleType::LYRIC);
 				if (result.size() <= index + 1) {
 					int amount = index + 1 - result.size();
@@ -425,6 +425,194 @@ public:
 	}
 
 	/**
+	 * @brief 文字列を元に Lyric オブジェクトを作成する.
+	 * @param line 「"あ","a",0.0000,0.0」などのような文字列.
+	 */
+	Lyric parseLyric(std::string const& line)
+	{
+		Lyric lyric("", "");
+		if (line.size() == 0) {
+			lyric.phrase = "a";
+			lyric.phoneticSymbol("a");
+			lyric.lengthRatio = 1.0;
+			lyric.isProtected = false;
+			lyric.consonantAdjustment("0");
+			return lyric;
+		}
+		int len = line.size();
+		int indx = 0;
+		int dquote_count = 0;
+		std::string work = "";
+		std::string consonantAdjustment = "";
+		for (int i = 0; i < len; i++) {
+			char c = line[i];
+			if (c == ',' || i + 1 == len) {
+				if (i + 1 == len) {
+					work = work + c;
+				}
+				if (dquote_count % 2 == 0) {
+					// ,の左側に偶数個の"がある場合→,は区切り文字
+					indx = indx + 1;
+					std::string search = "\"";
+					if (indx == 1) {
+						// phrase
+						work = StringUtil::replace(work, "\"\"", "\"");   // "は""として保存される
+						if (work.find(search) == 0 && work.find_last_of(search) == (work.size() - search.size())) {
+							int l = work.size();
+							if (l > search.size() * 2) {
+								lyric.phrase = work.substr(search.size(), l - search.size() * 2);
+							} else {
+								lyric.phrase = "a";
+							}
+						} else {
+							lyric.phrase = work;
+						}
+						work = "";
+					} else if (indx == 2) {
+						// symbols
+						std::string symbols = "";
+						if ((work.find(search) == 0) && (work.find_last_of(search) == (work.size() - search.size()))) {
+							int l = work.size();
+							if (l > search.size() * 2) {
+								symbols = work.substr(search.size(), l - search.size() * 2);
+							} else {
+								symbols = "a";
+							}
+						} else {
+							symbols = work;
+						}
+						lyric.phoneticSymbol(symbols);
+						work = "";
+					} else if (indx == 3) {
+						// lengthRatio
+						lyric.lengthRatio = atof(work.c_str());
+						work = "";
+					} else {
+						if (indx - 3 <= lyric._phoneticSymbol.size()) {
+							// consonant adjustment
+							if (indx - 3 == 1) {
+								consonantAdjustment = consonantAdjustment + work;
+							} else {
+								consonantAdjustment = consonantAdjustment + "," + work;
+							}
+						} else {
+							// protected
+							lyric.isProtected = (work == "1");
+						}
+						work = "";
+					}
+				} else {
+					// ,の左側に奇数個の"がある場合→,は歌詞等の一部
+					work = work + "" + c;
+				}
+			} else {
+				work = work + "" + c;
+				if (c == '"') {
+					dquote_count = dquote_count + 1;
+				}
+			}
+		}
+		lyric.consonantAdjustment(consonantAdjustment);
+
+		return lyric;
+	}
+
+	/**
+	 * @brief テキストストリームから読み込むことで Master のオブジェクトを作成する.
+	 * @param stream 読み込むテキストストリーム.
+	 * @param lastLine 読み込んだ最後の行.
+	 */
+	Master parseMaster(TextStream& stream, std::string& lastLine)
+	{
+		Master m;
+		m.preMeasure = 0;
+		lastLine = stream.readLine();
+		while (lastLine.find("[") == std::string::npos) {
+			std::vector<std::string> spl = StringUtil::explode("=", lastLine);
+			if (spl[0] == "PreMeasure") {
+				m.preMeasure = StringUtil::parseInt<int>(spl[1]);
+			}
+			if (!stream.ready()) {
+				break;
+			}
+			lastLine = stream.readLine();
+		}
+		return m;
+	}
+
+	/**
+	 * @brief テキストストリームから読み込みを行い, 初期化を行う.
+	 * @param stream 読み込むテキストストリーム.
+	 * @param lastLine 読み込んだ最後の行.
+	 */
+	static Mixer parseMixer(TextStream& stream, std::string& lastLine)
+	{
+		Mixer m;
+		m.masterFeder = 0;
+		m.masterPanpot = 0;
+		m.masterMute = 0;
+		m.outputMode = 0;
+		int tracks = 0;
+		std::string buffer = "";
+		lastLine = stream.readLine();
+		while (lastLine.at(0) != '[') {
+			std::vector<std::string> params = StringUtil::explode("=", lastLine);
+			if (params[0] == "MasterFeder") {
+				m.masterFeder = StringUtil::parseInt<int>(params[1]);
+			} else if (params[0] == "MasterPanpot") {
+				m.masterPanpot = StringUtil::parseInt<int>(params[1]);
+			} else if (params[0] == "MasterMute") {
+				m.masterMute = StringUtil::parseInt<int>(params[1]);
+			} else if (params[0] == "OutputMode") {
+				m.outputMode = StringUtil::parseInt<int>(params[1]);
+			} else if (params[0] == "Tracks") {
+				tracks = StringUtil::parseInt<int>(params[1]);
+			} else {
+				if (params[0].find("Feder") == 0 ||
+					params[0].find("Panpot") == 0 ||
+					params[0].find("Mute") == 0 ||
+					params[0].find("Solo") == 0) {
+					buffer = buffer + params[0] + "=" + params[1] + "\n";
+				}
+			}
+			if (!stream.ready()) {
+				break;
+			}
+			lastLine = stream.readLine();
+		}
+
+		for (int i = 0; i < tracks; i++) {
+			m.slave.push_back(MixerItem(0, 0, 0, 0));
+		}
+		std::vector<std::string> spl = StringUtil::explode("\n", buffer);
+		for (std::string const& s : spl) {
+			std::string ind = "";
+			int index;
+			std::vector<std::string> spl2 = StringUtil::explode("=", s);
+			if (spl2[0].find("Feder") == 0) {
+				ind = spl2[0].substr(std::string("Feder").size());
+				index = StringUtil::parseInt<int>(ind);
+				m.slave[index].feder = StringUtil::parseInt<int>(spl2[1]);
+			} else if (spl2[0].find("Panpot") == 0) {
+				ind = spl2[0].substr(std::string("Panpot").size());
+				index = StringUtil::parseInt<int>(ind);
+				m.slave[index].panpot = StringUtil::parseInt<int>(spl2[1]);
+			} else if (spl2[0].find("Mute") == 0) {
+				ind = spl2[0].substr(std::string("Mute").size());
+				index = StringUtil::parseInt<int>(ind);
+				m.slave[index].mute = StringUtil::parseInt<int>(spl2[1]);
+			} else if (spl2[0].find("Solo") == 0) {
+				ind = spl2[0].substr(std::string("Solo").size());
+				index = StringUtil::parseInt<int>(ind);
+				m.slave[index].solo = StringUtil::parseInt<int>(spl2[1]);
+			}
+		}
+
+		return m;
+	}
+
+
+	/**
 	 * @brief MIDI イベントのリストから, VOCALOIDメタテキストとトラック名を取得する.
 	 * @param midi_event
 	 * @param encoding
@@ -532,9 +720,9 @@ public:
 			} else if (lastLine == "[Common]") {
 				result.setCommon(parseCommon(stream, lastLine));
 			} else if (lastLine == "[Master]" && master != 0) {
-				*master = Master(stream, lastLine);
+				*master = parseMaster(stream, lastLine);
 			} else if (lastLine == "[Mixer]" && mixer != 0) {
-				*mixer = Mixer(stream, lastLine);
+				*mixer = parseMixer(stream, lastLine);
 			} else if (lastLine == "[EventList]") {
 				lastLine = stream.readLine();
 				while (lastLine.find("[") != 0) {

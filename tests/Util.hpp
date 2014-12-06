@@ -17,6 +17,10 @@
 #include "../include/libvsq/VoiceLanguage.hpp"
 #include "../include/libvsq/EventType.hpp"
 
+#ifdef _MSC_VER
+#    pragma execution_character_set("utf-8")
+#endif
+
 #define REGISTER_TEST_SUITE( ATestFixtureType )      \
 	static CppUnit::AutoRegisterSuite< ATestFixtureType > CPPUNIT_JOIN( testSuite, ATestFixtureType )
 

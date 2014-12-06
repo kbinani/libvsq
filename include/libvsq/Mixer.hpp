@@ -68,23 +68,10 @@ public:
 	Mixer(int masterFeder, int masterPanpot, int masterMute, int outputMode);
 
 	/**
-	 * @brief テキストストリームから読み込みを行い, 初期化を行う.
-	 * @param stream 読み込むテキストストリーム.
-	 * @param lastLine 読み込んだ最後の行.
-	 */
-	Mixer(TextStream& stream, std::string& lastLine);
-
-	/**
 	 * @brief コピーを作成する.
 	 * @return このオブジェクトのコピー.
 	 */
 	Mixer clone() const;
-
-	/**
-	 * @brief テキストストリームに出力する.
-	 * @param stream 出力先のストリーム.
-	 */
-	void write(TextStream& stream) const;
 };
 
 LIBVSQ_END_NAMESPACE

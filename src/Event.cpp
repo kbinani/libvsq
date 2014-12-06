@@ -217,15 +217,6 @@ void Event::ListIterator::remove()
 	}
 }
 
-Event::Event(std::string const& line)
-	: vibratoHandle()
-{
-	init();
-	std::vector<std::string> spl = StringUtil::explode("=", line);
-	tick = StringUtil::parseInt<tick_t>(spl[0]);
-	isEos = (spl[1] == "EOS");
-}
-
 Event::Event()
 {
 	init();

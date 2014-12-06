@@ -210,7 +210,7 @@ public:
 	void testReadDeltaTick()
 	{
 		// 空のストリームが渡された場合
-		char emptyData[] = {};
+		char* emptyData = nullptr;
 		MemoryInputStream emptyStream(emptyData, 0);
 		CPPUNIT_ASSERT_EQUAL((tick_t)0, MidiEvent::readDeltaTick(emptyStream));
 

@@ -27,8 +27,6 @@ LIBVSQ_BEGIN_NAMESPACE
  */
 class Event
 {
-	// TODO: Track::Track(TextStream &, ...)の機能がVSQFileReaderに移動したら, ここは不要になるので消す.
-	friend class VSQFileReader;
 public:
 	class ListIterator;
 	class ListConstIterator;
@@ -375,12 +373,6 @@ private:
 	tick_t _length;
 
 public:
-	/**
-	 * @brief 初期化を行う.
-	 * @param line VSQ メタテキスト中の [EventList] セクション内のイベント宣言文字列(ex."480=ID#0001").
-	 */
-	explicit Event(std::string const& line);
-
 	/**
 	 * @brief 初期化を行う.
 	 * @param tick Tick 単位の時刻.

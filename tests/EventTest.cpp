@@ -46,17 +46,6 @@ public:
 		CPPUNIT_ASSERT(event.isEOS());
 	}
 
-	void testConstructWithLine()
-	{
-		Event event("123=ID#0001");
-		CPPUNIT_ASSERT_EQUAL((tick_t)123, event.tick);
-		CPPUNIT_ASSERT(false == event.isEOS());
-
-		event = Event("1230=EOS");
-		CPPUNIT_ASSERT_EQUAL((tick_t)1230, event.tick);
-		CPPUNIT_ASSERT(event.isEOS());
-	}
-
 	void testConstructWithTickAndId()
 	{
 		Event event(1, EventType::NOTE);
@@ -185,7 +174,6 @@ public:
 
 	CPPUNIT_TEST_SUITE(EventTest);
 	CPPUNIT_TEST(testConstruct);
-	CPPUNIT_TEST(testConstructWithLine);
 	CPPUNIT_TEST(testConstructWithTickAndId);
 	CPPUNIT_TEST(testEquals);
 	CPPUNIT_TEST(testCompareTo);

@@ -19,11 +19,14 @@
 
 LIBVSQ_BEGIN_NAMESPACE
 
+class VSQFileReader;
+
 /**
  * @brief 歌詞ハンドルに格納する歌詞情報を保持するクラス.
  */
 class Lyric
 {
+	friend class VSQFileReader;
 public:
 	/**
 	 * @brief 歌詞.
@@ -40,24 +43,19 @@ public:
 	 */
 	bool isProtected;
 
-private:
+protected:
 	/**
 	 * @brief 発音記号のリスト.
 	 */
 	std::vector<std::string> _phoneticSymbol;
 
+private:
 	/**
 	 * @brief Consonant Adjustment のリスト.
 	 */
 	std::vector<int> _consonantAdjustment;
 
 public:
-	/**
-	 * @brief 文字列を元に初期化を行う.
-	 * @param line 「"あ","a",0.0000,0.0」などのような文字列.
-	 */
-	explicit Lyric(std::string const& line);
-
 	/**
 	 * @brief 歌詞, 発音記号を指定して初期化を行う.
 	 * @param phrase 歌詞.

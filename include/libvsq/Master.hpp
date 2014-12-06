@@ -40,23 +40,10 @@ public:
 	explicit Master(int preMeasure);
 
 	/**
-	 * @brief テキストストリームから読み込むことで初期化を行う.
-	 * @param stream 読み込むテキストストリーム.
-	 * @param lastLine 読み込んだ最後の行.
-	 */
-	Master(TextStream& stream, std::string& lastLine);
-
-	/**
 	 * @brief コピーを作成する.
 	 * @return このオブジェクトのコピー.
 	 */
 	Master clone() const;
-
-	/**
-	 * @brief テキストストリームに出力する.
-	 * @param stream (TextStream) 出力先.
-	 */
-	void write(TextStream& stream) const;
 };
 
 LIBVSQ_END_NAMESPACE

@@ -291,10 +291,10 @@ public:
 	{
 		_printCommon(track.common(), stream);
 		if (master) {
-			master->write(stream);
+			_printMaster(*master, stream);
 		}
 		if (mixer) {
-			mixer->write(stream);
+			_printMixer(*mixer, stream);
 		}
 
 		std::vector<Handle> handle;
@@ -631,6 +631,41 @@ private:
 			}
 		}
 		return handle;
+	}
+
+	/**
+	 * @brief Master のオブジェクトをテキストストリームに出力する.
+	 * @param m 出力するオブジェクト.
+	 * @param stream 出力先.
+	 */
+	void _printMaster(Master const& m, TextStream& stream) const
+	{
+		stream.writeLine("[Master]");
+		std::ostringstream oss;
+		oss << "PreMeasure=" << m.preMeasure;
+		stream.writeLine(oss.str());
+	}
+
+	/**
+	 * @brief Mixer のオブジェクトをテキストストリームに出力する.
+	 * @param m 出力するオブジェクト.
+	 * @param stream 出力先のストリーム.
+	 */
+	static void _printMixer(Mixer const& m, TextStream& stream)
+	{
+		stream.writeLine("[Mixer]");
+		stream.writeLine("MasterFeder=" + StringUtil::toString(m.masterFeder));
+		stream.writeLine("MasterPanpot=" + StringUtil::toString(m.masterPanpot));
+		stream.writeLine("MasterMute=" + StringUtil::toString(m.masterMute));
+		stream.writeLine("OutputMode=" + StringUtil::toString(m.outputMode));
+		stream.writeLine("Tracks=" + StringUtil::toString(m.slave.size()));
+		for (int i = 0; i < m.slave.size(); ++i) {
+			MixerItem item = m.slave[i];
+			stream.writeLine("Feder" + StringUtil::toString(i) + "=" + StringUtil::toString(item.feder));
+			stream.writeLine("Panpot" + StringUtil::toString(i) + "=" + StringUtil::toString(item.panpot));
+			stream.writeLine("Mute" + StringUtil::toString(i) + "=" + StringUtil::toString(item.mute));
+			stream.writeLine("Solo" + StringUtil::toString(i) + "=" + StringUtil::toString(item.solo));
+		}
 	}
 
 	/**

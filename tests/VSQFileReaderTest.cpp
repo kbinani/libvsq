@@ -458,7 +458,7 @@ public:
 		EventType type;
 		Event event = reader.parseEvent(stream, lastLine, type, lyricHandleIndex, singerHandleIndex, vibratoHandleIndex, noteHeadHandleIndex);
 
-		CPPUNIT_ASSERT_EQUAL(EventType::NOTE, event.type());
+		CPPUNIT_ASSERT_EQUAL(EventType::NOTE, type);
 		CPPUNIT_ASSERT_EQUAL((tick_t)1, event.length());
 		CPPUNIT_ASSERT_EQUAL(2, event.note);
 		CPPUNIT_ASSERT_EQUAL(3, event.dynamics);
