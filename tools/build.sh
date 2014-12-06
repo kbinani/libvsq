@@ -31,6 +31,8 @@
   cppcheck src include --enable=all -q --xml > cppcheck-result.xml 2>&1
   gcovr --gcov-executable="$GCC_ROOT/bin/gcov${GCC_SUFFIX}" -r . --exclude=tests/ --xml > coverage.xml
 
+  source tools/audit.sh
+
   cd "$DIR"
   "$DOXYGEN"
 )
