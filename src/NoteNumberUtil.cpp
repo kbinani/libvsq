@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file NoteNumberUtil.cpp
  * Copyright © 2014 kbinani
  *

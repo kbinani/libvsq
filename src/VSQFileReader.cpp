@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file VSQFileReader.cpp
  * Copyright © 2014 kbinani
  *

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file BitConverter.hpp
  * Copyright © 2012,2014 kbinani
  *

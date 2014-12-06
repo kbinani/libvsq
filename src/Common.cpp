@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file Common.cpp
  * Copyright © 2014 kbinani
  *

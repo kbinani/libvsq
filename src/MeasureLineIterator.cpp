@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file MeasureLineIterator.cpp
  * Copyright © 2014 kbinani
  *

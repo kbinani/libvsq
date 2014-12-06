@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file DynamicsMode.hpp
  * Copyright © 2012 kbinani
  *

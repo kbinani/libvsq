@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file MixerItem.cpp
  * Copyright © 2014 kbinani
  *

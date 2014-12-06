@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file libvsq.h
  * Copyright © 2014 kbinani
  *

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file Master.hpp
  * Copyright © 2012,2014 kbinani
  *

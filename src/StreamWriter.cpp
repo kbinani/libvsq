@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file StreamWriter.cpp
  * Copyright © 2014 kbinani
  *

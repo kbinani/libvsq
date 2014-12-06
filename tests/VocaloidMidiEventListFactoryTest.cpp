@@ -1,4 +1,4 @@
-#include "Util.hpp"
+﻿#include "Util.hpp"
 #include "../include/libvsq/VocaloidMidiEventListFactory.hpp"
 #include "../include/libvsq/Sequence.hpp"
 

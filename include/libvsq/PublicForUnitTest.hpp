@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file PublicForUnitTest.hpp
  * Copyright © 2014 kbinani
  *

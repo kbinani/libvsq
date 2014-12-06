@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file SMFReader.cpp
  * Copyright © 2014 kbinani
  *

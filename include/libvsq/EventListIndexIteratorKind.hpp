@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file EventListIndexIteratorKind.hpp
  * Copyright © 2012,2014 kbinani
  *

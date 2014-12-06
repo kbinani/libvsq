@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file MidiParameterType.cpp
  * Copyright © 2014 kbinani
  *

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file PhoneticSymbolDictionary.cpp
  * Copyright © 2014 kbinani
  *

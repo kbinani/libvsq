@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file VSQFileWriter.cpp
  * Copyright © 2014 kbinani
  *

@@ -1,4 +1,4 @@
-#include "Util.hpp"
+﻿#include "Util.hpp"
 #include "../include/libvsq/MidiEvent.hpp"
 #include "../include/libvsq/ByteArrayOutputStream.hpp"
 #include "../include/libvsq/InputStream.hpp"

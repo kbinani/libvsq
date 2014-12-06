@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file VoiceLanguage.cpp
  * Copyright © 2014 kbinani
  *

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file BasicTypes.hpp
  * Copyright © 2014 kbinani
  *

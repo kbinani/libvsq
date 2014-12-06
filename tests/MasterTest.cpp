@@ -1,4 +1,4 @@
-#include "../include/libvsq/Master.hpp"
+﻿#include "../include/libvsq/Master.hpp"
 #include "../include/libvsq/TextStream.hpp"
 #include "Util.hpp"
 

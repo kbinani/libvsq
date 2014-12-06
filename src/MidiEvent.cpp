@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file MidiEvent.cpp
  * Copyright © 2014 kbinani
  *

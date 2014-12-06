@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file Namespace.hpp
  * Copyright © 2014 kbinani
  *

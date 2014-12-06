@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file NrpnEvent.cpp
  * Copyright © 2014 kbinani
  *

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file Sequence.cpp
  * Copyright © 2014 kbinani
  *

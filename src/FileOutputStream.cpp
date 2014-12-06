@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file FileOutputStream.cpp
  * Copyright © 2014 kbinani
  *

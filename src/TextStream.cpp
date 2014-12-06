@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file TextStream.cpp
  * Copyright © 2014 kbinani
  *

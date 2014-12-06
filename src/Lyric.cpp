@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file Lyric.cpp
  * Copyright © 2014 kbinani
  *

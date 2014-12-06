@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file BPListSearchResult.hpp
  * Copyright © 2012 kbinani
  *

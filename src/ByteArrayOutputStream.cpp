@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file ByteArrayOutputStream.cpp
  * Copyright © 2012,2014 kbinani
  *

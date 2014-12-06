@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file Master.cpp
  * Copyright © 2014 kbinani
  *

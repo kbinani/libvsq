@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file EventListIndexIterator.cpp
  * Copyright © 2014 kbinani
  *

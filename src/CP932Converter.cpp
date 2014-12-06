@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file CP932Converter.cpp
  * Copyright © 2014 kbinani
  *

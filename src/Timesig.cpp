@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file Timesig.cpp
  * Copyright © 2014 kbinani
  *

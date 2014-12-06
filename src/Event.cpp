@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file Event.cpp
  * Copyright © 2012,2014 kbinani
  *

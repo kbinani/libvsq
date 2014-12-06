@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <cppunit/TestRunner.h>
 #include <cppunit/TestResult.h>
