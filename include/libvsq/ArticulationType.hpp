@@ -13,7 +13,7 @@
  */
 #pragma once
 
-#include "./EnumUtil.hpp"
+#include "./Namespace.hpp"
 
 LIBVSQ_BEGIN_NAMESPACE
 
@@ -51,7 +51,5 @@ enum class ArticulationType {
 	 */
 	NOTE_TRANSITION = 5,
 };
-
-LIBVSQ_DECLARE_ENUM_TO_OSTREAM_OPERATOR(ArticulationType)
 
 LIBVSQ_END_NAMESPACE

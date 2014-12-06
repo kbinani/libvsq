@@ -13,7 +13,7 @@
  */
 #pragma once
 
-#include "./EnumUtil.hpp"
+#include "./Namespace.hpp"
 
 LIBVSQ_BEGIN_NAMESPACE
 
@@ -48,7 +48,5 @@ enum class HandleType {
 	 */
 	DYNAMICS = 5,
 };
-
-LIBVSQ_DECLARE_ENUM_TO_OSTREAM_OPERATOR(HandleType)
 
 LIBVSQ_END_NAMESPACE

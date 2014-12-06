@@ -13,7 +13,7 @@
  */
 #pragma once
 
-#include "./EnumUtil.hpp"
+#include "./Namespace.hpp"
 
 LIBVSQ_BEGIN_NAMESPACE
 
@@ -51,7 +51,5 @@ enum class EventListIndexIteratorKind {
 	 */
 	DYNAFF = 1 << 4,
 };
-
-LIBVSQ_DECLARE_ENUM_TO_OSTREAM_OPERATOR(EventListIndexIteratorKind)
 
 LIBVSQ_END_NAMESPACE

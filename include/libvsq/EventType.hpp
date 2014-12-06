@@ -13,7 +13,8 @@
  */
 #pragma once
 
-#include "./EnumUtil.hpp"
+#include "./Namespace.hpp"
+#include <string>
 
 LIBVSQ_BEGIN_NAMESPACE
 
@@ -42,6 +43,14 @@ enum class EventType {
 	ICON = 3,
 };
 
-LIBVSQ_DECLARE_ENUM_TO_STRING_FREE_FUNCTION(EventType)
+namespace EventTypeUtil
+{
+/**
+ * @brief EventType を文字列に変換する.
+ * @param v 変換する EventType の値.
+ * @return EventType の文字列表現.
+ */
+extern std::string toString(EventType v);
+}
 
 LIBVSQ_END_NAMESPACE

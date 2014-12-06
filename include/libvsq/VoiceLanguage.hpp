@@ -13,7 +13,8 @@
  */
 #pragma once
 
-#include "./EnumUtil.hpp"
+#include "./Namespace.hpp"
+#include <string>
 
 LIBVSQ_BEGIN_NAMESPACE
 
@@ -31,8 +32,6 @@ enum class VoiceLanguage {
 	 */
 	ENGLISH = 1,
 };
-
-LIBVSQ_DECLARE_ENUM_TO_OSTREAM_OPERATOR(VoiceLanguage)
 
 namespace VoiceLanguageUtil
 {

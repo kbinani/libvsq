@@ -26,7 +26,6 @@
 #include "./CP932Converter.hpp"
 #include "./Common.hpp"
 #include "./DynamicsMode.hpp"
-#include "./EnumUtil.hpp"
 #include "./Event.hpp"
 #include "./EventListIndexIterator.hpp"
 #include "./EventListIndexIteratorKind.hpp"

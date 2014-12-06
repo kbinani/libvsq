@@ -13,7 +13,8 @@
  */
 #pragma once
 
-#include "./EnumUtil.hpp"
+#include "./Namespace.hpp"
+#include <string>
 
 LIBVSQ_BEGIN_NAMESPACE
 
@@ -575,7 +576,5 @@ extern int getVoiceChangeParameterId(std::string const& curve_name);
  */
 extern bool isDataLsbRequire(MidiParameterType nrpn);
 };
-
-LIBVSQ_DECLARE_ENUM_TO_OSTREAM_OPERATOR(MidiParameterType)
 
 LIBVSQ_END_NAMESPACE

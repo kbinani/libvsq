@@ -133,7 +133,6 @@ ADD_LIBRARY(vsq STATIC
     src/VoiceLanguage.cpp
     include/libvsq/Namespace.hpp
     include/libvsq/BasicTypes.hpp
-    include/libvsq/EnumUtil.hpp
-    src/BP.cpp
+	src/BP.cpp
 	include/libvsq/libvsq.h
 	include/libvsq/PublicForUnitTest.hpp)

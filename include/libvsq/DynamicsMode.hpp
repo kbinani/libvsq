@@ -13,7 +13,7 @@
  */
 #pragma once
 
-#include "./EnumUtil.hpp"
+#include "./Namespace.hpp"
 
 LIBVSQ_BEGIN_NAMESPACE
 
@@ -31,7 +31,5 @@ enum class DynamicsMode {
 	 */
 	EXPERT = 1,
 };
-
-LIBVSQ_DECLARE_ENUM_TO_OSTREAM_OPERATOR(DynamicsMode)
 
 LIBVSQ_END_NAMESPACE
