@@ -2,9 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:../libvsq.xcodeproj">
+      location = "group:../../libvsq.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:../tests/libvsqtest.xcodeproj">
+      location = "group:../../tests/libvsqtest.xcodeproj">
    </FileRef>
 </Workspace>
