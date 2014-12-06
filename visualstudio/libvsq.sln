@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vsq", "..\vsq.vcxproj", "{41C38438-0F56-49E3-ADD2-F4CBE0E318A7}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libvsqtest", "..\tests\libvsqtest.vcxproj", "{6E374A55-610A-4135-9EA1-6A9D1D7EB759}"
+	ProjectSection(ProjectDependencies) = postProject
+		{41C38438-0F56-49E3-ADD2-F4CBE0E318A7} = {41C38438-0F56-49E3-ADD2-F4CBE0E318A7}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		MinSizeRel|Win32 = MinSizeRel|Win32
+		Release|Win32 = Release|Win32
+		RelWithDebInfo|Win32 = RelWithDebInfo|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{41C38438-0F56-49E3-ADD2-F4CBE0E318A7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{41C38438-0F56-49E3-ADD2-F4CBE0E318A7}.Debug|Win32.Build.0 = Debug|Win32
+		{41C38438-0F56-49E3-ADD2-F4CBE0E318A7}.MinSizeRel|Win32.ActiveCfg = MinSizeRel|Win32
+		{41C38438-0F56-49E3-ADD2-F4CBE0E318A7}.MinSizeRel|Win32.Build.0 = MinSizeRel|Win32
+		{41C38438-0F56-49E3-ADD2-F4CBE0E318A7}.Release|Win32.ActiveCfg = Release|Win32
+		{41C38438-0F56-49E3-ADD2-F4CBE0E318A7}.Release|Win32.Build.0 = Release|Win32
+		{41C38438-0F56-49E3-ADD2-F4CBE0E318A7}.RelWithDebInfo|Win32.ActiveCfg = RelWithDebInfo|Win32
+		{41C38438-0F56-49E3-ADD2-F4CBE0E318A7}.RelWithDebInfo|Win32.Build.0 = RelWithDebInfo|Win32
+		{6E374A55-610A-4135-9EA1-6A9D1D7EB759}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6E374A55-610A-4135-9EA1-6A9D1D7EB759}.Debug|Win32.Build.0 = Debug|Win32
+		{6E374A55-610A-4135-9EA1-6A9D1D7EB759}.MinSizeRel|Win32.ActiveCfg = MinSizeRel|Win32
+		{6E374A55-610A-4135-9EA1-6A9D1D7EB759}.MinSizeRel|Win32.Build.0 = MinSizeRel|Win32
+		{6E374A55-610A-4135-9EA1-6A9D1D7EB759}.Release|Win32.ActiveCfg = Release|Win32
+		{6E374A55-610A-4135-9EA1-6A9D1D7EB759}.Release|Win32.Build.0 = Release|Win32
+		{6E374A55-610A-4135-9EA1-6A9D1D7EB759}.RelWithDebInfo|Win32.ActiveCfg = RelWithDebInfo|Win32
+		{6E374A55-610A-4135-9EA1-6A9D1D7EB759}.RelWithDebInfo|Win32.Build.0 = RelWithDebInfo|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
