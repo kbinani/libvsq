@@ -6,10 +6,13 @@ SET(CMAKE_CXX_FLAGS "-std=c++11")
 
 LINK_DIRECTORIES("${PROJECT_SOURCE_DIR}/../lib/$(CONFIGURATION)"
                  "${PROJECT_SOURCE_DIR}/../lib"
-				 /usr/local/lib)
+                 /usr/local/lib)
 INCLUDE_DIRECTORIES(ext/gtest/include
                     ext/gtest
-					/usr/local/include)
+                    /usr/local/include)
+IF((NOT APPLE) AND (NOT WIN32))
+  SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pthread")
+ENDIF()
 
 SET(COVERAGE false CACHE BOOL "Enable gcov")
 
@@ -67,7 +70,7 @@ ADD_EXECUTABLE(libvsqtest
     VocaloidMidiEventListFactoryTest.cpp
     VoiceLanguageTest.cpp
     Util.hpp
-	ext/gtest/src/gtest-all.cc
-	ext/gtest/src/gtest_main.cc)
+    ext/gtest/src/gtest-all.cc
+    ext/gtest/src/gtest_main.cc)
 
 TARGET_LINK_LIBRARIES(libvsqtest vsq)
