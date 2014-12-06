@@ -17,6 +17,33 @@
 
 LIBVSQ_BEGIN_NAMESPACE
 
+namespace
+{
+static std::string const kBPListNamePit			= "PIT";
+static std::string const kBPListNamePbs			= "PBS";
+static std::string const kBPListNameDyn			= "DYN";
+static std::string const kBPListNameBre			= "BRE";
+static std::string const kBPListNameBri			= "BRI";
+static std::string const kBPListNameCle			= "CLE";
+static std::string const kBPListNameHarmonics	= "harmonics";
+static std::string const kBPListNameFx2depth	= "fx2depth";
+static std::string const kBPListNameReso1Freq	= "reso1Freq";
+static std::string const kBPListNameReso2Freq	= "reso2Freq";
+static std::string const kBPListNameReso3Freq	= "reso3Freq";
+static std::string const kBPListNameReso4Freq	= "reso4Freq";
+static std::string const kBPListNameReso1BW		= "reso1BW";
+static std::string const kBPListNameReso2BW		= "reso2BW";
+static std::string const kBPListNameReso3BW		= "reso3BW";
+static std::string const kBPListNameReso4BW		= "reso4BW";
+static std::string const kBPListNameReso1Amp	= "reso1Amp";
+static std::string const kBPListNameReso2Amp	= "reso2Amp";
+static std::string const kBPListNameReso3Amp	= "reso3Amp";
+static std::string const kBPListNameReso4Amp	= "reso4Amp";
+static std::string const kBPListNameGen			= "GEN";
+static std::string const kBPListNamePor			= "POR";
+static std::string const kBPListNameOpe			= "OPE";
+}
+
 Track::Track()
 {
 	this->_initCor("Track1", "Miku");
@@ -463,32 +490,32 @@ std::vector<std::string> const* Track::curveNameList() const
 		vocaloid1.clear();
 		vocaloid2.clear();
 
-		addCurveNameTo(vocaloid1, vocaloid2, "PIT", true, true);
-		addCurveNameTo(vocaloid1, vocaloid2, "PBS", true, true);
-		addCurveNameTo(vocaloid1, vocaloid2, "DYN", true, true);
-		addCurveNameTo(vocaloid1, vocaloid2, "BRE", true, true);
-		addCurveNameTo(vocaloid1, vocaloid2, "BRI", true, true);
-		addCurveNameTo(vocaloid1, vocaloid2, "CLE", true, true);
+		addCurveNameTo(vocaloid1, vocaloid2, kBPListNamePit, true, true);
+		addCurveNameTo(vocaloid1, vocaloid2, kBPListNamePbs, true, true);
+		addCurveNameTo(vocaloid1, vocaloid2, kBPListNameDyn, true, true);
+		addCurveNameTo(vocaloid1, vocaloid2, kBPListNameBre, true, true);
+		addCurveNameTo(vocaloid1, vocaloid2, kBPListNameBri, true, true);
+		addCurveNameTo(vocaloid1, vocaloid2, kBPListNameCle, true, true);
 
-		addCurveNameTo(vocaloid1, vocaloid2, "harmonics", true, false);
-		addCurveNameTo(vocaloid1, vocaloid2, "fx2depth", true, false);
-		addCurveNameTo(vocaloid1, vocaloid2, "reso1Freq", true, false);
-		addCurveNameTo(vocaloid1, vocaloid2, "reso2Freq", true, false);
-		addCurveNameTo(vocaloid1, vocaloid2, "reso3Freq", true, false);
-		addCurveNameTo(vocaloid1, vocaloid2, "reso4Freq", true, false);
-		addCurveNameTo(vocaloid1, vocaloid2, "reso1BW", true, false);
-		addCurveNameTo(vocaloid1, vocaloid2, "reso2BW", true, false);
-		addCurveNameTo(vocaloid1, vocaloid2, "reso3BW", true, false);
-		addCurveNameTo(vocaloid1, vocaloid2, "reso4BW", true, false);
-		addCurveNameTo(vocaloid1, vocaloid2, "reso1Amp", true, false);
-		addCurveNameTo(vocaloid1, vocaloid2, "reso2Amp", true, false);
-		addCurveNameTo(vocaloid1, vocaloid2, "reso3Amp", true, false);
-		addCurveNameTo(vocaloid1, vocaloid2, "reso4Amp", true, false);
+		addCurveNameTo(vocaloid1, vocaloid2, kBPListNameHarmonics, true, false);
+		addCurveNameTo(vocaloid1, vocaloid2, kBPListNameFx2depth, true, false);
+		addCurveNameTo(vocaloid1, vocaloid2, kBPListNameReso1Freq, true, false);
+		addCurveNameTo(vocaloid1, vocaloid2, kBPListNameReso2Freq, true, false);
+		addCurveNameTo(vocaloid1, vocaloid2, kBPListNameReso3Freq, true, false);
+		addCurveNameTo(vocaloid1, vocaloid2, kBPListNameReso4Freq, true, false);
+		addCurveNameTo(vocaloid1, vocaloid2, kBPListNameReso1BW, true, false);
+		addCurveNameTo(vocaloid1, vocaloid2, kBPListNameReso2BW, true, false);
+		addCurveNameTo(vocaloid1, vocaloid2, kBPListNameReso3BW, true, false);
+		addCurveNameTo(vocaloid1, vocaloid2, kBPListNameReso4BW, true, false);
+		addCurveNameTo(vocaloid1, vocaloid2, kBPListNameReso1Amp, true, false);
+		addCurveNameTo(vocaloid1, vocaloid2, kBPListNameReso2Amp, true, false);
+		addCurveNameTo(vocaloid1, vocaloid2, kBPListNameReso3Amp, true, false);
+		addCurveNameTo(vocaloid1, vocaloid2, kBPListNameReso4Amp, true, false);
 
-		addCurveNameTo(vocaloid1, vocaloid2, "GEN", true, true);
-		addCurveNameTo(vocaloid1, vocaloid2, "POR", true, true);
+		addCurveNameTo(vocaloid1, vocaloid2, kBPListNameGen, true, true);
+		addCurveNameTo(vocaloid1, vocaloid2, kBPListNamePor, true, true);
 
-		addCurveNameTo(vocaloid1, vocaloid2, "OPE", false, true);
+		addCurveNameTo(vocaloid1, vocaloid2, kBPListNameOpe, false, true);
 	}
 
 	if (common().version.substr(0, 4) == "DSB2") {
@@ -500,30 +527,33 @@ std::vector<std::string> const* Track::curveNameList() const
 
 std::map<std::string, std::string> Track::getSectionNameMap() const
 {
+	auto toLower = [](std::string const & s) {
+		return StringUtil::toLower(s);
+	};
 	static std::map<std::string, std::string> const result = {
-		{"[PitchBendBPList]",			"pit"},
-		{"[PitchBendSensBPList]",		"pbs"},
-		{"[DynamicsBPList]",			"dyn"},
-		{"[EpRResidualBPList]",			"bre"},
-		{"[EpRESlopeBPList]",			"bri"},
-		{"[EpRESlopeDepthBPList]",		"cle"},
-		{"[EpRSineBPList]",				"harmonics"},
-		{"[VibTremDepthBPList]",		"fx2depth"},
-		{"[Reso1FreqBPList]",			"reso1Freq"},
-		{"[Reso2FreqBPList]",			"reso2Freq"},
-		{"[Reso3FreqBPList]",			"reso3Freq"},
-		{"[Reso4FreqBPList]",			"reso4Freq"},
-		{"[Reso1BWBPList]",				"reso1BW"},
-		{"[Reso2BWBPList]",				"reso2BW"},
-		{"[Reso3BWBPList]",				"reso3BW"},
-		{"[Reso4BWBPList]",				"reso4BW"},
-		{"[Reso1AmpBPList]",			"reso1Amp"},
-		{"[Reso2AmpBPList]",			"reso2Amp"},
-		{"[Reso3AmpBPList]",			"reso3Amp"},
-		{"[Reso4AmpBPList]",			"reso4Amp"},
-		{"[GenderFactorBPList]",		"gen"},
-		{"[PortamentoTimingBPList]",	"por"},
-		{"[OpeningBPList]",				"ope"},
+		{"[PitchBendBPList]",			toLower(kBPListNamePit)},
+		{"[PitchBendSensBPList]",		toLower(kBPListNamePbs)},
+		{"[DynamicsBPList]",			toLower(kBPListNameDyn)},
+		{"[EpRResidualBPList]",			toLower(kBPListNameBre)},
+		{"[EpRESlopeBPList]",			toLower(kBPListNameBri)},
+		{"[EpRESlopeDepthBPList]",		toLower(kBPListNameCle)},
+		{"[EpRSineBPList]",				kBPListNameHarmonics},
+		{"[VibTremDepthBPList]",		kBPListNameFx2depth},
+		{"[Reso1FreqBPList]",			kBPListNameReso1Freq},
+		{"[Reso2FreqBPList]",			kBPListNameReso2Freq},
+		{"[Reso3FreqBPList]",			kBPListNameReso3Freq},
+		{"[Reso4FreqBPList]",			kBPListNameReso4Freq},
+		{"[Reso1BWBPList]",				kBPListNameReso1BW},
+		{"[Reso2BWBPList]",				kBPListNameReso2BW},
+		{"[Reso3BWBPList]",				kBPListNameReso3BW},
+		{"[Reso4BWBPList]",				kBPListNameReso4BW},
+		{"[Reso1AmpBPList]",			kBPListNameReso1Amp},
+		{"[Reso2AmpBPList]",			kBPListNameReso2Amp},
+		{"[Reso3AmpBPList]",			kBPListNameReso3Amp},
+		{"[Reso4AmpBPList]",			kBPListNameReso4Amp},
+		{"[GenderFactorBPList]",		toLower(kBPListNameGen)},
+		{"[PortamentoTimingBPList]",	toLower(kBPListNamePor)},
+		{"[OpeningBPList]",				toLower(kBPListNameOpe)},
 	};
 	return result;
 }
@@ -531,29 +561,32 @@ std::map<std::string, std::string> Track::getSectionNameMap() const
 void Track::_initCor(std::string const& name, std::string const& singer)
 {
 	this->_common = Common(name, 179, 181, 123, DynamicsMode::EXPERT, PlayMode::PLAY_WITH_SYNTH);
-	curveNameMap["pit"] = std::move(std::unique_ptr<BPList>(new BPList("pit", 0, -8192, 8191)));
-	curveNameMap["pbs"] = std::move(std::unique_ptr<BPList>(new BPList("pbs", 2, 0, 24)));
-	curveNameMap["dyn"] = std::move(std::unique_ptr<BPList>(new BPList("dyn", 64, 0, 127)));
-	curveNameMap["bre"] = std::move(std::unique_ptr<BPList>(new BPList("bre", 0, 0, 127)));
-	curveNameMap["bri"] = std::move(std::unique_ptr<BPList>(new BPList("bri", 64, 0, 127)));
-	curveNameMap["cle"] = std::move(std::unique_ptr<BPList>(new BPList("cle", 0, 0, 127)));
-	curveNameMap["reso1freq"] = std::move(std::unique_ptr<BPList>(new BPList("reso1freq", 64, 0, 127)));
-	curveNameMap["reso2freq"] = std::move(std::unique_ptr<BPList>(new BPList("reso2freq", 64, 0, 127)));
-	curveNameMap["reso3freq"] = std::move(std::unique_ptr<BPList>(new BPList("reso3freq", 64, 0, 127)));
-	curveNameMap["reso4freq"] = std::move(std::unique_ptr<BPList>(new BPList("reso4freq", 64, 0, 127)));
-	curveNameMap["reso1bw"] = std::move(std::unique_ptr<BPList>(new BPList("reso1bw", 64, 0, 127)));
-	curveNameMap["reso2bw"] = std::move(std::unique_ptr<BPList>(new BPList("reso2bw", 64, 0, 127)));
-	curveNameMap["reso3bw"] = std::move(std::unique_ptr<BPList>(new BPList("reso3bw", 64, 0, 127)));
-	curveNameMap["reso4bw"] = std::move(std::unique_ptr<BPList>(new BPList("reso4bw", 64, 0, 127)));
-	curveNameMap["reso1amp"] = std::move(std::unique_ptr<BPList>(new BPList("reso1amp", 64, 0, 127)));
-	curveNameMap["reso2amp"] = std::move(std::unique_ptr<BPList>(new BPList("reso2amp", 64, 0, 127)));
-	curveNameMap["reso3amp"] = std::move(std::unique_ptr<BPList>(new BPList("reso3amp", 64, 0, 127)));
-	curveNameMap["reso4amp"] = std::move(std::unique_ptr<BPList>(new BPList("reso4amp", 64, 0, 127)));
-	curveNameMap["harmonics"] = std::move(std::unique_ptr<BPList>(new BPList("harmonics", 64, 0, 127)));
-	curveNameMap["fx2depth"] = std::move(std::unique_ptr<BPList>(new BPList("fx2depth", 64, 0, 127)));
-	curveNameMap["gen"] = std::move(std::unique_ptr<BPList>(new BPList("gen", 64, 0, 127)));
-	curveNameMap["por"] = std::move(std::unique_ptr<BPList>(new BPList("por", 64, 0, 127)));
-	curveNameMap["ope"] = std::move(std::unique_ptr<BPList>(new BPList("ope", 127, 0, 127)));
+	auto toLower = [](std::string const & s) {
+		return StringUtil::toLower(s);
+	};
+	curveNameMap[toLower(kBPListNamePit)]		= std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNamePit),			0,		-8192,	8191)));
+	curveNameMap[toLower(kBPListNamePbs)]		= std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNamePbs),			2,		0,		24)));
+	curveNameMap[toLower(kBPListNameDyn)]		= std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNameDyn),			64,		0,		127)));
+	curveNameMap[toLower(kBPListNameBre)]		= std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNameBre),			0,		0,		127)));
+	curveNameMap[toLower(kBPListNameBri)]		= std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNameBri),			64,		0,		127)));
+	curveNameMap[toLower(kBPListNameCle)]		= std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNameCle),			0,		0,		127)));
+	curveNameMap[toLower(kBPListNameReso1Freq)]	= std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNameReso1Freq),	64,		0,		127)));
+	curveNameMap[toLower(kBPListNameReso2Freq)] = std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNameReso2Freq),	64,		0,		127)));
+	curveNameMap[toLower(kBPListNameReso3Freq)] = std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNameReso3Freq),	64,		0,		127)));
+	curveNameMap[toLower(kBPListNameReso4Freq)] = std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNameReso4Freq),	64,		0,		127)));
+	curveNameMap[toLower(kBPListNameReso1BW)]	= std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNameReso1BW),		64,		0,		127)));
+	curveNameMap[toLower(kBPListNameReso2BW)]	= std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNameReso2BW),		64,		0,		127)));
+	curveNameMap[toLower(kBPListNameReso3BW)]	= std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNameReso3BW),		64,		0,		127)));
+	curveNameMap[toLower(kBPListNameReso4BW)]	= std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNameReso4BW),		64,		0,		127)));
+	curveNameMap[toLower(kBPListNameReso1Amp)]	= std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNameReso1Amp),	64,		0,		127)));
+	curveNameMap[toLower(kBPListNameReso2Amp)]	= std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNameReso2Amp),	64,		0,		127)));
+	curveNameMap[toLower(kBPListNameReso3Amp)]	= std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNameReso3Amp),	64,		0,		127)));
+	curveNameMap[toLower(kBPListNameReso4Amp)]	= std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNameReso4Amp),	64,		0,		127)));
+	curveNameMap[kBPListNameHarmonics]			= std::move(std::unique_ptr<BPList>(new BPList(kBPListNameHarmonics,			64,		0,		127)));
+	curveNameMap[kBPListNameFx2depth]			= std::move(std::unique_ptr<BPList>(new BPList(kBPListNameFx2depth,				64,		0,		127)));
+	curveNameMap[toLower(kBPListNameGen)]		= std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNameGen),			64,		0,		127)));
+	curveNameMap[toLower(kBPListNamePor)]		= std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNamePor),			64,		0,		127)));
+	curveNameMap[toLower(kBPListNameOpe)]		= std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNameOpe),			127,	0,		127)));
 
 	Event event(0, EventType::SINGER);
 	Handle ish(HandleType::SINGER);
@@ -578,14 +611,14 @@ void Track::deepCopy(Track* destination) const
 		destination->_events.add(item->clone(), item->id);
 	}
 	destination->curveNameMap.clear();
-    for (auto const& item : curveNameMap) {
-        BPList* list = new BPList(item.second->name(),
-                                  item.second->defaultValue(),
-                                  item.second->minimum(),
-                                  item.second->maximum());
+	for (auto const& item : curveNameMap) {
+		BPList* list = new BPList(item.second->name(),
+								  item.second->defaultValue(),
+								  item.second->minimum(),
+								  item.second->maximum());
 		*list = item.second->clone();
-        destination->curveNameMap[item.first] = std::move(std::unique_ptr<BPList>(list));
-    }
+		destination->curveNameMap[item.first] = std::move(std::unique_ptr<BPList>(list));
+	}
 }
 
 void Track::addCurveNameTo(std::vector<std::string>& vocaloid1CurveNameList,
