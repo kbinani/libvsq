@@ -768,7 +768,7 @@ TEST(VocaloidMidiEventListFactoryTest, testGenerateNRPN)
 
 	int preSendMilliseconds = 500;
 	vector<NrpnEvent> actual = VocaloidMidiEventListFactory::generateNRPN(
-									track, sequence.tempoList, sequence.totalTicks(), sequence.preMeasureTicks(), preSendMilliseconds);
+								   track, sequence.tempoList, sequence.totalTicks(), sequence.preMeasureTicks(), preSendMilliseconds);
 
 	std::vector<NrpnEventSpec> expected = {
 		// 0

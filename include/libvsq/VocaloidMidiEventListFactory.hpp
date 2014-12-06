@@ -32,7 +32,7 @@ class VocaloidMidiEventListFactory
 {
 private:
 	/**
-	 * @brief \~japanese-en BPList オブジェクトから, 対応するコントロールカーブのディレイを表す NrpnEvent と, 
+	 * @brief \~japanese-en BPList オブジェクトから, 対応するコントロールカーブのディレイを表す NrpnEvent と,
 	 *                      値を表す NrpnEvent をそれぞれ提供する何らかのオブジェクトを表す抽象クラス.
 	 *        \~english A base class to provide Delay NrpnEvent and Value NrpnEvent from an instance of BPList.
 	 */

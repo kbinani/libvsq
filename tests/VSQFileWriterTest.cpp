@@ -119,11 +119,11 @@ TEST(VSQFileWriterTest, testWriteWithoutPitch)
 	Sequence sequence("Foo", 1, 4, 4, 500000);
 	const int CURVE_COUNT = 19;
 	string curveNames[CURVE_COUNT] = { "BRE", "BRI", "CLE", "POR", "GEN", "harmonics", "OPE",
-										"reso1amp", "reso1bw", "reso1freq",
-										"reso2amp", "reso2bw", "reso2freq",
-										"reso3amp", "reso3bw", "reso3freq",
-										"reso4amp", "reso4bw", "reso4freq"
-										};
+									   "reso1amp", "reso1bw", "reso1freq",
+									   "reso2amp", "reso2bw", "reso2freq",
+									   "reso3amp", "reso3bw", "reso3freq",
+									   "reso4amp", "reso4bw", "reso4freq"
+									 };
 	for (int i = 0; i < CURVE_COUNT; i++) {
 		BPList* list = sequence.track(0).curve(curveNames[i]);
 		list->add(1920, 1 + i);
