@@ -5,33 +5,21 @@
 using namespace std;
 using namespace vsq;
 
-class MasterTest : public CppUnit::TestCase
+TEST(MasterTest, testConstructWithoutArgument)
 {
-public:
-	void testConstructWithoutArgument()
-	{
-		Master master;
-		CPPUNIT_ASSERT_EQUAL(1, master.preMeasure);
-	}
+	Master master;
+	EXPECT_EQ(1, master.preMeasure);
+}
 
-	void testConstructWithPreMeasure()
-	{
-		Master master(10);
-		CPPUNIT_ASSERT_EQUAL(10, master.preMeasure);
-	}
+TEST(MasterTest, testConstructWithPreMeasure)
+{
+	Master master(10);
+	EXPECT_EQ(10, master.preMeasure);
+}
 
-	void testClone()
-	{
-		Master master(15);
-		Master copy = master.clone();
-		CPPUNIT_ASSERT_EQUAL(15, copy.preMeasure);
-	}
-
-	CPPUNIT_TEST_SUITE(MasterTest);
-	CPPUNIT_TEST(testConstructWithoutArgument);
-	CPPUNIT_TEST(testConstructWithPreMeasure);
-	CPPUNIT_TEST(testClone);
-	CPPUNIT_TEST_SUITE_END();
-};
-
-REGISTER_TEST_SUITE(MasterTest);
+TEST(MasterTest, testClone)
+{
+	Master master(15);
+	Master copy = master.clone();
+	EXPECT_EQ(15, copy.preMeasure);
+}

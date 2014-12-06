@@ -4,184 +4,171 @@
 
 using namespace vsq;
 
-class MeasureLineIteratorTest : public CppUnit::TestCase
+TEST(MeasureLineIteratorTest, test)
 {
-public:
-	void test()
-	{
-		TimesigList list;
-		list.push(Timesig(4, 4, 0));
-		list.push(Timesig(3, 4, 1));
-		MeasureLineIterator i(&list);
-		i.reset(3360);
+	TimesigList list;
+	list.push(Timesig(4, 4, 0));
+	list.push(Timesig(3, 4, 1));
+	MeasureLineIterator i(&list);
+	i.reset(3360);
 
-		CPPUNIT_ASSERT(i.hasNext());
+	EXPECT_TRUE(i.hasNext());
+	MeasureLine actual = i.next();
+	EXPECT_EQ((tick_t)0, actual.tick);
+	EXPECT_EQ(true, actual.isBorder);
+	EXPECT_EQ(0, actual.barCount);
+	EXPECT_EQ(4, actual.numerator);
+	EXPECT_EQ(4, actual.denominator);
+	EXPECT_EQ(false, actual.isAssistLine);
+
+	EXPECT_TRUE(i.hasNext());
+	actual = i.next();
+	EXPECT_EQ((tick_t)480, actual.tick);
+	EXPECT_EQ(false, actual.isBorder);
+	EXPECT_EQ(0, actual.barCount);
+	EXPECT_EQ(4, actual.numerator);
+	EXPECT_EQ(4, actual.denominator);
+	EXPECT_EQ(false, actual.isAssistLine);
+
+	EXPECT_TRUE(i.hasNext());
+	actual = i.next();
+	EXPECT_EQ((tick_t)960, actual.tick);
+	EXPECT_EQ(false, actual.isBorder);
+	EXPECT_EQ(0, actual.barCount);
+	EXPECT_EQ(4, actual.numerator);
+	EXPECT_EQ(4, actual.denominator);
+	EXPECT_EQ(false, actual.isAssistLine);
+
+	EXPECT_TRUE(i.hasNext());
+	actual = i.next();
+	EXPECT_EQ((tick_t)1440, actual.tick);
+	EXPECT_EQ(false, actual.isBorder);
+	EXPECT_EQ(0, actual.barCount);
+	EXPECT_EQ(4, actual.numerator);
+	EXPECT_EQ(4, actual.denominator);
+	EXPECT_EQ(false, actual.isAssistLine);
+
+	EXPECT_TRUE(i.hasNext());
+	actual = i.next();
+	EXPECT_EQ((tick_t)1920, actual.tick);
+	EXPECT_EQ(true, actual.isBorder);
+	EXPECT_EQ(1, actual.barCount);
+	EXPECT_EQ(3, actual.numerator);
+	EXPECT_EQ(4, actual.denominator);
+	EXPECT_EQ(false, actual.isAssistLine);
+
+	EXPECT_TRUE(i.hasNext());
+	actual = i.next();
+	EXPECT_EQ((tick_t)2400, actual.tick);
+	EXPECT_EQ(false, actual.isBorder);
+	EXPECT_EQ(1, actual.barCount);
+	EXPECT_EQ(3, actual.numerator);
+	EXPECT_EQ(4, actual.denominator);
+	EXPECT_EQ(false, actual.isAssistLine);
+
+	EXPECT_TRUE(i.hasNext());
+	actual = i.next();
+	EXPECT_EQ((tick_t)2880, actual.tick);
+	EXPECT_EQ(false, actual.isBorder);
+	EXPECT_EQ(1, actual.barCount);
+	EXPECT_EQ(3, actual.numerator);
+	EXPECT_EQ(4, actual.denominator);
+	EXPECT_EQ(false, actual.isAssistLine);
+
+	EXPECT_TRUE(i.hasNext());
+	actual = i.next();
+	EXPECT_EQ((tick_t)3360, actual.tick);
+	EXPECT_EQ(true, actual.isBorder);
+	EXPECT_EQ(2, actual.barCount);
+	EXPECT_EQ(3, actual.numerator);
+	EXPECT_EQ(4, actual.denominator);
+	EXPECT_EQ(false, actual.isAssistLine);
+
+	EXPECT_EQ(false, i.hasNext());
+}
+
+void testWithoutAnyBar()
+{
+	TimesigList list;
+	list.push(Timesig(4, 4, 0));
+	list.push(Timesig(3, 4, 1));
+	MeasureLineIterator i(&list);
+	i.reset(479);
+
+	EXPECT_EQ(true, i.hasNext());
+	MeasureLine actual = i.next();
+	EXPECT_EQ((tick_t)0, actual.tick);
+	EXPECT_EQ(true, actual.isBorder);
+	EXPECT_EQ(false, actual.isAssistLine);
+
+	EXPECT_EQ(false, i.hasNext());
+}
+
+TEST(MeasureLineIteratorTest, testWithAssistLineStep)
+{
+	TimesigList list;
+	list.push(Timesig(1, 4, 0));
+	MeasureLineIterator i(&list, 120);
+	i.reset(480);
+
+	EXPECT_EQ(true, i.hasNext());
+	{
 		MeasureLine actual = i.next();
-		CPPUNIT_ASSERT_EQUAL((tick_t)0, actual.tick);
-		CPPUNIT_ASSERT_EQUAL(true, actual.isBorder);
-		CPPUNIT_ASSERT_EQUAL(0, actual.barCount);
-		CPPUNIT_ASSERT_EQUAL(4, actual.numerator);
-		CPPUNIT_ASSERT_EQUAL(4, actual.denominator);
-		CPPUNIT_ASSERT_EQUAL(false, actual.isAssistLine);
-
-		CPPUNIT_ASSERT(i.hasNext());
-		actual = i.next();
-		CPPUNIT_ASSERT_EQUAL((tick_t)480, actual.tick);
-		CPPUNIT_ASSERT_EQUAL(false, actual.isBorder);
-		CPPUNIT_ASSERT_EQUAL(0, actual.barCount);
-		CPPUNIT_ASSERT_EQUAL(4, actual.numerator);
-		CPPUNIT_ASSERT_EQUAL(4, actual.denominator);
-		CPPUNIT_ASSERT_EQUAL(false, actual.isAssistLine);
-
-		CPPUNIT_ASSERT(i.hasNext());
-		actual = i.next();
-		CPPUNIT_ASSERT_EQUAL((tick_t)960, actual.tick);
-		CPPUNIT_ASSERT_EQUAL(false, actual.isBorder);
-		CPPUNIT_ASSERT_EQUAL(0, actual.barCount);
-		CPPUNIT_ASSERT_EQUAL(4, actual.numerator);
-		CPPUNIT_ASSERT_EQUAL(4, actual.denominator);
-		CPPUNIT_ASSERT_EQUAL(false, actual.isAssistLine);
-
-		CPPUNIT_ASSERT(i.hasNext());
-		actual = i.next();
-		CPPUNIT_ASSERT_EQUAL((tick_t)1440, actual.tick);
-		CPPUNIT_ASSERT_EQUAL(false, actual.isBorder);
-		CPPUNIT_ASSERT_EQUAL(0, actual.barCount);
-		CPPUNIT_ASSERT_EQUAL(4, actual.numerator);
-		CPPUNIT_ASSERT_EQUAL(4, actual.denominator);
-		CPPUNIT_ASSERT_EQUAL(false, actual.isAssistLine);
-
-		CPPUNIT_ASSERT(i.hasNext());
-		actual = i.next();
-		CPPUNIT_ASSERT_EQUAL((tick_t)1920, actual.tick);
-		CPPUNIT_ASSERT_EQUAL(true, actual.isBorder);
-		CPPUNIT_ASSERT_EQUAL(1, actual.barCount);
-		CPPUNIT_ASSERT_EQUAL(3, actual.numerator);
-		CPPUNIT_ASSERT_EQUAL(4, actual.denominator);
-		CPPUNIT_ASSERT_EQUAL(false, actual.isAssistLine);
-
-		CPPUNIT_ASSERT(i.hasNext());
-		actual = i.next();
-		CPPUNIT_ASSERT_EQUAL((tick_t)2400, actual.tick);
-		CPPUNIT_ASSERT_EQUAL(false, actual.isBorder);
-		CPPUNIT_ASSERT_EQUAL(1, actual.barCount);
-		CPPUNIT_ASSERT_EQUAL(3, actual.numerator);
-		CPPUNIT_ASSERT_EQUAL(4, actual.denominator);
-		CPPUNIT_ASSERT_EQUAL(false, actual.isAssistLine);
-
-		CPPUNIT_ASSERT(i.hasNext());
-		actual = i.next();
-		CPPUNIT_ASSERT_EQUAL((tick_t)2880, actual.tick);
-		CPPUNIT_ASSERT_EQUAL(false, actual.isBorder);
-		CPPUNIT_ASSERT_EQUAL(1, actual.barCount);
-		CPPUNIT_ASSERT_EQUAL(3, actual.numerator);
-		CPPUNIT_ASSERT_EQUAL(4, actual.denominator);
-		CPPUNIT_ASSERT_EQUAL(false, actual.isAssistLine);
-
-		CPPUNIT_ASSERT(i.hasNext());
-		actual = i.next();
-		CPPUNIT_ASSERT_EQUAL((tick_t)3360, actual.tick);
-		CPPUNIT_ASSERT_EQUAL(true, actual.isBorder);
-		CPPUNIT_ASSERT_EQUAL(2, actual.barCount);
-		CPPUNIT_ASSERT_EQUAL(3, actual.numerator);
-		CPPUNIT_ASSERT_EQUAL(4, actual.denominator);
-		CPPUNIT_ASSERT_EQUAL(false, actual.isAssistLine);
-
-		CPPUNIT_ASSERT_EQUAL(false, i.hasNext());
+		EXPECT_EQ((tick_t)0, actual.tick);
+		EXPECT_EQ(0, actual.barCount);
+		EXPECT_EQ(true, actual.isBorder);
+		EXPECT_EQ(1, actual.numerator);
+		EXPECT_EQ(4, actual.denominator);
+		EXPECT_EQ(false, actual.isAssistLine);
 	}
-
-	void testWithoutAnyBar()
+	EXPECT_EQ(true, i.hasNext());
 	{
-		TimesigList list;
-		list.push(Timesig(4, 4, 0));
-		list.push(Timesig(3, 4, 1));
-		MeasureLineIterator i(&list);
-		i.reset(479);
-
-		CPPUNIT_ASSERT_EQUAL(true, i.hasNext());
 		MeasureLine actual = i.next();
-		CPPUNIT_ASSERT_EQUAL((tick_t)0, actual.tick);
-		CPPUNIT_ASSERT_EQUAL(true, actual.isBorder);
-		CPPUNIT_ASSERT_EQUAL(false, actual.isAssistLine);
-
-		CPPUNIT_ASSERT_EQUAL(false, i.hasNext());
+		EXPECT_EQ((tick_t)120, actual.tick);
+		EXPECT_EQ(0, actual.barCount);
+		EXPECT_EQ(false, actual.isBorder);
+		EXPECT_EQ(1, actual.numerator);
+		EXPECT_EQ(4, actual.denominator);
+		EXPECT_EQ(true, actual.isAssistLine);
 	}
-
-	void testWithAssistLineStep()
+	EXPECT_EQ(true, i.hasNext());
 	{
-		TimesigList list;
-		list.push(Timesig(1, 4, 0));
-		MeasureLineIterator i(&list, 120);
-		i.reset(480);
-
-		CPPUNIT_ASSERT_EQUAL(true, i.hasNext());
-		{
-			MeasureLine actual = i.next();
-			CPPUNIT_ASSERT_EQUAL((tick_t)0, actual.tick);
-			CPPUNIT_ASSERT_EQUAL(0, actual.barCount);
-			CPPUNIT_ASSERT_EQUAL(true, actual.isBorder);
-			CPPUNIT_ASSERT_EQUAL(1, actual.numerator);
-			CPPUNIT_ASSERT_EQUAL(4, actual.denominator);
-			CPPUNIT_ASSERT_EQUAL(false, actual.isAssistLine);
-		}
-		CPPUNIT_ASSERT_EQUAL(true, i.hasNext());
-		{
-			MeasureLine actual = i.next();
-			CPPUNIT_ASSERT_EQUAL((tick_t)120, actual.tick);
-			CPPUNIT_ASSERT_EQUAL(0, actual.barCount);
-			CPPUNIT_ASSERT_EQUAL(false, actual.isBorder);
-			CPPUNIT_ASSERT_EQUAL(1, actual.numerator);
-			CPPUNIT_ASSERT_EQUAL(4, actual.denominator);
-			CPPUNIT_ASSERT_EQUAL(true, actual.isAssistLine);
-		}
-		CPPUNIT_ASSERT_EQUAL(true, i.hasNext());
-		{
-			MeasureLine actual = i.next();
-			CPPUNIT_ASSERT_EQUAL((tick_t)240, actual.tick);
-			CPPUNIT_ASSERT_EQUAL(0, actual.barCount);
-			CPPUNIT_ASSERT_EQUAL(false, actual.isBorder);
-			CPPUNIT_ASSERT_EQUAL(1, actual.numerator);
-			CPPUNIT_ASSERT_EQUAL(4, actual.denominator);
-			CPPUNIT_ASSERT_EQUAL(true, actual.isAssistLine);
-		}
-		CPPUNIT_ASSERT_EQUAL(true, i.hasNext());
-		{
-			MeasureLine actual = i.next();
-			CPPUNIT_ASSERT_EQUAL((tick_t)360, actual.tick);
-			CPPUNIT_ASSERT_EQUAL(0, actual.barCount);
-			CPPUNIT_ASSERT_EQUAL(false, actual.isBorder);
-			CPPUNIT_ASSERT_EQUAL(1, actual.numerator);
-			CPPUNIT_ASSERT_EQUAL(4, actual.denominator);
-			CPPUNIT_ASSERT_EQUAL(true, actual.isAssistLine);
-		}
-		CPPUNIT_ASSERT_EQUAL(true, i.hasNext());
-		{
-			MeasureLine actual = i.next();
-			CPPUNIT_ASSERT_EQUAL((tick_t)480, actual.tick);
-			CPPUNIT_ASSERT_EQUAL(1, actual.barCount);
-			CPPUNIT_ASSERT_EQUAL(true, actual.isBorder);
-			CPPUNIT_ASSERT_EQUAL(1, actual.numerator);
-			CPPUNIT_ASSERT_EQUAL(4, actual.denominator);
-			CPPUNIT_ASSERT_EQUAL(false, actual.isAssistLine);
-		}
-		CPPUNIT_ASSERT_EQUAL(false, i.hasNext());
+		MeasureLine actual = i.next();
+		EXPECT_EQ((tick_t)240, actual.tick);
+		EXPECT_EQ(0, actual.barCount);
+		EXPECT_EQ(false, actual.isBorder);
+		EXPECT_EQ(1, actual.numerator);
+		EXPECT_EQ(4, actual.denominator);
+		EXPECT_EQ(true, actual.isAssistLine);
 	}
-
-	void testWithInvalidAssistLineStep()
+	EXPECT_EQ(true, i.hasNext());
 	{
-		TimesigList list;
-		CPPUNIT_ASSERT_THROW(
-			MeasureLineIterator(&list, 10),
-			MeasureLineIterator::InvalidAssistLineStep
-		);
+		MeasureLine actual = i.next();
+		EXPECT_EQ((tick_t)360, actual.tick);
+		EXPECT_EQ(0, actual.barCount);
+		EXPECT_EQ(false, actual.isBorder);
+		EXPECT_EQ(1, actual.numerator);
+		EXPECT_EQ(4, actual.denominator);
+		EXPECT_EQ(true, actual.isAssistLine);
 	}
+	EXPECT_EQ(true, i.hasNext());
+	{
+		MeasureLine actual = i.next();
+		EXPECT_EQ((tick_t)480, actual.tick);
+		EXPECT_EQ(1, actual.barCount);
+		EXPECT_EQ(true, actual.isBorder);
+		EXPECT_EQ(1, actual.numerator);
+		EXPECT_EQ(4, actual.denominator);
+		EXPECT_EQ(false, actual.isAssistLine);
+	}
+	EXPECT_EQ(false, i.hasNext());
+}
 
-	CPPUNIT_TEST_SUITE(MeasureLineIteratorTest);
-	CPPUNIT_TEST(test);
-	CPPUNIT_TEST(testWithoutAnyBar);
-	CPPUNIT_TEST(testWithAssistLineStep);
-	CPPUNIT_TEST(testWithInvalidAssistLineStep);
-	CPPUNIT_TEST_SUITE_END();
-};
-
-REGISTER_TEST_SUITE(MeasureLineIteratorTest);
+TEST(MeasureLineIteratorTest, testWithInvalidAssistLineStep)
+{
+	TimesigList list;
+	EXPECT_THROW(
+		MeasureLineIterator(&list, 10),
+		MeasureLineIterator::InvalidAssistLineStep
+	);
+}

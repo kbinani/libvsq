@@ -4,28 +4,18 @@
 using namespace std;
 using namespace vsq;
 
-class VoiceLanguageEnumTest : public CppUnit::TestCase
+TEST(VoiceLanguageEnumTest, test)
 {
-public:
-	void test()
-	{
-		CPPUNIT_ASSERT_EQUAL(0, (int)VoiceLanguage::JAPANESE);
-		CPPUNIT_ASSERT_EQUAL(1, (int)VoiceLanguage::ENGLISH);
+	EXPECT_EQ(0, (int)VoiceLanguage::JAPANESE);
+	EXPECT_EQ(1, (int)VoiceLanguage::ENGLISH);
 
-		CPPUNIT_ASSERT_EQUAL(VoiceLanguage::ENGLISH, VoiceLanguageUtil::valueFromSingerName("sweet_ann"));
-		CPPUNIT_ASSERT_EQUAL(VoiceLanguage::ENGLISH, VoiceLanguageUtil::valueFromSingerName("prima"));
-		CPPUNIT_ASSERT_EQUAL(VoiceLanguage::ENGLISH, VoiceLanguageUtil::valueFromSingerName("luka_eng"));
-		CPPUNIT_ASSERT_EQUAL(VoiceLanguage::ENGLISH, VoiceLanguageUtil::valueFromSingerName("sonika"));
-		CPPUNIT_ASSERT_EQUAL(VoiceLanguage::ENGLISH, VoiceLanguageUtil::valueFromSingerName("lola"));
-		CPPUNIT_ASSERT_EQUAL(VoiceLanguage::ENGLISH, VoiceLanguageUtil::valueFromSingerName("leon"));
-		CPPUNIT_ASSERT_EQUAL(VoiceLanguage::ENGLISH, VoiceLanguageUtil::valueFromSingerName("miriam"));
-		CPPUNIT_ASSERT_EQUAL(VoiceLanguage::ENGLISH, VoiceLanguageUtil::valueFromSingerName("big_al"));
-		CPPUNIT_ASSERT_EQUAL(VoiceLanguage::JAPANESE, VoiceLanguageUtil::valueFromSingerName("___FOO___"));
-	}
-
-	CPPUNIT_TEST_SUITE(VoiceLanguageEnumTest);
-	CPPUNIT_TEST(test);
-	CPPUNIT_TEST_SUITE_END();
-};
-
-REGISTER_TEST_SUITE(VoiceLanguageEnumTest);
+	EXPECT_EQ(VoiceLanguage::ENGLISH, VoiceLanguageUtil::valueFromSingerName("sweet_ann"));
+	EXPECT_EQ(VoiceLanguage::ENGLISH, VoiceLanguageUtil::valueFromSingerName("prima"));
+	EXPECT_EQ(VoiceLanguage::ENGLISH, VoiceLanguageUtil::valueFromSingerName("luka_eng"));
+	EXPECT_EQ(VoiceLanguage::ENGLISH, VoiceLanguageUtil::valueFromSingerName("sonika"));
+	EXPECT_EQ(VoiceLanguage::ENGLISH, VoiceLanguageUtil::valueFromSingerName("lola"));
+	EXPECT_EQ(VoiceLanguage::ENGLISH, VoiceLanguageUtil::valueFromSingerName("leon"));
+	EXPECT_EQ(VoiceLanguage::ENGLISH, VoiceLanguageUtil::valueFromSingerName("miriam"));
+	EXPECT_EQ(VoiceLanguage::ENGLISH, VoiceLanguageUtil::valueFromSingerName("big_al"));
+	EXPECT_EQ(VoiceLanguage::JAPANESE, VoiceLanguageUtil::valueFromSingerName("___FOO___"));
+}

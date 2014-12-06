@@ -4,6 +4,8 @@
   DIR="$(cd "$(dirname $0)/.."; pwd)"
   cd "$DIR"
 
+  git submodule update --init --recursive
+
   rm -f "tests/cppunit.xml"
   rm -f "coverage.xml"
 
@@ -25,8 +27,10 @@
   make clean
   make
 
-  cd "$DIR"
-  tests/libvsqtest -o tests/cppunit.xml -f tests
+  (
+    cd "$DIR/tests"
+    ./libvsqtest --gtest_output=xml:gtest_result.xml
+  )
   rm -f cppcheck-result.xml
   cppcheck src include --enable=all -q --xml > cppcheck-result.xml 2>&1
   gcovr --gcov-executable="$GCC_ROOT/bin/gcov${GCC_SUFFIX}" -r . --exclude=tests/ --xml > coverage.xml

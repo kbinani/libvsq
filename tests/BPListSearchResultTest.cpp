@@ -4,19 +4,9 @@
 using namespace std;
 using namespace vsq;
 
-class BPListSearchResultTest : public CppUnit::TestCase
+TEST(BPListSearchResultTest, construct)
 {
-public:
-	void testConstruct()
-	{
-		BPListSearchResult result;
-		CPPUNIT_ASSERT_EQUAL((tick_t)0, result.tick);
-		CPPUNIT_ASSERT_EQUAL(0, result.index);
-	}
-
-	CPPUNIT_TEST_SUITE(BPListSearchResultTest);
-	CPPUNIT_TEST(testConstruct);
-	CPPUNIT_TEST_SUITE_END();
-};
-
-REGISTER_TEST_SUITE(BPListSearchResultTest);
+	BPListSearchResult result;
+	EXPECT_EQ((tick_t)0, result.tick);
+	EXPECT_EQ(0, result.index);
+}

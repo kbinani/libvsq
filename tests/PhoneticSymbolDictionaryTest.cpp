@@ -4,61 +4,50 @@
 using namespace std;
 using namespace vsq;
 
-class PhoneticSymbolDictionaryTest : public CppUnit::TestCase
+TEST(PhoneticSymbolDictionaryTest, ctorElement)
 {
-public:
-	void ctorElement()
 	{
-		{
-			PhoneticSymbolDictionary::Element actual("a-" "\t" "corn", "eI" "\t" "k O@ n");
-			CPPUNIT_ASSERT_EQUAL(string("a-" "\t" "corn"), actual.word());
-			CPPUNIT_ASSERT_EQUAL(string("eI" "\t" "k O@ n"), actual.rawSymbol());
-			CPPUNIT_ASSERT_EQUAL(string("eI k O@ n"), actual.symbol());
-		}
-
-		{
-			PhoneticSymbolDictionary::Element actual("ふぇ", "p\\ e");
-			CPPUNIT_ASSERT_EQUAL(string("ふぇ"), actual.word());
-			CPPUNIT_ASSERT_EQUAL(string("p\\ e"), actual.rawSymbol());
-			CPPUNIT_ASSERT_EQUAL(string("p\\ e"), actual.symbol());
-		}
+		PhoneticSymbolDictionary::Element actual("a-" "\t" "corn", "eI" "\t" "k O@ n");
+		EXPECT_EQ(string("a-" "\t" "corn"), actual.word());
+		EXPECT_EQ(string("eI" "\t" "k O@ n"), actual.rawSymbol());
+		EXPECT_EQ(string("eI k O@ n"), actual.symbol());
 	}
 
-	void read()
 	{
-		string fixture = TestUtil::getFixtureRootPath() + "/PhoneticSymbolDictionaryTest/fixture/dict_en.txt";
-		PhoneticSymbolDictionary dictionary(fixture);
-		CPPUNIT_ASSERT_EQUAL(3, dictionary.maxDivisions());
+		PhoneticSymbolDictionary::Element actual("ふぇ", "p\\ e");
+		EXPECT_EQ(string("ふぇ"), actual.word());
+		EXPECT_EQ(string("p\\ e"), actual.rawSymbol());
+		EXPECT_EQ(string("p\\ e"), actual.symbol());
+	}
+}
 
-		{
-			// ABS
-			const PhoneticSymbolDictionary::Element* actual = dictionary.attach("ABS");
-			CPPUNIT_ASSERT(0 != actual);
-			CPPUNIT_ASSERT_EQUAL(string("a-" "\t" "b-" "\t" "s"), actual->word());
-			CPPUNIT_ASSERT_EQUAL(string("eI" "\t" "b i:" "\t" "e s"), actual->rawSymbol());
-			CPPUNIT_ASSERT_EQUAL(string("eI b i: e s"), actual->symbol());
-		}
+TEST(PhoneticSymbolDictionaryTest, read)
+{
+	string fixture = "PhoneticSymbolDictionaryTest/fixture/dict_en.txt";
+	PhoneticSymbolDictionary dictionary(fixture);
+	EXPECT_EQ(3, dictionary.maxDivisions());
 
-		{
-			// lain
-			const PhoneticSymbolDictionary::Element* actual = dictionary.attach("lain");
-			CPPUNIT_ASSERT(0 != actual);
-			CPPUNIT_ASSERT_EQUAL(string("lain"), actual->word());
-			CPPUNIT_ASSERT_EQUAL(string("l0 eI n"), actual->rawSymbol());
-			CPPUNIT_ASSERT_EQUAL(string("l0 eI n"), actual->symbol());
-		}
-
-		{
-			// unknown word
-			const PhoneticSymbolDictionary::Element* actual = dictionary.attach("hogehoge");
-			CPPUNIT_ASSERT(0 == actual);
-		}
+	{
+		// ABS
+		const PhoneticSymbolDictionary::Element* actual = dictionary.attach("ABS");
+		EXPECT_TRUE(0 != actual);
+		EXPECT_EQ(string("a-" "\t" "b-" "\t" "s"), actual->word());
+		EXPECT_EQ(string("eI" "\t" "b i:" "\t" "e s"), actual->rawSymbol());
+		EXPECT_EQ(string("eI b i: e s"), actual->symbol());
 	}
 
-	CPPUNIT_TEST_SUITE(PhoneticSymbolDictionaryTest);
-	CPPUNIT_TEST(ctorElement);
-	CPPUNIT_TEST(read);
-	CPPUNIT_TEST_SUITE_END();
-};
+	{
+		// lain
+		const PhoneticSymbolDictionary::Element* actual = dictionary.attach("lain");
+		EXPECT_TRUE(0 != actual);
+		EXPECT_EQ(string("lain"), actual->word());
+		EXPECT_EQ(string("l0 eI n"), actual->rawSymbol());
+		EXPECT_EQ(string("l0 eI n"), actual->symbol());
+	}
 
-REGISTER_TEST_SUITE(PhoneticSymbolDictionaryTest);
+	{
+		// unknown word
+		const PhoneticSymbolDictionary::Element* actual = dictionary.attach("hogehoge");
+		EXPECT_TRUE(0 == actual);
+	}
+}

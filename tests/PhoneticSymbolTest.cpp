@@ -4,34 +4,22 @@
 using namespace std;
 using namespace vsq;
 
-class PhoneticSymbolTest : public CppUnit::TestCase
+TEST(PhoneticSymbolTest, testIsConsonant)
 {
-public:
-	void testIsConsonant()
-	{
-		CPPUNIT_ASSERT(PhoneticSymbol::isConsonant("k'"));
-		CPPUNIT_ASSERT(false == PhoneticSymbol::isConsonant("a"));
-	}
+	EXPECT_TRUE(PhoneticSymbol::isConsonant("k'"));
+	EXPECT_TRUE(false == PhoneticSymbol::isConsonant("a"));
+}
 
-	void testIsVowel()
-	{
-		CPPUNIT_ASSERT(PhoneticSymbol::isVowel("@"));
-		CPPUNIT_ASSERT(false == PhoneticSymbol::isVowel("b"));
-	}
+TEST(PhoneticSymbolTest, testIsVowel)
+{
+	EXPECT_TRUE(PhoneticSymbol::isVowel("@"));
+	EXPECT_TRUE(false == PhoneticSymbol::isVowel("b"));
+}
 
-	void testIsValidSymbol()
-	{
-		CPPUNIT_ASSERT(PhoneticSymbol::isValidSymbol("a"));
-		CPPUNIT_ASSERT(PhoneticSymbol::isValidSymbol("br1"));
-		CPPUNIT_ASSERT(false == PhoneticSymbol::isValidSymbol("__INVALID_SYMBOL__"));
-		CPPUNIT_ASSERT(false == PhoneticSymbol::isValidSymbol("br_"));
-	}
-
-	CPPUNIT_TEST_SUITE(PhoneticSymbolTest);
-	CPPUNIT_TEST(testIsConsonant);
-	CPPUNIT_TEST(testIsVowel);
-	CPPUNIT_TEST(testIsValidSymbol);
-	CPPUNIT_TEST_SUITE_END();
-};
-
-REGISTER_TEST_SUITE(PhoneticSymbolTest);
+TEST(PhoneticSymbolTest, testIsValidSymbol)
+{
+	EXPECT_TRUE(PhoneticSymbol::isValidSymbol("a"));
+	EXPECT_TRUE(PhoneticSymbol::isValidSymbol("br1"));
+	EXPECT_TRUE(false == PhoneticSymbol::isValidSymbol("__INVALID_SYMBOL__"));
+	EXPECT_TRUE(false == PhoneticSymbol::isValidSymbol("br_"));
+}

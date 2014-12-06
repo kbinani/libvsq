@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#if 0
 #include <cppunit/TestRunner.h>
 #include <cppunit/TestResult.h>
 #include <cppunit/TestResultCollector.h>
@@ -8,6 +9,8 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/BriefTestProgressListener.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
+#endif
+#include <gtest/gtest.h>
 #include "../include/libvsq/DynamicsMode.hpp"
 #include "../include/libvsq/PlayMode.hpp"
 #include "../include/libvsq/HandleType.hpp"
@@ -23,23 +26,6 @@
 
 #define REGISTER_TEST_SUITE( ATestFixtureType )      \
 	static CppUnit::AutoRegisterSuite< ATestFixtureType > CPPUNIT_JOIN( testSuite, ATestFixtureType )
-
-class TestUtil
-{
-private:
-	static std::string fixtureRootPath;
-
-public:
-	static void setFixtureRootPath(std::string const& fixtureRootPath)
-	{
-		TestUtil::fixtureRootPath = fixtureRootPath;
-	}
-
-	static std::string getFixtureRootPath()
-	{
-		return TestUtil::fixtureRootPath;
-	}
-};
 
 /**
  * @def LIBVSQ_DECLARE_ENUM_TO_OSTREAM_OPERATOR
