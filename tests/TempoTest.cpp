@@ -18,7 +18,7 @@ public:
 	}
 };
 
-TEST(TempoTest, testtestConstructor)
+TEST(TempoTest, testConstructor)
 {
 	Tempo entry = Tempo();
 	EXPECT_EQ((tick_t)0, entry.tick);
@@ -30,13 +30,13 @@ TEST(TempoTest, testtestConstructor)
 	EXPECT_EQ(500000, entry.tempo);
 }
 
-TEST(TempoTest, testtestToString)
+TEST(TempoTest, testToString)
 {
 	Tempo entry = Tempo(480, 500000);
 	EXPECT_EQ(string("{Tick=480, Tempo=500000, Time=0}"), entry.toString());
 }
 
-TEST(TempoTest, testtestCompareTo)
+TEST(TempoTest, testCompareTo)
 {
 	Tempo a = Tempo();
 	Tempo b = Tempo(480, 500000);
@@ -45,7 +45,7 @@ TEST(TempoTest, testtestCompareTo)
 	EXPECT_TRUE(0 > a.compareTo(b));
 }
 
-TEST(TempoTest, testtestEquals)
+TEST(TempoTest, testEquals)
 {
 	TempoStub a = TempoStub(480, 500000);
 	TempoStub b = TempoStub(480, 500000);
@@ -60,7 +60,7 @@ TEST(TempoTest, testtestEquals)
 	EXPECT_TRUE(false == a.equals(b));
 }
 
-TEST(TempoTest, testtestCompare)
+TEST(TempoTest, testCompare)
 {
 	Tempo a = Tempo();
 	Tempo b = Tempo(480, 500000);
@@ -69,7 +69,7 @@ TEST(TempoTest, testtestCompare)
 	EXPECT_TRUE(Tempo::compare(a, b));
 }
 
-TEST(TempoTest, testtestClone)
+TEST(TempoTest, testClone)
 {
 	Tempo a(1920, 500000);
 	Tempo b = a;

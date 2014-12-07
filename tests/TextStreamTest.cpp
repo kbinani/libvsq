@@ -4,7 +4,7 @@
 using namespace std;
 using namespace vsq;
 
-TEST(TextStreamTest, testtestConstruct)
+TEST(TextStreamTest, testConstruct)
 {
 	TextStream stream;
 	EXPECT_TRUE(false == stream.ready());
@@ -12,7 +12,7 @@ TEST(TextStreamTest, testtestConstruct)
 	EXPECT_TRUE(0 > stream.getPointer());
 }
 
-TEST(TextStreamTest, testtestReadLine)
+TEST(TextStreamTest, testReadLine)
 {
 	TextStream stream;
 	stream.write("hel\nlo");
@@ -25,7 +25,7 @@ TEST(TextStreamTest, testtestReadLine)
 	EXPECT_TRUE(false == stream.ready());
 }
 
-TEST(TextStreamTest, testtestWrite)
+TEST(TextStreamTest, testWrite)
 {
 	TextStream stream;
 	stream.write("foo");
@@ -34,7 +34,7 @@ TEST(TextStreamTest, testtestWrite)
 	EXPECT_EQ(string("foo"), stream.readLine());
 }
 
-TEST(TextStreamTest, testtestWriteLine)
+TEST(TextStreamTest, testWriteLine)
 {
 	TextStream stream;
 	stream.writeLine("foo");
@@ -43,7 +43,7 @@ TEST(TextStreamTest, testtestWriteLine)
 	EXPECT_EQ(string("foo"), stream.readLine());
 }
 
-TEST(TextStreamTest, testtestClose)
+TEST(TextStreamTest, testClose)
 {
 	TextStream stream;
 	stream.writeLine("foo");
@@ -51,7 +51,7 @@ TEST(TextStreamTest, testtestClose)
 	stream.close();
 }
 
-TEST(TextStreamTest, testtestToString)
+TEST(TextStreamTest, testToString)
 {
 	TextStream stream;
 	stream.writeLine("foo");

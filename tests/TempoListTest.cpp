@@ -7,7 +7,7 @@ using namespace vsq;
 /**
  * push, get, set, size のテスト
  */
-TEST(TempoListTest, testtest)
+TEST(TempoListTest, test)
 {
 	TempoList list;
 	EXPECT_EQ(0, list.size());
@@ -24,7 +24,7 @@ TEST(TempoListTest, testtest)
 	EXPECT_EQ(0.5, list.get(1).time());
 }
 
-TEST(TempoListTest, testtestIterator)
+TEST(TempoListTest, testIterator)
 {
 	TempoList list;
 	EXPECT_EQ(0, list.size());
@@ -46,7 +46,7 @@ TEST(TempoListTest, testtestIterator)
 	EXPECT_TRUE(i.hasNext() == false);
 }
 
-TEST(TempoListTest, testtestSort)
+TEST(TempoListTest, testSort)
 {
 	TempoList list;
 	list.push(Tempo(480, 525000));
@@ -60,7 +60,7 @@ TEST(TempoListTest, testtestSort)
 	EXPECT_EQ(525000, list.get(1).tempo);
 }
 
-TEST(TempoListTest, testtestTickFromSec)
+TEST(TempoListTest, testTickFromSec)
 {
 	TempoList list;
 	list.push(Tempo(480, 480000));
@@ -73,7 +73,7 @@ TEST(TempoListTest, testtestTickFromSec)
 	EXPECT_EQ(680.0, list.tickFromTime(0.7));
 }
 
-TEST(TempoListTest, testtestUpdateTempoInfo)
+TEST(TempoListTest, testUpdateTempoInfo)
 {
 	TempoList list;
 	list.updateTempoInfo();
@@ -95,7 +95,7 @@ TEST(TempoListTest, testtestUpdateTempoInfo)
 	EXPECT_EQ(0.5, list.get(1).time());
 }
 
-TEST(TempoListTest, testtestTimeFromTick)
+TEST(TempoListTest, testTimeFromTick)
 {
 	TempoList list;
 	list.push(Tempo(480, 480000));
@@ -108,7 +108,7 @@ TEST(TempoListTest, testtestTimeFromTick)
 	EXPECT_EQ(0.7, list.timeFromTick(680));
 }
 
-TEST(TempoListTest, testtestGetTempoAt)
+TEST(TempoListTest, testGetTempoAt)
 {
 	TempoList list;
 	list.push(Tempo(480, 480000));
@@ -120,7 +120,7 @@ TEST(TempoListTest, testtestGetTempoAt)
 	EXPECT_EQ(480000, list.tempoAt(480));
 }
 
-TEST(TempoListTest, testtestClear)
+TEST(TempoListTest, testClear)
 {
 	TempoList list;
 	list.push(Tempo(480, 480000));

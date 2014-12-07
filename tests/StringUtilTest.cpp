@@ -38,7 +38,7 @@ TEST(StringUtilTest, testexplodeDelimiterNotFound)
 	EXPECT_EQ(string("aaa,bbb,ccc"), splitted[0]);
 }
 
-TEST(StringUtilTest, testtestReplace)
+TEST(StringUtilTest, testReplace)
 {
 	string actual = StringUtil::replace("abc", "a", "A");
 	string expected = "Abc";
@@ -49,7 +49,7 @@ TEST(StringUtilTest, testtestReplace)
 	EXPECT_EQ(expected, actual);
 }
 
-TEST(StringUtilTest, testtestParseInt)
+TEST(StringUtilTest, testParseInt)
 {
 	EXPECT_EQ(1, StringUtil::parseInt<int>("1"));
 	EXPECT_EQ(10, StringUtil::parseInt<int>("A", 16));
@@ -67,7 +67,7 @@ TEST(StringUtilTest, testtestParseInt)
 	}
 }
 
-TEST(StringUtilTest, testtestParseFloat)
+TEST(StringUtilTest, testParseFloat)
 {
 	EXPECT_EQ(1.0, StringUtil::parseFloat<double>("1.0"));
 	EXPECT_EQ(-1.0f, StringUtil::parseFloat<float>("-1.0"));
@@ -79,24 +79,24 @@ TEST(StringUtilTest, testtestParseFloat)
 	}
 }
 
-TEST(StringUtilTest, testtestToString)
+TEST(StringUtilTest, testToString)
 {
 	EXPECT_EQ(string("10"), StringUtil::toString(10));
 	EXPECT_EQ(string("1A"), StringUtil::toString(0x1A, 16));
 }
 
-TEST(StringUtilTest, testtestToStringWithFormat)
+TEST(StringUtilTest, testToStringWithFormat)
 {
 	EXPECT_EQ(string("0.500"), StringUtil::toString(0.5, "%.3f"));
 }
 
-TEST(StringUtilTest, testtestToLower)
+TEST(StringUtilTest, testToLower)
 {
 	std::string actual = StringUtil::toLower("FooBar");
 	EXPECT_EQ(string("foobar"), actual);
 }
 
-TEST(StringUtilTest, testtestRepeat)
+TEST(StringUtilTest, testRepeat)
 {
 	string fixture = "ab";
 	string actual = StringUtil::repeat(fixture, 4);
