@@ -3,7 +3,7 @@
 
 using namespace vsq;
 
-TEST(TimesigListTest, testtestUpdateTimesigInfo)
+TEST(TimesigListTest, testUpdateTimesigInfo)
 {
 	TimesigList table;
 	table.push(Timesig(4, 4, 2));
@@ -18,7 +18,7 @@ TEST(TimesigListTest, testtestUpdateTimesigInfo)
 	EXPECT_EQ(2, table.get(2).barCount);
 }
 
-TEST(TimesigListTest, testtestGetTimesigAt)
+TEST(TimesigListTest, testGetTimesigAt)
 {
 	TimesigList table;
 	table.push(Timesig(4, 8, 2));
@@ -50,7 +50,7 @@ TEST(TimesigListTest, testtestGetTimesigAt)
 	EXPECT_EQ(8, timesig.barCount);
 }
 
-TEST(TimesigListTest, testtestPushDuplicateKey)
+TEST(TimesigListTest, testPushDuplicateKey)
 {
 	TimesigList table;
 	table.push(Timesig(3, 4, 0));
@@ -61,7 +61,7 @@ TEST(TimesigListTest, testtestPushDuplicateKey)
 	EXPECT_EQ(8, table.get(0).denominator);
 }
 
-TEST(TimesigListTest, testtestTickFromBarCount)
+TEST(TimesigListTest, testTickFromBarCount)
 {
 	TimesigList table;
 	table.push(Timesig(4, 6, 2));     // 3360 tick開始
@@ -74,7 +74,7 @@ TEST(TimesigListTest, testtestTickFromBarCount)
 	EXPECT_EQ((tick_t)9760, table.tickFromBarCount(7));
 }
 
-TEST(TimesigListTest, testtestClear)
+TEST(TimesigListTest, testClear)
 {
 	TimesigList table;
 	table.push(Timesig(4, 6, 2));
@@ -85,7 +85,7 @@ TEST(TimesigListTest, testtestClear)
 	EXPECT_EQ(1, table.size());
 }
 
-TEST(TimesigListTest, testtestCopy)
+TEST(TimesigListTest, testCopy)
 {
 	TimesigList a;
 	a.push(Timesig(4, 4, 0));
@@ -96,7 +96,7 @@ TEST(TimesigListTest, testtestCopy)
 	EXPECT_EQ(1, b.size());
 }
 
-TEST(TimesigListTest, testtestBarCountFromTick)
+TEST(TimesigListTest, testBarCountFromTick)
 {
 	TimesigList a;
 	a.push(Timesig(4, 6, 2));     // 3360 tick開始

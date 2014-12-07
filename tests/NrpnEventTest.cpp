@@ -32,7 +32,7 @@ public:
 	}
 };
 
-TEST(NrpnEventTest, testtestConstructWithoutLSB)
+TEST(NrpnEventTest, testConstructWithoutLSB)
 {
 	NrpnEvent event(480, MidiParameterType::CVM_NM_VELOCITY, 64);
 	EXPECT_EQ((tick_t)480, event.tick);
@@ -43,7 +43,7 @@ TEST(NrpnEventTest, testtestConstructWithoutLSB)
 	EXPECT_EQ(false, event.isMSBOmittingRequired);
 }
 
-TEST(NrpnEventTest, testtestConstructWithLSB)
+TEST(NrpnEventTest, testConstructWithLSB)
 {
 	NrpnEvent event(480, MidiParameterType::CVM_NM_DELAY, 0x01, 0x23);
 	EXPECT_EQ((tick_t)480, event.tick);
@@ -54,7 +54,7 @@ TEST(NrpnEventTest, testtestConstructWithLSB)
 	EXPECT_EQ(false, event.isMSBOmittingRequired);
 }
 
-TEST(NrpnEventTest, testtestCompareTo)
+TEST(NrpnEventTest, testCompareTo)
 {
 	// tick が異なる場合
 	NrpnEvent a(480, MidiParameterType::CVM_NM_VELOCITY, 64);
@@ -73,7 +73,7 @@ TEST(NrpnEventTest, testtestCompareTo)
 	EXPECT_EQ(0, a.compareTo(a));
 }
 
-TEST(NrpnEventTest, testtestAppend)
+TEST(NrpnEventTest, testAppend)
 {
 	// NRPNとDATA MSBを指定したappend
 	NrpnEventStub target = NrpnEventStub(1920, MidiParameterType::CVM_NM_DELAY, 0x01, 0x23);
@@ -124,7 +124,7 @@ TEST(NrpnEventTest, testtestAppend)
 	EXPECT_TRUE(list[0].isMSBOmittingRequired);
 }
 
-TEST(NrpnEventTest, testtestExpand)
+TEST(NrpnEventTest, testExpand)
 {
 
 	// DATA LSB を保持している単一 NrpnEvent アイテムの expand
@@ -180,7 +180,7 @@ TEST(NrpnEventTest, testtestExpand)
 	EXPECT_EQ(false, list[2].isMSBOmittingRequired);
 }
 
-TEST(NrpnEventTest, testtestCompare)
+TEST(NrpnEventTest, testCompare)
 {
 	NrpnEvent a(480, MidiParameterType::CVM_NM_VELOCITY, 64);
 	NrpnEvent b(1920, MidiParameterType::CVM_NM_DELAY, 0x01, 0x23);
@@ -189,7 +189,7 @@ TEST(NrpnEventTest, testtestCompare)
 	EXPECT_EQ(false, NrpnEvent::compare(a, a));
 }
 
-TEST(NrpnEventTest, testtestConvert)
+TEST(NrpnEventTest, testConvert)
 {
 	NrpnEvent target = NrpnEvent(1920, MidiParameterType::CVM_NM_DELAY, 0x01, 0x23);
 	target.append(MidiParameterType::CVM_NM_VELOCITY, 0x01, 0x02, true);
