@@ -1,22 +1,11 @@
-#include "Util.hpp"
-#include "../ArticulationType.hpp"
+﻿#include "Util.hpp"
+#include "../include/libvsq/ArticulationType.hpp"
 
-using namespace VSQ_NS;
+using namespace vsq;
 
-class ArticulationTypeTest : public CppUnit::TestCase
+TEST(ArticulationTypeTest, test)
 {
-public:
-    void test()
-    {
-        ArticulationType::ArticulationTypeEnum e
-            = ArticulationType::CRESCENDO;
-        CPPUNIT_ASSERT( e != ArticulationType::DYNAFF );
-        CPPUNIT_ASSERT( e == ArticulationType::CRESCENDO );
-    }
-
-    CPPUNIT_TEST_SUITE( ArticulationTypeTest );
-    CPPUNIT_TEST( test );
-    CPPUNIT_TEST_SUITE_END();
-};
-
-REGISTER_TEST_SUITE( ArticulationTypeTest );
+	ArticulationType e = ArticulationType::CRESCENDO;
+	EXPECT_NE(e, ArticulationType::DYNAFF);
+	EXPECT_EQ(e, ArticulationType::CRESCENDO);
+}

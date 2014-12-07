@@ -1,45 +1,36 @@
-#include "Util.hpp"
-#include "../Event.hpp"
+﻿#include "Util.hpp"
+#include "../include/libvsq/Event.hpp"
 
 using namespace std;
-using namespace VSQ_NS;
+using namespace vsq;
 
-class EventListIteratorTest : public CppUnit::TestCase
+TEST(EventListIteratorTest, test)
 {
-public:
-    void test(){
-        Event::List list;
-        Event::ListIterator iterator( &list );
-        CPPUNIT_ASSERT( false == iterator.hasNext() );
-    
-        Event a( 1920, EventType::NOTE );
-        Event b( 480, EventType::ICON );
-        list.add( a, 1 );
-        list.add( b, 2 );
+	Event::List list;
+	Event::ListIterator iterator(&list);
+	EXPECT_TRUE(false == iterator.hasNext());
 
-        iterator = Event::ListIterator( &list );
-        CPPUNIT_ASSERT( iterator.hasNext() );
-        Event *eventA = iterator.next();
-        CPPUNIT_ASSERT_EQUAL( (tick_t)480, eventA->clock );
-        CPPUNIT_ASSERT_EQUAL( 2, eventA->id );
-        CPPUNIT_ASSERT_EQUAL( EventType::ICON, eventA->type );
-        CPPUNIT_ASSERT( iterator.hasNext() );
-        iterator.remove();
-        CPPUNIT_ASSERT( iterator.hasNext() );
-        Event *eventB = iterator.next();
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1920, eventB->clock );
-        CPPUNIT_ASSERT_EQUAL( 1, eventB->id );
-        CPPUNIT_ASSERT_EQUAL( EventType::NOTE, eventB->type );
-        CPPUNIT_ASSERT( false == iterator.hasNext() );
-    
-        CPPUNIT_ASSERT_EQUAL( 1, list.size() );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1920, list.get( 0 )->clock );
-        CPPUNIT_ASSERT_EQUAL( 1, list.get( 0 )->id );
-    }
+	Event a(1920, EventType::NOTE);
+	Event b(480, EventType::ICON);
+	list.add(a, 1);
+	list.add(b, 2);
 
-    CPPUNIT_TEST_SUITE( EventListIteratorTest );
-    CPPUNIT_TEST( test );
-    CPPUNIT_TEST_SUITE_END();
-};
+	iterator = Event::ListIterator(&list);
+	EXPECT_TRUE(iterator.hasNext());
+	Event* eventA = iterator.next();
+	EXPECT_EQ((tick_t)480, eventA->tick);
+	EXPECT_EQ(2, eventA->id);
+	EXPECT_EQ(EventType::ICON, eventA->type());
+	EXPECT_TRUE(iterator.hasNext());
+	iterator.remove();
+	EXPECT_TRUE(iterator.hasNext());
+	Event* eventB = iterator.next();
+	EXPECT_EQ((tick_t)1920, eventB->tick);
+	EXPECT_EQ(1, eventB->id);
+	EXPECT_EQ(EventType::NOTE, eventB->type());
+	EXPECT_TRUE(false == iterator.hasNext());
 
-REGISTER_TEST_SUITE( EventListIteratorTest );
+	EXPECT_EQ(1, list.size());
+	EXPECT_EQ((tick_t)1920, list.get(0)->tick);
+	EXPECT_EQ(1, list.get(0)->id);
+}

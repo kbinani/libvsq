@@ -1,22 +1,12 @@
-#include "Util.hpp"
-#include "../HandleType.hpp"
+﻿#include "Util.hpp"
+#include "../include/libvsq/HandleType.hpp"
 
-class HandleTypeTest : public CppUnit::TestCase
+TEST(HandleTypeTest, test)
 {
-public:
-    void test()
-    {
-        CPPUNIT_ASSERT_EQUAL( 0, (int)VSQ_NS::HandleType::UNKNOWN );
-        CPPUNIT_ASSERT_EQUAL( 1, (int)VSQ_NS::HandleType::LYRIC );
-        CPPUNIT_ASSERT_EQUAL( 2, (int)VSQ_NS::HandleType::VIBRATO );
-        CPPUNIT_ASSERT_EQUAL( 3, (int)VSQ_NS::HandleType::SINGER );
-        CPPUNIT_ASSERT_EQUAL( 4, (int)VSQ_NS::HandleType::NOTE_HEAD );
-        CPPUNIT_ASSERT_EQUAL( 5, (int)VSQ_NS::HandleType::DYNAMICS );
-    }
-
-    CPPUNIT_TEST_SUITE( HandleTypeTest );
-    CPPUNIT_TEST( test );
-    CPPUNIT_TEST_SUITE_END();
-};
-
-REGISTER_TEST_SUITE( HandleTypeTest );
+	EXPECT_EQ(0, (int)vsq::HandleType::UNKNOWN);
+	EXPECT_EQ(1, (int)vsq::HandleType::LYRIC);
+	EXPECT_EQ(2, (int)vsq::HandleType::VIBRATO);
+	EXPECT_EQ(3, (int)vsq::HandleType::SINGER);
+	EXPECT_EQ(4, (int)vsq::HandleType::NOTE_HEAD);
+	EXPECT_EQ(5, (int)vsq::HandleType::DYNAMICS);
+}

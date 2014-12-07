@@ -1,45 +1,37 @@
-#include "Util.hpp"
-#include "../MidiParameterType.hpp"
+﻿#include "Util.hpp"
+#include "../include/libvsq/MidiParameterType.hpp"
 
 using namespace std;
-using namespace VSQ_NS;
+using namespace vsq;
 
-class MidiParameterTypeTest : public CppUnit::TestCase{
-public:
-    void testGetVoiceChangeParameterId(){
-        CPPUNIT_ASSERT_EQUAL( 0x30, MidiParameterType::getVoiceChangeParameterId( "HarMoNiCS" ) );
-        CPPUNIT_ASSERT_EQUAL( 0x31, MidiParameterType::getVoiceChangeParameterId( "bre" ) );
-        CPPUNIT_ASSERT_EQUAL( 0x32, MidiParameterType::getVoiceChangeParameterId( "bri" ) );
-        CPPUNIT_ASSERT_EQUAL( 0x33, MidiParameterType::getVoiceChangeParameterId( "cle" ) );
-        CPPUNIT_ASSERT_EQUAL( 0x34, MidiParameterType::getVoiceChangeParameterId( "por" ) );
-        CPPUNIT_ASSERT_EQUAL( 0x35, MidiParameterType::getVoiceChangeParameterId( "ope" ) );
-        CPPUNIT_ASSERT_EQUAL( 0x40, MidiParameterType::getVoiceChangeParameterId( "reso1freq" ) );
-        CPPUNIT_ASSERT_EQUAL( 0x41, MidiParameterType::getVoiceChangeParameterId( "reso2freq" ) );
-        CPPUNIT_ASSERT_EQUAL( 0x42, MidiParameterType::getVoiceChangeParameterId( "reso3freq" ) );
-        CPPUNIT_ASSERT_EQUAL( 0x43, MidiParameterType::getVoiceChangeParameterId( "reso4freq" ) );
-        CPPUNIT_ASSERT_EQUAL( 0x50, MidiParameterType::getVoiceChangeParameterId( "reso1bw" ) );
-        CPPUNIT_ASSERT_EQUAL( 0x51, MidiParameterType::getVoiceChangeParameterId( "reso2bw" ) );
-        CPPUNIT_ASSERT_EQUAL( 0x52, MidiParameterType::getVoiceChangeParameterId( "reso3bw" ) );
-        CPPUNIT_ASSERT_EQUAL( 0x53, MidiParameterType::getVoiceChangeParameterId( "reso4bw" ) );
-        CPPUNIT_ASSERT_EQUAL( 0x60, MidiParameterType::getVoiceChangeParameterId( "reso1amp" ) );
-        CPPUNIT_ASSERT_EQUAL( 0x61, MidiParameterType::getVoiceChangeParameterId( "reso2amp" ) );
-        CPPUNIT_ASSERT_EQUAL( 0x62, MidiParameterType::getVoiceChangeParameterId( "reso3amp" ) );
-        CPPUNIT_ASSERT_EQUAL( 0x63, MidiParameterType::getVoiceChangeParameterId( "reso4amp" ) );
-        CPPUNIT_ASSERT_EQUAL( 0x70, MidiParameterType::getVoiceChangeParameterId( "gen" ) );
+TEST(MidiParameterTypeTest, testGetVoiceChangeParameterId)
+{
+	EXPECT_EQ(0x30, MidiParameterTypeUtil::getVoiceChangeParameterId("HarMoNiCS"));
+	EXPECT_EQ(0x31, MidiParameterTypeUtil::getVoiceChangeParameterId("bre"));
+	EXPECT_EQ(0x32, MidiParameterTypeUtil::getVoiceChangeParameterId("bri"));
+	EXPECT_EQ(0x33, MidiParameterTypeUtil::getVoiceChangeParameterId("cle"));
+	EXPECT_EQ(0x34, MidiParameterTypeUtil::getVoiceChangeParameterId("por"));
+	EXPECT_EQ(0x35, MidiParameterTypeUtil::getVoiceChangeParameterId("ope"));
+	EXPECT_EQ(0x40, MidiParameterTypeUtil::getVoiceChangeParameterId("reso1freq"));
+	EXPECT_EQ(0x41, MidiParameterTypeUtil::getVoiceChangeParameterId("reso2freq"));
+	EXPECT_EQ(0x42, MidiParameterTypeUtil::getVoiceChangeParameterId("reso3freq"));
+	EXPECT_EQ(0x43, MidiParameterTypeUtil::getVoiceChangeParameterId("reso4freq"));
+	EXPECT_EQ(0x50, MidiParameterTypeUtil::getVoiceChangeParameterId("reso1bw"));
+	EXPECT_EQ(0x51, MidiParameterTypeUtil::getVoiceChangeParameterId("reso2bw"));
+	EXPECT_EQ(0x52, MidiParameterTypeUtil::getVoiceChangeParameterId("reso3bw"));
+	EXPECT_EQ(0x53, MidiParameterTypeUtil::getVoiceChangeParameterId("reso4bw"));
+	EXPECT_EQ(0x60, MidiParameterTypeUtil::getVoiceChangeParameterId("reso1amp"));
+	EXPECT_EQ(0x61, MidiParameterTypeUtil::getVoiceChangeParameterId("reso2amp"));
+	EXPECT_EQ(0x62, MidiParameterTypeUtil::getVoiceChangeParameterId("reso3amp"));
+	EXPECT_EQ(0x63, MidiParameterTypeUtil::getVoiceChangeParameterId("reso4amp"));
+	EXPECT_EQ(0x70, MidiParameterTypeUtil::getVoiceChangeParameterId("gen"));
 
-        CPPUNIT_ASSERT_EQUAL( 0x31, MidiParameterType::getVoiceChangeParameterId( "UNKNOWN_CURVE_NAME" ) );
-    }
-    
-    void testIsDataLsbRequire(){
-        CPPUNIT_ASSERT( MidiParameterType::isDataLsbRequire( MidiParameterType::CC_PBS_VERSION_AND_DEVICE ) );
-        CPPUNIT_ASSERT_EQUAL( false, MidiParameterType::isDataLsbRequire( MidiParameterType::CVM_NM_NOTE_MESSAGE_CONTINUATION ) );
-        CPPUNIT_ASSERT_EQUAL( false, MidiParameterType::isDataLsbRequire( (MidiParameterType::MidiParameterTypeEnum)0 ) );
-    }
+	EXPECT_EQ(0x31, MidiParameterTypeUtil::getVoiceChangeParameterId("UNKNOWN_CURVE_NAME"));
+}
 
-    CPPUNIT_TEST_SUITE( MidiParameterTypeTest );
-    CPPUNIT_TEST( testGetVoiceChangeParameterId );
-    CPPUNIT_TEST( testIsDataLsbRequire );
-    CPPUNIT_TEST_SUITE_END();
-};
-
-REGISTER_TEST_SUITE( MidiParameterTypeTest );
+TEST(MidiParameterTypeTest, testIsDataLsbRequire)
+{
+	EXPECT_TRUE(MidiParameterTypeUtil::isDataLsbRequire(MidiParameterType::CC_PBS_VERSION_AND_DEVICE));
+	EXPECT_EQ(false, MidiParameterTypeUtil::isDataLsbRequire(MidiParameterType::CVM_NM_NOTE_MESSAGE_CONTINUATION));
+	EXPECT_EQ(false, MidiParameterTypeUtil::isDataLsbRequire((MidiParameterType)0));
+}

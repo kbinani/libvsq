@@ -1,22 +1,12 @@
-#include "Util.hpp"
-#include "../BPListSearchResult.hpp"
+﻿#include "Util.hpp"
+#include "../include/libvsq/BPListSearchResult.hpp"
 
 using namespace std;
-using namespace VSQ_NS;
+using namespace vsq;
 
-class BPListSearchResultTest : public CppUnit::TestCase
+TEST(BPListSearchResultTest, construct)
 {
-public:
-    void testConstruct()
-    {
-        BPListSearchResult result;
-        CPPUNIT_ASSERT_EQUAL( (tick_t)0, result.clock );
-        CPPUNIT_ASSERT_EQUAL( 0, result.index );
-    }
-
-    CPPUNIT_TEST_SUITE( BPListSearchResultTest );
-    CPPUNIT_TEST( testConstruct );
-    CPPUNIT_TEST_SUITE_END();
-};
-
-REGISTER_TEST_SUITE( BPListSearchResultTest );
+	BPListSearchResult result;
+	EXPECT_EQ((tick_t)0, result.tick);
+	EXPECT_EQ(0, result.index);
+}

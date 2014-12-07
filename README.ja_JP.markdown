@@ -1,19 +1,19 @@
-# libvsqとは
+# libvsq
 
-libvsqは、VOCALOID2用の楽譜ファイルの読み込み、書き込み、および編集をするためのC++ライブラリです。
+libvsqは, VOCALOID, VOCALOID2 用の VSQ ファイル (*.vsq) の読み書き, 編集を行うための C++ ライブラリです.
 
 ## ライセンス
 
-修正BSDライセンスです。
+修正BSDライセンスです.
 
 ## ライブラリ・リファレンス
 
 http://ci.kbinani.info/job/libvsq-devel/doxygen/
 
-## 使い方
+## ビルド
 
-ヘッダーのみのライブラリなので、ビルドの必要はなく、使いたいヘッダーファイルを`#include`すればよいです。
+このプロジェクトは CMake を使っています. CMake の通常の手順で `cmake .`, `make` でビルドできます.
 
 ## 商標など
 
-VOCALOID はヤマハ株式会社の登録商標です。
+VOCALOID はヤマハ株式会社の登録商標です.

@@ -1,489 +1,444 @@
-#include "Util.hpp"
-#include "../BPList.hpp"
+﻿#include "Util.hpp"
+#include "../include/libvsq/BPList.hpp"
+#include "../include/libvsq/TextStream.hpp"
 
 using namespace std;
-using namespace VSQ_NS;
+using namespace vsq;
 
-class BPListTest : public CppUnit::TestCase
+TEST(BPListTest, construct)
 {
-public:
-    void testConstruct()
-    {
-        BPList list( "foo", 63, -10, 1000 );
-        CPPUNIT_ASSERT_EQUAL( string( "foo" ), list.getName() );
-        CPPUNIT_ASSERT_EQUAL( 63, list.getDefault() );
-        CPPUNIT_ASSERT_EQUAL( -10, list.getMinimum() );
-        CPPUNIT_ASSERT_EQUAL( 1000, list.getMaximum() );
-        CPPUNIT_ASSERT_EQUAL( 0, list.getMaxId() );
-    }
-    
-    void testGetterAndSetterName()
-    {
-        BPList list( "foo", 63, -10, 1000 );
-        CPPUNIT_ASSERT_EQUAL( string( "foo" ), list.getName() );
-        list.setName( "bar" );
-        CPPUNIT_ASSERT_EQUAL( string( "bar" ), list.getName() );
-    }
-    
-    void testGetMaxId()
-    {
-        BPList list( "foo", 63, -10, 1000 );
-        list.add( 0, 1 );
-        CPPUNIT_ASSERT_EQUAL( 1, list.getMaxId() );
-    }
-    
-    void testGetterAndSetterDefaultValue()
-    {
-        BPList list( "foo", 63, -10, 1000 );
-        CPPUNIT_ASSERT_EQUAL( 63, list.getDefault() );
-        list.setDefault( 62 );
-        CPPUNIT_ASSERT_EQUAL( 62, list.getDefault() );
-    }
-    
-    void testRenumberIds()
-    {
-        BPList list( "foo", 63, -10, 1000 );
-        list.addWithId( 0, 1, 10000 );
-        list.addWithId( 1, 2, 10001 );
-        list.renumberIds();
+	BPList list("foo", 63, -10, 1000);
+	EXPECT_EQ(string("foo"), list.name());
+	EXPECT_EQ(63, list.defaultValue());
+	EXPECT_EQ(-10, list.minimum());
+	EXPECT_EQ(1000, list.maximum());
+	EXPECT_EQ(0, list.maxUsedId());
+}
 
-        CPPUNIT_ASSERT( 10000 != list.get( 0 ).id );
-        CPPUNIT_ASSERT_EQUAL( 1, list.get( 0 ).value );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)0, list.getKeyClock( 0 ) );
-
-        CPPUNIT_ASSERT( 10001 != list.get( 1 ).id );
-        CPPUNIT_ASSERT_EQUAL( 2, list.get( 1 ).value );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1, list.getKeyClock( 1 ) );
-    }
-    
-    void testGetData()
-    {
-        BPList list( "foo", 63, -10, 1000 );
-        list.addWithId( 0, 101, 10000 );
-        list.addWithId( 480, 103, 10001 );
-        string expected = "0=101,480=103";
-        string actual = list.getData();
-        CPPUNIT_ASSERT_EQUAL( expected, actual );
-    }
-    
-    void testSetData()
-    {
-        BPList list( "foo", 63, -10, 1000 );
-        string value = "0=-11,240=50,480=1001";
-        list.setData( value );
-        string expected = "0=-10,240=50,480=1000";
-        string actual = list.getData();
-        CPPUNIT_ASSERT_EQUAL( expected, actual );
-    }
-    
-    void testGetterAndSetterMaximum()
-    {
-        BPList list( "foo", 63, -10, 1000 );
-        CPPUNIT_ASSERT_EQUAL( 1000, list.getMaximum() );
-        list.setMaximum( 1001 );
-        CPPUNIT_ASSERT_EQUAL( 1001, list.getMaximum() );
-    }
-    
-    void testGetterAndSetterMinimum()
-    {
-        BPList list( "foo", 63, -10, 1000 );
-        CPPUNIT_ASSERT_EQUAL( -10, list.getMinimum() );
-        list.setMinimum( 1 );
-        CPPUNIT_ASSERT_EQUAL( 1, list.getMinimum() );
-    }
-    
-    void testRemove()
-    {
-        BPList list( "foo", 63, -10, 1000 );
-        list.add( 0, 11 );
-        list.add( 240, 13 );
-        list.add( 480, 17 );
-
-        list.remove( 240 );
-        CPPUNIT_ASSERT_EQUAL( 2, list.size() );
-        string expected = "0=11,480=17";
-        string actual = list.getData();
-        CPPUNIT_ASSERT_EQUAL( expected, actual );
-
-        list.remove( 100 );
-        CPPUNIT_ASSERT_EQUAL( 2, list.size() );
-        actual = list.getData();
-        CPPUNIT_ASSERT_EQUAL( expected, actual );
-    }
-    
-    void testRemoveElementAt()
-    {
-        BPList list( "foo", 63, -10, 1000 );
-        list.add( 0, 11 );
-        list.add( 240, 13 );
-        list.add( 480, 17 );
-
-        list.removeElementAt( 1 );
-        string expected = "0=11,480=17";
-        string actual = list.getData();
-        CPPUNIT_ASSERT_EQUAL( expected, actual );
-    }
-    
-    void testIsContainsKey()
-    {
-        BPList list( "foo", 63, -10, 1000 );
-        CPPUNIT_ASSERT( false == list.isContainsKey( 480 ) );
-        list.add( 480, 1 );
-        CPPUNIT_ASSERT( list.isContainsKey( 480 ) );
-    }
-    
-    void testMove()
-    {
-        // 移動先にデータ点がない場合
-        BPList listA( "foo", 63, -10, 1000 );
-        listA.addWithId( 0, 11, 1 );
-        listA.addWithId( 240, 13, 2 );
-        listA.addWithId( 480, 17, 3 );
-        listA.move( 240, 481, 19 );
-
-        string expected = "0=11,480=17,481=19";
-        assertEqual( expected, listA.getData() );
-        assertEqual( 3, listA.size() );
-
-        assertEqual( 11, listA.get( 0 ).value );
-        assertEqual( (tick_t)0, listA.getKeyClock( 0 ) );
-        assertEqual( 1, listA.get( 0 ).id );
-
-        assertEqual( 17, listA.get( 1 ).value );
-        assertEqual( (tick_t)480, listA.getKeyClock( 1 ) );
-        assertEqual( 3, listA.get( 1 ).id );
-
-        assertEqual( 19, listA.get( 2 ).value );
-        assertEqual( (tick_t)481, listA.getKeyClock( 2 ) );
-        assertEqual( 2, listA.get( 2 ).id );
-
-        // 移動先にデータがある場合
-        BPList listB( "foo", 63, -10, 1000 );
-        listB.addWithId( 0, 11, 1 );
-        listB.addWithId( 240, 13, 2 );
-        listB.addWithId( 480, 17, 3 );
-        listB.move( 240, 480, 19 );
-
-        expected = "0=11,480=19";
-        assertEqual( 2, listB.size() );
-        assertEqual( expected, listB.getData() );
-
-        assertEqual( 11, listB.get( 0 ).value );
-        assertEqual( (tick_t)0, listB.getKeyClock( 0 ) );
-        assertEqual( 1, listB.get( 0 ).id );
-
-        assertEqual( 19, listB.get( 1 ).value );
-        assertEqual( (tick_t)480, listB.getKeyClock( 1 ) );
-        assertEqual( 2, listB.get( 1 ).id );
-    }
-    
-    void testGetValue()
-    {
-        BPList list( "foo", 63, -10, 1000 );
-        list.add( 480, 1 );
-        list.add( 1920, 2 );
-        CPPUNIT_ASSERT_EQUAL( 1, list.getValue( 0 ) );
-        CPPUNIT_ASSERT_EQUAL( 2, list.getValue( 1 ) );
-    }
-    
-    void testGet()
-    {
-        BPList list( "foo", 63, -10, 1000 );
-        list.add( 480, 11 );
-        list.add( 1920, 12 );
-        CPPUNIT_ASSERT_EQUAL( 1, list.get( 0 ).id );
-        CPPUNIT_ASSERT_EQUAL( 11, list.get( 0 ).value );
-        CPPUNIT_ASSERT_EQUAL( 2, list.get( 1 ).id );
-        CPPUNIT_ASSERT_EQUAL( 12, list.get( 1 ).value );
-    }
-    
-    void testGetKeyClock()
-    {
-        BPList list( "foo", 63, -10, 1000 );
-        list.add( 480, 11 );
-        list.add( 1920, 12 );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)480, list.getKeyClock( 0 ) );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1920, list.getKeyClock( 1 ) );
-    }
-    
-    void testFindValueFromId()
-    {
-        BPList list( "foo", 63, -10, 1000 );
-        int idA = list.add( 480, 11 );
-        int idB = list.add( 1920, 12 );
-        CPPUNIT_ASSERT_EQUAL( 11, list.findValueFromId( idA ) );
-        CPPUNIT_ASSERT_EQUAL( 12, list.findValueFromId( idB ) );
-    }
-    
-    void testFindElement()
-    {
-        BPList list( "foo", 63, -10, 1000 );
-        int idA = list.add( 480, 11 );
-        int idB = list.add( 1920, 12 );
-        BPListSearchResult resultA = list.findElement( idA );
-        BPListSearchResult resultB = list.findElement( idB );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)480, resultA.clock );
-        CPPUNIT_ASSERT_EQUAL( 0, resultA.index );
-        CPPUNIT_ASSERT_EQUAL( idA, resultA.point.id );
-        CPPUNIT_ASSERT_EQUAL( 11, resultA.point.value );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1920, resultB.clock );
-        CPPUNIT_ASSERT_EQUAL( 1, resultB.index );
-        CPPUNIT_ASSERT_EQUAL( idB, resultB.point.id );
-        CPPUNIT_ASSERT_EQUAL( 12, resultB.point.value );
-    }
-    
-    void testSetValueForId()
-    {
-        BPList list( "foo", 63, -10, 1000 );
-        int idA = list.add( 480, 11 );
-        list.add( 1920, 12 );
-        list.setValueForId( idA, 13 );
-        CPPUNIT_ASSERT_EQUAL( 13, list.findValueFromId( idA ) );
-    }
-    
-    void testPrint()
-    {
-        BPList list( "foo", 63, -10, 1000 );
-        string header = "[BPList]";
-    
-        TextStream stream;
-        list.print( stream, 0, header );
-        string expected =
-            "[BPList]\n";
-        CPPUNIT_ASSERT_EQUAL( expected, stream.toString() );
-        stream.close();
-
-        stream = TextStream();
-        list.add( 480, 11 );
-        list.add( 1920, 12 );
-        list.print( stream, 0, header );
-        expected =
-            "[BPList]\n"
-            "480=11\n"
-            "1920=12\n";
-        CPPUNIT_ASSERT_EQUAL( expected, stream.toString() );
-        stream.close();
-    
-        stream = TextStream();
-        list.print( stream, 1921, header );
-        expected =
-            "[BPList]\n"
-            "1921=12\n";
-        CPPUNIT_ASSERT_EQUAL( expected, stream.toString() );
-    }
-    
-    void testAppendFromText()
-    {
-        BPList list( "foo", 63, -10, 1000 );
-        TextStream stream;
-        stream.writeLine( "0=11" );
-        stream.writeLine( "340=13" );
-        stream.writeLine( "480=17" );
-        stream.writeLine( "[foooo]" );
-        stream.writeLine( "481=19" );
-        stream.setPointer( -1 );
-        string lastLine = list.appendFromText( stream );
-        string expected = "0=11,340=13,480=17";
-        assertEqual( expected, list.getData() );
-        assertEqual( string( "[foooo]" ), lastLine );
-    }
-    
-    void testSize()
-    {
-        BPList list( "foo", 63, -10, 1000 );
-        CPPUNIT_ASSERT_EQUAL( 0, list.size() );
-        list.add( 480, 11 );
-        CPPUNIT_ASSERT_EQUAL( 1, list.size() );
-    }
-    
-    void testKeyClockIterator()
-    {
-        BPList list( "foo", 63, -10, 1000 );
-        list.add( 480, 11 );
-        list.add( 1920, 12 );
-        BPList::KeyClockIterator iterator = list.keyClockIterator();
-        CPPUNIT_ASSERT( iterator.hasNext() );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)480, iterator.next() );
-        CPPUNIT_ASSERT( iterator.hasNext() );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1920, iterator.next() );
-        CPPUNIT_ASSERT( false == iterator.hasNext() );
-    }
-    
-    void testAdd()
-    {
-        BPList list( "foo", 63, -10, 1000 );
-        CPPUNIT_ASSERT_EQUAL( 0, list.size() );
-        int idA = list.add( 480, 11 );
-        CPPUNIT_ASSERT_EQUAL( 1, list.size() );
-        CPPUNIT_ASSERT_EQUAL( 1, idA );
-        CPPUNIT_ASSERT_EQUAL( 11, list.getValue( 0 ) );
-    
-        // 同じclockに値をaddすると、データ点は増えずに値が上書きされる
-        idA = list.add( 480, 12 );
-        CPPUNIT_ASSERT_EQUAL( 1, list.size() );
-        CPPUNIT_ASSERT_EQUAL( 1, idA );
-        CPPUNIT_ASSERT_EQUAL( 12, list.getValue( 0 ) );
-    
-        // 既存の点より小さいclockに値をaddすると、並び替えが起こる
-        int idB = list.add( 240, 99 );
-        CPPUNIT_ASSERT_EQUAL( 2, list.size() );
-        CPPUNIT_ASSERT( idA != idB );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)240, list.getKeyClock( 0 ) );
-        CPPUNIT_ASSERT_EQUAL( idB, list.get( 0 ).id );
-        CPPUNIT_ASSERT_EQUAL( 99, list.get( 0 ).value );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)480, list.getKeyClock( 1 ) );
-        CPPUNIT_ASSERT_EQUAL( idA, list.get( 1 ).id );
-        CPPUNIT_ASSERT_EQUAL( 12, list.get( 1 ).value );
-    }
-    
-    void testAddWithId()
-    {
-        BPList list( "foo", 63, -10, 1000 );
-        int idA = list.addWithId( 480, 11, 3 );
-        CPPUNIT_ASSERT_EQUAL( 3, idA );
-        CPPUNIT_ASSERT_EQUAL( 11, list.getValue( 0 ) );
-        CPPUNIT_ASSERT_EQUAL( 3, list.getMaxId() );
-    
-        // 同じclockに値をaddすると、データ点は増えずに値が上書きされる
-        idA = list.addWithId( 480, 12, 4 );
-        CPPUNIT_ASSERT_EQUAL( 4, idA );
-        CPPUNIT_ASSERT_EQUAL( 12, list.getValue( 0 ) );
-        CPPUNIT_ASSERT_EQUAL( 4, list.getMaxId() );
-    
-        // 既存の点より小さいclockに値をaddすると、並び替えが起こる
-        int idB = list.addWithId( 240, 99, 5 );
-        CPPUNIT_ASSERT_EQUAL( 5, idB );
-        CPPUNIT_ASSERT_EQUAL( 5, list.getMaxId() );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)240, list.getKeyClock( 0 ) );
-        CPPUNIT_ASSERT_EQUAL( 5, list.get( 0 ).id );
-        CPPUNIT_ASSERT_EQUAL( 99, list.get( 0 ).value );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)480, list.getKeyClock( 1 ) );
-        CPPUNIT_ASSERT_EQUAL( 4, list.get( 1 ).id );
-        CPPUNIT_ASSERT_EQUAL( 12, list.get( 1 ).value );
-    }
-    
-    void testRemoveWithId()
-    {
-        BPList list( "foo", 63, -10, 1000 );
-        list.addWithId( 480, 11, 1 );
-        list.addWithId( 1920, 12, 2 );
-
-        list.removeWithId( 1 );
-        string expected = "1920=12";
-        assertEqual( expected, list.getData() );
-
-        // 存在しないIDを削除しようとする
-        list.removeWithId( 1 );
-        assertEqual( expected, list.getData() );
-    }
-    
-    void testGetValueAtWithoutLastIndex()
-    {
-        BPList list( "foo", 63, -10, 1000 );
-        list.add( 480, 11 );
-        list.add( 1920, 12 );
-        CPPUNIT_ASSERT_EQUAL( 63, list.getValueAt( 479 ) );
-        CPPUNIT_ASSERT_EQUAL( 11, list.getValueAt( 480 ) );
-        CPPUNIT_ASSERT_EQUAL( 12, list.getValueAt( 2000 ) );
-    }
-    
-    void testGetValueAtWithLastIndex()
-    {
-        BPList list( "foo", 63, -10, 1000 );
-        list.add( 480, 11 );
-        list.add( 1920, 12 );
-        int index = 0;
-        CPPUNIT_ASSERT_EQUAL( 63, list.getValueAt( 479, &index ) );
-        CPPUNIT_ASSERT_EQUAL( 0, index );
-        CPPUNIT_ASSERT_EQUAL( 11, list.getValueAt( 480, &index ) );
-        CPPUNIT_ASSERT_EQUAL( 0, index );
-        CPPUNIT_ASSERT_EQUAL( 12, list.getValueAt( 2000, &index ) );
-        CPPUNIT_ASSERT_EQUAL( 1, index );
-        CPPUNIT_ASSERT_EQUAL( 63, list.getValueAt( 479, &index ) );
-        CPPUNIT_ASSERT_EQUAL( 0, index );
-    }
-
-    void testClone(){
-        BPList list( "foo", 63, -10, 1000 );
-        list.add( 480, 1 );
-        list.add( 1920, 2 );
-        BPList copy = list.clone();
-        CPPUNIT_ASSERT_EQUAL( string( "foo" ), copy.getName() );
-        CPPUNIT_ASSERT_EQUAL( 63, copy.getDefault() );
-        CPPUNIT_ASSERT_EQUAL( -10, copy.getMinimum() );
-        CPPUNIT_ASSERT_EQUAL( 1000, copy.getMaximum() );
-        CPPUNIT_ASSERT_EQUAL( 2, copy.size() );
-        CPPUNIT_ASSERT_EQUAL( 1, copy.get( 0 ).id );
-        CPPUNIT_ASSERT_EQUAL( 1, copy.get( 0 ).value );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)480, copy.getKeyClock( 0 ) );
-        CPPUNIT_ASSERT_EQUAL( 2, copy.get( 1 ).id );
-        CPPUNIT_ASSERT_EQUAL( 2, copy.get( 1 ).value );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1920, copy.getKeyClock( 1 ) );
-    }
-
-    CPPUNIT_TEST_SUITE( BPListTest );
-    CPPUNIT_TEST( testConstruct );
-    CPPUNIT_TEST( testGetterAndSetterName );
-    CPPUNIT_TEST( testGetMaxId );
-    CPPUNIT_TEST( testGetterAndSetterDefaultValue );
-    CPPUNIT_TEST( testRenumberIds );
-    CPPUNIT_TEST( testGetData );
-    CPPUNIT_TEST( testSetData );
-    CPPUNIT_TEST( testGetterAndSetterMaximum );
-    CPPUNIT_TEST( testGetterAndSetterMinimum );
-    CPPUNIT_TEST( testRemove );
-    CPPUNIT_TEST( testRemoveElementAt );
-    CPPUNIT_TEST( testIsContainsKey );
-    CPPUNIT_TEST( testMove );
-    CPPUNIT_TEST( testGetValue );
-    CPPUNIT_TEST( testGet );
-    CPPUNIT_TEST( testGetKeyClock );
-    CPPUNIT_TEST( testFindValueFromId );
-    CPPUNIT_TEST( testFindElement );
-    CPPUNIT_TEST( testSetValueForId );
-    CPPUNIT_TEST( testPrint );
-    CPPUNIT_TEST( testAppendFromText );
-    CPPUNIT_TEST( testSize );
-    CPPUNIT_TEST( testKeyClockIterator );
-    CPPUNIT_TEST( testAdd );
-    CPPUNIT_TEST( testAddWithId );
-    CPPUNIT_TEST( testRemoveWithId );
-    CPPUNIT_TEST( testGetValueAtWithoutLastIndex );
-    CPPUNIT_TEST( testGetValueAtWithLastIndex );
-    CPPUNIT_TEST( testClone );
-    CPPUNIT_TEST_SUITE_END();
-};
-
-class BPListKeyClockIteratorTest : public CppUnit::TestCase
+TEST(BPListTest, testGetterAndSetterName)
 {
-public:
-    void test()
-    {
-        BPList list( "foo", 63, -10, 1000 );
-        BPList::KeyClockIterator iterator = BPList::KeyClockIterator( &list );
-        CPPUNIT_ASSERT( false == iterator.hasNext() );
-        list.add( 480, 1 );
-        list.add( 1920, 2 );
+	BPList list("foo", 63, -10, 1000);
+	EXPECT_EQ(string("foo"), list.name());
+	list.name("bar");
+	EXPECT_EQ(string("bar"), list.name());
+}
 
-        iterator = BPList::KeyClockIterator( &list );
-        CPPUNIT_ASSERT( iterator.hasNext() );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)480, iterator.next() );
-        CPPUNIT_ASSERT( iterator.hasNext() );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1920, iterator.next() );
-        CPPUNIT_ASSERT( false == iterator.hasNext() );
+TEST(BPListTest, testmaxUsedId)
+{
+	BPList list("foo", 63, -10, 1000);
+	list.add(0, 1);
+	EXPECT_EQ(1, list.maxUsedId());
+}
 
-        iterator = BPList::KeyClockIterator( &list );
-        CPPUNIT_ASSERT( iterator.hasNext() );
-        CPPUNIT_ASSERT_EQUAL( (tick_t)480, iterator.next() );
-        iterator.remove();
-        CPPUNIT_ASSERT_EQUAL( (tick_t)1920, iterator.next() );
-        CPPUNIT_ASSERT( false == iterator.hasNext() );
-    }
+TEST(BPListTest, testGetterAndSetterDefaultValue)
+{
+	BPList list("foo", 63, -10, 1000);
+	EXPECT_EQ(63, list.defaultValue());
+	list.defaultValue(62);
+	EXPECT_EQ(62, list.defaultValue());
+}
 
-    CPPUNIT_TEST_SUITE( BPListKeyClockIteratorTest );
-    CPPUNIT_TEST( test );
-    CPPUNIT_TEST_SUITE_END();
-};
+TEST(BPListTest, testRenumberIds)
+{
+	BPList list("foo", 63, -10, 1000);
+	list.addWithId(0, 1, 10000);
+	list.addWithId(1, 2, 10001);
+	list.renumberIds();
 
-REGISTER_TEST_SUITE( BPListTest );
-REGISTER_TEST_SUITE( BPListKeyClockIteratorTest );
+	EXPECT_TRUE(10000 != list.get(0).id);
+	EXPECT_EQ(1, list.get(0).value);
+	EXPECT_EQ((tick_t)0, list.keyTickAt(0));
+
+	EXPECT_TRUE(10001 != list.get(1).id);
+	EXPECT_EQ(2, list.get(1).value);
+	EXPECT_EQ((tick_t)1, list.keyTickAt(1));
+}
+
+TEST(BPListTest, testGetData)
+{
+	BPList list("foo", 63, -10, 1000);
+	list.addWithId(0, 101, 10000);
+	list.addWithId(480, 103, 10001);
+	string expected = "0=101,480=103";
+	string actual = list.data();
+	EXPECT_EQ(expected, actual);
+}
+
+TEST(BPListTest, testSetData)
+{
+	BPList list("foo", 63, -10, 1000);
+	string value = "0=-11,240=50,480=1001";
+	list.data(value);
+	string expected = "0=-10,240=50,480=1000";
+	string actual = list.data();
+	EXPECT_EQ(expected, actual);
+}
+
+TEST(BPListTest, testGetterAndSetterMaximum)
+{
+	BPList list("foo", 63, -10, 1000);
+	EXPECT_EQ(1000, list.maximum());
+	list.maximum(1001);
+	EXPECT_EQ(1001, list.maximum());
+}
+
+TEST(BPListTest, testGetterAndSetterMinimum)
+{
+	BPList list("foo", 63, -10, 1000);
+	EXPECT_EQ(-10, list.minimum());
+	list.minimum(1);
+	EXPECT_EQ(1, list.minimum());
+}
+
+TEST(BPListTest, testRemove)
+{
+	BPList list("foo", 63, -10, 1000);
+	list.add(0, 11);
+	list.add(240, 13);
+	list.add(480, 17);
+
+	list.remove(240);
+	EXPECT_EQ(2, list.size());
+	string expected = "0=11,480=17";
+	string actual = list.data();
+	EXPECT_EQ(expected, actual);
+
+	list.remove(100);
+	EXPECT_EQ(2, list.size());
+	actual = list.data();
+	EXPECT_EQ(expected, actual);
+}
+
+TEST(BPListTest, testRemoveElementAt)
+{
+	BPList list("foo", 63, -10, 1000);
+	list.add(0, 11);
+	list.add(240, 13);
+	list.add(480, 17);
+
+	list.removeElementAt(1);
+	string expected = "0=11,480=17";
+	string actual = list.data();
+	EXPECT_EQ(expected, actual);
+}
+
+TEST(BPListTest, testIsContainsKey)
+{
+	BPList list("foo", 63, -10, 1000);
+	EXPECT_TRUE(false == list.isContainsKey(480));
+	list.add(480, 1);
+	EXPECT_TRUE(list.isContainsKey(480));
+}
+
+TEST(BPListTest, testMove)
+{
+	// 移動先にデータ点がない場合
+	BPList listA("foo", 63, -10, 1000);
+	listA.addWithId(0, 11, 1);
+	listA.addWithId(240, 13, 2);
+	listA.addWithId(480, 17, 3);
+	listA.move(240, 481, 19);
+
+	string expected = "0=11,480=17,481=19";
+	EXPECT_EQ(expected, listA.data());
+	EXPECT_EQ(3, listA.size());
+
+	EXPECT_EQ(11, listA.get(0).value);
+	EXPECT_EQ((tick_t)0, listA.keyTickAt(0));
+	EXPECT_EQ(1, listA.get(0).id);
+
+	EXPECT_EQ(17, listA.get(1).value);
+	EXPECT_EQ((tick_t)480, listA.keyTickAt(1));
+	EXPECT_EQ(3, listA.get(1).id);
+
+	EXPECT_EQ(19, listA.get(2).value);
+	EXPECT_EQ((tick_t)481, listA.keyTickAt(2));
+	EXPECT_EQ(2, listA.get(2).id);
+
+	// 移動先にデータがある場合
+	BPList listB("foo", 63, -10, 1000);
+	listB.addWithId(0, 11, 1);
+	listB.addWithId(240, 13, 2);
+	listB.addWithId(480, 17, 3);
+	listB.move(240, 480, 19);
+
+	expected = "0=11,480=19";
+	EXPECT_EQ(2, listB.size());
+	EXPECT_EQ(expected, listB.data());
+
+	EXPECT_EQ(11, listB.get(0).value);
+	EXPECT_EQ((tick_t)0, listB.keyTickAt(0));
+	EXPECT_EQ(1, listB.get(0).id);
+
+	EXPECT_EQ(19, listB.get(1).value);
+	EXPECT_EQ((tick_t)480, listB.keyTickAt(1));
+	EXPECT_EQ(2, listB.get(1).id);
+}
+
+TEST(BPListTest, testGetValue)
+{
+	BPList list("foo", 63, -10, 1000);
+	list.add(480, 1);
+	list.add(1920, 2);
+	EXPECT_EQ(1, list.get(0).value);
+	EXPECT_EQ(2, list.get(1).value);
+}
+
+TEST(BPListTest, testGet)
+{
+	BPList list("foo", 63, -10, 1000);
+	list.add(480, 11);
+	list.add(1920, 12);
+	EXPECT_EQ(1, list.get(0).id);
+	EXPECT_EQ(11, list.get(0).value);
+	EXPECT_EQ(2, list.get(1).id);
+	EXPECT_EQ(12, list.get(1).value);
+}
+
+TEST(BPListTest, testKeyTickAt)
+{
+	BPList list("foo", 63, -10, 1000);
+	list.add(480, 11);
+	list.add(1920, 12);
+	EXPECT_EQ((tick_t)480, list.keyTickAt(0));
+	EXPECT_EQ((tick_t)1920, list.keyTickAt(1));
+}
+
+TEST(BPListTest, testFindValueFromId)
+{
+	BPList list("foo", 63, -10, 1000);
+	int idA = list.add(480, 11);
+	int idB = list.add(1920, 12);
+	EXPECT_EQ(11, list.findValueFromId(idA));
+	EXPECT_EQ(12, list.findValueFromId(idB));
+}
+
+TEST(BPListTest, testFindElement)
+{
+	BPList list("foo", 63, -10, 1000);
+	int idA = list.add(480, 11);
+	int idB = list.add(1920, 12);
+	BPListSearchResult resultA = list.findElement(idA);
+	BPListSearchResult resultB = list.findElement(idB);
+	EXPECT_EQ((tick_t)480, resultA.tick);
+	EXPECT_EQ(0, resultA.index);
+	EXPECT_EQ(idA, resultA.point.id);
+	EXPECT_EQ(11, resultA.point.value);
+	EXPECT_EQ((tick_t)1920, resultB.tick);
+	EXPECT_EQ(1, resultB.index);
+	EXPECT_EQ(idB, resultB.point.id);
+	EXPECT_EQ(12, resultB.point.value);
+}
+
+TEST(BPListTest, testSetValueForId)
+{
+	BPList list("foo", 63, -10, 1000);
+	int idA = list.add(480, 11);
+	list.add(1920, 12);
+	list.setValueForId(idA, 13);
+	EXPECT_EQ(13, list.findValueFromId(idA));
+}
+
+TEST(BPListTest, testPrint)
+{
+	BPList list("foo", 63, -10, 1000);
+	string header = "[BPList]";
+
+	TextStream stream;
+	list.print(stream, 0, header);
+	string expected =
+		"[BPList]\n";
+	EXPECT_EQ(expected, stream.toString());
+	stream.close();
+
+	stream = TextStream();
+	list.add(480, 11);
+	list.add(1920, 12);
+	list.print(stream, 0, header);
+	expected =
+		"[BPList]\n"
+		"480=11\n"
+		"1920=12\n";
+	EXPECT_EQ(expected, stream.toString());
+	stream.close();
+
+	stream = TextStream();
+	list.print(stream, 1921, header);
+	expected =
+		"[BPList]\n"
+		"1921=12\n";
+	EXPECT_EQ(expected, stream.toString());
+}
+
+TEST(BPListTest, testAppendFromText)
+{
+	BPList list("foo", 63, -10, 1000);
+	TextStream stream;
+	stream.writeLine("0=11");
+	stream.writeLine("340=13");
+	stream.writeLine("480=17");
+	stream.writeLine("[foooo]");
+	stream.writeLine("481=19");
+	stream.setPointer(-1);
+	string lastLine = list.appendFromText(stream);
+	string expected = "0=11,340=13,480=17";
+	EXPECT_EQ(expected, list.data());
+	EXPECT_EQ(string("[foooo]"), lastLine);
+}
+
+TEST(BPListTest, testSize)
+{
+	BPList list("foo", 63, -10, 1000);
+	EXPECT_EQ(0, list.size());
+	list.add(480, 11);
+	EXPECT_EQ(1, list.size());
+}
+
+TEST(BPListTest, testKeyTickIterator)
+{
+	BPList list("foo", 63, -10, 1000);
+	list.add(480, 11);
+	list.add(1920, 12);
+	BPList::KeyTickIterator iterator = list.keyTickIterator();
+	EXPECT_TRUE(iterator.hasNext());
+	EXPECT_EQ((tick_t)480, iterator.next());
+	EXPECT_TRUE(iterator.hasNext());
+	EXPECT_EQ((tick_t)1920, iterator.next());
+	EXPECT_TRUE(false == iterator.hasNext());
+}
+
+TEST(BPListTest, testAdd)
+{
+	BPList list("foo", 63, -10, 1000);
+	EXPECT_EQ(0, list.size());
+	int idA = list.add(480, 11);
+	EXPECT_EQ(1, list.size());
+	EXPECT_EQ(1, idA);
+	EXPECT_EQ(11, list.get(0).value);
+
+	// 同じtickに値をaddすると, データ点は増えずに値が上書きされる
+	idA = list.add(480, 12);
+	EXPECT_EQ(1, list.size());
+	EXPECT_EQ(1, idA);
+	EXPECT_EQ(12, list.get(0).value);
+
+	// 既存の点より小さいtickに値をaddすると, 並び替えが起こる
+	int idB = list.add(240, 99);
+	EXPECT_EQ(2, list.size());
+	EXPECT_TRUE(idA != idB);
+	EXPECT_EQ((tick_t)240, list.keyTickAt(0));
+	EXPECT_EQ(idB, list.get(0).id);
+	EXPECT_EQ(99, list.get(0).value);
+	EXPECT_EQ((tick_t)480, list.keyTickAt(1));
+	EXPECT_EQ(idA, list.get(1).id);
+	EXPECT_EQ(12, list.get(1).value);
+}
+
+TEST(BPListTest, testAddWithId)
+{
+	BPList list("foo", 63, -10, 1000);
+	int idA = list.addWithId(480, 11, 3);
+	EXPECT_EQ(3, idA);
+	EXPECT_EQ(11, list.get(0).value);
+	EXPECT_EQ(3, list.maxUsedId());
+
+	// 同じtickに値をaddすると, データ点は増えずに値が上書きされる
+	idA = list.addWithId(480, 12, 4);
+	EXPECT_EQ(4, idA);
+	EXPECT_EQ(12, list.get(0).value);
+	EXPECT_EQ(4, list.maxUsedId());
+
+	// 既存の点より小さいtickに値をaddすると, 並び替えが起こる
+	int idB = list.addWithId(240, 99, 5);
+	EXPECT_EQ(5, idB);
+	EXPECT_EQ(5, list.maxUsedId());
+	EXPECT_EQ((tick_t)240, list.keyTickAt(0));
+	EXPECT_EQ(5, list.get(0).id);
+	EXPECT_EQ(99, list.get(0).value);
+	EXPECT_EQ((tick_t)480, list.keyTickAt(1));
+	EXPECT_EQ(4, list.get(1).id);
+	EXPECT_EQ(12, list.get(1).value);
+}
+
+TEST(BPListTest, testRemoveWithId)
+{
+	BPList list("foo", 63, -10, 1000);
+	list.addWithId(480, 11, 1);
+	list.addWithId(1920, 12, 2);
+
+	list.removeWithId(1);
+	string expected = "1920=12";
+	EXPECT_EQ(expected, list.data());
+
+	// 存在しないIDを削除しようとする
+	list.removeWithId(1);
+	EXPECT_EQ(expected, list.data());
+}
+
+TEST(BPListTest, testGetValueAtWithoutLastIndex)
+{
+	BPList list("foo", 63, -10, 1000);
+	list.add(480, 11);
+	list.add(1920, 12);
+	EXPECT_EQ(63, list.getValueAt(479));
+	EXPECT_EQ(11, list.getValueAt(480));
+	EXPECT_EQ(12, list.getValueAt(2000));
+}
+
+TEST(BPListTest, testGetValueAtWithLastIndex)
+{
+	BPList list("foo", 63, -10, 1000);
+	list.add(480, 11);
+	list.add(1920, 12);
+	int index = 0;
+	EXPECT_EQ(63, list.getValueAt(479, index));
+	EXPECT_EQ(0, index);
+	EXPECT_EQ(11, list.getValueAt(480, index));
+	EXPECT_EQ(0, index);
+	EXPECT_EQ(12, list.getValueAt(2000, index));
+	EXPECT_EQ(1, index);
+	EXPECT_EQ(63, list.getValueAt(479, index));
+	EXPECT_EQ(0, index);
+}
+
+TEST(BPListTest, testClone)
+{
+	BPList list("foo", 63, -10, 1000);
+	list.add(480, 1);
+	list.add(1920, 2);
+	BPList copy = list.clone();
+	EXPECT_EQ(string("foo"), copy.name());
+	EXPECT_EQ(63, copy.defaultValue());
+	EXPECT_EQ(-10, copy.minimum());
+	EXPECT_EQ(1000, copy.maximum());
+	EXPECT_EQ(2, copy.size());
+	EXPECT_EQ(1, copy.get(0).id);
+	EXPECT_EQ(1, copy.get(0).value);
+	EXPECT_EQ((tick_t)480, copy.keyTickAt(0));
+	EXPECT_EQ(2, copy.get(1).id);
+	EXPECT_EQ(2, copy.get(1).value);
+	EXPECT_EQ((tick_t)1920, copy.keyTickAt(1));
+}
+
+TEST(BPListKeyTickIteratorTest, test)
+{
+	BPList list("foo", 63, -10, 1000);
+	BPList::KeyTickIterator iterator = BPList::KeyTickIterator(&list);
+	EXPECT_TRUE(false == iterator.hasNext());
+	list.add(480, 1);
+	list.add(1920, 2);
+
+	iterator = BPList::KeyTickIterator(&list);
+	EXPECT_TRUE(iterator.hasNext());
+	EXPECT_EQ((tick_t)480, iterator.next());
+	EXPECT_TRUE(iterator.hasNext());
+	EXPECT_EQ((tick_t)1920, iterator.next());
+	EXPECT_TRUE(false == iterator.hasNext());
+
+	iterator = BPList::KeyTickIterator(&list);
+	EXPECT_TRUE(iterator.hasNext());
+	EXPECT_EQ((tick_t)480, iterator.next());
+	iterator.remove();
+	EXPECT_EQ((tick_t)1920, iterator.next());
+	EXPECT_TRUE(false == iterator.hasNext());
+}

@@ -1,23 +1,13 @@
-#include "Util.hpp"
-#include "../EventType.hpp"
+﻿#include "Util.hpp"
+#include "../include/libvsq/EventType.hpp"
 
 using namespace std;
-using namespace VSQ_NS;
+using namespace vsq;
 
-class EventTypeTest : public CppUnit::TestCase
+TEST(EventTypeTest, testToString)
 {
-public:
-    void testToString()
-    {
-        CPPUNIT_ASSERT_EQUAL( string( "Singer" ), EventType::toString( EventType::SINGER ) );
-        CPPUNIT_ASSERT_EQUAL( string( "Anote" ), EventType::toString( EventType::NOTE ) );
-        CPPUNIT_ASSERT_EQUAL( string( "Aicon" ), EventType::toString( EventType::ICON ) );
-        CPPUNIT_ASSERT_EQUAL( string( "Unknown" ), EventType::toString( EventType::UNKNOWN ) );
-    }
-
-    CPPUNIT_TEST_SUITE( EventTypeTest );
-    CPPUNIT_TEST( testToString );
-    CPPUNIT_TEST_SUITE_END();
-};
-
-REGISTER_TEST_SUITE( EventTypeTest );
+	EXPECT_EQ(string("Singer"), EventTypeUtil::toString(EventType::SINGER));
+	EXPECT_EQ(string("Anote"), EventTypeUtil::toString(EventType::NOTE));
+	EXPECT_EQ(string("Aicon"), EventTypeUtil::toString(EventType::ICON));
+	EXPECT_EQ(string("Unknown"), EventTypeUtil::toString(EventType::UNKNOWN));
+}
