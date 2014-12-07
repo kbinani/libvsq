@@ -134,7 +134,7 @@ public:
 		stream.write(0x00);
 		int64_t pos = stream.getPointer();
 		stream.seek(first_position - 4);
-		writeUnsignedInt(stream, pos - first_position);
+		writeUnsignedInt(stream, static_cast<int>(pos - first_position));
 		stream.seek(pos);
 
 		// トラック
@@ -519,7 +519,7 @@ private:
 		stream.write(0x00);
 		int64_t pos = stream.getPointer();
 		stream.seek(first_position - 4);
-		writeUnsignedInt(stream, pos - first_position);
+		writeUnsignedInt(stream, static_cast<int>(pos - first_position));
 		stream.seek(pos);
 	}
 

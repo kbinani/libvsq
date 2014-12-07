@@ -30,7 +30,7 @@ public:
 		}
 	}
 
-	int read(char* buffer, int64_t startIndex, int64_t length) override
+	size_t read(char* buffer, int64_t startIndex, int64_t length) override
 	{
 		int count = 0;
 		for (int64_t i = 0; i < length; ++i) {

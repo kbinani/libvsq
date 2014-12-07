@@ -29,9 +29,9 @@ int FileInputStream::read()
 	}
 }
 
-int FileInputStream::read(char* buffer, int64_t startIndex, int64_t length)
+size_t FileInputStream::read(char* buffer, int64_t startIndex, int64_t length)
 {
-	return stream.read(buffer + sizeof(char) * startIndex, length).gcount();
+	return static_cast<size_t>(stream.read(buffer + sizeof(char) * startIndex, length).gcount());
 }
 
 void FileInputStream::seek(int64_t position)

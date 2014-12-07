@@ -46,7 +46,7 @@ public:
 	 * @param startIndex 読み込んだデータを格納するオフセット.
 	 * @param length 読み込む長さ.
 	 */
-	int read(char* buffer, int64_t startIndex, int64_t length) override;
+	size_t read(char* buffer, int64_t startIndex, int64_t length) override;
 
 	/**
 	 * @brief ファイルポインターを移動する.

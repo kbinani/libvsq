@@ -125,7 +125,7 @@ double TempoList::timeFromTick(double tick) const
 		Tempo item = _array[i];
 		if (item.tick < tick) {
 			double init = item.time();
-			tick_t dtick = tick - item.tick;
+			tick_t dtick = static_cast<tick_t>(tick - item.tick);
 			double sec_per_tick1 = item.tempo * 1e-6 / 480.0;
 			return init + dtick * sec_per_tick1;
 		}

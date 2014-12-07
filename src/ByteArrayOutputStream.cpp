@@ -21,7 +21,7 @@ ByteArrayOutputStream::ByteArrayOutputStream()
 {
 	_pointer = 0;
 	_arrayLength = UNIT_BUFFER_LENGTH;
-	_array.resize(_arrayLength);
+	_array.resize(static_cast<size_t>(_arrayLength));
 	_length = 0;
 }
 
@@ -33,7 +33,7 @@ ByteArrayOutputStream::~ByteArrayOutputStream()
 void ByteArrayOutputStream::write(int byte)
 {
 	ensureBufferLength(_pointer + 1);
-	_array[_pointer] = (char)byte;
+	_array[static_cast<size_t>(_pointer)] = (char)byte;
 	_pointer++;
 	_length = std::max(_length, _pointer);
 }
@@ -42,7 +42,7 @@ void ByteArrayOutputStream::write(char const* array, int64_t startIndex, int64_t
 {
 	ensureBufferLength(_pointer + length);
 	for (int i = 0; i < length; i++) {
-		_array[_pointer + i] = array[startIndex + i];
+		_array[static_cast<size_t>(_pointer + i)] = array[startIndex + i];
 	}
 	_pointer += length;
 	_length = std::max(_length, _pointer);
@@ -50,7 +50,7 @@ void ByteArrayOutputStream::write(char const* array, int64_t startIndex, int64_t
 
 std::string ByteArrayOutputStream::toString() const
 {
-	std::string result(_array.data(), _length);
+	std::string result(_array.data(), static_cast<size_t>(_length));
 	return result;
 }
 
@@ -70,12 +70,12 @@ void ByteArrayOutputStream::close()
 	_arrayLength = 0;
 }
 
-void ByteArrayOutputStream::ensureBufferLength(int length)
+void ByteArrayOutputStream::ensureBufferLength(int64_t length)
 {
-	int amount = length - _arrayLength;
+	int64_t amount = length - _arrayLength;
 	if (0 < amount) {
 		_arrayLength = length;
-		_array.resize(_arrayLength);
+		_array.resize(static_cast<size_t>(_arrayLength));
 	}
 }
 

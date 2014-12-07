@@ -40,7 +40,7 @@ public:
 	 * @param length 読み込む長さ.
 	 * @return 読み込んだ長さ.
 	 */
-	virtual int read(char* buffer, int64_t startIndex, int64_t length) = 0;
+	virtual size_t read(char* buffer, int64_t startIndex, int64_t length) = 0;
 
 	/**
 	 * @brief ファイルポインターを移動する.

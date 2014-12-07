@@ -104,7 +104,7 @@ private:
 	 * @brief バッファーを指定した長さまで確保する.
 	 * @param length 確保するバッファーの長さ.
 	 */
-	void ensureBufferLength(int length);
+	void ensureBufferLength(int64_t length);
 };
 
 LIBVSQ_END_NAMESPACE
