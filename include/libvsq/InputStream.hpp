@@ -15,6 +15,7 @@
 
 #include "./Namespace.hpp"
 #include <cstdint>
+#include <cstdlib>
 
 LIBVSQ_BEGIN_NAMESPACE
 

@@ -5,7 +5,7 @@ PROJECT(libvsqtest)
 IF(MSVC)
   ADD_DEFINITIONS("/wd4018")
 ELSE()
-  SET(CMAKE_CXX_FLAGS "-std=c++11")
+  SET(CMAKE_CXX_FLAGS "-std=c++11 -Wno-conversion-null")
 ENDIF()
 
 LINK_DIRECTORIES("${PROJECT_SOURCE_DIR}/../lib/$(CONFIGURATION)"
@@ -22,7 +22,9 @@ SET(COVERAGE false CACHE BOOL "Enable gcov")
 
 IF(COVERAGE)
   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -coverage")
-  SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lgcov")
+  IF((NOT APPLE))
+    SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lgcov")
+  ENDIF()
 ENDIF()
 
 ADD_EXECUTABLE(libvsqtest
@@ -78,3 +80,7 @@ ADD_EXECUTABLE(libvsqtest
     ext/gtest/src/gtest_main.cc)
 
 TARGET_LINK_LIBRARIES(libvsqtest vsq)
+
+ADD_TEST(test libvsqtest)
+ENABLE_TESTING()
+

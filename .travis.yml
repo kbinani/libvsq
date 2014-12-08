@@ -1,0 +1,22 @@
+language: c++
+os:
+  - linux
+  - osx
+before_install:
+  - git submodule update --init --recursive
+install:
+  - "if [[ $TRAVIS_OS_NAME = 'linux' ]]; then sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test; fi"
+  - "if [[ $TRAVIS_OS_NAME = 'linux' ]]; then sudo apt-get -qq update; fi"
+  - "if [[ $TRAVIS_OS_NAME = 'linux' ]]; then sudo apt-get -qq install g++-4.8; fi"
+script:
+  - "if which g++-4.8 >/dev/null 2>&1; then export CXX=$(which g++-4.8); export CC=$(which gcc-4.8); else export CXX=$(which g++); export CC=$(which gcc); fi"
+  - $CXX --version
+  - $CC --version
+  - cmake --version
+  - cmake . -DCOVERAGE=true
+  - make
+  - cd tests
+  - cmake . -DCOVERAGE=true
+  - make
+  - make test
+
