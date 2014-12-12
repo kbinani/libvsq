@@ -256,6 +256,7 @@ EventType Event::type() const
 
 void Event::type(EventType type)
 {
+	isEos = false;
 	_type = type;
 }
 

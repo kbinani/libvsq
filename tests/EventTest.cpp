@@ -41,6 +41,9 @@ TEST(EventTest, testConstruct)
 	EXPECT_EQ((tick_t)0, event.tick);
 	EXPECT_EQ(0, event.id);
 	EXPECT_TRUE(event.isEOS());
+
+	event.type(EventType::NOTE);
+	EXPECT_FALSE(event.isEOS());
 }
 
 TEST(EventTest, testConstructWithTickAndId)

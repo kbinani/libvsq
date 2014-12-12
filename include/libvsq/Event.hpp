@@ -400,6 +400,12 @@ public:
 	 */
 	EventType type() const;
 
+    /**
+     * @brief type イベントの種類を設定する.
+     * @param type イベントの種類.
+     */
+    void type(EventType type);
+
 	/**
 	 * @brief コピーを作成する.
 	 * @return このインスタンスのコピー.
@@ -452,12 +458,6 @@ public:
 	 *       の中のequals使うassertionを復活させること
 	bool equals(Event const& other) const;
 	 */
-
-protected:
-	/**
-	 * @brief イベントの種類を設定する.
-	 */
-	void type(EventType type);
 
 private:
 	/**
