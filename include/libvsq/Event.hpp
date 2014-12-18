@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @file Event.hpp
  * Copyright © 2012,2014 kbinani
  *
@@ -380,7 +380,12 @@ public:
 	 */
 	Event(tick_t tick, EventType eventType);
 
-	virtual ~Event()
+    /**
+     * @brief 初期化を行う. この初期化メソッドは末尾のイベントリストを表すインスタンスを初期化する.
+     */
+    Event();
+
+    virtual ~Event()
 	{}
 
 	/**
@@ -460,11 +465,6 @@ public:
 	 */
 
 private:
-	/**
-	 * @brief 初期化を行う. この初期化メソッドは末尾のイベントリストを表すインスタンスを初期化する.
-	 */
-	Event();
-
 	void init();
 };
 
