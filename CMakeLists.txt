@@ -6,7 +6,7 @@ SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY lib)
 IF(MSVC)
   ADD_DEFINITIONS("/wd4018")
 ELSE()
-  SET(CMAKE_CXX_FLAGS "-std=c++11")
+  SET(CMAKE_CXX_FLAGS "-std=c++14")
 ENDIF()
 SET(COVERAGE false CACHE BOOL "Enable gcov")
 
@@ -14,129 +14,11 @@ IF(COVERAGE)
   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -coverage")
 ENDIF()
 
-ADD_LIBRARY(vsq STATIC
-    include/libvsq/ArticulationType.hpp
-    include/libvsq/BP.hpp
-    include/libvsq/BPList.hpp
-    src/BPList.cpp
-    include/libvsq/BPListSearchResult.hpp
-    include/libvsq/BitConverter.hpp
-    src/BitConverter.cpp
-    include/libvsq/ByteArrayOutputStream.hpp
-    src/ByteArrayOutputStream.cpp
-    include/libvsq/CP932Converter.hpp
-    src/CP932Converter.cpp
-    src/CP932ConverterData.inc
-    include/libvsq/Common.hpp
-    src/Common.cpp
-    include/libvsq/DynamicsMode.hpp
-    include/libvsq/Event.hpp
-    src/Event.cpp
-    include/libvsq/EventListIndexIterator.hpp
-    src/EventListIndexIterator.cpp
-    include/libvsq/EventListIndexIteratorKind.hpp
-    include/libvsq/EventType.hpp
-    src/EventType.cpp
-    include/libvsq/FileInputStream.hpp
-    src/FileInputStream.cpp
-    include/libvsq/FileOutputStream.hpp
-    src/FileOutputStream.cpp
-    include/libvsq/Handle.hpp
-    src/Handle.cpp
-    include/libvsq/HandleType.hpp
-    include/libvsq/InputStream.hpp
-    include/libvsq/Lyric.hpp
-    src/Lyric.cpp
-    include/libvsq/Master.hpp
-    src/Master.cpp
-    include/libvsq/MeasureLine.hpp
-    include/libvsq/MeasureLineIterator.hpp
-    src/MeasureLineIterator.cpp
-    include/libvsq/MidiEvent.hpp
-    src/MidiEvent.cpp
-    include/libvsq/MidiParameterType.hpp
-    src/MidiParameterType.cpp
-    include/libvsq/Mixer.hpp
-    src/Mixer.cpp
-    include/libvsq/MixerItem.hpp
-    src/MixerItem.cpp
-    include/libvsq/MusicXmlWriter.hpp
-    src/MusicXmlWriter.cpp
-    include/libvsq/NoteNumberUtil.hpp
-    src/NoteNumberUtil.cpp
-    include/libvsq/NrpnEvent.hpp
-    src/NrpnEvent.cpp
-    include/libvsq/OutputStream.hpp
-    include/libvsq/PhoneticSymbol.hpp
-    src/PhoneticSymbol.cpp
-    include/libvsq/PhoneticSymbolDictionary.hpp
-    src/PhoneticSymbolDictionary.cpp
-    src/PhoneticSymbolDictionaryVocaloidJp.inc
-    src/PhoneticSymbolDictionaryVocaloidEn.0.inc
-    src/PhoneticSymbolDictionaryVocaloidEn.1.inc
-    src/PhoneticSymbolDictionaryVocaloidEn.2.inc
-    src/PhoneticSymbolDictionaryVocaloidEn.3.inc
-    src/PhoneticSymbolDictionaryVocaloidEn.4.inc
-    src/PhoneticSymbolDictionaryVocaloidEn.5.inc
-    src/PhoneticSymbolDictionaryVocaloidEn.6.inc
-    src/PhoneticSymbolDictionaryVocaloidEn.7.inc
-    src/PhoneticSymbolDictionaryVocaloidEn.8.inc
-    src/PhoneticSymbolDictionaryVocaloidEn.9.inc
-    src/PhoneticSymbolDictionaryVocaloidEn.10.inc
-    src/PhoneticSymbolDictionaryVocaloidEn.11.inc
-    src/PhoneticSymbolDictionaryVocaloidEn.12.inc
-    src/PhoneticSymbolDictionaryVocaloidEn.13.inc
-    src/PhoneticSymbolDictionaryVocaloidEn.14.inc
-    src/PhoneticSymbolDictionaryVocaloidEn.15.inc
-    src/PhoneticSymbolDictionaryVocaloidEn.16.inc
-    src/PhoneticSymbolDictionaryVocaloidEn.17.inc
-    src/PhoneticSymbolDictionaryVocaloidEn.18.inc
-    src/PhoneticSymbolDictionaryVocaloidEn.19.inc
-    src/PhoneticSymbolDictionaryVocaloidEn.20.inc
-    src/PhoneticSymbolDictionaryVocaloidEn.21.inc
-    src/PhoneticSymbolDictionaryVocaloidEn.22.inc
-    src/PhoneticSymbolDictionaryVocaloidEn.23.inc
-    src/PhoneticSymbolDictionaryVocaloidEn.24.inc
-    src/PhoneticSymbolDictionaryVocaloidEn.25.inc
-    src/PhoneticSymbolDictionaryVocaloidEn.26.inc
-    src/PhoneticSymbolDictionaryVocaloidEn.27.inc
-    src/PhoneticSymbolDictionaryVocaloidEn.28.inc
-    include/libvsq/PlayMode.hpp
-    include/libvsq/SMFReader.hpp
-    src/SMFReader.cpp
-    include/libvsq/Sequence.hpp
-    src/Sequence.cpp
-    include/libvsq/StreamWriter.hpp
-    src/StreamWriter.cpp
-    include/libvsq/StringUtil.hpp
-    src/StringUtil.cpp
-    include/libvsq/Tempo.hpp
-    src/Tempo.cpp
-    include/libvsq/TempoList.hpp
-    src/TempoList.cpp
-    include/libvsq/TextOutputStream.hpp
-    include/libvsq/TextStream.hpp
-    src/TextStream.cpp
-    include/libvsq/Timesig.hpp
-    src/Timesig.cpp
-    include/libvsq/TimesigList.hpp
-    src/TimesigList.cpp
-    include/libvsq/Track.hpp
-    src/Track.cpp
-    include/libvsq/VSQFileReader.hpp
-    src/VSQFileReader.cpp
-    include/libvsq/VSQFileWriter.hpp
-    src/VSQFileWriter.cpp
-    include/libvsq/VibratoBP.hpp
-    src/VibratoBP.cpp
-    include/libvsq/VibratoBPList.hpp
-    src/VibratoBPList.cpp
-    include/libvsq/VocaloidMidiEventListFactory.hpp
-    src/VocaloidMidiEventListFactory.cpp
-    include/libvsq/VoiceLanguage.hpp
-    src/VoiceLanguage.cpp
-    include/libvsq/Namespace.hpp
-    include/libvsq/BasicTypes.hpp
-    src/BP.cpp
-    include/libvsq/libvsq.h
-    include/libvsq/PublicForUnitTest.hpp)
+FILE(GLOB_RECURSE _libvsq_src
+    include/*.hpp
+    src/*.cpp)
+
+ADD_LIBRARY(vsq STATIC ${_libvsq_src})
+TARGET_INCLUDE_DIRECTORIES(vsq PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+ADD_SUBDIRECTORY(tests)
