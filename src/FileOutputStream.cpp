@@ -1,6 +1,6 @@
 ﻿/**
  * @file FileOutputStream.cpp
- * Copyright © 2014 kbinani
+ * Copyright © 2014,2017 kbinani
  *
  * This file is part of libvsq.
  *
@@ -11,13 +11,20 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-#include "../include/libvsq/FileOutputStream.hpp"
+#include <libvsq/FileOutputStream.hpp>
+#include <libvsq/FileUtil.hpp>
 
 LIBVSQ_BEGIN_NAMESPACE
 
 FileOutputStream::FileOutputStream(std::string const& filePath)
 {
 	stream.open(filePath.c_str(), std::ios::binary);
+	if (!stream.is_open()) { throw OutputStream::IOException(); }
+}
+
+FileOutputStream::FileOutputStream(std::wstring const& filePath)
+{
+	FileUtil::open(stream, filePath, std::ios::out | std::ios::binary);
 	if (!stream.is_open()) { throw OutputStream::IOException(); }
 }
 

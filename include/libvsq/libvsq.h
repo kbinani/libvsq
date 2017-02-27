@@ -63,6 +63,7 @@
 #include "./Track.hpp"
 #include "./VSQFileReader.hpp"
 #include "./VSQFileWriter.hpp"
+#include "./VSQXFileReader.hpp"
 #include "./VibratoBP.hpp"
 #include "./VibratoBPList.hpp"
 #include "./VocaloidMidiEventListFactory.hpp"

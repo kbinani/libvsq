@@ -30,6 +30,8 @@ TEST(FileOutputStreamTest, test)
 	EXPECT_EQ(0x40, fgetc(file));
 	EXPECT_EQ(EOF, fgetc(file));
 	fclose(file);
+
+	remove("hoge.bin");
 }
 
 TEST(FileOutputStreamTest, testWithException)

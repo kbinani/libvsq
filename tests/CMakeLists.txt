@@ -5,10 +5,12 @@ ELSE()
 ENDIF()
 
 INCLUDE_DIRECTORIES(ext/gtest/include
-                    ext/gtest
-                    /usr/local/include)
+                    ext/gtest)
 IF((NOT APPLE) AND (NOT WIN32))
   SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pthread")
+ENDIF()
+IF(APPLE)
+  SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -framework CoreFoundation")
 ENDIF()
 
 SET(COVERAGE false CACHE BOOL "Enable gcov")

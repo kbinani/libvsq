@@ -24,6 +24,8 @@ TEST(StreamWriterTest, test)
 	fclose(file);
 
 	EXPECT_EQ(expected.str(), actual.str());
+	
+	remove("foo.txt");
 }
 
 TEST(StreamWriterTest, testWithException)
@@ -50,4 +52,6 @@ TEST(StreamWriterTest, testConstructByStream)
 	fclose(file);
 
 	EXPECT_EQ(expected.str(), actual.str());
+	
+	remove("foo.txt");
 }

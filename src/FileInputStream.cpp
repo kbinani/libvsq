@@ -1,6 +1,6 @@
 ﻿/**
  * @file FileInputStream.cpp
- * Copyright © 2014 kbinani
+ * Copyright © 2014,2017 kbinani
  *
  * This file is part of libvsq.
  *
@@ -11,13 +11,20 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-#include "../include/libvsq/FileInputStream.hpp"
+#include <libvsq/FileInputStream.hpp>
+#include <libvsq/FileUtil.hpp>
 
 LIBVSQ_BEGIN_NAMESPACE
 
 FileInputStream::FileInputStream(std::string const& filePath)
 	: stream(filePath.c_str(), std::ios::binary)
-{}
+{
+}
+
+FileInputStream::FileInputStream(std::wstring const& filePath)
+{
+	FileUtil::open(stream, filePath, std::ios::in | std::ios::binary);
+}
 
 int FileInputStream::read()
 {

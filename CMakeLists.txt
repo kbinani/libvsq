@@ -18,7 +18,11 @@ FILE(GLOB_RECURSE _libvsq_src
     include/*.hpp
     src/*.cpp)
 
-ADD_LIBRARY(vsq STATIC ${_libvsq_src})
+ADD_LIBRARY(vsq STATIC
+	${_libvsq_src}
+	${CMAKE_CURRENT_SOURCE_DIR}/ext/tinyxml2/tinyxml2.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/ext/tinyxml2/tinyxml2.h)
 TARGET_INCLUDE_DIRECTORIES(vsq PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+TARGET_INCLUDE_DIRECTORIES(vsq PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/ext/tinyxml2)
 
 ADD_SUBDIRECTORY(tests)
