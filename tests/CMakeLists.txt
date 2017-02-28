@@ -4,8 +4,8 @@ ELSE()
   SET(CMAKE_CXX_FLAGS "-std=c++11 -Wno-conversion-null")
 ENDIF()
 
-INCLUDE_DIRECTORIES(ext/gtest/include
-                    ext/gtest)
+INCLUDE_DIRECTORIES(ext/gtest/googletest/include
+                    ext/gtest/googletest)
 IF((NOT APPLE) AND (NOT WIN32))
   SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pthread")
 ENDIF()
@@ -28,8 +28,8 @@ FILE(GLOB_RECURSE _libvsqtest_src
 
 ADD_EXECUTABLE(libvsqtest
     ${_libvsqtest_src}
-    ext/gtest/src/gtest-all.cc
-    ext/gtest/src/gtest_main.cc)
+    ext/gtest/googletest/src/gtest-all.cc
+    ext/gtest/googletest/src/gtest_main.cc)
 
 TARGET_LINK_LIBRARIES(libvsqtest vsq)
 
