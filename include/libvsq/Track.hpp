@@ -41,7 +41,7 @@ protected:
 	Event::List _events;
 
 private:
-	std::map<std::string, std::unique_ptr<BPList>> curveNameMap;
+	std::map<std::string, std::shared_ptr<BPList>> curveNameMap;
 
 public:
 	/**

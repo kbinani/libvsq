@@ -450,7 +450,7 @@ public:
 
 
 VSQXFileReader::VSQXFileReader()
-	: _impl(std::make_unique<Impl>())
+	: _impl(new Impl())
 {}
 
 
