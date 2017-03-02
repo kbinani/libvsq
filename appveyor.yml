@@ -1,0 +1,27 @@
+version: 1.0.{build}
+configuration: Debug
+before_build:
+- cmd: >-
+    git submodule sync --recursive
+
+    git submodule update --init --recursive
+
+    mkdir build
+
+    mkdir build\win64
+build_script:
+- cmd: >-
+    cd build\win64
+
+    cmake ..\.. -G "Visual Studio 14 2015 Win64"
+
+    cmake --build .
+
+    cd ..\..
+test_script:
+- cmd: >-
+    cd tests
+
+    ..\build\win64\tests\Debug\libvsqtest.exe
+
+    cd ..
