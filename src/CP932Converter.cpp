@@ -1,6 +1,6 @@
 ﻿/**
  * @file CP932Converter.cpp
- * Copyright © 2014 kbinani
+ * Copyright © 2014,2017 kbinani
  *
  * This file is part of libvsq.
  *
@@ -11,211 +11,174 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-#include "../include/libvsq/CP932Converter.hpp"
-#include <sstream>
+#include <libvsq/CP932Converter.hpp>
+#if defined _MSC_VER
+#define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
+#include <windows.h>
+#elif defined __APPLE__
+#include <CoreFoundation/CoreFoundation.h>
+#else
+#include <iconv.h>
+#include <sys/errno.h>
+#endif
+#include <vector>
+#include <memory>
 
 LIBVSQ_BEGIN_NAMESPACE
 
+namespace {
+#if defined(_MSC_VER)
+    std::string convert(std::string const& str, int from, int to)
+    {
+        int numChars = MultiByteToWideChar(from, // CodePage
+                                           0, // dwFlags,
+                                           str.c_str(), // lpMultiByteStr
+                                           str.size(), // cbMultiByte
+                                           nullptr, // lpWideCharStr
+                                           0);// cchWideChar
+        if (numChars == 0) {
+            return std::string();
+        }
+        std::vector<wchar_t> buffer(numChars);
+        numChars = MultiByteToWideChar(from, // CodePage
+                                       0, // dwFlags,
+                                       str.c_str(), // lpMultiByteStr
+                                       str.size(), // cbMultiByte
+                                       buffer.data(), // lpWideCharStr
+                                       buffer.size());// cchWideChar
+        if (numChars == 0) {
+            return std::string();
+        }
+        numChars = WideCharToMultiByte(to, // CodePage
+                                       0, // dwFlags
+                                       buffer.data(), // lpWideCharStr
+                                       buffer.size(), // cchWideChar
+                                       nullptr, // lpMultiByteStr
+                                       0, // cbMultiByte
+                                       nullptr, // lpDefaultChar
+                                       nullptr); // lpUsedDefaultChar
+        if (numChars == 0) {
+            return std::string();
+        }
+        std::vector<char> out(numChars);
+        numChars = WideCharToMultiByte(to, // CodePage
+                                       0, // dwFlags
+                                       buffer.data(), // lpWideCharStr
+                                       buffer.size(), // cchWideChar
+                                       out.data(), // lpMultiByteStr
+                                       out.size(), // cbMultiByte
+                                       nullptr, // lpDefaultChar
+                                       nullptr); // lpUsedDefaultChar
+        if (numChars == 0) {
+            return std::string();
+        }
+        return std::string(out.begin(), out.end());
+    }
+#elif defined(__APPLE__)
+	std::string convert(std::string const& str, CFStringEncoding from, CFStringEncoding to)
+	{
+		CFStringRef cfstr = CFStringCreateWithBytes(kCFAllocatorDefault,
+												  (UInt8 const*)str.c_str(),
+												  str.size(),
+												  from,
+												  false); // isExternalRepresentation
+		if (cfstr == nullptr) {
+			return std::string();
+		}
+		
+		CFRange range = CFRangeMake(0, CFStringGetLength(cfstr));
+		CFIndex usedBufLen = 0;
+		CFIndex numOkChars = CFStringGetBytes(cfstr,
+											  range,
+											  to,
+											  0, // lossByte
+											  false, // isExternalRepresentation
+											  nullptr, // buffer
+											  0, // maxBufLen
+											  &usedBufLen);
+		if (numOkChars <= 0) {
+			CFRelease(cfstr);
+			return std::string();
+		}
+		std::vector<char> buffer(usedBufLen);
+		numOkChars = CFStringGetBytes(cfstr,
+									  range,
+									  to,
+									  0, // lossByte
+									  false, // isExternalRepresentation
+									  (UInt8*)buffer.data(), // buffer
+									  buffer.size(), // maxBufLen
+									  nullptr);
+		if (numOkChars <= 0) {
+			CFRelease(cfstr);
+			return std::string();
+		}
+		
+		CFRelease(cfstr);
+		return std::string(buffer.begin(), buffer.end());
+	}
+#else
+    std::string convert(std::string const& str, char const* from, char const* to)
+    {
+        std::shared_ptr<void> ic(iconv_open(to, from), iconv_close);
+        if (ic.get() == (iconv_t)-1) {
+            return std::string();
+        }
+        std::vector<char> src(str.begin(), str.end());
+        std::vector<char> result(str.size() + 1);
+        while (true) {
+            size_t inbytesleft = src.size() * sizeof(char);
+            char* inbuf = src.data();
+            size_t outbytesleft = result.size();
+            char* outbuf = result.data();
+
+            size_t ret = iconv(ic.get(),
+                               &inbuf, &inbytesleft,
+                               &outbuf, &outbytesleft);
+            int ecode = errno;
+            if (ret == (size_t)-1) {
+                if (ecode == E2BIG) {
+                    result.resize(result.size() * 2);
+                    continue;
+            } else {
+                    return std::string();
+                }
+            } else {
+                int count = ret;
+                if (count == 0 && result.size() > outbytesleft) {
+                    count = result.size() - outbytesleft;
+                }
+                return std::string(result.begin(), result.begin() + count);
+            }
+        }
+
+        return std::string();
+    }
+#endif
+}
+
 std::string CP932Converter::convertFromUTF8(std::string const& utf8)
 {
-	std::vector<std::vector<int>> utf8codes = _getUnicodeBytesFromUTF8String(utf8);
-	std::ostringstream result;
-	static int _unicode_to_cp932[256][256][2];
-	static int initialized = 0;
-	if (initialized == 0) {
-		initializeUnicodeToCp932Dictionary(_unicode_to_cp932);
-		initialized = 1;
-	}
-	for (int i = 0; i < utf8codes.size(); i++) {
-		std::vector<int> r = utf8codes[i];
-		if (r.size() == 1) {
-			result << (char)r[0];
-		} else if (r.size() == 2) {
-			int firstByte = r[0];
-			if (_unicode_to_cp932[firstByte] != 0) {
-				int secondByte = r[1];
-				if (_unicode_to_cp932[firstByte][secondByte][0] != 0) {
-					result << (char)(0xff & _unicode_to_cp932[firstByte][secondByte][0]);
-					if (_unicode_to_cp932[firstByte][secondByte][1] != 0) {
-						result << (char)(0xff & _unicode_to_cp932[firstByte][secondByte][1]);
-					}
-				}
-			}
-		}
-	}
-	return result.str();
+#if defined _MSC_VER
+    return convert(utf8, CP_UTF8, 932);
+#elif defined __APPLE__
+	return convert(utf8, kCFStringEncodingUTF8, CFStringConvertWindowsCodepageToEncoding(932));
+#else
+    return convert(utf8, "UTF8", "CP932");
+#endif
 }
+
 
 std::string CP932Converter::convertToUTF8(std::string const& cp932)
 {
-	static int dict[0xFFFF];
-	static int initialized = 0;
-	if (initialized == 0) {
-		initializeCP932ToUTF8Dictionary(dict);
-		initialized = 1;
-	}
-	std::ostringstream result;
-	int i = 0;
-	int length = cp932.size();
-	while (i < length) {
-		int b1 = 0xFF & cp932[i];
-		int b2 = 0;
-		if (i + 1 < length) { b2 = 0xFF & cp932[i + 1]; }
-		int b1b2 = (0xFF00 & (b1 << 8)) | (0xFF & b2);
-		int value;
-		if ((value = dict[b1]) != 0) {
-			result << (char)value;
-			i++;
-		} else if ((value = dict[b1b2]) != 0) {
-			result << (char)(0xFF & (value >> 16));
-			result << (char)(0xFF & (value >> 8));
-			result << (char)(0xFF & value);
-			i += 2;
-		} else {
-			i++;
-		}
-	}
-	return result.str();
-}
-
-std::vector<std::vector<int>> CP932Converter::_getUnicodeBytesFromUTF8String(std::string const& s)
-{
-	std::vector<std::vector<int>> result;
-	int i = 0;
-	while (i < s.size()) {
-		int b = 0xff & (int)s[i];
-		int byteCount = 1;
-		std::vector<int> utf8bytes;
-		utf8bytes.push_back(b);
-		if (b <= 0x7f) {
-			// 1byte
-			byteCount = 1;
-		} else if (b <= 0xdf) {
-			// 2byte
-			byteCount = 2;
-		} else if (b <= 0xef) {
-			// 3byte
-			byteCount = 3;
-		} else if (b <= 0xf7) {
-			// 4byte
-			byteCount = 4;
-		} else if (b <= 0xfb) {
-			// 5byte
-			byteCount = 5;
-		} else {
-			// 6byte
-			byteCount = 6;
-		}
-		for (int j = 1; j < byteCount; j++) {
-			int a = 0xff & (int)s[i + j];
-			utf8bytes.push_back(a);
-		}
-
-		std::vector<int> r = _getUnicodeBytesFromUTF8Bytes(utf8bytes);
-		result.push_back(r);
-
-		i = i + byteCount;
-	}
-	return result;
-}
-
-std::vector<int> CP932Converter::_getUnicodeBytesFromUTF8Bytes(std::vector<int> const& utf8)
-{
-	if (utf8.size() == 1) {
-		// 0xxx xxxx
-		std::vector<int> result;
-		result.push_back(utf8[0] & 0x7f);
-		return result;
-	} else if (utf8.size() == 2) {
-		// 110yyy yx | 10xx xxxx
-		//    [2] [7     65 432]
-		std::vector<int> result;
-		result.push_back(((utf8[0] >> 2) & 0x7));
-		// 0x80
-		result.push_back((((utf8[0] & 0x3) << 6) | (utf8[1] & 0x3f)));
-		if (result[0] == 0) {
-			result.erase(result.begin());
-		}
-		return result;
-	} else if (utf8.size() == 3) {
-		// 1110yyyy | 10yxxx xx | 10xx xxxx
-		//     [765     432] [7     65 432]
-		std::vector<int> result;
-		result.push_back((((utf8[0] & 0xf) << 4) | ((utf8[1] >> 2) & 0xf)));
-		result.push_back((((utf8[1] & 0x3) << 6) | (utf8[2] & 0x3f)));
-		return result;
-	} else if (utf8.size() == 4) {
-		// 11110y yy | 10yy xxxx | 10xxxx xx | 10xx xxxx
-		//      [ 43     2] [765     432] [7     65 432]
-		std::vector<int> result;
-		result.push_back((((utf8[0] & 0x7) << 2) | ((utf8[1] & 0x30) >> 4)));
-		result.push_back((((utf8[1] & 0xf) << 4) | ((utf8[2] & 0x3c) >> 2)));
-		result.push_back((((utf8[2] & 0x3) << 6) | (utf8[3] & 0x3f)));
-		return result;
-	} else if (utf8.size() == 5) {
-		// 111110yy | 10yyyx xx | 10xx xxxx | 10xxxx xx | 10xx xxxx
-		//       []     [765 43     2] [765     432] [7     65 432]
-		std::vector<int> result;
-		result.push_back((utf8[0] & 0x3));
-		result.push_back((((utf8[1] & 0x3f) << 2) | ((utf8[2] & 0x30) >> 4)));
-		result.push_back((((utf8[2] & 0xf) << 4) | ((utf8[3] & 0x3c) >> 2)));
-		result.push_back((((utf8[3] & 0x3) << 6) | (utf8[4] & 0x3f)));
-		if (result[0] == 0) {
-			result.erase(result.begin());
-		}
-		return result;
-	} else if (utf8.size() == 6) {
-		// 1111110y | 10yy yyxx | 10xxxx xx | 10xx xxxx | 10xxxx xx | 10xx xxxx
-		//        [     65 432]     [765 43     2] [765     432] [7     65 432]
-		std::vector<int> result;
-		result.push_back((((utf8[0] & 0x1) << 6) | (utf8[1] & 0x3f)));
-		result.push_back((((utf8[2] & 0x3f) << 2) | ((utf8[3] & 0x30) >> 4)));
-		result.push_back((((utf8[3] & 0xf) << 4) | ((utf8[4] & 0x3c) >> 2)));
-		result.push_back((((utf8[4] & 0x3) << 6) | (utf8[5] & 0x3f)));
-		return result;
-	} else {
-		std::vector<int> result;
-		return result;
-	}
-}
-
-void CP932Converter::initializeUnicodeToCp932Dictionary(int dict[256][256][2])
-{
-	for (int i = 0; i < 256; i++) {
-		for (int j = 0; j < 256; j++) {
-			dict[i][j][0] = 0;
-			dict[i][j][1] = 0;
-		}
-	}
-#	include "./CP932ConverterData.inc"
-}
-
-void CP932Converter::initializeCP932ToUTF8Dictionary(int dict[0xFFFF])
-{
-	int baseDictionary[256][256][2];
-	initializeUnicodeToCp932Dictionary(baseDictionary);
-	for (int i = 0; i < 0xFFFF; i++) {
-		dict[i] = 0;
-	}
-	for (int firstByte = 0; firstByte < 256; firstByte++) {
-		for (int secondByte = 0; secondByte < 256; secondByte++) {
-			int key = baseDictionary[firstByte][secondByte][0];
-			if (key == 0) { continue; }
-			if (baseDictionary[firstByte][secondByte][1] != 0) {
-				key = (0xFF00 & (key << 8)) | (0xFF & baseDictionary[firstByte][secondByte][1]);
-			}
-			int value = 0;
-			if (0 == firstByte) {
-				value = secondByte;
-			} else {
-				int c1 = 0xE0 | (0xFF & (firstByte >> 4));
-				int c2 = 0x80 | (0x3C & (firstByte << 2)) | (0xFF & (secondByte >> 6));
-				int c3 = 0x80 | (0x3F & secondByte);
-				value = (0xFF0000 & (c1 << 16)) | (0x00FF00 & (c2 << 8)) | (0x0000FF & c3);
-			}
-			dict[key] = value;
-		}
-	}
+#if defined _MSC_VER
+    return convert(cp932, 932, CP_UTF8);
+#elif defined __APPLE__
+	return convert(cp932, CFStringConvertWindowsCodepageToEncoding(932), kCFStringEncodingUTF8);
+#else
+    return convert(cp932, "CP932", "UTF8");
+#endif
 }
 
 LIBVSQ_END_NAMESPACE
