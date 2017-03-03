@@ -1,6 +1,6 @@
 ﻿/**
  * @file FileInputStream.hpp
- * Copyright © 2012,2014 kbinani
+ * Copyright © 2012,2014,2017 kbinani
  *
  * This file is part of libvsq.
  *
@@ -34,6 +34,8 @@ public:
 	 */
 	explicit FileInputStream(std::string const& filePath);
 
+	explicit FileInputStream(std::wstring const& filePath);
+	
 	/**
 	 * @brief 1 バイトを読み込む.
 	 * @return 読み込んだバイト値.

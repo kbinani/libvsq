@@ -564,29 +564,29 @@ void Track::_initCor(std::string const& name, std::string const& singer)
 	auto toLower = [](std::string const & s) {
 		return StringUtil::toLower(s);
 	};
-	curveNameMap[toLower(kBPListNamePit)]		= std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNamePit),			0,		-8192,	8191)));
-	curveNameMap[toLower(kBPListNamePbs)]		= std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNamePbs),			2,		0,		24)));
-	curveNameMap[toLower(kBPListNameDyn)]		= std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNameDyn),			64,		0,		127)));
-	curveNameMap[toLower(kBPListNameBre)]		= std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNameBre),			0,		0,		127)));
-	curveNameMap[toLower(kBPListNameBri)]		= std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNameBri),			64,		0,		127)));
-	curveNameMap[toLower(kBPListNameCle)]		= std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNameCle),			0,		0,		127)));
-	curveNameMap[toLower(kBPListNameReso1Freq)]	= std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNameReso1Freq),	64,		0,		127)));
-	curveNameMap[toLower(kBPListNameReso2Freq)] = std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNameReso2Freq),	64,		0,		127)));
-	curveNameMap[toLower(kBPListNameReso3Freq)] = std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNameReso3Freq),	64,		0,		127)));
-	curveNameMap[toLower(kBPListNameReso4Freq)] = std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNameReso4Freq),	64,		0,		127)));
-	curveNameMap[toLower(kBPListNameReso1BW)]	= std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNameReso1BW),		64,		0,		127)));
-	curveNameMap[toLower(kBPListNameReso2BW)]	= std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNameReso2BW),		64,		0,		127)));
-	curveNameMap[toLower(kBPListNameReso3BW)]	= std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNameReso3BW),		64,		0,		127)));
-	curveNameMap[toLower(kBPListNameReso4BW)]	= std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNameReso4BW),		64,		0,		127)));
-	curveNameMap[toLower(kBPListNameReso1Amp)]	= std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNameReso1Amp),	64,		0,		127)));
-	curveNameMap[toLower(kBPListNameReso2Amp)]	= std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNameReso2Amp),	64,		0,		127)));
-	curveNameMap[toLower(kBPListNameReso3Amp)]	= std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNameReso3Amp),	64,		0,		127)));
-	curveNameMap[toLower(kBPListNameReso4Amp)]	= std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNameReso4Amp),	64,		0,		127)));
-	curveNameMap[kBPListNameHarmonics]			= std::move(std::unique_ptr<BPList>(new BPList(kBPListNameHarmonics,			64,		0,		127)));
-	curveNameMap[kBPListNameFx2depth]			= std::move(std::unique_ptr<BPList>(new BPList(kBPListNameFx2depth,				64,		0,		127)));
-	curveNameMap[toLower(kBPListNameGen)]		= std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNameGen),			64,		0,		127)));
-	curveNameMap[toLower(kBPListNamePor)]		= std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNamePor),			64,		0,		127)));
-	curveNameMap[toLower(kBPListNameOpe)]		= std::move(std::unique_ptr<BPList>(new BPList(toLower(kBPListNameOpe),			127,	0,		127)));
+	curveNameMap[toLower(kBPListNamePit)]		= std::make_shared<BPList>(toLower(kBPListNamePit),			0,		-8192,	8191);
+	curveNameMap[toLower(kBPListNamePbs)]		= std::make_shared<BPList>(toLower(kBPListNamePbs),			2,		0,		24);
+	curveNameMap[toLower(kBPListNameDyn)]		= std::make_shared<BPList>(toLower(kBPListNameDyn),			64,		0,		127);
+	curveNameMap[toLower(kBPListNameBre)]		= std::make_shared<BPList>(toLower(kBPListNameBre),			0,		0,		127);
+	curveNameMap[toLower(kBPListNameBri)]		= std::make_shared<BPList>(toLower(kBPListNameBri),			64,		0,		127);
+	curveNameMap[toLower(kBPListNameCle)]		= std::make_shared<BPList>(toLower(kBPListNameCle),			0,		0,		127);
+	curveNameMap[toLower(kBPListNameReso1Freq)]	= std::make_shared<BPList>(toLower(kBPListNameReso1Freq),	64,		0,		127);
+	curveNameMap[toLower(kBPListNameReso2Freq)] = std::make_shared<BPList>(toLower(kBPListNameReso2Freq),	64,		0,		127);
+	curveNameMap[toLower(kBPListNameReso3Freq)] = std::make_shared<BPList>(toLower(kBPListNameReso3Freq),	64,		0,		127);
+	curveNameMap[toLower(kBPListNameReso4Freq)] = std::make_shared<BPList>(toLower(kBPListNameReso4Freq),	64,		0,		127);
+	curveNameMap[toLower(kBPListNameReso1BW)]	= std::make_shared<BPList>(toLower(kBPListNameReso1BW),		64,		0,		127);
+	curveNameMap[toLower(kBPListNameReso2BW)]	= std::make_shared<BPList>(toLower(kBPListNameReso2BW),		64,		0,		127);
+	curveNameMap[toLower(kBPListNameReso3BW)]	= std::make_shared<BPList>(toLower(kBPListNameReso3BW),		64,		0,		127);
+	curveNameMap[toLower(kBPListNameReso4BW)]	= std::make_shared<BPList>(toLower(kBPListNameReso4BW),		64,		0,		127);
+	curveNameMap[toLower(kBPListNameReso1Amp)]	= std::make_shared<BPList>(toLower(kBPListNameReso1Amp),	64,		0,		127);
+	curveNameMap[toLower(kBPListNameReso2Amp)]	= std::make_shared<BPList>(toLower(kBPListNameReso2Amp),	64,		0,		127);
+	curveNameMap[toLower(kBPListNameReso3Amp)]	= std::make_shared<BPList>(toLower(kBPListNameReso3Amp),	64,		0,		127);
+	curveNameMap[toLower(kBPListNameReso4Amp)]	= std::make_shared<BPList>(toLower(kBPListNameReso4Amp),	64,		0,		127);
+	curveNameMap[kBPListNameHarmonics]			= std::make_shared<BPList>(kBPListNameHarmonics,			64,		0,		127);
+	curveNameMap[kBPListNameFx2depth]			= std::make_shared<BPList>(kBPListNameFx2depth,				64,		0,		127);
+	curveNameMap[toLower(kBPListNameGen)]		= std::make_shared<BPList>(toLower(kBPListNameGen),			64,		0,		127);
+	curveNameMap[toLower(kBPListNamePor)]		= std::make_shared<BPList>(toLower(kBPListNamePor),			64,		0,		127);
+	curveNameMap[toLower(kBPListNameOpe)]		= std::make_shared<BPList>(toLower(kBPListNameOpe),			127,	0,		127);
 
 	Event event(0, EventType::SINGER);
 	Handle ish(HandleType::SINGER);
@@ -617,7 +617,7 @@ void Track::deepCopy(Track* destination) const
 								  item.second->minimum(),
 								  item.second->maximum());
 		*list = item.second->clone();
-		destination->curveNameMap[item.first] = std::move(std::unique_ptr<BPList>(list));
+		destination->curveNameMap[item.first].reset(list);
 	}
 }
 

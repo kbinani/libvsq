@@ -1,6 +1,6 @@
 ﻿/**
  * @file Handle.hpp
- * Copyright © 2012,2014 kbinani
+ * Copyright © 2012,2014,2017 kbinani
  *
  * This file is part of libvsq.
  *
@@ -157,6 +157,14 @@ public:
 		return "$0503";
 	}
 
+	/**
+	 * @brief ビブラートの場合の, IconId の最初の 5 文字.
+	 */
+	inline static std::string getIconIdPrefixVibrato()
+	{
+		return "$0404";
+	}
+	
 	/**
 	 * @brief @a type で指定された種類のハンドルを初期化する.
 	 * @param type ハンドルの種類.

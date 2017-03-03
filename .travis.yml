@@ -1,22 +1,28 @@
+sudo: required
 language: cpp
 os:
   - linux
   - osx
 before_install:
+  - git submodule sync --recursive
   - git submodule update --init --recursive
 install:
-  - "if [[ $TRAVIS_OS_NAME = 'linux' ]]; then sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test; fi"
-  - "if [[ $TRAVIS_OS_NAME = 'linux' ]]; then sudo apt-get -qq update; fi"
-  - "if [[ $TRAVIS_OS_NAME = 'linux' ]]; then sudo apt-get -qq install g++-4.8; fi"
+  - bash .travis/install/$TRAVIS_OS_NAME.sh
 script:
   - "if which g++-4.8 >/dev/null 2>&1; then export CXX=$(which g++-4.8); export CC=$(which gcc-4.8); else export CXX=$(which g++); export CC=$(which gcc); fi"
   - $CXX --version
   - $CC --version
   - cmake --version
-  - cmake . -DCOVERAGE=true
-  - make
-  - cd tests
-  - cmake . -DCOVERAGE=true
-  - make
-  - make test
-
+  - cmake . -DCOVERAGE=ON
+  - cmake --build .
+  - pushd tests
+  - ./libvsqtest
+  - popd
+after_success:
+  - lcov --directory . --capture --output-file coverage.info
+  - lcov --remove coverage.info '/Applications/Xcode.app/*' --output-file coverage.info
+  - lcov --remove coverage.info '/usr/*'                    --output-file coverage.info
+  - lcov --remove coverage.info "$(pwd)/ext/*"              --output-file coverage.info
+  - lcov --remove coverage.info "$(pwd)/tests/*"            --output-file coverage.info
+  - lcov --list coverage.info
+  - bash <(curl -s https://codecov.io/bash)

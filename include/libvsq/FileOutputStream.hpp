@@ -1,6 +1,6 @@
 ﻿/**
  * @file FileOutputStream.hpp
- * Copyright © 2012,2014 kbinani
+ * Copyright © 2012,2014,2017 kbinani
  *
  * This file is part of libvsq.
  *
@@ -35,6 +35,8 @@ public:
 	 * @brief 出力先のファイルパスを指定し, 初期化する.
 	 */
 	explicit FileOutputStream(std::string const& filePath);
+
+	explicit FileOutputStream(std::wstring const& filePath);
 
 	~FileOutputStream();
 
